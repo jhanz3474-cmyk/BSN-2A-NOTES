@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>BSN 2A NOTES</title>
 
+
+<!-- FIREBASE -->
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 
 <style>
 
-/* =========================
-   GLOBAL
-========================= */
+/* =====================================================
+   GENERAL
+===================================================== */
 
 * {
     box-sizing: border-box;
@@ -28,8 +39,14 @@ body {
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     background: #f7f4ed;
+
     color: #333;
 }
 
@@ -49,12 +66,14 @@ button:active {
 }
 
 
-/* =========================
+/* =====================================================
    SIDEBAR
-========================= */
+===================================================== */
 
 .sidebar {
+
     position: fixed;
+
     left: 0;
     top: 0;
 
@@ -65,36 +84,51 @@ button:active {
 
     padding: 28px 16px;
 
-    border-right: 1px solid #ddd5c8;
+    border-right:
+        1px solid #ddd5c8;
 
     z-index: 20;
 }
 
-.logo {
-    margin: 0 10px 40px;
 
-    font-family: Georgia, serif;
+.logo {
+
+    margin:
+        0 10px 40px;
+
+    font-family:
+        Georgia,
+        serif;
 
     font-size: 24px;
+
     font-weight: bold;
 
     line-height: 1.2;
 }
 
+
 .logo-icon {
     color: #4d9b7a;
 }
 
+
 .nav {
+
     display: flex;
+
     flex-direction: column;
+
     gap: 6px;
 }
 
+
 .nav button {
+
     width: 100%;
 
-    padding: 14px 16px;
+    padding:
+        14px 16px;
 
     text-align: left;
 
@@ -105,15 +139,16 @@ button:active {
     color: #444;
 
     font-size: 15px;
-
-    transition: .2s;
 }
+
 
 .nav button:hover {
     background: #ded6c8;
 }
 
+
 .nav button.active {
+
     background: #dcd4c7;
 
     color: #378d6b;
@@ -122,19 +157,19 @@ button:active {
 }
 
 
-/* =========================
-   ADMIN BUTTON
-========================= */
-
 .admin-status {
+
     position: absolute;
 
     left: 16px;
     right: 16px;
+
     bottom: 25px;
 }
 
+
 .admin-btn {
+
     width: 100%;
 
     padding: 12px;
@@ -144,40 +179,40 @@ button:active {
     background: #ddd5c8;
 
     color: #444;
-
-    font-size: 14px;
 }
 
+
 .admin-btn.admin-on {
+
     background: #4d9b7a;
 
     color: white;
 }
 
 
-/* =========================
+/* =====================================================
    MAIN
-========================= */
+===================================================== */
 
 .main {
+
     margin-left: 240px;
 
-    width: calc(100% - 240px);
+    width:
+        calc(100% - 240px);
 
     min-height: 100vh;
 }
 
 
-/* =========================
-   TOPBAR
-========================= */
-
 .topbar {
+
     width: 100%;
 
     min-height: 65px;
 
-    padding: 0 35px;
+    padding:
+        0 35px;
 
     display: flex;
 
@@ -187,29 +222,32 @@ button:active {
 
     background: #faf8f3;
 
-    border-bottom: 1px solid #ddd5c8;
+    border-bottom:
+        1px solid #ddd5c8;
 }
+
 
 .topbar-title {
     font-weight: bold;
 }
+
 
 .user-info {
     color: #777;
 }
 
 
-/* =========================
-   PAGE
-========================= */
-
 .page {
+
     width: 100%;
 
-    padding: 38px 40px 60px;
+    padding:
+        38px 40px 60px;
 }
 
+
 .page-header {
+
     display: flex;
 
     align-items: center;
@@ -221,20 +259,25 @@ button:active {
     margin-bottom: 25px;
 }
 
+
 h1 {
+
     margin: 0;
 
-    font-family: Georgia, serif;
+    font-family:
+        Georgia,
+        serif;
 
-    font-size: clamp(30px, 4vw, 46px);
+    font-size:
+        clamp(30px, 4vw, 46px);
 
     line-height: 1.1;
 }
 
 
-/* =========================
+/* =====================================================
    SECTIONS
-========================= */
+===================================================== */
 
 .section {
     display: none;
@@ -245,16 +288,18 @@ h1 {
 }
 
 
-/* =========================
+/* =====================================================
    BUTTONS
-========================= */
+===================================================== */
 
 .add-btn {
+
     background: #4d9b7a;
 
     color: white;
 
-    padding: 12px 18px;
+    padding:
+        12px 18px;
 
     border-radius: 10px;
 
@@ -263,12 +308,16 @@ h1 {
     white-space: nowrap;
 }
 
+
 .add-btn:hover {
     background: #3d8465;
 }
 
+
 .small-btn {
-    padding: 8px 12px;
+
+    padding:
+        8px 12px;
 
     border-radius: 8px;
 
@@ -279,40 +328,46 @@ h1 {
     white-space: nowrap;
 }
 
-.small-btn:hover {
-    background: #ccc2b2;
-}
 
 .save-btn {
+
     background: #4d9b7a;
 
     color: white;
 
-    padding: 11px 18px;
+    padding:
+        11px 18px;
 
     border-radius: 8px;
 }
 
+
 .cancel-btn {
+
     background: #ddd5c8;
 
     color: #444;
 
-    padding: 11px 18px;
+    padding:
+        11px 18px;
 
     border-radius: 8px;
 }
 
 
-/* =========================
-   NOTES GRID
-========================= */
+/* =====================================================
+   NOTES
+===================================================== */
 
 .notes-grid {
+
     display: grid;
 
     grid-template-columns:
-        repeat(auto-fill, minmax(280px, 1fr));
+        repeat(
+            auto-fill,
+            minmax(280px, 1fr)
+        );
 
     gap: 20px;
 
@@ -320,11 +375,8 @@ h1 {
 }
 
 
-/* =========================
-   NOTE CARD
-========================= */
-
 .note-card {
+
     width: 100%;
 
     min-height: 210px;
@@ -333,7 +385,8 @@ h1 {
 
     background: #f1ebdf;
 
-    border: 1px solid #ddd4c5;
+    border:
+        1px solid #ddd4c5;
 
     border-radius: 16px;
 
@@ -343,20 +396,33 @@ h1 {
         transform .2s,
         box-shadow .2s;
 
-    overflow-wrap: anywhere;
+    overflow: hidden;
 }
+
 
 .note-card:hover {
-    transform: translateY(-3px);
+
+    transform:
+        translateY(-3px);
 
     box-shadow:
-        0 7px 20px rgba(0,0,0,.08);
+        0 7px 20px
+        rgba(0,0,0,.08);
 }
 
-.note-title {
-    margin: 0 0 14px;
 
-    font-family: Georgia, serif;
+.note-title {
+
+    display: block;
+
+    width: 100%;
+
+    margin:
+        0 0 14px;
+
+    font-family:
+        Georgia,
+        serif;
 
     font-size: 23px;
 
@@ -367,8 +433,18 @@ h1 {
     color: #333;
 }
 
+
 .note-content {
+
+    display: block;
+
+    width: 100%;
+
+    max-width: none;
+
     margin: 0;
+
+    padding: 0;
 
     color: #666;
 
@@ -378,10 +454,14 @@ h1 {
 
     white-space: pre-wrap;
 
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+
+    word-break: normal;
 }
 
+
 .card-buttons {
+
     display: flex;
 
     gap: 8px;
@@ -390,14 +470,12 @@ h1 {
 }
 
 
-/* =========================
-   EMPTY
-========================= */
-
 .empty {
+
     width: 100%;
 
-    padding: 60px 25px;
+    padding:
+        60px 25px;
 
     text-align: center;
 
@@ -405,19 +483,22 @@ h1 {
 
     background: #f1ebdf;
 
-    border: 1px solid #ddd4c5;
+    border:
+        1px solid #ddd4c5;
 
     border-radius: 16px;
 
-    grid-column: 1 / -1;
+    grid-column:
+        1 / -1;
 }
 
 
-/* =========================
+/* =====================================================
    TASKS
-========================= */
+===================================================== */
 
 .task-list {
+
     width: 100%;
 
     display: flex;
@@ -427,7 +508,9 @@ h1 {
     gap: 12px;
 }
 
+
 .task {
+
     width: 100%;
 
     display: flex;
@@ -436,16 +519,20 @@ h1 {
 
     gap: 13px;
 
-    padding: 17px 18px;
+    padding:
+        17px 18px;
 
     background: #f1ebdf;
 
-    border: 1px solid #ddd4c5;
+    border:
+        1px solid #ddd4c5;
 
     border-radius: 13px;
 }
 
+
 .task input[type="checkbox"] {
+
     width: 18px;
     height: 18px;
 
@@ -454,38 +541,66 @@ h1 {
     flex-shrink: 0;
 }
 
+
 .task-text {
+
     flex: 1;
 
-    overflow-wrap: anywhere;
+    overflow-wrap:
+        anywhere;
 
     line-height: 1.4;
 }
 
+
 .task.done .task-text {
-    text-decoration: line-through;
+
+    text-decoration:
+        line-through;
 
     opacity: .5;
 }
 
 
-/* =========================
+.task-date {
+
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 13px;
+
+    color: #888;
+}
+
+
+.task-overdue {
+
+    color: #b45d5d;
+}
+
+
+/* =====================================================
    CHAT
-========================= */
+===================================================== */
 
 .chat-box {
+
     width: 100%;
 
     background: #f1ebdf;
 
-    border: 1px solid #ddd4c5;
+    border:
+        1px solid #ddd4c5;
 
     border-radius: 16px;
 
     padding: 20px;
 }
 
+
 .messages {
+
     width: 100%;
 
     height: 55vh;
@@ -495,16 +610,17 @@ h1 {
     overflow-y: auto;
 
     margin-bottom: 15px;
-
-    padding-right: 5px;
 }
 
+
 .message {
+
     width: fit-content;
 
     max-width: 80%;
 
-    padding: 10px 13px;
+    padding:
+        10px 13px;
 
     margin-bottom: 10px;
 
@@ -512,14 +628,18 @@ h1 {
 
     border-radius: 10px;
 
-    overflow-wrap: anywhere;
+    overflow-wrap:
+        anywhere;
 }
+
 
 .message strong {
     color: #378d6b;
 }
 
+
 .message-time {
+
     margin-left: 7px;
 
     font-size: 11px;
@@ -527,13 +647,17 @@ h1 {
     color: #999;
 }
 
+
 .message div {
+
     margin-top: 4px;
 
     line-height: 1.4;
 }
 
+
 .chat-input {
+
     display: flex;
 
     gap: 8px;
@@ -541,24 +665,108 @@ h1 {
     width: 100%;
 }
 
-.chat-input input {
+
+/* =====================================================
+   AI
+===================================================== */
+
+.ai-box {
+
+    width: 100%;
+
+    background: #f1ebdf;
+
+    border:
+        1px solid #ddd4c5;
+
+    border-radius: 16px;
+
+    padding: 20px;
+}
+
+
+.ai-messages {
+
+    min-height: 350px;
+
+    max-height: 55vh;
+
+    overflow-y: auto;
+
+    margin-bottom: 15px;
+}
+
+
+.ai-message {
+
+    max-width: 85%;
+
+    padding:
+        14px 16px;
+
+    margin-bottom: 12px;
+
+    border-radius: 12px;
+
+    line-height: 1.55;
+
+    white-space: pre-wrap;
+}
+
+
+.ai-message.user {
+
+    margin-left: auto;
+
+    background: #d9eadf;
+}
+
+
+.ai-message.bot {
+
+    background: #e4dccf;
+}
+
+
+.ai-label {
+
+    font-weight: bold;
+
+    color: #378d6b;
+
+    margin-bottom: 5px;
+}
+
+
+.ai-input {
+
+    display: flex;
+
+    gap: 8px;
+}
+
+
+.ai-input input {
+
     flex: 1;
 
     min-width: 0;
 }
 
 
-/* =========================
+/* =====================================================
    INPUTS
-========================= */
+===================================================== */
 
 input,
 textarea {
+
     width: 100%;
 
     padding: 13px;
 
-    border: 1px solid #d5ccbd;
+    border:
+        1px solid #d5ccbd;
 
     border-radius: 9px;
 
@@ -571,15 +779,17 @@ textarea {
     outline: none;
 }
 
+
 input:focus,
 textarea:focus {
-    border-color: #4d9b7a;
 
-    box-shadow:
-        0 0 0 2px rgba(77,155,122,.12);
+    border-color:
+        #4d9b7a;
 }
 
+
 textarea {
+
     min-height: 280px;
 
     resize: vertical;
@@ -588,16 +798,24 @@ textarea {
 }
 
 
-/* =========================
+label {
+
+    display: block;
+}
+
+
+/* =====================================================
    MODALS
-========================= */
+===================================================== */
 
 .overlay {
+
     position: fixed;
 
     inset: 0;
 
-    background: rgba(0,0,0,.45);
+    background:
+        rgba(0,0,0,.45);
 
     display: none;
 
@@ -610,12 +828,16 @@ textarea {
     padding: 20px;
 }
 
+
 .overlay.show {
     display: flex;
 }
 
+
 .modal {
-    width: min(650px, 100%);
+
+    width:
+        min(650px, 100%);
 
     max-height: 90vh;
 
@@ -628,20 +850,30 @@ textarea {
     border-radius: 16px;
 
     box-shadow:
-        0 15px 50px rgba(0,0,0,.2);
+        0 15px 50px
+        rgba(0,0,0,.2);
 }
+
 
 .modal h2 {
-    margin: 0 0 20px;
 
-    font-family: Georgia, serif;
+    margin:
+        0 0 20px;
+
+    font-family:
+        Georgia,
+        serif;
 }
 
+
 .modal input {
+
     margin-bottom: 15px;
 }
 
+
 .modal-buttons {
+
     display: flex;
 
     justify-content: flex-end;
@@ -652,17 +884,15 @@ textarea {
 }
 
 
-/* =========================
-   USERNAME
-========================= */
-
 .username-box {
     text-align: center;
 }
 
+
 .username-box h2 {
     font-size: 30px;
 }
+
 
 .username-box p {
     color: #777;
@@ -670,16 +900,18 @@ textarea {
     margin-bottom: 20px;
 }
 
+
 .username-box .save-btn {
+
     width: 100%;
 
     margin-top: 12px;
 }
 
 
-/* =========================
+/* =====================================================
    MOBILE
-========================= */
+===================================================== */
 
 @media (max-width: 900px) {
 
@@ -688,147 +920,212 @@ textarea {
     }
 
     .main {
+
         margin-left: 200px;
 
-        width: calc(100% - 200px);
+        width:
+            calc(100% - 200px);
+
     }
 
     .page {
-        padding: 30px 25px 50px;
+
+        padding:
+            30px 25px 50px;
+
     }
 
     .topbar {
-        padding: 0 25px;
+
+        padding:
+            0 25px;
+
     }
+
 }
 
 
 @media (max-width: 700px) {
 
     .sidebar {
+
         position: fixed;
 
         width: 70px;
 
-        padding: 20px 8px;
+        padding:
+            20px 8px;
+
     }
+
 
     .logo {
-        margin: 0 0 30px;
+
+        margin:
+            0 0 30px;
 
         text-align: center;
 
         font-size: 0;
+
     }
+
 
     .logo-icon {
+
         font-size: 27px;
+
     }
 
+
     .nav button {
-        padding: 13px 5px;
+
+        padding:
+            13px 5px;
 
         text-align: center;
 
         font-size: 0;
+
     }
 
+
     .nav button:first-child::after {
+
         content: "📝";
 
         font-size: 21px;
+
     }
 
+
     .nav button:nth-child(2)::after {
+
         content: "☑️";
 
         font-size: 21px;
+
     }
 
+
     .nav button:nth-child(3)::after {
+
         content: "💬";
 
         font-size: 21px;
+
     }
+
+
+    .nav button:nth-child(4)::after {
+
+        content: "🤖";
+
+        font-size: 21px;
+
+    }
+
 
     .admin-status {
+
         left: 8px;
+
         right: 8px;
+
     }
+
 
     .admin-btn {
-        padding: 12px 3px;
+
+        padding:
+            12px 3px;
 
         font-size: 0;
+
     }
 
+
     .admin-btn::after {
+
         content: "🔒";
 
         font-size: 20px;
+
     }
+
 
     .main {
+
         margin-left: 70px;
 
-        width: calc(100% - 70px);
+        width:
+            calc(100% - 70px);
+
     }
+
 
     .page {
-        padding: 25px 15px 40px;
+
+        padding:
+            25px 15px 40px;
+
     }
+
 
     .topbar {
+
         min-height: 58px;
 
-        padding: 0 15px;
+        padding:
+            0 15px;
+
     }
 
-    .user-info {
-        font-size: 13px;
-    }
 
     .page-header {
-        align-items: flex-start;
 
-        flex-direction: column;
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
     }
+
 
     .add-btn {
+
         width: 100%;
+
     }
+
 
     .notes-grid {
-        grid-template-columns: 1fr;
+
+        grid-template-columns:
+            1fr;
 
         gap: 14px;
+
     }
 
-    .note-card {
-        min-height: 180px;
 
-        padding: 20px;
+    .chat-input,
+    .ai-input {
+
+        flex-direction:
+            column;
+
     }
 
-    .chat-input {
-        flex-direction: column;
-    }
 
-    .chat-input .save-btn {
+    .chat-input .save-btn,
+    .ai-input .save-btn {
+
         width: 100%;
+
     }
 
-    .message {
-        max-width: 90%;
-    }
-
-    .task {
-        align-items: flex-start;
-    }
-
-    .task .small-btn {
-        flex-shrink: 0;
-    }
 }
 
 
@@ -838,39 +1135,45 @@ textarea {
         width: 60px;
     }
 
+
     .main {
+
         margin-left: 60px;
 
-        width: calc(100% - 60px);
+        width:
+            calc(100% - 60px);
+
     }
+
 
     .page {
-        padding: 20px 10px 35px;
+
+        padding:
+            20px 10px 35px;
+
     }
+
 
     .topbar {
-        padding: 0 10px;
+
+        padding:
+            0 10px;
+
     }
 
-    .topbar-title {
-        display: none;
-    }
-
-    .note-card {
-        padding: 17px;
-    }
 }
 
 </style>
+
 </head>
 
 
 <body>
 
 
-<!-- =========================
+<!-- =====================================================
      SIDEBAR
-========================= -->
+===================================================== -->
 
 <aside class="sidebar">
 
@@ -891,26 +1194,30 @@ textarea {
 
         <button
             class="active"
-            onclick="showSection('notes', this)">
-
+            onclick="showSection('notes', this)"
+        >
             📝 Notes
-
         </button>
 
 
         <button
-            onclick="showSection('tasks', this)">
-
+            onclick="showSection('tasks', this)"
+        >
             ☑️ Tasks
-
         </button>
 
 
         <button
-            onclick="showSection('chat', this)">
-
+            onclick="showSection('chat', this)"
+        >
             💬 Chat
+        </button>
 
+
+        <button
+            onclick="showSection('ai', this)"
+        >
+            🤖 AI Assistant
         </button>
 
     </div>
@@ -921,10 +1228,9 @@ textarea {
         <button
             id="adminButton"
             class="admin-btn"
-            onclick="toggleAdmin()">
-
+            onclick="toggleAdmin()"
+        >
             🔒 Admin
-
         </button>
 
     </div>
@@ -932,393 +1238,543 @@ textarea {
 </aside>
 
 
-
-<!-- =========================
+<!-- =====================================================
      MAIN
-========================= -->
+===================================================== -->
 
 <main class="main">
 
 
-    <header class="topbar">
+<header class="topbar">
 
-        <div class="topbar-title">
+    <div class="topbar-title">
+        📚 BSN 2A
+    </div>
 
-            📚 BSN 2A
 
-        </div>
+    <div class="user-info">
 
+        👤
 
-        <div class="user-info">
+        <span
+            id="usernameDisplay"
+        ></span>
 
-            👤
+    </div>
 
-            <span
-                id="usernameDisplay">
-            </span>
+</header>
 
-        </div>
 
-    </header>
+<!-- =====================================================
+     NOTES
+===================================================== -->
 
+<section
+    id="notesSection"
+    class="section active"
+>
 
+<div class="page">
 
-    <!-- NOTES -->
 
-    <section
-        id="notesSection"
-        class="section active">
+    <div class="page-header">
 
-        <div class="page">
-
-            <div class="page-header">
-
-                <h1>
-                    Notes
-                </h1>
-
-
-                <button
-                    id="addNoteButton"
-                    class="add-btn"
-                    onclick="openNoteEditor()"
-                    style="display:none;">
-
-                    + Add Note
-
-                </button>
-
-            </div>
-
-
-            <div
-                id="notesGrid"
-                class="notes-grid">
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- TASKS -->
-
-    <section
-        id="tasksSection"
-        class="section">
-
-        <div class="page">
-
-            <div class="page-header">
-
-                <h1>
-                    Tasks
-                </h1>
-
-
-                <button
-                    id="addTaskButton"
-                    class="add-btn"
-                    onclick="openTaskEditor()"
-                    style="display:none;">
-
-                    + Add Task
-
-                </button>
-
-            </div>
-
-
-            <div
-                id="taskList"
-                class="task-list">
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- CHAT -->
-
-    <section
-        id="chatSection"
-        class="section">
-
-        <div class="page">
-
-            <div class="page-header">
-
-                <h1>
-                    Chat
-                </h1>
-
-            </div>
-
-
-            <div class="chat-box">
-
-                <div
-                    id="messages"
-                    class="messages">
-                </div>
-
-
-                <div class="chat-input">
-
-                    <input
-                        id="chatInput"
-                        type="text"
-                        placeholder="Write a message..."
-                        maxlength="500"
-                        onkeydown="
-                            if(event.key === 'Enter')
-                            sendMessage()
-                        "
-                    >
-
-
-                    <button
-                        class="save-btn"
-                        onclick="sendMessage()">
-
-                        Send
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-</main>
-
-
-
-<!-- =========================
-     USERNAME MODAL
-========================= -->
-
-<div
-    id="usernameOverlay"
-    class="overlay">
-
-    <div class="modal username-box">
-
-        <h2>
-            Welcome to BSN 2A Notes 👋
-        </h2>
-
-        <p>
-            Enter your name to continue.
-        </p>
-
-
-        <input
-            id="usernameInput"
-            type="text"
-            placeholder="Your name"
-            maxlength="30"
-            onkeydown="
-                if(event.key === 'Enter')
-                saveUsername()
-            "
-        >
+        <h1>
+            Notes
+        </h1>
 
 
         <button
-            class="save-btn"
-            onclick="saveUsername()">
+            id="addNoteButton"
+            class="add-btn"
+            onclick="openNoteEditor()"
+            style="display:none;"
+        >
 
-            Enter
+            + Add Note
 
         </button>
 
     </div>
 
+
+    <div
+        id="notesGrid"
+        class="notes-grid"
+    ></div>
+
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     TASKS
+===================================================== -->
+
+<section
+    id="tasksSection"
+    class="section"
+>
+
+<div class="page">
+
+
+    <div class="page-header">
+
+        <h1>
+            Tasks
+        </h1>
+
+
+        <button
+            id="addTaskButton"
+            class="add-btn"
+            onclick="openTaskEditor()"
+            style="display:none;"
+        >
+
+            + Add Task
+
+        </button>
+
+    </div>
+
+
+    <div
+        id="taskList"
+        class="task-list"
+    ></div>
+
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     CHAT
+===================================================== -->
+
+<section
+    id="chatSection"
+    class="section"
+>
+
+<div class="page">
+
+
+    <div class="page-header">
+
+        <h1>
+            Chat
+        </h1>
+
+    </div>
+
+
+    <div class="chat-box">
+
+
+        <div
+            id="messages"
+            class="messages"
+        ></div>
+
+
+        <div class="chat-input">
+
+
+            <input
+                id="chatInput"
+                type="text"
+                placeholder="Write a message..."
+                maxlength="500"
+                onkeydown="
+                    if(event.key==='Enter')
+                    sendMessage()
+                "
+            >
+
+
+            <button
+                class="save-btn"
+                onclick="sendMessage()"
+            >
+
+                Send
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     AI
+===================================================== -->
+
+<section
+    id="aiSection"
+    class="section"
+>
+
+<div class="page">
+
+
+    <div class="page-header">
+
+        <h1>
+            AI Assistant 🤖
+        </h1>
+
+    </div>
+
+
+    <div class="ai-box">
+
+
+        <div
+            id="aiMessages"
+            class="ai-messages"
+        >
+
+
+            <div
+                class="ai-message bot"
+            >
+
+                <div class="ai-label">
+
+                    🤖 BSN 2A Assistant
+
+                </div>
+
+
+                Hey!
+
+                Ask me things like:
+
+                <br><br>
+
+                • What's due tomorrow?<br>
+
+                • What's due today?<br>
+
+                • What is overdue?<br>
+
+                • What do I have this week?<br>
+
+                • What tasks are unfinished?<br>
+
+                • What should I study?<br>
+
+                • What notes do we have?
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="ai-input">
+
+
+            <input
+                id="aiInput"
+                type="text"
+                placeholder="Ask about your notes and tasks..."
+                onkeydown="
+                    if(event.key==='Enter')
+                    askAI()
+                "
+            >
+
+
+            <button
+                class="save-btn"
+                onclick="askAI()"
+            >
+
+                Ask
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================================
+     USERNAME MODAL
+===================================================== -->
+
+<div
+    id="usernameOverlay"
+    class="overlay"
+>
+
+<div class="modal username-box">
+
+
+    <h2>
+        Welcome to BSN 2A Notes 👋
+    </h2>
+
+
+    <p>
+        Enter your name to continue.
+    </p>
+
+
+    <input
+        id="usernameInput"
+        type="text"
+        placeholder="Your name"
+        maxlength="30"
+        onkeydown="
+            if(event.key==='Enter')
+            saveUsername()
+        "
+    >
+
+
+    <button
+        class="save-btn"
+        onclick="saveUsername()"
+    >
+
+        Enter
+
+    </button>
+
+
+</div>
+
 </div>
 
 
-
-<!-- =========================
-     NOTE EDITOR
-========================= -->
+<!-- =====================================================
+     NOTE MODAL
+===================================================== -->
 
 <div
     id="noteOverlay"
-    class="overlay">
+    class="overlay"
+>
 
-    <div class="modal">
-
-        <h2
-            id="noteModalTitle">
-
-            Add Note
-
-        </h2>
+<div class="modal">
 
 
-        <input
-            id="noteTitle"
-            type="text"
-            placeholder="Note title"
-            maxlength="100"
+    <h2
+        id="noteModalTitle"
+    >
+        Add Note
+    </h2>
+
+
+    <input
+        id="noteTitle"
+        type="text"
+        placeholder="Note title"
+        maxlength="100"
+    >
+
+
+    <textarea
+        id="noteContent"
+        placeholder="Write your note here..."
+    ></textarea>
+
+
+    <div class="modal-buttons">
+
+
+        <button
+            class="cancel-btn"
+            onclick="closeNoteEditor()"
         >
 
+            Cancel
 
-        <textarea
-            id="noteContent"
-            placeholder="Write your note here..."
-        ></textarea>
+        </button>
 
 
-        <div class="modal-buttons">
+        <button
+            id="noteSaveButton"
+            class="save-btn"
+            onclick="saveNote()"
+        >
 
-            <button
-                class="cancel-btn"
-                onclick="closeNoteEditor()">
+            Save
 
-                Cancel
+        </button>
 
-            </button>
-
-
-            <button
-                class="save-btn"
-                onclick="saveNote()">
-
-                Save
-
-            </button>
-
-        </div>
 
     </div>
+
+
+</div>
 
 </div>
 
 
-
-<!-- =========================
-     TASK EDITOR
-========================= -->
+<!-- =====================================================
+     TASK MODAL
+===================================================== -->
 
 <div
     id="taskOverlay"
-    class="overlay">
+    class="overlay"
+>
 
-    <div class="modal">
-
-        <h2>
-            Add Task
-        </h2>
+<div class="modal">
 
 
-        <input
-            id="taskInput"
-            type="text"
-            placeholder="Task..."
-            maxlength="300"
-            onkeydown="
-                if(event.key === 'Enter')
-                saveTask()
-            "
+    <h2>
+        Add Task
+    </h2>
+
+
+    <input
+        id="taskInput"
+        type="text"
+        placeholder="Task..."
+        maxlength="300"
+    >
+
+
+    <label>
+
+        Due date
+
+    </label>
+
+
+    <input
+        id="taskDueDate"
+        type="date"
+    >
+
+
+    <div class="modal-buttons">
+
+
+        <button
+            class="cancel-btn"
+            onclick="closeTaskEditor()"
         >
 
+            Cancel
 
-        <div class="modal-buttons">
-
-            <button
-                class="cancel-btn"
-                onclick="closeTaskEditor()">
-
-                Cancel
-
-            </button>
+        </button>
 
 
-            <button
-                class="save-btn"
-                onclick="saveTask()">
+        <button
+            class="save-btn"
+            onclick="saveTask()"
+        >
 
-                Save
+            Save
 
-            </button>
+        </button>
 
-        </div>
 
     </div>
+
+
+</div>
 
 </div>
 
 
-
-<!-- =========================
-     ADMIN PASSWORD
-========================= -->
+<!-- =====================================================
+     ADMIN MODAL
+===================================================== -->
 
 <div
     id="adminOverlay"
-    class="overlay">
+    class="overlay"
+>
 
-    <div class="modal username-box">
-
-        <h2>
-            🔒 Admin Mode
-        </h2>
-
-        <p>
-            Enter the admin password.
-        </p>
+<div class="modal username-box">
 
 
-        <input
-            id="adminPassword"
-            type="password"
-            placeholder="Password"
-            onkeydown="
-                if(event.key === 'Enter')
-                checkAdmin()
-            "
+    <h2>
+        🔒 Admin Mode
+    </h2>
+
+
+    <p>
+        Enter the admin password.
+    </p>
+
+
+    <input
+        id="adminPassword"
+        type="password"
+        placeholder="Password"
+        onkeydown="
+            if(event.key==='Enter')
+            checkAdmin()
+        "
+    >
+
+
+    <div class="modal-buttons">
+
+
+        <button
+            class="cancel-btn"
+            onclick="closeAdmin()"
         >
 
+            Cancel
 
-        <div class="modal-buttons">
-
-            <button
-                class="cancel-btn"
-                onclick="closeAdmin()">
-
-                Cancel
-
-            </button>
+        </button>
 
 
-            <button
-                class="save-btn"
-                onclick="checkAdmin()">
+        <button
+            class="save-btn"
+            onclick="checkAdmin()"
+        >
 
-                Unlock
+            Unlock
 
-            </button>
+        </button>
 
-        </div>
 
     </div>
 
+
 </div>
 
+</div>
 
 
 <script>
 
 /* =====================================================
-   FIREBASE
+   FIREBASE CONFIG
 ===================================================== */
 
 const firebaseConfig = {
@@ -1346,6 +1802,7 @@ const firebaseConfig = {
 
     measurementId:
         "G-WNTP9GZJ4B"
+
 };
 
 
@@ -1353,9 +1810,9 @@ firebase.initializeApp(
     firebaseConfig
 );
 
+
 const db =
     firebase.database();
-
 
 
 /* =====================================================
@@ -1372,9 +1829,8 @@ let isAdmin = false;
 let editingNoteId = null;
 
 
-
 /* =====================================================
-   LOAD
+   STARTUP
 ===================================================== */
 
 window.addEventListener(
@@ -1387,19 +1843,22 @@ window.addEventListener(
                 .getElementById(
                     "usernameOverlay"
                 )
-                .classList
-                .add("show");
+                .classList.add("show");
 
 
-            setTimeout(() => {
+            setTimeout(
+                () => {
 
-                document
-                    .getElementById(
-                        "usernameInput"
-                    )
-                    .focus();
+                    document
+                        .getElementById(
+                            "usernameInput"
+                        )
+                        .focus();
 
-            }, 200);
+                },
+                200
+            );
+
 
         } else {
 
@@ -1414,7 +1873,6 @@ window.addEventListener(
 
     }
 );
-
 
 
 /* =====================================================
@@ -1440,6 +1898,7 @@ function saveUsername() {
         );
 
         return;
+
     }
 
 
@@ -1464,11 +1923,11 @@ function saveUsername() {
         .getElementById(
             "usernameOverlay"
         )
-        .classList
-        .remove("show");
+        .classList.remove(
+            "show"
+        );
 
 }
-
 
 
 /* =====================================================
@@ -1520,15 +1979,18 @@ function showSection(
             "Section"
         )
         .classList
-        .add("active");
+        .add(
+            "active"
+        );
 
 
     button
         .classList
-        .add("active");
+        .add(
+            "active"
+        );
 
 }
-
 
 
 /* =====================================================
@@ -1548,6 +2010,7 @@ function toggleAdmin() {
         );
 
         return;
+
     }
 
 
@@ -1556,7 +2019,9 @@ function toggleAdmin() {
             "adminOverlay"
         )
         .classList
-        .add("show");
+        .add(
+            "show"
+        );
 
 
     document
@@ -1566,7 +2031,6 @@ function toggleAdmin() {
         .focus();
 
 }
-
 
 
 function checkAdmin() {
@@ -1592,7 +2056,9 @@ function checkAdmin() {
                 "adminOverlay"
             )
             .classList
-            .remove("show");
+            .remove(
+                "show"
+            );
 
 
         document
@@ -1609,6 +2075,7 @@ function checkAdmin() {
             "Admin mode unlocked 🔓"
         );
 
+
     } else {
 
         alert(
@@ -1620,7 +2087,6 @@ function checkAdmin() {
 }
 
 
-
 function closeAdmin() {
 
     document
@@ -1628,7 +2094,9 @@ function closeAdmin() {
             "adminOverlay"
         )
         .classList
-        .remove("show");
+        .remove(
+            "show"
+        );
 
 
     document
@@ -1638,7 +2106,6 @@ function closeAdmin() {
         .value = "";
 
 }
-
 
 
 function updateAdminUI() {
@@ -1666,9 +2133,11 @@ function updateAdminUI() {
         button.textContent =
             "🔓 Admin ON";
 
-        button.classList.add(
-            "admin-on"
-        );
+
+        button.classList
+            .add(
+                "admin-on"
+            );
 
 
         addNote.style.display =
@@ -1678,14 +2147,17 @@ function updateAdminUI() {
         addTask.style.display =
             "inline-block";
 
+
     } else {
 
         button.textContent =
             "🔒 Admin";
 
-        button.classList.remove(
-            "admin-on"
-        );
+
+        button.classList
+            .remove(
+                "admin-on"
+            );
 
 
         addNote.style.display =
@@ -1700,45 +2172,55 @@ function updateAdminUI() {
 
     db.ref("notes")
         .once("value")
-        .then(snapshot => {
+        .then(
+            snapshot => {
 
-            renderNotes(
-                snapshot.val() || {}
-            );
+                renderNotes(
+                    snapshot.val() ||
+                    {}
+                );
 
-        });
+            }
+        );
 
 
     db.ref("tasks")
         .once("value")
-        .then(snapshot => {
+        .then(
+            snapshot => {
 
-            renderTasks(
-                snapshot.val() || {}
-            );
+                renderTasks(
+                    snapshot.val() ||
+                    {}
+                );
 
-        });
+            }
+        );
 
 }
 
 
-
 /* =====================================================
-   NOTES REALTIME
+   NOTES DATABASE
 ===================================================== */
 
-db.ref("notes").on(
-    "value",
-    snapshot => {
+db.ref("notes")
+    .on(
+        "value",
+        snapshot => {
 
-        renderNotes(
-            snapshot.val() || {}
-        );
+            renderNotes(
+                snapshot.val() ||
+                {}
+            );
 
-    }
-);
+        }
+    );
 
 
+/* =====================================================
+   RENDER NOTES
+===================================================== */
 
 function renderNotes(data) {
 
@@ -1776,9 +2258,7 @@ function renderNotes(data) {
     );
 
 
-    if (
-        notes.length === 0
-    ) {
+    if (!notes.length) {
 
         grid.innerHTML = `
 
@@ -1799,6 +2279,7 @@ function renderNotes(data) {
         `;
 
         return;
+
     }
 
 
@@ -1832,7 +2313,9 @@ function renderNotes(data) {
                                 "button"
                             )
                     ) {
+
                         return;
+
                     }
 
 
@@ -1844,7 +2327,7 @@ function renderNotes(data) {
                 };
 
 
-            /* Drag and drop */
+            /* DRAG */
 
             card.addEventListener(
                 "dragstart",
@@ -1852,13 +2335,16 @@ function renderNotes(data) {
 
                     if (!isAdmin) {
 
-                        event.preventDefault();
+                        event
+                            .preventDefault();
 
                         return;
+
                     }
 
 
-                    event.dataTransfer
+                    event
+                        .dataTransfer
                         .setData(
                             "text/plain",
                             id
@@ -1874,7 +2360,8 @@ function renderNotes(data) {
 
                     if (isAdmin) {
 
-                        event.preventDefault();
+                        event
+                            .preventDefault();
 
                     }
 
@@ -1895,7 +2382,8 @@ function renderNotes(data) {
 
 
                     const draggedId =
-                        event.dataTransfer
+                        event
+                            .dataTransfer
                             .getData(
                                 "text/plain"
                             );
@@ -1946,7 +2434,8 @@ function renderNotes(data) {
                             onclick="
                                 event.stopPropagation();
                                 editNote('${id}');
-                            ">
+                            "
+                        >
 
                             ✏️ Edit
 
@@ -1959,7 +2448,8 @@ function renderNotes(data) {
                             onclick="
                                 event.stopPropagation();
                                 deleteNote('${id}');
-                            ">
+                            "
+                        >
 
                             🗑️ Delete
 
@@ -1984,7 +2474,6 @@ function renderNotes(data) {
     );
 
 }
-
 
 
 /* =====================================================
@@ -2016,42 +2505,66 @@ function openNoteEditor(
         );
 
 
+    title.disabled =
+        false;
+
+
+    content.disabled =
+        false;
+
+
+    document
+        .getElementById(
+            "noteSaveButton"
+        )
+        .style.display =
+        "inline-block";
+
+
     if (id) {
 
         db.ref(
             "notes/" + id
         )
-        .once("value")
-        .then(snapshot => {
+        .once(
+            "value"
+        )
+        .then(
+            snapshot => {
 
-            const note =
-                snapshot.val();
-
-
-            title.value =
-                note?.title || "";
-
-
-            content.value =
-                note?.content || "";
+                const note =
+                    snapshot.val();
 
 
-            document
-                .getElementById(
-                    "noteModalTitle"
-                )
-                .textContent =
-                "Edit Note";
+                title.value =
+                    note?.title ||
+                    "";
 
 
-            document
-                .getElementById(
-                    "noteOverlay"
-                )
-                .classList
-                .add("show");
+                content.value =
+                    note?.content ||
+                    "";
 
-        });
+
+                document
+                    .getElementById(
+                        "noteModalTitle"
+                    )
+                    .textContent =
+                    "Edit Note";
+
+
+                document
+                    .getElementById(
+                        "noteOverlay"
+                    )
+                    .classList
+                    .add(
+                        "show"
+                    );
+
+            }
+        );
 
 
     } else {
@@ -2074,7 +2587,9 @@ function openNoteEditor(
                 "noteOverlay"
             )
             .classList
-            .add("show");
+            .add(
+                "show"
+            );
 
 
         title.focus();
@@ -2084,18 +2599,14 @@ function openNoteEditor(
 }
 
 
-
 function editNote(id) {
 
-    openNoteEditor(id);
+    openNoteEditor(
+        id
+    );
 
 }
 
-
-
-/* =====================================================
-   OPEN NOTE
-===================================================== */
 
 function openNote(
     id,
@@ -2119,11 +2630,33 @@ function openNote(
 
 
     title.value =
-        note.title || "";
+        note.title ||
+        "";
 
 
     content.value =
-        note.content || "";
+        note.content ||
+        "";
+
+
+    title.disabled =
+        !isAdmin;
+
+
+    content.disabled =
+        !isAdmin;
+
+
+    document
+        .getElementById(
+            "noteSaveButton"
+        )
+        .style.display =
+        isAdmin
+        ?
+        "inline-block"
+        :
+        "none";
 
 
     document
@@ -2138,28 +2671,17 @@ function openNote(
         "View Note";
 
 
-    title.disabled =
-        !isAdmin;
-
-
-    content.disabled =
-        !isAdmin;
-
-
     document
         .getElementById(
             "noteOverlay"
         )
         .classList
-        .add("show");
+        .add(
+            "show"
+        );
 
 }
 
-
-
-/* =====================================================
-   SAVE NOTE
-===================================================== */
 
 function saveNote() {
 
@@ -2193,6 +2715,7 @@ function saveNote() {
         );
 
         return;
+
     }
 
 
@@ -2203,6 +2726,7 @@ function saveNote() {
         );
 
         return;
+
     }
 
 
@@ -2214,9 +2738,11 @@ function saveNote() {
         )
         .update({
 
-            title: title,
+            title:
+                title,
 
-            content: content,
+            content:
+                content,
 
             updatedAt:
                 Date.now(),
@@ -2230,15 +2756,18 @@ function saveNote() {
     } else {
 
         const newNote =
-            db.ref("notes")
-              .push();
+            db
+                .ref("notes")
+                .push();
 
 
         newNote.set({
 
-            title: title,
+            title:
+                title,
 
-            content: content,
+            content:
+                content,
 
             createdAt:
                 Date.now(),
@@ -2262,11 +2791,6 @@ function saveNote() {
 }
 
 
-
-/* =====================================================
-   CLOSE NOTE
-===================================================== */
-
 function closeNoteEditor() {
 
     document
@@ -2274,21 +2798,25 @@ function closeNoteEditor() {
             "noteOverlay"
         )
         .classList
-        .remove("show");
+        .remove(
+            "show"
+        );
 
 
     document
         .getElementById(
             "noteTitle"
         )
-        .disabled = false;
+        .disabled =
+        false;
 
 
     document
         .getElementById(
             "noteContent"
         )
-        .disabled = false;
+        .disabled =
+        false;
 
 
     editingNoteId =
@@ -2296,11 +2824,6 @@ function closeNoteEditor() {
 
 }
 
-
-
-/* =====================================================
-   DELETE NOTE
-===================================================== */
 
 function deleteNote(id) {
 
@@ -2319,28 +2842,24 @@ function deleteNote(id) {
             "notes/" + id
         )
         .remove()
-        .catch(error => {
+        .catch(
+            error => {
 
-            console.error(
-                error
-            );
+                alert(
+                    "Couldn't delete the note: " +
+                    error.message
+                );
 
-
-            alert(
-                "Couldn't delete the note: " +
-                error.message
-            );
-
-        });
+            }
+        );
 
     }
 
 }
 
 
-
 /* =====================================================
-   REORDER NOTES
+   NOTE DRAG ORDER
 ===================================================== */
 
 function reorderNotes(
@@ -2353,111 +2872,120 @@ function reorderNotes(
         !targetId ||
         draggedId === targetId
     ) {
+
         return;
+
     }
 
 
     db.ref("notes")
         .once("value")
-        .then(snapshot => {
+        .then(
+            snapshot => {
 
-            const notes =
-                snapshot.val() || {};
+                const notes =
+                    snapshot.val() ||
+                    {};
 
 
-            const entries =
-                Object.entries(
-                    notes
+                const entries =
+                    Object.entries(
+                        notes
+                    );
+
+
+                entries.sort(
+                    (a, b) =>
+                        (a[1].order || 0) -
+                        (b[1].order || 0)
                 );
 
 
-            entries.sort(
-                (a, b) =>
-                    (a[1].order || 0) -
-                    (b[1].order || 0)
-            );
+                const draggedIndex =
+                    entries.findIndex(
+                        item =>
+                            item[0] ===
+                            draggedId
+                    );
 
 
-            const draggedIndex =
-                entries.findIndex(
-                    item =>
-                        item[0] ===
-                        draggedId
-                );
+                const targetIndex =
+                    entries.findIndex(
+                        item =>
+                            item[0] ===
+                            targetId
+                    );
 
 
-            const targetIndex =
-                entries.findIndex(
-                    item =>
-                        item[0] ===
-                        targetId
-                );
+                if (
+                    draggedIndex === -1 ||
+                    targetIndex === -1
+                ) {
 
-
-            if (
-                draggedIndex === -1 ||
-                targetIndex === -1
-            ) {
-                return;
-            }
-
-
-            const dragged =
-                entries.splice(
-                    draggedIndex,
-                    1
-                )[0];
-
-
-            entries.splice(
-                targetIndex,
-                0,
-                dragged
-            );
-
-
-            const updates = {};
-
-
-            entries.forEach(
-                ([id], index) => {
-
-                    updates[
-                        "notes/" +
-                        id +
-                        "/order"
-                    ] = index;
+                    return;
 
                 }
-            );
 
 
-            db.ref()
-                .update(
-                    updates
+                const dragged =
+                    entries.splice(
+                        draggedIndex,
+                        1
+                    )[0];
+
+
+                entries.splice(
+                    targetIndex,
+                    0,
+                    dragged
                 );
 
-        });
+
+                const updates =
+                    {};
+
+
+                entries.forEach(
+                    ([id], index) => {
+
+                        updates[
+                            "notes/" +
+                            id +
+                            "/order"
+                        ] =
+                        index;
+
+                    }
+                );
+
+
+                db.ref()
+                    .update(
+                        updates
+                    );
+
+            }
+        );
 
 }
 
 
-
 /* =====================================================
-   TASKS REALTIME
+   TASK DATABASE
 ===================================================== */
 
-db.ref("tasks").on(
-    "value",
-    snapshot => {
+db.ref("tasks")
+    .on(
+        "value",
+        snapshot => {
 
-        renderTasks(
-            snapshot.val() || {}
-        );
+            renderTasks(
+                snapshot.val() ||
+                {}
+            );
 
-    }
-);
-
+        }
+    );
 
 
 /* =====================================================
@@ -2484,15 +3012,27 @@ function renderTasks(
 
 
     entries.sort(
-        (a, b) =>
-            (a[1].createdAt || 0) -
-            (b[1].createdAt || 0)
+        (a, b) => {
+
+            const dateA =
+                a[1].dueDate ||
+                "9999-12-31";
+
+
+            const dateB =
+                b[1].dueDate ||
+                "9999-12-31";
+
+
+            return dateA.localeCompare(
+                dateB
+            );
+
+        }
     );
 
 
-    if (
-        entries.length === 0
-    ) {
+    if (!entries.length) {
 
         list.innerHTML = `
 
@@ -2505,6 +3045,7 @@ function renderTasks(
         `;
 
         return;
+
     }
 
 
@@ -2528,8 +3069,6 @@ function renderTasks(
                 );
 
 
-            /* Checkbox */
-
             const checkbox =
                 document.createElement(
                     "input"
@@ -2546,15 +3085,20 @@ function renderTasks(
 
             checkbox.addEventListener(
                 "change",
-                () => {
-
-                    toggleTask(id);
-
-                }
+                () =>
+                    toggleTask(id)
             );
 
 
-            /* Text */
+            const textContainer =
+                document.createElement(
+                    "div"
+                );
+
+
+            textContainer.className =
+                "task-text";
+
 
             const text =
                 document.createElement(
@@ -2562,12 +3106,63 @@ function renderTasks(
                 );
 
 
-            text.className =
-                "task-text";
-
-
             text.textContent =
-                task.text || "";
+                task.text ||
+                "Unnamed task";
+
+
+            textContainer.appendChild(
+                text
+            );
+
+
+            if (task.dueDate) {
+
+                const due =
+                    document.createElement(
+                        "small"
+                    );
+
+
+                due.className =
+                    "task-date";
+
+
+                if (
+                    isOverdue(
+                        task.dueDate
+                    ) &&
+                    !task.done
+                ) {
+
+                    due.classList.add(
+                        "task-overdue"
+                    );
+
+
+                    due.textContent =
+                        "⚠️ Overdue: " +
+                        formatTaskDate(
+                            task.dueDate
+                        );
+
+                } else {
+
+                    due.textContent =
+                        "📅 Due: " +
+                        formatTaskDate(
+                            task.dueDate
+                        );
+
+                }
+
+
+                textContainer
+                    .appendChild(
+                        due
+                    );
+
+            }
 
 
             div.appendChild(
@@ -2576,11 +3171,9 @@ function renderTasks(
 
 
             div.appendChild(
-                text
+                textContainer
             );
 
-
-            /* ADMIN DELETE */
 
             if (isAdmin) {
 
@@ -2606,9 +3199,12 @@ function renderTasks(
                     "click",
                     event => {
 
-                        event.preventDefault();
+                        event
+                            .preventDefault();
 
-                        event.stopPropagation();
+
+                        event
+                            .stopPropagation();
 
 
                         deleteTask(id);
@@ -2634,7 +3230,6 @@ function renderTasks(
 }
 
 
-
 /* =====================================================
    TASK EDITOR
 ===================================================== */
@@ -2650,7 +3245,16 @@ function openTaskEditor() {
         .getElementById(
             "taskInput"
         )
-        .value = "";
+        .value =
+        "";
+
+
+    document
+        .getElementById(
+            "taskDueDate"
+        )
+        .value =
+        "";
 
 
     document
@@ -2658,7 +3262,9 @@ function openTaskEditor() {
             "taskOverlay"
         )
         .classList
-        .add("show");
+        .add(
+            "show"
+        );
 
 
     document
@@ -2670,7 +3276,6 @@ function openTaskEditor() {
 }
 
 
-
 function closeTaskEditor() {
 
     document
@@ -2678,15 +3283,28 @@ function closeTaskEditor() {
             "taskOverlay"
         )
         .classList
-        .remove("show");
+        .remove(
+            "show"
+        );
+
+
+    document
+        .getElementById(
+            "taskInput"
+        )
+        .value =
+        "";
+
+
+    document
+        .getElementById(
+            "taskDueDate"
+        )
+        .value =
+        "";
 
 }
 
-
-
-/* =====================================================
-   SAVE TASK
-===================================================== */
 
 function saveTask() {
 
@@ -2701,8 +3319,18 @@ function saveTask() {
         );
 
 
+    const dueDateInput =
+        document.getElementById(
+            "taskDueDate"
+        );
+
+
     const text =
         input.value.trim();
+
+
+    const dueDate =
+        dueDateInput.value;
 
 
     if (!text) {
@@ -2712,15 +3340,32 @@ function saveTask() {
         );
 
         return;
+
+    }
+
+
+    if (!dueDate) {
+
+        alert(
+            "Please select a due date."
+        );
+
+        return;
+
     }
 
 
     db.ref("tasks")
         .push({
 
-            text: text,
+            text:
+                text,
 
-            done: false,
+            dueDate:
+                dueDate,
+
+            done:
+                false,
 
             createdAt:
                 Date.now(),
@@ -2729,32 +3374,26 @@ function saveTask() {
                 username
 
         })
-        .then(() => {
+        .then(
+            () => {
 
-            closeTaskEditor();
+                closeTaskEditor();
 
-        })
-        .catch(error => {
+            }
+        )
+        .catch(
+            error => {
 
-            console.error(
-                error
-            );
+                alert(
+                    "Couldn't create the task: " +
+                    error.message
+                );
 
-
-            alert(
-                "Couldn't create the task: " +
-                error.message
-            );
-
-        });
+            }
+        );
 
 }
 
-
-
-/* =====================================================
-   TOGGLE TASK
-===================================================== */
 
 function toggleTask(id) {
 
@@ -2763,43 +3402,35 @@ function toggleTask(id) {
         id +
         "/done"
     )
-    .once("value")
-    .then(snapshot => {
+    .once(
+        "value"
+    )
+    .then(
+        snapshot => {
 
-        const current =
-            !!snapshot.val();
+            return db.ref(
+                "tasks/" +
+                id +
+                "/done"
+            )
+            .set(
+                !snapshot.val()
+            );
 
+        }
+    )
+    .catch(
+        error => {
 
-        return db.ref(
-            "tasks/" +
-            id +
-            "/done"
-        )
-        .set(
-            !current
-        );
+            alert(
+                "Couldn't update the task."
+            );
 
-    })
-    .catch(error => {
-
-        console.error(
-            "Task update failed:",
-            error
-        );
-
-        alert(
-            "Couldn't update the task."
-        );
-
-    });
+        }
+    );
 
 }
 
-
-
-/* =====================================================
-   DELETE TASK
-===================================================== */
 
 function deleteTask(id) {
 
@@ -2810,6 +3441,7 @@ function deleteTask(id) {
         );
 
         return;
+
     }
 
 
@@ -2820,6 +3452,7 @@ function deleteTask(id) {
         );
 
         return;
+
     }
 
 
@@ -2828,7 +3461,9 @@ function deleteTask(id) {
             "Delete this task permanently?"
         )
     ) {
+
         return;
+
     }
 
 
@@ -2836,48 +3471,180 @@ function deleteTask(id) {
         "tasks/" + id
     )
     .remove()
-    .then(() => {
+    .catch(
+        error => {
 
-        console.log(
-            "Task deleted:",
-            id
-        );
+            alert(
+                "Couldn't delete the task: " +
+                error.message
+            );
 
-    })
-    .catch(error => {
-
-        console.error(
-            "Delete failed:",
-            error
-        );
-
-
-        alert(
-            "Couldn't delete the task: " +
-            error.message
-        );
-
-    });
+        }
+    );
 
 }
 
+
+/* =====================================================
+   DATE FUNCTIONS
+===================================================== */
+
+function formatTaskDate(
+    dateString
+) {
+
+    const date =
+        new Date(
+            dateString +
+            "T00:00:00"
+        );
+
+
+    return date.toLocaleDateString(
+        [],
+        {
+
+            month:
+                "long",
+
+            day:
+                "numeric",
+
+            year:
+                "numeric"
+
+        }
+    );
+
+}
+
+
+function getTodayString() {
+
+    const date =
+        new Date();
+
+
+    const year =
+        date.getFullYear();
+
+
+    const month =
+        String(
+            date.getMonth() + 1
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            date.getDate()
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day
+    );
+
+}
+
+
+function getDateOffset(
+    days
+) {
+
+    const date =
+        new Date();
+
+
+    date.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    date.setDate(
+        date.getDate() +
+        days
+    );
+
+
+    const year =
+        date.getFullYear();
+
+
+    const month =
+        String(
+            date.getMonth() + 1
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            date.getDate()
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day
+    );
+
+}
+
+
+function isOverdue(
+    dateString
+) {
+
+    return (
+        dateString <
+        getTodayString()
+    );
+
+}
 
 
 /* =====================================================
    CHAT
 ===================================================== */
 
-db.ref("chat").on(
-    "value",
-    snapshot => {
+db.ref("chat")
+    .on(
+        "value",
+        snapshot => {
 
-        renderMessages(
-            snapshot.val() || {}
-        );
+            renderMessages(
+                snapshot.val() ||
+                {}
+            );
 
-    }
-);
-
+        }
+    );
 
 
 function renderMessages(
@@ -2901,8 +3668,14 @@ function renderMessages(
 
     entries.sort(
         (a, b) =>
-            (a[1].timestamp || 0) -
-            (b[1].timestamp || 0)
+            (
+                a[1].timestamp ||
+                0
+            ) -
+            (
+                b[1].timestamp ||
+                0
+            )
     );
 
 
@@ -2927,11 +3700,13 @@ function renderMessages(
                 .toLocaleTimeString(
                     [],
                     {
+
                         hour:
                             "2-digit",
 
                         minute:
                             "2-digit"
+
                     }
                 );
 
@@ -3001,11 +3776,6 @@ function renderMessages(
 }
 
 
-
-/* =====================================================
-   SEND MESSAGE
-===================================================== */
-
 function sendMessage() {
 
     const input =
@@ -3037,27 +3807,684 @@ function sendMessage() {
                 Date.now()
 
         })
-        .then(() => {
+        .then(
+            () => {
 
-            input.value = "";
+                input.value =
+                    "";
 
-        })
-        .catch(error => {
-
-            console.error(
-                error
-            );
-
-
-            alert(
-                "Couldn't send message: " +
-                error.message
-            );
-
-        });
+            }
+        );
 
 }
 
+
+/* =====================================================
+   AI ASSISTANT
+===================================================== */
+
+async function askAI() {
+
+    const input =
+        document.getElementById(
+            "aiInput"
+        );
+
+
+    const question =
+        input.value.trim();
+
+
+    if (!question) {
+        return;
+    }
+
+
+    addAIMessage(
+        question,
+        "user"
+    );
+
+
+    input.value =
+        "";
+
+
+    const [
+        notesSnap,
+        tasksSnap
+    ] =
+        await Promise.all([
+
+            db.ref("notes")
+                .once("value"),
+
+            db.ref("tasks")
+                .once("value")
+
+        ]);
+
+
+    const notes =
+        notesSnap.val() ||
+        {};
+
+
+    const tasks =
+        tasksSnap.val() ||
+        {};
+
+
+    const answer =
+        makeSmartAnswer(
+            question,
+            notes,
+            tasks
+        );
+
+
+    setTimeout(
+        () => {
+
+            addAIMessage(
+                answer,
+                "bot"
+            );
+
+        },
+        250
+    );
+
+}
+
+
+function addAIMessage(
+    text,
+    type
+) {
+
+    const box =
+        document.getElementById(
+            "aiMessages"
+        );
+
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.className =
+        "ai-message " +
+        type;
+
+
+    if (type === "bot") {
+
+        const label =
+            document.createElement(
+                "div"
+            );
+
+
+        label.className =
+            "ai-label";
+
+
+        label.textContent =
+            "🤖 BSN 2A Assistant";
+
+
+        div.appendChild(
+            label
+        );
+
+
+        const content =
+            document.createElement(
+                "div"
+            );
+
+
+        content.textContent =
+            text;
+
+
+        div.appendChild(
+            content
+        );
+
+
+    } else {
+
+        div.textContent =
+            text;
+
+    }
+
+
+    box.appendChild(
+        div
+    );
+
+
+    box.scrollTop =
+        box.scrollHeight;
+
+}
+
+
+/* =====================================================
+   SMART AI
+===================================================== */
+
+function makeSmartAnswer(
+    question,
+    notes,
+    tasks
+) {
+
+    const q =
+        question.toLowerCase();
+
+
+    const taskList =
+        Object.values(
+            tasks
+        );
+
+
+    const noteList =
+        Object.values(
+            notes
+        );
+
+
+    /* TOMORROW */
+
+    if (
+        q.includes("tomorrow") ||
+        q.includes("due tomorrow")
+    ) {
+
+        return findTasksForDate(
+            taskList,
+            getDateOffset(1),
+            "tomorrow"
+        );
+
+    }
+
+
+    /* TODAY */
+
+    if (
+        q.includes("today") ||
+        q.includes("due today")
+    ) {
+
+        return findTasksForDate(
+            taskList,
+            getTodayString(),
+            "today"
+        );
+
+    }
+
+
+    /* OVERDUE */
+
+    if (
+        q.includes("overdue") ||
+        q.includes("late")
+    ) {
+
+        const overdue =
+            taskList.filter(
+                task =>
+                    !task.done &&
+                    task.dueDate &&
+                    task.dueDate <
+                    getTodayString()
+            );
+
+
+        if (!overdue.length) {
+
+            return (
+                "🎉 You don't have any overdue tasks!"
+            );
+
+        }
+
+
+        return (
+            "⚠️ Overdue tasks:\n\n" +
+
+            overdue
+                .map(
+                    (task, i) =>
+
+                        `${i + 1}. ` +
+                        `${task.text} ` +
+                        `— ${formatTaskDate(task.dueDate)}`
+                )
+                .join("\n")
+        );
+
+    }
+
+
+    /* UNFINISHED */
+
+    if (
+        q.includes("unfinished") ||
+        q.includes("not finished") ||
+        q.includes("pending") ||
+        q.includes("incomplete")
+    ) {
+
+        const unfinished =
+            taskList.filter(
+                task =>
+                    !task.done
+            );
+
+
+        if (!unfinished.length) {
+
+            return (
+                "🎉 You don't have any unfinished tasks!"
+            );
+
+        }
+
+
+        return (
+            "You have " +
+            unfinished.length +
+            " unfinished task(s):\n\n" +
+
+            unfinished
+                .map(
+                    (task, i) => {
+
+                        let line =
+                            `${i + 1}. ${task.text}`;
+
+                        if (
+                            task.dueDate
+                        ) {
+
+                            line +=
+                                ` — Due ${formatTaskDate(task.dueDate)}`;
+
+                        }
+
+                        return line;
+
+                    }
+                )
+                .join("\n")
+        );
+
+    }
+
+
+    /* STUDY */
+
+    if (
+        q.includes("study") ||
+        q.includes("review") ||
+        q.includes("revise")
+    ) {
+
+        const studyNotes =
+            noteList.filter(
+                note => {
+
+                    const text =
+                        (
+                            (
+                                note.title ||
+                                ""
+                            ) +
+                            " " +
+                            (
+                                note.content ||
+                                ""
+                            )
+                        )
+                        .toLowerCase();
+
+
+                    return (
+
+                        text.includes(
+                            "study"
+                        ) ||
+
+                        text.includes(
+                            "review"
+                        ) ||
+
+                        text.includes(
+                            "exam"
+                        ) ||
+
+                        text.includes(
+                            "quiz"
+                        ) ||
+
+                        text.includes(
+                            "test"
+                        )
+
+                    );
+
+                }
+            );
+
+
+        if (!studyNotes.length) {
+
+            return (
+                "I couldn't find notes specifically related to studying yet."
+            );
+
+        }
+
+
+        return (
+            "📖 These notes look useful for studying:\n\n" +
+
+            studyNotes
+                .map(
+                    (note, i) =>
+                        `${i + 1}. ${note.title}`
+                )
+                .join("\n")
+        );
+
+    }
+
+
+    /* NOTES */
+
+    if (
+        q.includes("notes") ||
+        q.includes("note")
+    ) {
+
+        if (!noteList.length) {
+
+            return (
+                "There are no notes yet."
+            );
+
+        }
+
+
+        return (
+            "📚 You currently have " +
+            noteList.length +
+            " note(s):\n\n" +
+
+            noteList
+                .map(
+                    (note, i) =>
+                        `${i + 1}. ${note.title}`
+                )
+                .join("\n")
+        );
+
+    }
+
+
+    /* THIS WEEK */
+
+    if (
+        q.includes("this week") ||
+        q.includes("coming week") ||
+        q.includes("upcoming")
+    ) {
+
+        return getWeekTasks(
+            taskList
+        );
+
+    }
+
+
+    /* EVERYTHING */
+
+    if (
+        q.includes("everything") ||
+        q.includes("all tasks")
+    ) {
+
+        const unfinished =
+            taskList.filter(
+                task =>
+                    !task.done
+            );
+
+
+        let response =
+            "📋 Here's what I found:\n\n";
+
+
+        response +=
+            "📚 Notes: " +
+            noteList.length +
+            "\n";
+
+
+        response +=
+            "☑️ Unfinished tasks: " +
+            unfinished.length +
+            "\n";
+
+
+        if (unfinished.length) {
+
+            response +=
+                "\nTasks:\n" +
+
+                unfinished
+                    .map(
+                        (task, i) => {
+
+                            let line =
+                                `${i + 1}. ${task.text}`;
+
+                            if (
+                                task.dueDate
+                            ) {
+
+                                line +=
+                                    ` — ${formatTaskDate(task.dueDate)}`;
+
+                            }
+
+                            return line;
+
+                        }
+                    )
+                    .join("\n");
+
+        }
+
+
+        return response;
+
+    }
+
+
+    /* DEFAULT */
+
+    return (
+        "🤖 I can search your BSN 2A notes and tasks.\n\n" +
+
+        "Try asking:\n\n" +
+
+        "• What's due tomorrow?\n" +
+
+        "• What's due today?\n" +
+
+        "• What is overdue?\n" +
+
+        "• What do I have this week?\n" +
+
+        "• What tasks are unfinished?\n" +
+
+        "• What should I study?\n" +
+
+        "• What notes do we have?"
+    );
+
+}
+
+
+/* =====================================================
+   FIND TASKS FOR DATE
+===================================================== */
+
+function findTasksForDate(
+    tasks,
+    targetDate,
+    label
+) {
+
+    const matching =
+        tasks.filter(
+            task =>
+                !task.done &&
+                task.dueDate ===
+                targetDate
+        );
+
+
+    if (!matching.length) {
+
+        return (
+            `🎉 You have no unfinished tasks due ${label}.`
+        );
+
+    }
+
+
+    return (
+        `📅 Tasks due ${label}:\n\n` +
+
+        matching
+            .map(
+                (task, i) =>
+                    `${i + 1}. ${task.text}`
+            )
+            .join("\n") +
+
+        `\n\nTotal: ${matching.length}`
+    );
+
+}
+
+
+/* =====================================================
+   THIS WEEK
+===================================================== */
+
+function getWeekTasks(
+    tasks
+) {
+
+    const today =
+        new Date();
+
+
+    today.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    const weekEnd =
+        new Date(
+            today
+        );
+
+
+    weekEnd.setDate(
+        weekEnd.getDate() +
+        7
+    );
+
+
+    const matching =
+        tasks.filter(
+            task => {
+
+                if (
+                    task.done ||
+                    !task.dueDate
+                ) {
+
+                    return false;
+
+                }
+
+
+                const date =
+                    new Date(
+                        task.dueDate +
+                        "T00:00:00"
+                    );
+
+
+                return (
+                    date >= today &&
+                    date <= weekEnd
+                );
+
+            }
+        );
+
+
+    if (!matching.length) {
+
+        return (
+            "🎉 You have no unfinished tasks with due dates in the next 7 days."
+        );
+
+    }
+
+
+    matching.sort(
+        (a, b) =>
+            a.dueDate.localeCompare(
+                b.dueDate
+            )
+    );
+
+
+    return (
+        "📅 Upcoming tasks:\n\n" +
+
+        matching
+            .map(
+                (task, i) =>
+
+                    `${i + 1}. ` +
+                    `${task.text}` +
+                    ` — ${formatTaskDate(task.dueDate)}`
+            )
+            .join("\n")
+    );
+
+}
 
 
 /* =====================================================
@@ -3105,4 +4532,5 @@ function escapeHTML(
 </script>
 
 </body>
+
 </html>
