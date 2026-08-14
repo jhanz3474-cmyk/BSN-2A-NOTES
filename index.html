@@ -1,14 +1,129 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>BSN 2A Notes</title>
+    <title>Seedling - BSN 2A Notes</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Georgia, serif;
+            background: #f8f6f1;
+            color: #302b25;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 220px;
+            height: 100vh;
+            background: #f1ece2;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        .menu {
+            padding: 12px;
+            margin: 5px 0;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .menu:hover {
+            background: #e2d9cb;
+        }
+
+        .active {
+            background: #e2d9cb;
+            color: #328b6d;
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 45px;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        .notes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            max-width: 900px;
+        }
+
+        .note {
+            background: #f4eee4;
+            border: 1px solid #ddd4c6;
+            border-radius: 14px;
+            padding: 25px;
+            min-height: 120px;
+        }
+
+        .note h2 {
+            margin-top: 0;
+        }
+
+        .note p {
+            color: #756c63;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>BSN 2A Notes</h1>
+    <div class="sidebar">
 
-    <p>Welcome to our class notes!</p>
+        <div class="logo">
+            🌱 Seedling
+        </div>
+
+        <div class="menu active">
+            📝 Notes
+        </div>
+
+        <div class="menu">
+            ☑ Tasks
+        </div>
+
+        <div class="menu">
+            💬 Chat
+        </div>
+
+    </div>
+
+
+    <div class="main">
+
+        <h1>Notes</h1>
+
+        <div class="notes">
+
+            <div class="note">
+                <h2>Welcome</h2>
+                <p>
+                    This is the BSN 2A notes page.
+                </p>
+            </div>
+
+            <div class="note">
+                <h2>Class Notes</h2>
+                <p>
+                    Your notes will go here.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
 
 </body>
 </html>
