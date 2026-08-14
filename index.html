@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>BSN 2A Notes</title>
 
 <style>
@@ -16,14 +15,12 @@
 :root {
     --green: #245c43;
     --green2: #3d7a5b;
-    --dark-green: #173f2d;
     --light-green: #e7f0e8;
     --cream: #f6f2e9;
     --white: #ffffff;
     --text: #1e2b25;
     --muted: #718078;
     --danger: #c94b4b;
-    --border: #e3e0d8;
     --shadow: 0 5px 20px rgba(30, 50, 40, 0.10);
 }
 
@@ -34,9 +31,7 @@ body {
     min-height: 100vh;
 }
 
-/* =========================================================
-   SIDEBAR
-========================================================= */
+/* SIDEBAR */
 
 .sidebar {
     position: fixed;
@@ -65,9 +60,9 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 24px;
-    line-height: 1.05;
+    font-size: 25px;
     font-weight: bold;
+    line-height: 1.1;
     background: rgba(255,255,255,0.08);
 }
 
@@ -122,26 +117,7 @@ body {
     margin-top: 4px;
 }
 
-.active-users {
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,.15);
-}
-
-.active-users-title {
-    font-size: 11px;
-    opacity: .75;
-    margin-bottom: 5px;
-}
-
-#activeUsersSmall {
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-/* =========================================================
-   MAIN
-========================================================= */
+/* MAIN */
 
 .main {
     margin-left: 240px;
@@ -162,7 +138,7 @@ body {
     border-radius: 14px;
     padding: 13px 18px;
     width: min(600px, 100%);
-    border: 1px solid var(--border);
+    border: 1px solid #e3e0d8;
     outline: none;
     font-size: 15px;
 }
@@ -195,14 +171,7 @@ body {
     background: var(--danger);
 }
 
-.btn:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-}
-
-/* =========================================================
-   HERO
-========================================================= */
+/* HERO */
 
 .hero {
     background: linear-gradient(110deg, #e4efdc, #f4f2df);
@@ -215,19 +184,17 @@ body {
 .hero h2 {
     font-family: Georgia, serif;
     font-size: clamp(30px, 4vw, 48px);
-    color: var(--dark-green);
+    color: #173f2d;
 }
 
 .hero p {
     margin-top: 10px;
-    max-width: 900px;
+    max-width: 800px;
     line-height: 1.6;
     color: #526158;
 }
 
-/* =========================================================
-   SECTIONS
-========================================================= */
+/* SECTIONS */
 
 .section {
     display: none;
@@ -249,9 +216,7 @@ body {
     font-family: Georgia, serif;
 }
 
-/* =========================================================
-   CARDS / NOTES
-========================================================= */
+/* CARDS */
 
 .cards {
     display: grid;
@@ -267,10 +232,7 @@ body {
     border: 1px solid #e9e6df;
     transition: .2s;
     cursor: pointer;
-
-    /* IMPORTANT FIX */
     min-width: 0;
-    width: 100%;
 }
 
 .card:hover {
@@ -280,29 +242,16 @@ body {
 .card h3 {
     font-family: Georgia, serif;
     font-size: 22px;
-    margin-bottom: 12px;
-    color: var(--dark-green);
-
-    /* IMPORTANT FIX */
-    display: block;
-    width: 100%;
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    margin-bottom: 10px;
+    color: #173f2d;
 }
 
 .card-text {
     width: 100%;
     display: block;
-
-    /* IMPORTANT FIX FOR WEIRD SPACING */
-    margin: 0;
-    padding: 0;
-
     white-space: pre-wrap;
-    word-wrap: break-word;
+    word-break: normal;
     overflow-wrap: anywhere;
-    word-break: break-word;
-
     line-height: 1.65;
     color: #526158;
 }
@@ -317,8 +266,6 @@ body {
     display: flex;
     gap: 7px;
     margin-top: 16px;
-    position: relative;
-    z-index: 5;
 }
 
 .small-btn {
@@ -335,9 +282,7 @@ body {
     color: var(--danger);
 }
 
-/* =========================================================
-   TASKS
-========================================================= */
+/* TASKS */
 
 .task {
     display: flex;
@@ -354,6 +299,7 @@ body {
     width: 22px;
     height: 22px;
     margin-top: 2px;
+    cursor: pointer;
 }
 
 .task-info {
@@ -363,7 +309,7 @@ body {
 
 .task-title {
     font-weight: bold;
-    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .task-due {
@@ -376,9 +322,8 @@ body {
     margin-top: 8px;
     color: #65726b;
     white-space: pre-wrap;
-    overflow-wrap: anywhere;
     word-break: break-word;
-    line-height: 1.55;
+    line-height: 1.5;
 }
 
 .completed .task-title {
@@ -386,15 +331,7 @@ body {
     opacity: .55;
 }
 
-.task-actions {
-    display: flex;
-    gap: 7px;
-    margin-top: 12px;
-}
-
-/* =========================================================
-   MODAL
-========================================================= */
+/* MODAL */
 
 .modal-bg {
     position: fixed;
@@ -450,16 +387,14 @@ body {
     gap: 10px;
 }
 
-/* =========================================================
-   CHAT
-========================================================= */
+/* AI CHAT */
 
 .chat-box {
     background: white;
     border-radius: 18px;
     box-shadow: var(--shadow);
     padding: 20px;
-    max-width: 1000px;
+    max-width: 950px;
 }
 
 .chat-messages {
@@ -476,6 +411,7 @@ body {
     max-width: 85%;
     line-height: 1.5;
     white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .message.user {
@@ -498,50 +434,84 @@ body {
     padding: 13px;
     border-radius: 10px;
     border: 1px solid #ddd;
+    outline: none;
 }
 
-/* =========================================================
-   ACTIVE USERS
-========================================================= */
+/* CLASS CHAT */
 
-.people-box {
+.class-chat-box {
     background: white;
     border-radius: 18px;
     box-shadow: var(--shadow);
-    padding: 22px;
+    padding: 20px;
+    max-width: 950px;
 }
 
-.people-count {
-    font-size: 30px;
+.class-chat-messages {
+    height: 500px;
+    overflow-y: auto;
+    padding: 15px;
+    border-radius: 14px;
+    background: #faf9f5;
+}
+
+.class-message {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 14px;
+    max-width: 80%;
+}
+
+.class-message.mine {
+    margin-left: auto;
+    align-items: flex-end;
+}
+
+.class-message.other {
+    align-items: flex-start;
+}
+
+.class-message-name {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
     font-weight: bold;
-    color: var(--green);
-    margin-bottom: 15px;
 }
 
-.people-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 10px;
+.class-message-text {
+    background: #f1eee6;
+    padding: 10px 14px;
+    border-radius: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.45;
 }
 
-.person {
-    padding: 12px;
+.class-message.mine .class-message-text {
     background: var(--light-green);
+}
+
+.class-message-time {
+    font-size: 10px;
+    color: #8a958e;
+    margin-top: 3px;
+}
+
+.class-chat-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.class-chat-input input {
+    flex: 1;
+    padding: 13px;
     border-radius: 10px;
+    border: 1px solid #ddd;
+    outline: none;
 }
 
-.person-dot {
-    display: inline-block;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #4caf50;
-    margin-right: 6px;
-}
-
-/* =========================================================
-   LOGIN
-========================================================= */
+/* LOGIN */
 
 .login-screen {
     position: fixed;
@@ -585,9 +555,7 @@ body {
     width: 100%;
 }
 
-/* =========================================================
-   EMPTY
-========================================================= */
+/* EMPTY */
 
 .empty {
     background: white;
@@ -597,9 +565,7 @@ body {
     color: var(--muted);
 }
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* RESPONSIVE */
 
 @media(max-width: 800px) {
 
@@ -641,16 +607,8 @@ body {
         align-items: stretch;
     }
 
-    .top-actions {
-        width: 100%;
-    }
-
-    .top-actions button {
-        flex: 1;
-    }
-
-    .chat-input {
-        flex-direction: column;
+    .class-chat-messages {
+        height: 420px;
     }
 }
 </style>
@@ -658,10 +616,7 @@ body {
 
 <body>
 
-<!-- =========================================================
-     LOGIN
-========================================================= -->
-
+<!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
 
     <div class="login-box">
@@ -680,10 +635,12 @@ body {
             id="usernameInput"
             placeholder="Enter your username"
             autocomplete="off"
-            onkeydown="if(event.key==='Enter') enterSite()"
         >
 
-        <button class="btn full" onclick="enterSite()">
+        <button
+            class="btn full"
+            onclick="enterSite()"
+        >
             Enter Website
         </button>
 
@@ -692,10 +649,7 @@ body {
 </div>
 
 
-<!-- =========================================================
-     SIDEBAR
-========================================================= -->
-
+<!-- SIDEBAR -->
 <aside class="sidebar">
 
     <div class="logo">
@@ -715,27 +669,40 @@ body {
 
     <nav class="nav">
 
-        <button class="active" onclick="showSection('notes', this)">
+        <button
+            class="active"
+            onclick="showSection('notes', this)"
+        >
             📝 <span>Notes</span>
         </button>
 
-        <button onclick="showSection('tasks', this)">
+        <button
+            onclick="showSection('tasks', this)"
+        >
             ✅ <span>Tasks</span>
         </button>
 
-        <button onclick="showSection('chat', this)">
+        <button
+            onclick="showSection('chat', this)"
+        >
             🤖 <span>AI Assistant</span>
         </button>
 
-        <button onclick="showSection('people', this)">
-            👥 <span>Active People</span>
+        <button
+            onclick="showSection('classChat', this)"
+        >
+            💬 <span>Class Chat</span>
         </button>
 
-        <button onclick="showSection('about', this)">
+        <button
+            onclick="showSection('about', this)"
+        >
             ℹ️ <span>About</span>
         </button>
 
-        <button onclick="adminLogin()">
+        <button
+            onclick="adminLogin()"
+        >
             🔒 <span id="adminButtonText">Admin</span>
         </button>
 
@@ -744,22 +711,12 @@ body {
 
     <div class="user-box">
 
-        👤 <b id="currentUser">Guest</b>
+        👤 <b id="currentUser">
+            Guest
+        </b>
 
         <div id="adminStatus">
             Student mode
-        </div>
-
-        <div class="active-users">
-
-            <div class="active-users-title">
-                🟢 ACTIVE NOW
-            </div>
-
-            <div id="activeUsersSmall">
-                0 people
-            </div>
-
         </div>
 
     </div>
@@ -767,10 +724,7 @@ body {
 </aside>
 
 
-<!-- =========================================================
-     MAIN
-========================================================= -->
-
+<!-- MAIN -->
 <main class="main">
 
     <div class="topbar">
@@ -807,11 +761,12 @@ body {
     </div>
 
 
-    <!-- =====================================================
-         NOTES
-    ====================================================== -->
+    <!-- NOTES -->
 
-    <section class="section active" id="notes">
+    <section
+        class="section active"
+        id="notes"
+    >
 
         <div class="hero">
 
@@ -840,16 +795,20 @@ body {
         </div>
 
 
-        <div class="cards" id="notesContainer"></div>
+        <div
+            class="cards"
+            id="notesContainer"
+        ></div>
 
     </section>
 
 
-    <!-- =====================================================
-         TASKS
-    ====================================================== -->
+    <!-- TASKS -->
 
-    <section class="section" id="tasks">
+    <section
+        class="section"
+        id="tasks"
+    >
 
         <div class="section-title">
 
@@ -868,16 +827,20 @@ body {
 
         </div>
 
-        <div id="tasksContainer"></div>
+
+        <div
+            id="tasksContainer"
+        ></div>
 
     </section>
 
 
-    <!-- =====================================================
-         AI
-    ====================================================== -->
+    <!-- AI ASSISTANT -->
 
-    <section class="section" id="chat">
+    <section
+        class="section"
+        id="chat"
+    >
 
         <div class="section-title">
 
@@ -890,7 +853,10 @@ body {
 
         <div class="chat-box">
 
-            <div class="chat-messages" id="chatMessages">
+            <div
+                class="chat-messages"
+                id="chatMessages"
+            >
 
                 <div class="message ai">
 
@@ -902,7 +868,6 @@ Try asking:
 • What tasks do I have?
 • Show my notes about NCM 105.
 • What's coming up?
-• What do I have this week?
 
                 </div>
 
@@ -931,34 +896,56 @@ Try asking:
     </section>
 
 
-    <!-- =====================================================
-         PEOPLE
-    ====================================================== -->
+    <!-- CLASS CHAT -->
 
-    <section class="section" id="people">
+    <section
+        class="section"
+        id="classChat"
+    >
 
         <div class="section-title">
 
             <h2>
-                👥 Active People
+                💬 Class Chat
             </h2>
+
+            <span>
+                Everyone can chat here
+            </span>
 
         </div>
 
 
-        <div class="people-box">
+        <div class="class-chat-box">
 
             <div
-                class="people-count"
-                id="activePeopleCount"
+                class="class-chat-messages"
+                id="classChatMessages"
             >
-                0
+
+                <div class="empty">
+                    Loading chat...
+                </div>
+
             </div>
 
-            <div
-                class="people-list"
-                id="activePeopleList"
-            >
+
+            <div class="class-chat-input">
+
+                <input
+                    id="classChatInput"
+                    placeholder="Type a message..."
+                    autocomplete="off"
+                    onkeydown="if(event.key === 'Enter') sendClassMessage()"
+                >
+
+                <button
+                    class="btn"
+                    onclick="sendClassMessage()"
+                >
+                    Send
+                </button>
+
             </div>
 
         </div>
@@ -966,11 +953,12 @@ Try asking:
     </section>
 
 
-    <!-- =====================================================
-         ABOUT
-    ====================================================== -->
+    <!-- ABOUT -->
 
-    <section class="section" id="about">
+    <section
+        class="section"
+        id="about"
+    >
 
         <div class="hero">
 
@@ -987,14 +975,8 @@ Try asking:
             <br>
 
             <p>
-                🔄 Data is synchronized through Firebase
-                Realtime Database.
-            </p>
-
-            <br>
-
-            <p>
-                👥 Active users are displayed in real time.
+                🔄 Notes, tasks and class chat are synchronized
+                through Firebase Realtime Database.
             </p>
 
         </div>
@@ -1004,11 +986,12 @@ Try asking:
 </main>
 
 
-<!-- =========================================================
-     NOTE MODAL
-========================================================= -->
+<!-- NOTE MODAL -->
 
-<div class="modal-bg" id="noteModal">
+<div
+    class="modal-bg"
+    id="noteModal"
+>
 
     <div class="modal">
 
@@ -1031,10 +1014,7 @@ Try asking:
         ></textarea>
 
 
-        <div
-            class="modal-actions"
-            id="noteModalActions"
-        >
+        <div class="modal-actions">
 
             <button
                 class="btn secondary"
@@ -1057,11 +1037,12 @@ Try asking:
 </div>
 
 
-<!-- =========================================================
-     TASK MODAL
-========================================================= -->
+<!-- TASK MODAL -->
 
-<div class="modal-bg" id="taskModal">
+<div
+    class="modal-bg"
+    id="taskModal"
+>
 
     <div class="modal">
 
@@ -1135,8 +1116,9 @@ import {
     update,
     remove,
     onValue,
-    onDisconnect,
-    serverTimestamp
+    query,
+    orderByChild,
+    limitToLast
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
@@ -1166,18 +1148,28 @@ const firebaseConfig = {
 
     measurementId:
         "G-WNTP9GZJ4B"
+
 };
 
 
-const app = initializeApp(firebaseConfig);
+const app =
+    initializeApp(firebaseConfig);
 
-const db = getDatabase(app);
 
-const notesRef = ref(db, "notes");
+const db =
+    getDatabase(app);
 
-const tasksRef = ref(db, "tasks");
 
-const presenceRef = ref(db, "presence");
+const notesRef =
+    ref(db, "notes");
+
+
+const tasksRef =
+    ref(db, "tasks");
+
+
+const chatRef =
+    ref(db, "chat");
 
 
 /* ============================================================
@@ -1188,15 +1180,11 @@ let notes = {};
 
 let tasks = {};
 
-let presence = {};
-
 let admin = false;
 
 let editingNoteId = null;
 
 let editingTaskId = null;
-
-let currentPresenceId = null;
 
 
 /* ============================================================
@@ -1205,11 +1193,12 @@ let currentPresenceId = null;
 
 window.enterSite = function() {
 
-    const input =
-        document.getElementById("usernameInput");
-
     const name =
-        input.value.trim();
+        document
+        .getElementById("usernameInput")
+        .value
+        .trim();
+
 
     if (!name) {
 
@@ -1218,20 +1207,22 @@ window.enterSite = function() {
         return;
     }
 
+
     localStorage.setItem(
         "bsnUsername",
         name
     );
 
-    document.getElementById(
-        "currentUser"
-    ).textContent = name;
 
-    document.getElementById(
-        "loginScreen"
-    ).style.display = "none";
+    document
+        .getElementById("currentUser")
+        .textContent = name;
 
-    setupPresence(name);
+
+    document
+        .getElementById("loginScreen")
+        .style.display = "none";
+
 };
 
 
@@ -1240,128 +1231,20 @@ function loadUsername() {
     const saved =
         localStorage.getItem("bsnUsername");
 
+
     if (saved) {
 
-        document.getElementById(
-            "currentUser"
-        ).textContent = saved;
-
-        document.getElementById(
-            "loginScreen"
-        ).style.display = "none";
-
-        setupPresence(saved);
-    }
-}
+        document
+            .getElementById("currentUser")
+            .textContent = saved;
 
 
-/* ============================================================
-   ACTIVE USER PRESENCE
-============================================================ */
-
-async function setupPresence(name) {
-
-    if (!name) return;
-
-    const userRef =
-        push(presenceRef);
-
-    currentPresenceId =
-        userRef.key;
-
-    const userData = {
-
-        name: name,
-
-        lastSeen: serverTimestamp()
-
-    };
-
-    try {
-
-        await set(
-            userRef,
-            userData
-        );
-
-        await onDisconnect(userRef).remove();
-
-    } catch (error) {
-
-        console.error(
-            "Presence error:",
-            error
-        );
-    }
-}
-
-
-onValue(
-    presenceRef,
-    snapshot => {
-
-        presence =
-            snapshot.val() || {};
-
-        renderActiveUsers();
+        document
+            .getElementById("loginScreen")
+            .style.display = "none";
 
     }
-);
 
-
-function renderActiveUsers() {
-
-    const people =
-        Object.values(presence);
-
-    const count =
-        people.length;
-
-
-    document.getElementById(
-        "activePeopleCount"
-    ).textContent = count;
-
-
-    document.getElementById(
-        "activeUsersSmall"
-    ).textContent =
-        count +
-        (count === 1 ? " person" : " people");
-
-
-    const list =
-        document.getElementById(
-            "activePeopleList"
-        );
-
-    list.innerHTML = "";
-
-
-    if (!people.length) {
-
-        list.innerHTML =
-            '<div class="empty">No active users.</div>';
-
-        return;
-    }
-
-
-    people.forEach(person => {
-
-        const div =
-            document.createElement("div");
-
-        div.className = "person";
-
-        div.innerHTML = `
-            <span class="person-dot"></span>
-            ${escapeHTML(person.name || "Unknown")}
-        `;
-
-        list.appendChild(div);
-
-    });
 }
 
 
@@ -1377,18 +1260,15 @@ window.adminLogin = function() {
 
         updateAdminUI();
 
-        alert(
-            "Admin mode disabled."
-        );
+        alert("Admin mode disabled.");
 
         return;
+
     }
 
 
     const password =
-        prompt(
-            "Enter admin password:"
-        );
+        prompt("Enter admin password:");
 
 
     if (
@@ -1400,16 +1280,14 @@ window.adminLogin = function() {
 
         updateAdminUI();
 
-        alert(
-            "Admin mode enabled 🔓"
-        );
+        alert("Admin mode enabled 🔓");
 
     } else {
 
-        alert(
-            "Wrong password."
-        );
+        alert("Wrong password.");
+
     }
+
 };
 
 
@@ -1420,20 +1298,24 @@ function updateAdminUI() {
             "addNoteButton"
         );
 
+
     const taskButton =
         document.getElementById(
             "addTaskButton"
         );
+
 
     const taskAddButton =
         document.getElementById(
             "taskAddButton"
         );
 
+
     const adminText =
         document.getElementById(
             "adminButtonText"
         );
+
 
     const status =
         document.getElementById(
@@ -1474,12 +1356,14 @@ function updateAdminUI() {
 
         status.textContent =
             "Student mode";
+
     }
 
 
     renderNotes();
 
     renderTasks();
+
 }
 
 
@@ -1501,15 +1385,9 @@ function(id, button) {
         });
 
 
-    const section =
-        document.getElementById(id);
-
-    if (section) {
-
-        section.classList.add(
-            "active"
-        );
-    }
+    document
+        .getElementById(id)
+        .classList.add("active");
 
 
     document
@@ -1530,11 +1408,12 @@ function(id, button) {
         );
 
     }
+
 };
 
 
 /* ============================================================
-   FIREBASE NOTES
+   NOTES FIREBASE
 ============================================================ */
 
 onValue(
@@ -1551,7 +1430,7 @@ onValue(
 
 
 /* ============================================================
-   FIREBASE TASKS
+   TASKS FIREBASE
 ============================================================ */
 
 onValue(
@@ -1578,12 +1457,15 @@ function renderNotes(search = "") {
             "notesContainer"
         );
 
+
     container.innerHTML = "";
+
 
     let count = 0;
 
 
-    Object.entries(notes)
+    Object
+        .entries(notes)
         .reverse()
         .forEach(([id, note]) => {
 
@@ -1591,8 +1473,10 @@ function renderNotes(search = "") {
                 note.title ||
                 "Untitled Note";
 
+
             const text =
-                note.text || "";
+                note.text ||
+                "";
 
 
             const combined =
@@ -1611,6 +1495,7 @@ function renderNotes(search = "") {
             ) {
 
                 return;
+
             }
 
 
@@ -1622,74 +1507,149 @@ function renderNotes(search = "") {
                     "div"
                 );
 
+
             card.className =
                 "card";
 
 
-            card.innerHTML = `
-
-                <h3>
-                    ${escapeHTML(title)}
-                </h3>
-
-                <div class="card-text">${escapeHTML(text)}</div>
-
-                <div class="card-date">
-                    ${
-                        note.author
-                        ?
-                        "Added by " +
-                        escapeHTML(
-                            note.author
-                        )
-                        :
-                        ""
-                    }
-                </div>
-
-                ${
-                    admin
-                    ?
-                    `
-                    <div class="card-buttons">
-
-                        <button
-                            class="small-btn"
-                            data-action="edit"
-                        >
-                            ✏️ Edit
-                        </button>
-
-                        <button
-                            class="small-btn delete"
-                            data-action="delete"
-                        >
-                            🗑️ Delete
-                        </button>
-
-                    </div>
-                    `
-                    :
-                    ""
-                }
-
-            `;
+            const titleElement =
+                document.createElement(
+                    "h3"
+                );
 
 
-            /* OPEN NOTE */
+            titleElement.textContent =
+                title;
+
+
+            const textElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            textElement.className =
+                "card-text";
+
+
+            textElement.textContent =
+                text;
+
+
+            const dateElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            dateElement.className =
+                "card-date";
+
+
+            if (note.author) {
+
+                dateElement.textContent =
+                    "Added by " +
+                    note.author;
+
+            }
+
+
+            card.appendChild(
+                titleElement
+            );
+
+
+            card.appendChild(
+                textElement
+            );
+
+
+            card.appendChild(
+                dateElement
+            );
+
+
+            if (admin) {
+
+                const buttons =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                buttons.className =
+                    "card-buttons";
+
+
+                const edit =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                edit.className =
+                    "small-btn";
+
+
+                edit.textContent =
+                    "✏️ Edit";
+
+
+                edit.onclick =
+                    function(event) {
+
+                        event.stopPropagation();
+
+                        editNote(id);
+
+                    };
+
+
+                const del =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                del.className =
+                    "small-btn delete";
+
+
+                del.textContent =
+                    "🗑️ Delete";
+
+
+                del.onclick =
+                    function(event) {
+
+                        event.stopPropagation();
+
+                        deleteNote(id);
+
+                    };
+
+
+                buttons.appendChild(
+                    edit
+                );
+
+
+                buttons.appendChild(
+                    del
+                );
+
+
+                card.appendChild(
+                    buttons
+                );
+
+            }
+
 
             card.addEventListener(
                 "click",
-                function(e) {
-
-                    if (
-                        e.target.closest(
-                            "button"
-                        )
-                    ) {
-
-                        return;
-                    }
+                function() {
 
                     openReadNote(id);
 
@@ -1697,58 +1657,16 @@ function renderNotes(search = "") {
             );
 
 
-            /* ADMIN EDIT */
-
-            const editButton =
-                card.querySelector(
-                    '[data-action="edit"]'
-                );
-
-            if (editButton) {
-
-                editButton.addEventListener(
-                    "click",
-                    function(e) {
-
-                        e.stopPropagation();
-
-                        editNote(id);
-
-                    }
-                );
-            }
-
-
-            /* ADMIN DELETE */
-
-            const deleteButton =
-                card.querySelector(
-                    '[data-action="delete"]'
-                );
-
-            if (deleteButton) {
-
-                deleteButton.addEventListener(
-                    "click",
-                    function(e) {
-
-                        e.stopPropagation();
-
-                        deleteNote(id);
-
-                    }
-                );
-            }
-
-
-            container.appendChild(card);
+            container.appendChild(
+                card
+            );
 
         });
 
 
-    document.getElementById(
-        "noteCount"
-    ).textContent =
+    document
+        .getElementById("noteCount")
+        .textContent =
         `${count} note${count === 1 ? "" : "s"}`;
 
 
@@ -1771,12 +1689,14 @@ function renderNotes(search = "") {
             </div>
 
         `;
+
     }
+
 }
 
 
 /* ============================================================
-   ADD NOTE
+   NOTE MODAL
 ============================================================ */
 
 window.openNoteModal =
@@ -1789,86 +1709,88 @@ function() {
         );
 
         return;
+
     }
 
 
     editingNoteId = null;
 
 
-    document.getElementById(
-        "noteModalTitle"
-    ).textContent =
+    document
+        .getElementById(
+            "noteModalTitle"
+        )
+        .textContent =
         "Add Note";
 
 
-    document.getElementById(
-        "noteTitle"
-    ).value = "";
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .value = "";
 
 
-    document.getElementById(
-        "noteText"
-    ).value = "";
+    document
+        .getElementById(
+            "noteText"
+        )
+        .value = "";
 
 
-    document.getElementById(
-        "noteTitle"
-    ).disabled = false;
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .disabled = false;
 
 
-    document.getElementById(
-        "noteText"
-    ).disabled = false;
+    document
+        .getElementById(
+            "noteText"
+        )
+        .disabled = false;
 
 
-    restoreNoteActions();
+    document
+        .querySelector(
+            "#noteModal .modal-actions"
+        )
+        .innerHTML = `
+
+            <button
+                class="btn secondary"
+                onclick="closeNoteModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="btn"
+                onclick="saveNote()"
+            >
+                Save Note
+            </button>
+
+        `;
 
 
-    document.getElementById(
-        "noteModal"
-    ).classList.add("show");
+    document
+        .getElementById("noteModal")
+        .classList.add("show");
+
 };
 
 
 window.closeNoteModal =
 function() {
 
-    document.getElementById(
-        "noteModal"
-    ).classList.remove("show");
-
-    restoreNoteActions();
+    document
+        .getElementById("noteModal")
+        .classList.remove("show");
 
 };
 
-
-function restoreNoteActions() {
-
-    document.getElementById(
-        "noteModalActions"
-    ).innerHTML = `
-
-        <button
-            class="btn secondary"
-            onclick="closeNoteModal()"
-        >
-            Cancel
-        </button>
-
-        <button
-            class="btn"
-            onclick="saveNote()"
-        >
-            Save Note
-        </button>
-
-    `;
-}
-
-
-/* ============================================================
-   SAVE NOTE
-============================================================ */
 
 window.saveNote =
 async function() {
@@ -1880,19 +1802,22 @@ async function() {
         );
 
         return;
+
     }
 
 
     const title =
-        document.getElementById(
-            "noteTitle"
-        ).value.trim();
+        document
+        .getElementById("noteTitle")
+        .value
+        .trim();
 
 
     const text =
-        document.getElementById(
-            "noteText"
-        ).value.trim();
+        document
+        .getElementById("noteText")
+        .value
+        .trim();
 
 
     if (!title) {
@@ -1902,6 +1827,7 @@ async function() {
         );
 
         return;
+
     }
 
 
@@ -1922,13 +1848,9 @@ async function() {
                     editingNoteId
                 ),
                 {
-
                     title,
-
                     text,
-
                     author
-
                 }
             );
 
@@ -1943,16 +1865,14 @@ async function() {
                 {
 
                     title,
-
                     text,
-
                     author,
-
                     createdAt:
                         Date.now()
 
                 }
             );
+
         }
 
 
@@ -1967,6 +1887,7 @@ async function() {
         );
 
     }
+
 };
 
 
@@ -1984,6 +1905,7 @@ function(id) {
         );
 
         return;
+
     }
 
 
@@ -1994,46 +1916,74 @@ function(id) {
     if (!note) return;
 
 
-    editingNoteId =
-        id;
+    editingNoteId = id;
 
 
-    document.getElementById(
-        "noteModalTitle"
-    ).textContent =
+    document
+        .getElementById(
+            "noteModalTitle"
+        )
+        .textContent =
         "Edit Note";
 
 
-    document.getElementById(
-        "noteTitle"
-    ).value =
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .value =
         note.title || "";
 
 
-    document.getElementById(
-        "noteText"
-    ).value =
+    document
+        .getElementById(
+            "noteText"
+        )
+        .value =
         note.text || "";
 
 
-    document.getElementById(
-        "noteTitle"
-    ).disabled =
-        false;
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .disabled = false;
 
 
-    document.getElementById(
-        "noteText"
-    ).disabled =
-        false;
+    document
+        .getElementById(
+            "noteText"
+        )
+        .disabled = false;
 
 
-    restoreNoteActions();
+    document
+        .querySelector(
+            "#noteModal .modal-actions"
+        )
+        .innerHTML = `
+
+            <button
+                class="btn secondary"
+                onclick="closeNoteModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="btn"
+                onclick="saveNote()"
+            >
+                Save Changes
+            </button>
+
+        `;
 
 
-    document.getElementById(
-        "noteModal"
-    ).classList.add("show");
+    document
+        .getElementById("noteModal")
+        .classList.add("show");
+
 };
 
 
@@ -2050,81 +2000,91 @@ function openReadNote(id) {
     if (!note) return;
 
 
-    editingNoteId =
-        null;
+    editingNoteId = null;
 
 
-    document.getElementById(
-        "noteModalTitle"
-    ).textContent =
+    document
+        .getElementById(
+            "noteModalTitle"
+        )
+        .textContent =
         note.title ||
         "Note";
 
 
-    document.getElementById(
-        "noteTitle"
-    ).value =
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .value =
         note.title || "";
 
 
-    document.getElementById(
-        "noteText"
-    ).value =
+    document
+        .getElementById(
+            "noteText"
+        )
+        .value =
         note.text || "";
 
 
-    document.getElementById(
-        "noteTitle"
-    ).disabled =
-        true;
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .disabled = true;
 
 
-    document.getElementById(
-        "noteText"
-    ).disabled =
-        true;
+    document
+        .getElementById(
+            "noteText"
+        )
+        .disabled = true;
 
 
-    document.getElementById(
-        "noteModalActions"
-    ).innerHTML = `
+    document
+        .querySelector(
+            "#noteModal .modal-actions"
+        )
+        .innerHTML = `
 
-        ${
-            admin
-            ?
-            `
             <button
-                class="btn secondary"
-                onclick="closeNoteModal()"
+                class="btn"
+                onclick="closeReadNote()"
             >
                 Close
             </button>
 
-            <button
-                class="btn"
-                onclick="editNote('${id}')"
-            >
-                ✏️ Edit
-            </button>
-            `
-            :
-            `
-            <button
-                class="btn"
-                onclick="closeNoteModal()"
-            >
-                Close
-            </button>
-            `
-        }
-
-    `;
+        `;
 
 
-    document.getElementById(
-        "noteModal"
-    ).classList.add("show");
+    document
+        .getElementById("noteModal")
+        .classList.add("show");
+
 }
+
+
+window.closeReadNote =
+function() {
+
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .disabled = false;
+
+
+    document
+        .getElementById(
+            "noteText"
+        )
+        .disabled = false;
+
+
+    closeNoteModal();
+
+};
 
 
 /* ============================================================
@@ -2141,6 +2101,7 @@ async function(id) {
         );
 
         return;
+
     }
 
 
@@ -2148,10 +2109,7 @@ async function(id) {
         !confirm(
             "Delete this note?"
         )
-    ) {
-
-        return;
-    }
+    ) return;
 
 
     try {
@@ -2170,7 +2128,9 @@ async function(id) {
         alert(
             "Could not delete note."
         );
+
     }
+
 };
 
 
@@ -2184,6 +2144,7 @@ function renderTasks(search = "") {
         document.getElementById(
             "tasksContainer"
         );
+
 
     container.innerHTML = "";
 
@@ -2203,15 +2164,16 @@ function renderTasks(search = "") {
         `;
 
         return;
+
     }
 
 
-    let visibleCount = 0;
+    let visibleTasks = 0;
 
 
     entries
         .sort(
-            (a,b) =>
+            (a, b) =>
                 (a[1].due || "")
                 .localeCompare(
                     b[1].due || ""
@@ -2236,10 +2198,11 @@ function renderTasks(search = "") {
                 ) {
 
                     return;
+
                 }
 
 
-                visibleCount++;
+                visibleTasks++;
 
 
                 const div =
@@ -2259,166 +2222,213 @@ function renderTasks(search = "") {
                     );
 
 
-                div.innerHTML = `
-
-                    <input
-                        class="task-check"
-                        type="checkbox"
-                        ${
-                            task.completed
-                            ?
-                            "checked"
-                            :
-                            ""
-                        }
-                    >
-
-                    <div class="task-info">
-
-                        <div class="task-title">
-                            ${escapeHTML(
-                                task.title ||
-                                "Untitled"
-                            )}
-                        </div>
-
-                        <div class="task-due">
-                            ${
-                                task.due
-                                ?
-                                "Due: " +
-                                formatDate(
-                                    task.due
-                                )
-                                :
-                                "No due date"
-                            }
-                        </div>
-
-                        ${
-                            task.description
-                            ?
-                            `
-                            <div class="task-description">
-                                ${escapeHTML(
-                                    task.description
-                                )}
-                            </div>
-                            `
-                            :
-                            ""
-                        }
-
-                        ${
-                            admin
-                            ?
-                            `
-                            <div class="task-actions">
-
-                                <button
-                                    class="small-btn"
-                                    data-action="edit"
-                                >
-                                    ✏️ Edit
-                                </button>
-
-                                <button
-                                    class="small-btn delete"
-                                    data-action="delete"
-                                >
-                                    🗑️ Delete
-                                </button>
-
-                            </div>
-                            `
-                            :
-                            ""
-                        }
-
-                    </div>
-
-                `;
-
-
-                /* TASK CHECKBOX */
-
                 const checkbox =
-                    div.querySelector(
-                        ".task-check"
+                    document.createElement(
+                        "input"
                     );
 
 
-                checkbox.addEventListener(
-                    "change",
+                checkbox.className =
+                    "task-check";
+
+
+                checkbox.type =
+                    "checkbox";
+
+
+                checkbox.checked =
+                    !!task.completed;
+
+
+                checkbox.onclick =
+                    function(event) {
+
+                        event.stopPropagation();
+
+                    };
+
+
+                checkbox.onchange =
                     function() {
-
-                        if (!admin) {
-
-                            checkbox.checked =
-                                !!task.completed;
-
-                            alert(
-                                "Admin access required to change tasks."
-                            );
-
-                            return;
-                        }
 
                         toggleTask(id);
 
-                    }
-                );
+                    };
 
 
-                /* EDIT */
-
-                const edit =
-                    div.querySelector(
-                        '[data-action="edit"]'
+                const info =
+                    document.createElement(
+                        "div"
                     );
 
 
-                if (edit) {
+                info.className =
+                    "task-info";
 
-                    edit.addEventListener(
-                        "click",
+
+                const title =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                title.className =
+                    "task-title";
+
+
+                title.textContent =
+                    task.title ||
+                    "Untitled";
+
+
+                const due =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                due.className =
+                    "task-due";
+
+
+                due.textContent =
+                    task.due
+                    ?
+                    "Due: " +
+                    formatDate(
+                        task.due
+                    )
+                    :
+                    "No due date";
+
+
+                info.appendChild(
+                    title
+                );
+
+
+                info.appendChild(
+                    due
+                );
+
+
+                if (
+                    task.description
+                ) {
+
+                    const description =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    description.className =
+                        "task-description";
+
+
+                    description.textContent =
+                        task.description;
+
+
+                    info.appendChild(
+                        description
+                    );
+
+                }
+
+
+                if (admin) {
+
+                    const buttons =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    buttons.className =
+                        "card-buttons";
+
+
+                    const edit =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    edit.className =
+                        "small-btn";
+
+
+                    edit.textContent =
+                        "✏️ Edit";
+
+
+                    edit.onclick =
                         function() {
 
                             editTask(id);
 
-                        }
-                    );
-                }
+                        };
 
 
-                /* DELETE */
-
-                const del =
-                    div.querySelector(
-                        '[data-action="delete"]'
-                    );
+                    const del =
+                        document.createElement(
+                            "button"
+                        );
 
 
-                if (del) {
+                    del.className =
+                        "small-btn delete";
 
-                    del.addEventListener(
-                        "click",
+
+                    del.textContent =
+                        "🗑️ Delete";
+
+
+                    del.onclick =
                         function() {
 
                             deleteTask(id);
 
-                        }
+                        };
+
+
+                    buttons.appendChild(
+                        edit
                     );
+
+
+                    buttons.appendChild(
+                        del
+                    );
+
+
+                    info.appendChild(
+                        buttons
+                    );
+
                 }
 
 
-                container.appendChild(div);
+                div.appendChild(
+                    checkbox
+                );
+
+
+                div.appendChild(
+                    info
+                );
+
+
+                container.appendChild(
+                    div
+                );
 
             }
         );
 
 
-    if (visibleCount === 0) {
+    if (!visibleTasks) {
 
         container.innerHTML = `
 
@@ -2427,12 +2437,14 @@ function renderTasks(search = "") {
             </div>
 
         `;
+
     }
+
 }
 
 
 /* ============================================================
-   ADD TASK
+   TASK MODAL
 ============================================================ */
 
 window.openTaskModal =
@@ -2445,50 +2457,55 @@ function() {
         );
 
         return;
+
     }
 
 
-    editingTaskId =
-        null;
+    editingTaskId = null;
 
 
-    document.getElementById(
-        "taskModalTitle"
-    ).textContent =
+    document
+        .getElementById(
+            "taskModalTitle"
+        )
+        .textContent =
         "Add Task";
 
 
-    document.getElementById(
-        "taskTitle"
-    ).value = "";
+    document
+        .getElementById(
+            "taskTitle"
+        )
+        .value = "";
 
 
-    document.getElementById(
-        "taskDue"
-    ).value = "";
+    document
+        .getElementById(
+            "taskDue"
+        )
+        .value = "";
 
 
-    document.getElementById(
-        "taskDescription"
-    ).value = "";
+    document
+        .getElementById(
+            "taskDescription"
+        )
+        .value = "";
 
 
-    document.getElementById(
-        "taskModal"
-    ).classList.add("show");
+    document
+        .getElementById("taskModal")
+        .classList.add("show");
+
 };
 
-
-/* ============================================================
-   CLOSE TASK
-============================================================ */
 
 window.closeTaskModal =
 function() {
 
-    document.getElementById(
-        "taskModal"
-    ).classList.remove("show");
+    document
+        .getElementById("taskModal")
+        .classList.remove("show");
 
 };
 
@@ -2507,25 +2524,34 @@ async function() {
         );
 
         return;
+
     }
 
 
     const title =
-        document.getElementById(
+        document
+        .getElementById(
             "taskTitle"
-        ).value.trim();
+        )
+        .value
+        .trim();
 
 
     const due =
-        document.getElementById(
+        document
+        .getElementById(
             "taskDue"
-        ).value;
+        )
+        .value;
 
 
     const description =
-        document.getElementById(
+        document
+        .getElementById(
             "taskDescription"
-        ).value.trim();
+        )
+        .value
+        .trim();
 
 
     if (!title) {
@@ -2535,6 +2561,7 @@ async function() {
         );
 
         return;
+
     }
 
 
@@ -2549,13 +2576,9 @@ async function() {
                     editingTaskId
                 ),
                 {
-
                     title,
-
                     due,
-
                     description
-
                 }
             );
 
@@ -2570,13 +2593,9 @@ async function() {
                 {
 
                     title,
-
                     due,
-
                     description,
-
                     completed: false,
-
                     createdAt:
                         Date.now()
 
@@ -2597,6 +2616,7 @@ async function() {
         );
 
     }
+
 };
 
 
@@ -2614,6 +2634,7 @@ function(id) {
         );
 
         return;
+
     }
 
 
@@ -2624,58 +2645,54 @@ function(id) {
     if (!task) return;
 
 
-    editingTaskId =
-        id;
+    editingTaskId = id;
 
 
-    document.getElementById(
-        "taskModalTitle"
-    ).textContent =
+    document
+        .getElementById(
+            "taskModalTitle"
+        )
+        .textContent =
         "Edit Task";
 
 
-    document.getElementById(
-        "taskTitle"
-    ).value =
+    document
+        .getElementById(
+            "taskTitle"
+        )
+        .value =
         task.title || "";
 
 
-    document.getElementById(
-        "taskDue"
-    ).value =
+    document
+        .getElementById(
+            "taskDue"
+        )
+        .value =
         task.due || "";
 
 
-    document.getElementById(
-        "taskDescription"
-    ).value =
+    document
+        .getElementById(
+            "taskDescription"
+        )
+        .value =
         task.description || "";
 
 
-    document.getElementById(
-        "taskModal"
-    ).classList.add("show");
+    document
+        .getElementById("taskModal")
+        .classList.add("show");
+
 };
 
 
 /* ============================================================
-   TOGGLE TASK
+   COMPLETE TASK
 ============================================================ */
 
 window.toggleTask =
 async function(id) {
-
-    if (!admin) {
-
-        alert(
-            "Admin access required."
-        );
-
-        renderTasks();
-
-        return;
-    }
-
 
     const task =
         tasks[id];
@@ -2692,10 +2709,8 @@ async function(id) {
                 "tasks/" + id
             ),
             {
-
                 completed:
                     !task.completed
-
             }
         );
 
@@ -2703,10 +2718,8 @@ async function(id) {
 
         console.error(error);
 
-        alert(
-            "Could not update task."
-        );
     }
+
 };
 
 
@@ -2724,6 +2737,7 @@ async function(id) {
         );
 
         return;
+
     }
 
 
@@ -2731,10 +2745,7 @@ async function(id) {
         !confirm(
             "Delete this task?"
         )
-    ) {
-
-        return;
-    }
+    ) return;
 
 
     try {
@@ -2753,7 +2764,9 @@ async function(id) {
         alert(
             "Could not delete task."
         );
+
     }
+
 };
 
 
@@ -2765,7 +2778,8 @@ window.searchEverything =
 function() {
 
     const query =
-        document.getElementById(
+        document
+        .getElementById(
             "searchInput"
         )
         .value
@@ -2775,6 +2789,7 @@ function() {
     renderNotes(query);
 
     renderTasks(query);
+
 };
 
 
@@ -2824,6 +2839,7 @@ function() {
         },
         250
     );
+
 };
 
 
@@ -2845,7 +2861,8 @@ function addChatMessage(
 
 
     message.className =
-        "message " + type;
+        "message " +
+        type;
 
 
     message.textContent =
@@ -2859,12 +2876,9 @@ function addChatMessage(
 
     container.scrollTop =
         container.scrollHeight;
+
 }
 
-
-/* ============================================================
-   AI LOGIC
-============================================================ */
 
 function generateAssistantAnswer(
     question
@@ -2873,8 +2887,6 @@ function generateAssistantAnswer(
     const q =
         question.toLowerCase();
 
-
-    /* TOMORROW */
 
     if (
         q.includes("tomorrow") ||
@@ -2891,167 +2903,40 @@ function generateAssistantAnswer(
 
 
         const date =
-            localDateString(
-                tomorrow
-            );
+            tomorrow
+            .toISOString()
+            .split("T")[0];
 
 
         const due =
             Object.values(tasks)
-                .filter(
-                    task =>
-                        task.due === date &&
-                        !task.completed
-                );
+            .filter(
+                task =>
+                    task.due === date &&
+                    !task.completed
+            );
 
 
         if (!due.length) {
 
-            return (
-                "🎉 You have no unfinished " +
-                "tasks due tomorrow."
-            );
+            return "🎉 You have no unfinished tasks due tomorrow.";
+
         }
 
 
         return (
             "📚 Due tomorrow:\n\n" +
             due
-                .map(
-                    task =>
-                        "• " +
-                        task.title
-                )
-                .join("\n")
+            .map(
+                task =>
+                    "• " +
+                    task.title
+            )
+            .join("\n")
         );
+
     }
 
-
-    /* TODAY */
-
-    if (
-        q.includes("today") ||
-        q.includes("due today")
-    ) {
-
-        const today =
-            localDateString(
-                new Date()
-            );
-
-
-        const due =
-            Object.values(tasks)
-                .filter(
-                    task =>
-                        task.due === today &&
-                        !task.completed
-                );
-
-
-        if (!due.length) {
-
-            return (
-                "🎉 You have no unfinished " +
-                "tasks due today."
-            );
-        }
-
-
-        return (
-            "📚 Due today:\n\n" +
-            due
-                .map(
-                    task =>
-                        "• " +
-                        task.title
-                )
-                .join("\n")
-        );
-    }
-
-
-    /* THIS WEEK */
-
-    if (
-        q.includes("this week") ||
-        q.includes("week")
-    ) {
-
-        const now =
-            new Date();
-
-
-        const end =
-            new Date();
-
-
-        end.setDate(
-            now.getDate() + 7
-        );
-
-
-        const list =
-            Object.values(tasks)
-                .filter(task => {
-
-                    if (
-                        !task.due ||
-                        task.completed
-                    ) {
-
-                        return false;
-                    }
-
-
-                    const d =
-                        new Date(
-                            task.due +
-                            "T00:00:00"
-                        );
-
-
-                    return (
-                        d >= now &&
-                        d <= end
-                    );
-
-                })
-                .sort(
-                    (a,b) =>
-                        a.due.localeCompare(
-                            b.due
-                        )
-                );
-
-
-        if (!list.length) {
-
-            return (
-                "🎉 You have no unfinished " +
-                "dated tasks for the next 7 days."
-            );
-        }
-
-
-        return (
-            "📅 Tasks this week:\n\n" +
-            list
-                .map(
-                    task =>
-                        "• " +
-                        task.title +
-                        " — " +
-                        formatDate(
-                            task.due
-                        )
-                )
-                .join("\n")
-        );
-    }
-
-
-    /* TASKS */
 
     if (
         q.includes("task") ||
@@ -3061,72 +2946,67 @@ function generateAssistantAnswer(
 
         const list =
             Object.values(tasks)
-                .filter(
-                    task =>
-                        !task.completed
-                );
+            .filter(
+                task =>
+                    !task.completed
+            );
 
 
         if (!list.length) {
 
-            return (
-                "🎉 You currently have " +
-                "no unfinished tasks."
-            );
+            return "🎉 You currently have no unfinished tasks.";
+
         }
 
 
         return (
             "📋 Your unfinished tasks:\n\n" +
             list
-                .map(task => {
+            .map(task => {
 
-                    return (
-                        "• " +
-                        task.title +
-                        (
+                return (
+                    "• " +
+                    task.title +
+                    (
+                        task.due
+                        ?
+                        " — " +
+                        formatDate(
                             task.due
-                            ?
-                            " — " +
-                            formatDate(
-                                task.due
-                            )
-                            :
-                            ""
                         )
-                    );
+                        :
+                        ""
+                    )
+                );
 
-                })
-                .join("\n")
+            })
+            .join("\n")
         );
+
     }
 
 
-    /* NOTES */
-
     const matchingNotes =
         Object.values(notes)
-            .filter(note => {
+        .filter(note => {
 
-                const combined =
-                    (
-                        (note.title || "") +
-                        " " +
-                        (note.text || "")
-                    ).toLowerCase();
+            const combined =
+                (
+                    (note.title || "") +
+                    " " +
+                    (note.text || "")
+                ).toLowerCase();
 
 
-                return q
-                    .split(/\s+/)
-                    .some(
-                        word =>
-                            word.length > 2 &&
-                            combined.includes(
-                                word
-                            )
-                    );
+            return q
+                .split(" ")
+                .some(
+                    word =>
+                        word.length > 2 &&
+                        combined.includes(word)
+                );
 
-            });
+        });
 
 
     if (
@@ -3135,32 +3015,27 @@ function generateAssistantAnswer(
         matchingNotes.length
     ) {
 
-        if (
-            !matchingNotes.length
-        ) {
+        if (!matchingNotes.length) {
 
-            return (
-                "🔎 I couldn't find a " +
-                "matching note."
-            );
+            return "🔎 I couldn't find a matching note.";
+
         }
 
 
         return (
             "📝 I found these notes:\n\n" +
             matchingNotes
-                .slice(0, 5)
-                .map(
-                    note =>
-                        "• " +
-                        note.title
-                )
-                .join("\n")
+            .slice(0, 5)
+            .map(
+                note =>
+                    "• " +
+                    note.title
+            )
+            .join("\n")
         );
+
     }
 
-
-    /* UPCOMING */
 
     if (
         q.includes("upcoming") ||
@@ -3170,135 +3045,338 @@ function generateAssistantAnswer(
 
         const upcoming =
             Object.values(tasks)
-                .filter(
-                    task =>
-                        !task.completed &&
-                        task.due
-                )
-                .sort(
-                    (a,b) =>
-                        a.due.localeCompare(
-                            b.due
-                        )
-                )
-                .slice(0, 5);
+            .filter(
+                task =>
+                    !task.completed &&
+                    task.due
+            )
+            .sort(
+                (a,b) =>
+                    a.due.localeCompare(
+                        b.due
+                    )
+            )
+            .slice(0, 5);
 
 
         if (!upcoming.length) {
 
-            return (
-                "You don't have any " +
-                "upcoming dated tasks."
-            );
+            return "You don't have any upcoming dated tasks.";
+
         }
 
 
         return (
             "📅 Upcoming:\n\n" +
             upcoming
-                .map(
-                    task =>
-                        "• " +
-                        task.title +
-                        " — " +
-                        formatDate(
-                            task.due
-                        )
-                )
-                .join("\n")
+            .map(
+                task =>
+                    "• " +
+                    task.title +
+                    " — " +
+                    formatDate(
+                        task.due
+                    )
+            )
+            .join("\n")
         );
-    }
 
-
-    /* ACTIVE USERS */
-
-    if (
-        q.includes("who") ||
-        q.includes("online") ||
-        q.includes("active")
-    ) {
-
-        const people =
-            Object.values(presence);
-
-
-        if (!people.length) {
-
-            return (
-                "👥 Nobody is currently " +
-                "shown as active."
-            );
-        }
-
-
-        return (
-            "🟢 Active people:\n\n" +
-            people
-                .map(
-                    person =>
-                        "• " +
-                        person.name
-                )
-                .join("\n")
-        );
     }
 
 
     return `
-🤖 I can help you check your BSN 2A information.
+🤖 I can help you check your class information.
 
 Try asking:
 
 • What is due tomorrow?
-• What is due today?
 • What tasks do I have?
-• What is due this week?
 • What is upcoming?
 • Show my notes.
 • Show notes about NCM 105.
-• Who is online?
     `.trim();
+
 }
 
 
 /* ============================================================
-   DATE HELPERS
+   NORMAL CLASS CHAT
 ============================================================ */
 
-function localDateString(
-    date
+const classChatQuery =
+    query(
+        chatRef,
+        orderByChild("createdAt"),
+        limitToLast(100)
+    );
+
+
+onValue(
+    classChatQuery,
+    snapshot => {
+
+        const container =
+            document.getElementById(
+                "classChatMessages"
+            );
+
+
+        if (!container) return;
+
+
+        container.innerHTML = "";
+
+
+        const messages =
+            snapshot.val() || {};
+
+
+        const entries =
+            Object.entries(
+                messages
+            );
+
+
+        if (!entries.length) {
+
+            container.innerHTML = `
+
+                <div class="empty">
+
+                    No messages yet.
+                    Be the first to say something! 👋
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        entries.forEach(
+            ([id, message]) => {
+
+                const username =
+                    message.username ||
+                    "Unknown";
+
+
+                const text =
+                    message.text ||
+                    "";
+
+
+                const currentUsername =
+                    localStorage.getItem(
+                        "bsnUsername"
+                    ) || "";
+
+
+                const wrapper =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                wrapper.className =
+                    "class-message " +
+                    (
+                        username ===
+                        currentUsername
+                        ?
+                        "mine"
+                        :
+                        "other"
+                    );
+
+
+                const name =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                name.className =
+                    "class-message-name";
+
+
+                name.textContent =
+                    username;
+
+
+                const messageText =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                messageText.className =
+                    "class-message-text";
+
+
+                messageText.textContent =
+                    text;
+
+
+                const time =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                time.className =
+                    "class-message-time";
+
+
+                time.textContent =
+                    message.createdAt
+                    ?
+                    formatChatTime(
+                        message.createdAt
+                    )
+                    :
+                    "";
+
+
+                wrapper.appendChild(
+                    name
+                );
+
+
+                wrapper.appendChild(
+                    messageText
+                );
+
+
+                wrapper.appendChild(
+                    time
+                );
+
+
+                container.appendChild(
+                    wrapper
+                );
+
+            }
+        );
+
+
+        container.scrollTop =
+            container.scrollHeight;
+
+    }
+);
+
+
+/* SEND CLASS MESSAGE */
+
+window.sendClassMessage =
+async function() {
+
+    const input =
+        document.getElementById(
+            "classChatInput"
+        );
+
+
+    const text =
+        input.value.trim();
+
+
+    const username =
+        localStorage.getItem(
+            "bsnUsername"
+        );
+
+
+    if (!username) {
+
+        alert(
+            "Please enter your username first."
+        );
+
+        return;
+
+    }
+
+
+    if (!text) return;
+
+
+    try {
+
+        const newMessage =
+            push(chatRef);
+
+
+        await set(
+            newMessage,
+            {
+
+                username:
+                    username,
+
+                text:
+                    text,
+
+                createdAt:
+                    Date.now()
+
+            }
+        );
+
+
+        input.value = "";
+
+        input.focus();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Could not send message."
+        );
+
+    }
+
+};
+
+
+/* CHAT TIME */
+
+function formatChatTime(
+    timestamp
 ) {
 
-    const year =
-        date.getFullYear();
-
-    const month =
-        String(
-            date.getMonth() + 1
-        ).padStart(2, "0");
-
-    const day =
-        String(
-            date.getDate()
-        ).padStart(2, "0");
+    const date =
+        new Date(timestamp);
 
 
-    return (
-        year +
-        "-" +
-        month +
-        "-" +
-        day
+    return date.toLocaleString(
+        undefined,
+        {
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+        }
     );
+
 }
 
+
+/* ============================================================
+   HELPERS
+============================================================ */
 
 function formatDate(
     dateString
 ) {
 
-    if (!dateString)
-        return "";
+    if (!dateString) return "";
 
 
     const date =
@@ -3316,38 +3394,7 @@ function formatDate(
             year: "numeric"
         }
     );
-}
 
-
-/* ============================================================
-   ESCAPE HTML
-============================================================ */
-
-function escapeHTML(
-    value
-) {
-
-    return String(value)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
 }
 
 
