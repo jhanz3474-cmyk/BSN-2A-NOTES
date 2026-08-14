@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>BSN 2A NOTES</title>
 
-<style>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
+<style>
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    background: #f8f6f1;
-    color: #302b25;
     font-family: Arial, sans-serif;
+    background: #f7f4ed;
+    color: #333;
 }
 
-/* SIDEBAR */
+button {
+    cursor: pointer;
+    border: none;
+}
 
 .sidebar {
     position: fixed;
@@ -28,344 +32,189 @@ body {
     top: 0;
     width: 240px;
     height: 100vh;
-    background: #f1ece2;
-    border-right: 1px solid #ddd5c8;
+    background: #eee8dc;
     padding: 25px 15px;
-    z-index: 10;
+    border-right: 1px solid #ddd5c8;
 }
 
 .logo {
     font-family: Georgia, serif;
-    font-size: 21px;
+    font-size: 25px;
     font-weight: bold;
-    padding: 5px 10px 35px;
+    margin: 0 10px 35px;
 }
 
-.menu {
-    padding: 13px 14px;
-    margin: 5px 0;
+.logo span {
+    color: #4d9b7a;
+}
+
+.nav button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 13px 15px;
+    margin-bottom: 7px;
     border-radius: 12px;
-    cursor: pointer;
-    color: #4b443c;
-}
-
-.menu:hover {
-    background: #e6ded2;
-}
-
-.menu.active {
-    background: #e1d8ca;
-    color: #328b6d;
-}
-
-/* TOP BAR */
-
-.topbar {
-    position: fixed;
-    left: 240px;
-    right: 0;
-    top: 0;
-    height: 65px;
-    background: #f8f6f1;
-    border-bottom: 1px solid #ddd5c8;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0 25px;
-    z-index: 5;
-}
-
-.lock-button {
-    border: none;
     background: transparent;
-    padding: 10px 14px;
-    border-radius: 9px;
-    color: #756b61;
-    cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
+    color: #444;
 }
 
-.lock-button:hover {
-    background: #eee8dd;
+.nav button:hover,
+.nav button.active {
+    background: #ded6c8;
+    color: #378d6b;
 }
 
-/* MAIN */
+.admin-status {
+    position: absolute;
+    bottom: 25px;
+    left: 20px;
+    right: 20px;
+}
+
+.admin-btn {
+    width: 100%;
+    padding: 11px;
+    border-radius: 10px;
+    background: #ddd5c8;
+    color: #444;
+}
+
+.admin-btn.admin-on {
+    background: #4d9b7a;
+    color: white;
+}
 
 .main {
     margin-left: 240px;
-    padding: 105px 45px 50px;
-    max-width: 1250px;
+    min-height: 100vh;
+}
+
+.topbar {
+    height: 65px;
+    border-bottom: 1px solid #ddd5c8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 35px;
+    background: #faf8f3;
+}
+
+.user-info {
+    color: #777;
 }
 
 .page {
-    display: none;
-}
-
-.page.active {
-    display: block;
+    padding: 40px;
+    max-width: 1200px;
+    margin: auto;
 }
 
 h1 {
     font-family: Georgia, serif;
-    font-size: 36px;
+    font-size: 40px;
     margin: 0 0 30px;
 }
 
-/* NOTES */
+.section {
+    display: none;
+}
 
-.notes {
+.section.active {
+    display: block;
+}
+
+.notes-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
 }
 
-.note {
-    background: #f4eee4;
-    border: 1px solid #ddd4c6;
-    border-radius: 14px;
-    padding: 25px;
-    min-height: 150px;
-    cursor: pointer;
-
-    box-shadow: 0 2px 5px rgba(0,0,0,.04);
-
-    transition: .2s;
+.note-card {
+    background: #f1ebdf;
+    border: 1px solid #ddd4c5;
+    border-radius: 15px;
+    padding: 22px;
+    min-height: 160px;
+    cursor: grab;
+    transition: 0.2s;
 }
 
-.note:hover {
+.note-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+    box-shadow: 0 5px 18px rgba(0,0,0,.07);
 }
 
-.note.dragging {
-    opacity: .45;
-}
-
-.note h2 {
-    font-family: Georgia, serif;
-    margin: 0 0 12px;
-    font-size: 21px;
-}
-
-.note p {
-    margin: 0;
-    color: #756c63;
-    line-height: 1.65;
-    white-space: pre-wrap;
-    font-size: 14px;
-}
-
-.add-button {
-    display: none;
-
-    margin-top: 25px;
-
-    border: 1px dashed #8b9d8f;
-    border-radius: 12px;
-
-    background: transparent;
-
-    padding: 14px 20px;
-
-    color: #328b6d;
-
-    cursor: pointer;
-
-    font-size: 15px;
-}
-
-.admin .add-button {
-    display: inline-block;
-}
-
-.add-button:hover {
-    background: #ebe5da;
-}
-
-/* NOTE EDITOR */
-
-.note-modal {
-    position: fixed;
-    inset: 0;
-
-    background: rgba(40,35,30,.55);
-
-    display: none;
-
-    justify-content: center;
-    align-items: center;
-
-    padding: 30px;
-
-    z-index: 100;
-}
-
-.note-modal.show {
-    display: flex;
-}
-
-.note-window {
-    width: min(850px, 100%);
-    height: min(750px, 90vh);
-
-    background: #fffdf9;
-
-    border-radius: 14px;
-
-    box-shadow: 0 20px 70px rgba(0,0,0,.3);
-
-    display: flex;
-    flex-direction: column;
-
-    overflow: hidden;
-}
-
-/* NOTE HEADER */
-
-.note-header {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    padding: 15px 20px;
-
-    border-bottom: 1px solid #eee6db;
-}
-
-.note-header button {
-    border: none;
-
-    background: transparent;
-
-    cursor: pointer;
-
-    font-size: 20px;
-
-    padding: 8px;
-
-    border-radius: 8px;
-}
-
-.note-header button:hover {
-    background: #eee8dc;
+.note-card:active {
+    cursor: grabbing;
 }
 
 .note-title {
-    flex: 1;
-
-    border: none;
-
-    outline: none;
-
-    background: transparent;
-
     font-family: Georgia, serif;
-
-    font-size: 25px;
-
-    margin: 0 15px;
-
-    color: #302b25;
-}
-
-.note-title:disabled {
-    color: #302b25;
-}
-
-/* NOTE BODY */
-
-.note-body {
-    flex: 1;
-
-    padding: 25px;
-
-    overflow-y: auto;
+    font-size: 23px;
+    font-weight: bold;
+    margin-bottom: 12px;
 }
 
 .note-content {
-    width: 100%;
-
-    min-height: 100%;
-
-    border: none;
-
-    outline: none;
-
-    resize: none;
-
-    background: transparent;
-
-    font-family: Arial, sans-serif;
-
-    font-size: 16px;
-
-    line-height: 1.7;
-
-    color: #302b25;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    color: #666;
 }
 
-/* FOOTER */
-
-.note-footer {
+.card-buttons {
     display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    padding: 12px 20px;
-
-    border-top: 1px solid #eee6db;
+    gap: 7px;
+    margin-top: 18px;
 }
 
-.note-footer button {
-    border: none;
-
-    background: transparent;
-
-    padding: 9px 13px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
+.small-btn {
+    padding: 7px 10px;
+    border-radius: 7px;
+    background: #ddd5c8;
 }
 
-.note-footer button:hover {
-    background: #eee8dc;
+.small-btn:hover {
+    background: #ccc2b2;
 }
 
-.save-button {
-    background: #3f9072 !important;
-
+.add-btn {
+    background: #4d9b7a;
     color: white;
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    font-size: 15px;
 }
 
-.delete-button {
-    color: #a34840;
+.add-btn:hover {
+    background: #3d8465;
+}
+
+.empty {
+    padding: 50px;
+    text-align: center;
+    color: #888;
+    background: #f1ebdf;
+    border-radius: 15px;
 }
 
 /* TASKS */
 
 .task-list {
-    max-width: 800px;
-}
-
-.task {
-    background: #f4eee4;
-    border: 1px solid #ddd4c6;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 12px;
-
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 12px;
 }
 
-.task-text {
-    flex: 1;
+.task {
+    background: #f1ebdf;
+    padding: 17px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .task.done .task-text {
@@ -373,121 +222,140 @@ h1 {
     opacity: .5;
 }
 
-.task-delete {
-    display: none;
-}
-
-.admin .task-delete {
-    display: block;
-}
-
-.task-delete button {
-    border: none;
-    background: transparent;
-    cursor: pointer;
+.task-text {
+    flex: 1;
 }
 
 /* CHAT */
 
 .chat-box {
-    max-width: 800px;
-
-    background: #f4eee4;
-
-    border: 1px solid #ddd4c6;
-
-    border-radius: 14px;
-
+    background: #f1ebdf;
+    border-radius: 15px;
     padding: 20px;
+    max-width: 800px;
 }
 
 .messages {
-    height: 400px;
+    height: 430px;
     overflow-y: auto;
+    margin-bottom: 15px;
 }
 
 .message {
-    background: #e8dfd2;
+    padding: 10px 13px;
+    margin-bottom: 9px;
+    background: #e4dccf;
+    border-radius: 10px;
+}
 
-    padding: 10px 14px;
+.message strong {
+    color: #378d6b;
+}
 
-    border-radius: 12px;
-
-    margin-bottom: 10px;
-
-    max-width: 80%;
+.message-time {
+    font-size: 11px;
+    color: #999;
+    margin-left: 7px;
 }
 
 .chat-input {
     display: flex;
     gap: 8px;
-    margin-top: 15px;
 }
 
 .chat-input input {
     flex: 1;
-
-    border: 1px solid #ccc2b4;
-
-    border-radius: 9px;
-
-    padding: 12px;
 }
 
-.chat-input button {
-    border: none;
+/* MODAL */
 
-    background: #3f9072;
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+}
 
+.overlay.show {
+    display: flex;
+}
+
+.modal {
+    width: 100%;
+    max-width: 650px;
+    background: #faf8f3;
+    border-radius: 15px;
+    padding: 28px;
+    box-shadow: 0 15px 50px rgba(0,0,0,.2);
+}
+
+.modal h2 {
+    font-family: Georgia, serif;
+    margin-top: 0;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d5ccbd;
+    border-radius: 9px;
+    background: white;
+    font-family: inherit;
+    font-size: 15px;
+    margin-bottom: 13px;
+}
+
+textarea {
+    min-height: 250px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.save-btn {
+    background: #4d9b7a;
     color: white;
-
-    border-radius: 9px;
-
-    padding: 10px 18px;
-
-    cursor: pointer;
+    padding: 11px 18px;
+    border-radius: 8px;
 }
 
-/* EMPTY */
+.cancel-btn {
+    background: #ddd5c8;
+    padding: 11px 18px;
+    border-radius: 8px;
+}
 
-.empty {
-    grid-column: 1 / -1;
+/* USERNAME */
 
+.username-box {
     text-align: center;
+}
 
-    padding: 60px 20px;
+.username-box h2 {
+    font-family: Georgia, serif;
+    font-size: 30px;
+}
 
-    color: #81776c;
+.username-box p {
+    color: #777;
 }
 
 /* MOBILE */
 
-@media(max-width:750px) {
-
+@media(max-width: 700px) {
     .sidebar {
-        width: 180px;
-    }
-
-    .topbar {
-        left: 180px;
-    }
-
-    .main {
-        margin-left: 180px;
-        padding-left: 25px;
-        padding-right: 25px;
-    }
-
-    .notes {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media(max-width:520px) {
-
-    .sidebar {
-        width: 65px;
-        padding: 20px 7px;
+        width: 75px;
+        padding: 20px 8px;
     }
 
     .logo {
@@ -495,257 +363,232 @@ h1 {
         text-align: center;
     }
 
-    .logo:first-letter {
-        font-size: 24px;
+    .logo span {
+        font-size: 28px;
     }
 
-    .menu {
+    .nav button {
+        font-size: 0;
         text-align: center;
+    }
+
+    .nav button::first-letter {
+        font-size: 22px;
+    }
+
+    .admin-status {
+        left: 8px;
+        right: 8px;
+    }
+
+    .admin-btn {
         font-size: 0;
     }
 
-    .menu:first-letter {
+    .admin-btn::first-letter {
         font-size: 20px;
     }
 
-    .topbar {
-        left: 65px;
+    .main {
+        margin-left: 75px;
     }
 
-    .main {
-        margin-left: 65px;
-        padding: 95px 15px 30px;
+    .page {
+        padding: 25px 18px;
     }
 
     h1 {
-        font-size: 30px;
+        font-size: 32px;
     }
 
-    .note-modal {
-        padding: 0;
-    }
-
-    .note-window {
-        height: 100vh;
-        border-radius: 0;
+    .topbar {
+        padding: 0 18px;
     }
 }
-
 </style>
 </head>
 
-
 <body>
-
 
 <!-- SIDEBAR -->
 
-<div class="sidebar">
+<aside class="sidebar">
 
     <div class="logo">
-        🌱 BSN 2A NOTES
+        <span>🌱</span> BSN 2A NOTES
     </div>
 
-    <div
-        class="menu active"
-        onclick="showPage('notes', this)"
-    >
-        📝 Notes
+    <div class="nav">
+        <button class="active" onclick="showSection('notes', this)">
+            📝 Notes
+        </button>
+
+        <button onclick="showSection('tasks', this)">
+            ☑️ Tasks
+        </button>
+
+        <button onclick="showSection('chat', this)">
+            💬 Chat
+        </button>
     </div>
 
-    <div
-        class="menu"
-        onclick="showPage('tasks', this)"
-    >
-        ☑ Tasks
+    <div class="admin-status">
+        <button id="adminButton" class="admin-btn" onclick="toggleAdmin()">
+            🔒 Admin
+        </button>
     </div>
 
-    <div
-        class="menu"
-        onclick="showPage('chat', this)"
-    >
-        💬 Chat
-    </div>
-
-</div>
-
-
-<!-- TOP BAR -->
-
-<div class="topbar">
-
-    <button
-        class="lock-button"
-        id="lockButton"
-        onclick="toggleAdmin()"
-    >
-        🔒 View Only
-    </button>
-
-</div>
+</aside>
 
 
 <!-- MAIN -->
 
-<div class="main">
+<main class="main">
+
+    <header class="topbar">
+        <div>📚 BSN 2A</div>
+        <div class="user-info">
+            👤 <span id="usernameDisplay"></span>
+        </div>
+    </header>
 
 
-<!-- NOTES -->
+    <!-- NOTES -->
 
-<div
-    id="notes"
-    class="page active"
->
+    <section id="notesSection" class="section active">
 
-    <h1>Notes</h1>
+        <div class="page">
 
-    <div
-        class="notes"
-        id="notesContainer"
-    ></div>
+            <h1>Notes</h1>
 
-    <button
-        class="add-button"
-        onclick="openNewNote()"
-    >
-        ＋ Add Note
-    </button>
-
-</div>
-
-
-<!-- TASKS -->
-
-<div
-    id="tasks"
-    class="page"
->
-
-    <h1>Tasks</h1>
-
-    <div
-        class="task-list"
-        id="taskContainer"
-    ></div>
-
-    <button
-        class="add-button"
-        onclick="addTask()"
-    >
-        ＋ Add Task
-    </button>
-
-</div>
-
-
-<!-- CHAT -->
-
-<div
-    id="chat"
-    class="page"
->
-
-    <h1>Chat</h1>
-
-    <div class="chat-box">
-
-        <div
-            class="messages"
-            id="messages"
-        ></div>
-
-        <div class="chat-input">
-
-            <input
-                id="chatInput"
-                placeholder="Write a message..."
-                onkeydown="
-                    if(event.key === 'Enter')
-                    sendMessage()
-                "
-            >
-
-            <button onclick="sendMessage()">
-                Send
+            <button id="addNoteButton"
+                    class="add-btn"
+                    onclick="openNoteEditor()"
+                    style="display:none;">
+                + Add Note
             </button>
 
+            <div id="notesGrid" class="notes-grid"></div>
+
         </div>
+
+    </section>
+
+
+    <!-- TASKS -->
+
+    <section id="tasksSection" class="section">
+
+        <div class="page">
+
+            <h1>Tasks</h1>
+
+            <button id="addTaskButton"
+                    class="add-btn"
+                    onclick="openTaskEditor()"
+                    style="display:none;">
+                + Add Task
+            </button>
+
+            <div id="taskList" class="task-list"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CHAT -->
+
+    <section id="chatSection" class="section">
+
+        <div class="page">
+
+            <h1>Chat</h1>
+
+            <div class="chat-box">
+
+                <div id="messages" class="messages"></div>
+
+                <div class="chat-input">
+
+                    <input
+                        id="chatInput"
+                        type="text"
+                        placeholder="Write a message..."
+                        onkeydown="if(event.key==='Enter') sendMessage()"
+                    >
+
+                    <button class="save-btn" onclick="sendMessage()">
+                        Send
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- USERNAME MODAL -->
+
+<div id="usernameOverlay" class="overlay">
+
+    <div class="modal username-box">
+
+        <h2>Welcome to BSN 2A Notes 👋</h2>
+
+        <p>Enter your name to continue.</p>
+
+        <input
+            id="usernameInput"
+            type="text"
+            placeholder="Your name"
+            maxlength="30"
+            onkeydown="if(event.key==='Enter') saveUsername()"
+        >
+
+        <button class="save-btn" onclick="saveUsername()">
+            Enter
+        </button>
 
     </div>
 
 </div>
 
-</div>
 
+<!-- NOTE EDITOR -->
 
-<!-- =========================
-     NOTE WINDOW
-========================= -->
+<div id="noteOverlay" class="overlay">
 
-<div
-    class="note-modal"
-    id="noteModal"
->
+    <div class="modal">
 
-    <div class="note-window">
+        <h2 id="noteModalTitle">Add Note</h2>
 
+        <input
+            id="noteTitle"
+            type="text"
+            placeholder="Note title"
+            maxlength="100"
+        >
 
-        <!-- HEADER -->
+        <textarea
+            id="noteContent"
+            placeholder="Write your note here..."
+        ></textarea>
 
-        <div class="note-header">
+        <div class="modal-buttons">
 
-            <button onclick="closeNote()">
-                ✕
+            <button class="cancel-btn"
+                    onclick="closeNoteEditor()">
+                Cancel
             </button>
 
-            <input
-                class="note-title"
-                id="noteTitle"
-                placeholder="Title"
-            >
-
-            <button
-                onclick="saveCurrentNote()"
-                title="Save"
-            >
-                💾
-            </button>
-
-        </div>
-
-
-        <!-- BODY -->
-
-        <div class="note-body">
-
-            <textarea
-                class="note-content"
-                id="noteContent"
-                placeholder="Write your note..."
-            ></textarea>
-
-        </div>
-
-
-        <!-- FOOTER -->
-
-        <div class="note-footer">
-
-            <button
-                class="delete-button"
-                id="deleteNoteButton"
-                onclick="deleteCurrentNote()"
-            >
-                🗑 Delete
-            </button>
-
-            <span id="noteStatus"></span>
-
-            <button
-                class="save-button"
-                id="saveNoteButton"
-                onclick="saveCurrentNote()"
-            >
+            <button class="save-btn"
+                    onclick="saveNote()">
                 Save
             </button>
 
@@ -756,77 +599,65 @@ h1 {
 </div>
 
 
-<!-- LOGIN -->
+<!-- TASK EDITOR -->
 
-<div
-    class="note-modal"
-    id="loginModal"
->
+<div id="taskOverlay" class="overlay">
 
-    <div
-        class="note-window"
-        style="
-            width:400px;
-            height:auto;
-        "
-    >
+    <div class="modal">
 
-        <div class="note-header">
+        <h2>Add Task</h2>
 
-            <span
-                style="
-                    font-family:Georgia,serif;
-                    font-size:22px;
-                "
-            >
-                🔒 Admin Access
-            </span>
+        <input
+            id="taskInput"
+            type="text"
+            placeholder="Task..."
+        >
 
-            <button onclick="closeLogin()">
-                ✕
+        <div class="modal-buttons">
+
+            <button class="cancel-btn"
+                    onclick="closeTaskEditor()">
+                Cancel
+            </button>
+
+            <button class="save-btn"
+                    onclick="saveTask()">
+                Save
             </button>
 
         </div>
 
-        <div
-            style="padding:25px;"
+    </div>
+
+</div>
+
+
+<!-- ADMIN PASSWORD -->
+
+<div id="adminOverlay" class="overlay">
+
+    <div class="modal username-box">
+
+        <h2>🔒 Admin Mode</h2>
+
+        <p>Enter the admin password.</p>
+
+        <input
+            id="adminPassword"
+            type="password"
+            placeholder="Password"
+            onkeydown="if(event.key==='Enter') checkAdmin()"
         >
 
-            <p>
-                Enter the administrator password.
-            </p>
+        <div class="modal-buttons">
 
-            <input
-                id="adminPassword"
-                type="password"
-                placeholder="Password"
-                style="
-                    width:100%;
-                    padding:12px;
-                    border:1px solid #ccc2b4;
-                    border-radius:8px;
-                "
-                onkeydown="
-                    if(event.key==='Enter')
-                    login()
-                "
-            >
+            <button class="cancel-btn"
+                    onclick="closeAdmin()">
+                Cancel
+            </button>
 
-            <p
-                id="loginError"
-                style="color:#a34840;"
-            ></p>
-
-            <button
-                class="save-button"
-                onclick="login()"
-                style="
-                    border:none;
-                    padding:11px 20px;
-                    border-radius:8px;
-                    cursor:pointer;
-                "
-            >
+            <button class="save-btn"
+                    onclick="checkAdmin()">
                 Unlock
             </button>
 
@@ -839,531 +670,429 @@ h1 {
 
 <script>
 
-/* =========================
-   ADMIN
-========================= */
+/* =========================================================
+   FIREBASE CONFIG
+   ========================================================= */
 
-const ADMIN_PASSWORD =
-    "supperlol123123";
+const firebaseConfig = {
+
+    apiKey: "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24",
+
+    authDomain: "bsn-2a-notes.firebaseapp.com",
+
+    databaseURL:
+    "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+    projectId: "bsn-2a-notes",
+
+    storageBucket:
+    "bsn-2a-notes.firebasestorage.app",
+
+    messagingSenderId: "991210260962",
+
+    appId:
+    "1:991210260962:web:8f6a886c7478be096991bb",
+
+    measurementId: "G-WNTP9GZJ4B"
+};
+
+
+/* Initialize Firebase */
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.database();
+
+
+/* =========================================================
+   USER
+   ========================================================= */
+
+let username = localStorage.getItem("bsnUsername");
 
 let isAdmin = false;
 
-
-/* =========================
-   DATA
-========================= */
-
-let notes =
-    JSON.parse(
-        localStorage.getItem("bsn_notes")
-    ) || [
-
-        {
-            id: Date.now(),
-            title: "Welcome",
-            content:
-                "Welcome to BSN 2A NOTES!"
-        },
-
-        {
-            id: Date.now() + 1,
-            title: "Class Notes",
-            content:
-                "Click this card to open the note."
-        }
-
-    ];
+let editingNoteId = null;
 
 
-let tasks =
-    JSON.parse(
-        localStorage.getItem("bsn_tasks")
-    ) || [];
+window.onload = function() {
+
+    if (!username) {
+
+        document
+            .getElementById("usernameOverlay")
+            .classList.add("show");
+
+    } else {
+
+        document
+            .getElementById("usernameDisplay")
+            .textContent = username;
+
+    }
+
+};
 
 
-let messages =
-    JSON.parse(
-        localStorage.getItem("bsn_messages")
-    ) || [];
+/* Save username */
 
+function saveUsername() {
 
-let currentNoteId = null;
+    const input =
+        document.getElementById("usernameInput");
 
+    const name = input.value.trim();
 
-/* =========================
-   SAVE
-========================= */
+    if (!name) {
 
-function saveData() {
+        alert("Please enter your name.");
 
-    localStorage.setItem(
-        "bsn_notes",
-        JSON.stringify(notes)
-    );
+        return;
+    }
 
-    localStorage.setItem(
-        "bsn_tasks",
-        JSON.stringify(tasks)
-    );
+    username = name;
 
-    localStorage.setItem(
-        "bsn_messages",
-        JSON.stringify(messages)
-    );
+    localStorage.setItem("bsnUsername", username);
+
+    document
+        .getElementById("usernameDisplay")
+        .textContent = username;
+
+    document
+        .getElementById("usernameOverlay")
+        .classList.remove("show");
 
 }
 
 
-/* =========================
-   RENDER NOTES
-========================= */
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
 
-function renderNotes() {
+function showSection(section, button) {
 
-    const container =
-        document.getElementById(
-            "notesContainer"
-        );
+    document
+        .querySelectorAll(".section")
+        .forEach(s => s.classList.remove("active"));
 
-    container.innerHTML = "";
+    document
+        .querySelectorAll(".nav button")
+        .forEach(b => b.classList.remove("active"));
+
+    document
+        .getElementById(section + "Section")
+        .classList.add("active");
+
+    button.classList.add("active");
+}
 
 
-    if(notes.length === 0) {
+/* =========================================================
+   ADMIN
+   ========================================================= */
 
-        container.innerHTML =
+function toggleAdmin() {
+
+    if (isAdmin) {
+
+        isAdmin = false;
+
+        updateAdminUI();
+
+        alert("Admin mode locked.");
+
+        return;
+    }
+
+    document
+        .getElementById("adminOverlay")
+        .classList.add("show");
+
+    document
+        .getElementById("adminPassword")
+        .focus();
+}
+
+
+function checkAdmin() {
+
+    const password =
+        document
+        .getElementById("adminPassword")
+        .value;
+
+    if (password === "supperlol123123") {
+
+        isAdmin = true;
+
+        document
+            .getElementById("adminOverlay")
+            .classList.remove("show");
+
+        document
+            .getElementById("adminPassword")
+            .value = "";
+
+        updateAdminUI();
+
+        alert("Admin mode unlocked 🔓");
+
+    } else {
+
+        alert("Wrong password.");
+
+    }
+
+}
+
+
+function closeAdmin() {
+
+    document
+        .getElementById("adminOverlay")
+        .classList.remove("show");
+
+    document
+        .getElementById("adminPassword")
+        .value = "";
+
+}
+
+
+function updateAdminUI() {
+
+    const button =
+        document.getElementById("adminButton");
+
+    const addNote =
+        document.getElementById("addNoteButton");
+
+    const addTask =
+        document.getElementById("addTaskButton");
+
+    if (isAdmin) {
+
+        button.textContent = "🔓 Admin ON";
+
+        button.classList.add("admin-on");
+
+        addNote.style.display = "inline-block";
+
+        addTask.style.display = "inline-block";
+
+    } else {
+
+        button.textContent = "🔒 Admin";
+
+        button.classList.remove("admin-on");
+
+        addNote.style.display = "none";
+
+        addTask.style.display = "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   NOTES - REALTIME DATABASE
+   ========================================================= */
+
+db.ref("notes").on("value", snapshot => {
+
+    const data = snapshot.val() || {};
+
+    renderNotes(data);
+
+});
+
+
+function renderNotes(data) {
+
+    const grid =
+        document.getElementById("notesGrid");
+
+    grid.innerHTML = "";
+
+    const notes = Object.entries(data);
+
+    notes.sort((a,b) => {
+
+        const orderA =
+            a[1].order ?? a[1].createdAt ?? 0;
+
+        const orderB =
+            b[1].order ?? b[1].createdAt ?? 0;
+
+        return orderA - orderB;
+
+    });
+
+
+    if (notes.length === 0) {
+
+        grid.innerHTML =
             `<div class="empty">
                 No notes yet.
+                ${isAdmin ? "Click + Add Note to create one." : ""}
             </div>`;
 
         return;
     }
 
 
-    notes.forEach(note => {
+    notes.forEach(([id, note]) => {
 
         const card =
             document.createElement("div");
 
-        card.className = "note";
+        card.className = "note-card";
 
         card.draggable = isAdmin;
 
-        card.dataset.id = note.id;
+        card.dataset.id = id;
 
+        card.onclick = function(e) {
 
-        card.innerHTML = `
+            if (
+                e.target.tagName === "BUTTON"
+            ) return;
 
-            <h2>
-                📌 ${escapeHTML(note.title)}
-            </h2>
-
-            <p>
-                ${escapeHTML(
-                    note.content
-                )}
-            </p>
-
-        `;
-
-
-        /* OPEN NOTE */
-
-        card.onclick = function() {
-
-            openNote(note.id);
+            openNote(id, note);
 
         };
 
 
-        /* DRAG */
+        card.ondragstart = function(e) {
 
-        card.addEventListener(
-            "dragstart",
-            function(e) {
+            e.dataTransfer.setData(
+                "text/plain",
+                id
+            );
 
-                if(!isAdmin) return;
-
-                e.dataTransfer.setData(
-                    "text/plain",
-                    note.id
-                );
-
-                card.classList.add(
-                    "dragging"
-                );
-
-            }
-        );
+        };
 
 
-        card.addEventListener(
-            "dragover",
-            function(e) {
+        card.ondragover = function(e) {
 
-                if(isAdmin)
-                    e.preventDefault();
+            e.preventDefault();
 
-            }
-        );
+        };
 
 
-        card.addEventListener(
-            "drop",
-            function(e) {
+        card.ondrop = function(e) {
 
-                if(!isAdmin) return;
+            e.preventDefault();
 
-                e.preventDefault();
+            if (!isAdmin) return;
 
-                const draggedId =
-                    Number(
-                        e.dataTransfer.getData(
-                            "text/plain"
-                        )
-                    );
+            const draggedId =
+                e.dataTransfer.getData("text/plain");
 
-                const from =
-                    notes.findIndex(
-                        n =>
-                            n.id ===
-                            draggedId
-                    );
+            reorderNotes(
+                draggedId,
+                id
+            );
 
-                const to =
-                    notes.findIndex(
-                        n =>
-                            n.id ===
-                            note.id
-                    );
-
-                if(from === to) return;
-
-                const moved =
-                    notes.splice(
-                        from,
-                        1
-                    )[0];
-
-                notes.splice(
-                    to,
-                    0,
-                    moved
-                );
-
-                saveData();
-
-                renderNotes();
-
-            }
-        );
+        };
 
 
-        container.appendChild(card);
+        let html = `
+
+            <div class="note-title">
+                ${escapeHTML(note.title)}
+            </div>
+
+            <div class="note-content">
+                ${escapeHTML(note.content)}
+            </div>
+
+        `;
+
+
+        if (isAdmin) {
+
+            html += `
+
+                <div class="card-buttons">
+
+                    <button
+                        class="small-btn"
+                        onclick="event.stopPropagation();
+                        editNote('${id}')">
+                        ✏️ Edit
+                    </button>
+
+                    <button
+                        class="small-btn"
+                        onclick="event.stopPropagation();
+                        deleteNote('${id}')">
+                        🗑️ Delete
+                    </button>
+
+                </div>
+
+            `;
+
+        }
+
+
+        card.innerHTML = html;
+
+        grid.appendChild(card);
 
     });
 
 }
 
 
-/* =========================
-   OPEN EXISTING NOTE
-========================= */
+function openNoteEditor(id = null) {
 
-function openNote(id) {
+    if (!isAdmin) return;
 
-    const note =
-        notes.find(
-            n => n.id === id
-        );
-
-    if(!note) return;
-
-
-    currentNoteId = id;
-
-
-    document
-        .getElementById("noteTitle")
-        .value = note.title;
-
-
-    document
-        .getElementById("noteContent")
-        .value = note.content;
-
-
-    document
-        .getElementById("noteModal")
-        .classList.add("show");
-
-
-    updateEditorMode();
-
-}
-
-
-/* =========================
-   NEW NOTE
-========================= */
-
-function openNewNote() {
-
-    if(!isAdmin) return;
-
-
-    currentNoteId = null;
-
-
-    document
-        .getElementById("noteTitle")
-        .value = "";
-
-
-    document
-        .getElementById("noteContent")
-        .value = "";
-
-
-    document
-        .getElementById("noteModal")
-        .classList.add("show");
-
-
-    updateEditorMode();
-
-
-    document
-        .getElementById("noteTitle")
-        .focus();
-
-}
-
-
-/* =========================
-   EDITOR MODE
-========================= */
-
-function updateEditorMode() {
+    editingNoteId = id;
 
     const title =
-        document.getElementById(
-            "noteTitle"
-        );
+        document.getElementById("noteTitle");
 
     const content =
-        document.getElementById(
-            "noteContent"
-        );
+        document.getElementById("noteContent");
 
-    const save =
-        document.getElementById(
-            "saveNoteButton"
-        );
+    if (id) {
 
-    const deleteButton =
-        document.getElementById(
-            "deleteNoteButton"
-        );
+        db.ref("notes/" + id)
+            .once("value")
+            .then(snapshot => {
 
+                const note = snapshot.val();
 
-    title.disabled =
-        !isAdmin;
+                title.value = note.title || "";
 
-    content.readOnly =
-        !isAdmin;
+                content.value = note.content || "";
 
+                document
+                    .getElementById("noteModalTitle")
+                    .textContent = "Edit Note";
 
-    save.style.display =
-        isAdmin
-        ? "block"
-        : "none";
+                document
+                    .getElementById("noteOverlay")
+                    .classList.add("show");
 
+            });
 
-    deleteButton.style.display =
-        isAdmin
-        ? "block"
-        : "none";
+    } else {
 
-}
+        title.value = "";
 
-
-/* =========================
-   SAVE NOTE
-========================= */
-
-function saveCurrentNote() {
-
-    if(!isAdmin) return;
-
-
-    const title =
-        document
-            .getElementById(
-                "noteTitle"
-            )
-            .value
-            .trim();
-
-
-    const content =
-        document
-            .getElementById(
-                "noteContent"
-            )
-            .value
-            .trim();
-
-
-    if(!title) {
-
-        alert(
-            "Please enter a title."
-        );
-
-        return;
-
-    }
-
-
-    /* EDIT */
-
-    if(currentNoteId !== null) {
-
-        const note =
-            notes.find(
-                n =>
-                    n.id ===
-                    currentNoteId
-            );
-
-
-        note.title = title;
-
-        note.content = content;
-
-    }
-
-
-    /* NEW */
-
-    else {
-
-        notes.push({
-
-            id: Date.now(),
-
-            title: title,
-
-            content: content
-
-        });
-
-    }
-
-
-    saveData();
-
-    renderNotes();
-
-    closeNote();
-
-}
-
-
-/* =========================
-   DELETE NOTE
-========================= */
-
-function deleteCurrentNote() {
-
-    if(!isAdmin) return;
-
-
-    if(currentNoteId === null) {
-
-        closeNote();
-
-        return;
-
-    }
-
-
-    if(
-        !confirm(
-            "Delete this note permanently?"
-        )
-    ) return;
-
-
-    notes =
-        notes.filter(
-            n =>
-                n.id !==
-                currentNoteId
-        );
-
-
-    saveData();
-
-    renderNotes();
-
-    closeNote();
-
-}
-
-
-/* =========================
-   CLOSE NOTE
-========================= */
-
-function closeNote() {
-
-    document
-        .getElementById(
-            "noteModal"
-        )
-        .classList.remove("show");
-
-    currentNoteId = null;
-
-}
-
-
-/* =========================
-   ADMIN LOGIN
-========================= */
-
-function toggleAdmin() {
-
-    if(isAdmin) {
-
-        isAdmin = false;
-
-        document.body
-            .classList.remove(
-                "admin"
-            );
+        content.value = "";
 
         document
-            .getElementById(
-                "lockButton"
-            )
-            .textContent =
-            "🔒 View Only";
-
-
-        renderNotes();
-
-        updateEditorMode();
-
-    }
-
-    else {
+            .getElementById("noteModalTitle")
+            .textContent = "Add Note";
 
         document
-            .getElementById(
-                "loginModal"
-            )
+            .getElementById("noteOverlay")
             .classList.add("show");
 
     }
@@ -1371,111 +1100,274 @@ function toggleAdmin() {
 }
 
 
-function login() {
+function editNote(id) {
 
-    const password =
-        document
-            .getElementById(
-                "adminPassword"
-            )
-            .value;
-
-
-    if(
-        password ===
-        ADMIN_PASSWORD
-    ) {
-
-        isAdmin = true;
-
-
-        document.body
-            .classList.add(
-                "admin"
-            );
-
-
-        document
-            .getElementById(
-                "lockButton"
-            )
-            .textContent =
-            "🔓 Admin";
-
-
-        document
-            .getElementById(
-                "loginModal"
-            )
-            .classList.remove(
-                "show"
-            );
-
-
-        document
-            .getElementById(
-                "adminPassword"
-            )
-            .value = "";
-
-
-        document
-            .getElementById(
-                "loginError"
-            )
-            .textContent = "";
-
-
-        renderNotes();
-
-        updateEditorMode();
-
-    }
-
-    else {
-
-        document
-            .getElementById(
-                "loginError"
-            )
-            .textContent =
-            "Incorrect password.";
-
-    }
+    openNoteEditor(id);
 
 }
 
 
-function closeLogin() {
+function openNote(id, note) {
 
     document
-        .getElementById(
-            "loginModal"
-        )
-        .classList.remove(
-            "show"
-        );
+        .getElementById("noteTitle")
+        .value = note.title;
+
+    document
+        .getElementById("noteContent")
+        .value = note.content;
+
+    editingNoteId = id;
+
+    document
+        .getElementById("noteModalTitle")
+        .textContent = isAdmin
+            ? "Edit Note"
+            : note.title;
+
+    document
+        .getElementById("noteOverlay")
+        .classList.add("show");
+
+    /* View-only users should not accidentally edit */
+
+    if (!isAdmin) {
+
+        document
+            .getElementById("noteTitle")
+            .disabled = true;
+
+        document
+            .getElementById("noteContent")
+            .disabled = true;
+
+    } else {
+
+        document
+            .getElementById("noteTitle")
+            .disabled = false;
+
+        document
+            .getElementById("noteContent")
+            .disabled = false;
+
+    }
 
 }
 
 
-/* =========================
+function saveNote() {
+
+    if (!isAdmin) return;
+
+    const title =
+        document
+        .getElementById("noteTitle")
+        .value.trim();
+
+    const content =
+        document
+        .getElementById("noteContent")
+        .value.trim();
+
+    if (!title) {
+
+        alert("Please enter a title.");
+
+        return;
+
+    }
+
+
+    if (!content) {
+
+        alert("Please enter some text.");
+
+        return;
+
+    }
+
+
+    if (editingNoteId) {
+
+        db.ref("notes/" + editingNoteId)
+            .update({
+
+                title: title,
+
+                content: content,
+
+                updatedAt: Date.now(),
+
+                updatedBy: username
+
+            });
+
+    } else {
+
+        const newRef =
+            db.ref("notes").push();
+
+        newRef.set({
+
+            title: title,
+
+            content: content,
+
+            createdAt: Date.now(),
+
+            updatedAt: Date.now(),
+
+            updatedBy: username,
+
+            order: Date.now()
+
+        });
+
+    }
+
+
+    closeNoteEditor();
+
+}
+
+
+function closeNoteEditor() {
+
+    document
+        .getElementById("noteOverlay")
+        .classList.remove("show");
+
+    document
+        .getElementById("noteTitle")
+        .disabled = false;
+
+    document
+        .getElementById("noteContent")
+        .disabled = false;
+
+    editingNoteId = null;
+
+}
+
+
+function deleteNote(id) {
+
+    if (!isAdmin) return;
+
+    if (
+        confirm("Delete this note permanently?")
+    ) {
+
+        db.ref("notes/" + id).remove();
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAG / DROP REORDER
+   ========================================================= */
+
+function reorderNotes(draggedId, targetId) {
+
+    if (
+        !draggedId ||
+        !targetId ||
+        draggedId === targetId
+    ) return;
+
+
+    db.ref("notes").once("value")
+        .then(snapshot => {
+
+            const notes =
+                snapshot.val() || {};
+
+            const entries =
+                Object.entries(notes);
+
+            entries.sort((a,b) =>
+                (a[1].order || 0) -
+                (b[1].order || 0)
+            );
+
+
+            const draggedIndex =
+                entries.findIndex(
+                    x => x[0] === draggedId
+                );
+
+            const targetIndex =
+                entries.findIndex(
+                    x => x[0] === targetId
+                );
+
+
+            const dragged =
+                entries.splice(
+                    draggedIndex,
+                    1
+                )[0];
+
+            entries.splice(
+                targetIndex,
+                0,
+                dragged
+            );
+
+
+            const updates = {};
+
+            entries.forEach(
+                ([id], index) => {
+
+                    updates[
+                        "notes/" +
+                        id +
+                        "/order"
+                    ] = index;
+
+                }
+            );
+
+
+            db.ref().update(updates);
+
+        });
+
+}
+
+
+/* =========================================================
    TASKS
-========================= */
+   ========================================================= */
 
-function renderTasks() {
+db.ref("tasks").on("value", snapshot => {
 
-    const container =
-        document.getElementById(
-            "taskContainer"
-        );
+    const tasks =
+        snapshot.val() || {};
 
-    container.innerHTML = "";
+    renderTasks(tasks);
+
+});
 
 
-    if(tasks.length === 0) {
+function renderTasks(tasks) {
 
-        container.innerHTML =
+    const list =
+        document.getElementById("taskList");
+
+    list.innerHTML = "";
+
+    const entries =
+        Object.entries(tasks);
+
+
+    if (entries.length === 0) {
+
+        list.innerHTML =
             `<div class="empty">
                 No tasks yet.
             </div>`;
@@ -1485,21 +1377,21 @@ function renderTasks() {
     }
 
 
-    tasks.forEach(task => {
+    entries.sort(
+        (a,b) =>
+        (a[1].createdAt || 0) -
+        (b[1].createdAt || 0)
+    );
+
+
+    entries.forEach(([id, task]) => {
 
         const div =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
         div.className =
-            "task";
-
-
-        if(task.done)
-            div.classList.add(
-                "done"
-            );
+            "task " +
+            (task.done ? "done" : "");
 
 
         div.innerHTML = `
@@ -1507,135 +1399,186 @@ function renderTasks() {
             <input
                 type="checkbox"
                 ${task.done ? "checked" : ""}
-                onchange="
-                    toggleTask(${task.id})
-                "
+                onchange="toggleTask('${id}')"
             >
 
-            <span class="task-text">
+            <div class="task-text">
                 ${escapeHTML(task.text)}
-            </span>
-
-            <div class="task-delete">
-
-                <button
-                    onclick="
-                        deleteTask(${task.id})
-                    "
-                >
-                    🗑
-                </button>
-
             </div>
+
+            ${
+                isAdmin
+                ?
+                `<button
+                    class="small-btn"
+                    onclick="deleteTask('${id}')">
+                    🗑️
+                </button>`
+                :
+                ""
+            }
 
         `;
 
-
-        container.appendChild(div);
+        list.appendChild(div);
 
     });
 
 }
 
 
-function addTask() {
+function openTaskEditor() {
 
-    if(!isAdmin) return;
+    if (!isAdmin) return;
 
+    document
+        .getElementById("taskInput")
+        .value = "";
+
+    document
+        .getElementById("taskOverlay")
+        .classList.add("show");
+
+    document
+        .getElementById("taskInput")
+        .focus();
+
+}
+
+
+function closeTaskEditor() {
+
+    document
+        .getElementById("taskOverlay")
+        .classList.remove("show");
+
+}
+
+
+function saveTask() {
+
+    if (!isAdmin) return;
 
     const text =
-        prompt(
-            "Enter task:"
-        );
+        document
+        .getElementById("taskInput")
+        .value.trim();
+
+    if (!text) return;
 
 
-    if(!text) return;
-
-
-    tasks.push({
-
-        id: Date.now(),
+    db.ref("tasks").push({
 
         text: text,
 
-        done: false
+        done: false,
+
+        createdAt: Date.now(),
+
+        createdBy: username
 
     });
 
 
-    saveData();
-
-    renderTasks();
+    closeTaskEditor();
 
 }
 
 
 function toggleTask(id) {
 
-    if(!isAdmin) return;
+    db.ref("tasks/" + id + "/done")
+        .once("value")
+        .then(snapshot => {
 
+            db.ref("tasks/" + id + "/done")
+                .set(!snapshot.val());
 
-    const task =
-        tasks.find(
-            t => t.id === id
-        );
-
-
-    task.done =
-        !task.done;
-
-
-    saveData();
-
-    renderTasks();
+        });
 
 }
 
 
 function deleteTask(id) {
 
-    if(!isAdmin) return;
+    if (!isAdmin) return;
 
+    if (confirm("Delete this task?")) {
 
-    tasks =
-        tasks.filter(
-            t => t.id !== id
-        );
+        db.ref("tasks/" + id).remove();
 
-
-    saveData();
-
-    renderTasks();
+    }
 
 }
 
 
-/* =========================
+/* =========================================================
    CHAT
-========================= */
+   ========================================================= */
 
-function renderMessages() {
+db.ref("chat").on("value", snapshot => {
+
+    const messages =
+        snapshot.val() || {};
+
+    renderMessages(messages);
+
+});
+
+
+function renderMessages(messages) {
 
     const box =
-        document.getElementById(
-            "messages"
-        );
+        document.getElementById("messages");
 
     box.innerHTML = "";
 
+    const entries =
+        Object.entries(messages);
 
-    messages.forEach(message => {
+
+    entries.sort(
+        (a,b) =>
+        (a[1].timestamp || 0) -
+        (b[1].timestamp || 0)
+    );
+
+
+    entries.forEach(([id, msg]) => {
 
         const div =
-            document.createElement(
-                "div"
+            document.createElement("div");
+
+        div.className = "message";
+
+        const time =
+            new Date(
+                msg.timestamp || Date.now()
+            ).toLocaleTimeString(
+                [],
+                {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
             );
 
-        div.className =
-            "message";
 
-        div.textContent =
-            message;
+        div.innerHTML = `
+
+            <strong>
+                ${escapeHTML(msg.user)}
+            </strong>
+
+            <span class="message-time">
+                ${time}
+            </span>
+
+            <div>
+                ${escapeHTML(msg.text)}
+            </div>
+
+        `;
+
 
         box.appendChild(div);
 
@@ -1651,135 +1594,46 @@ function renderMessages() {
 function sendMessage() {
 
     const input =
-        document.getElementById(
-            "chatInput"
-        );
-
+        document.getElementById("chatInput");
 
     const text =
         input.value.trim();
 
+    if (!text) return;
 
-    if(!text) return;
 
+    db.ref("chat").push({
 
-    messages.push(text);
+        user: username,
 
-    saveData();
+        text: text,
 
-    renderMessages();
+        timestamp: Date.now()
+
+    });
+
 
     input.value = "";
 
 }
 
 
-/* =========================
-   NAVIGATION
-========================= */
-
-function showPage(page, button) {
-
-    document
-        .querySelectorAll(".page")
-        .forEach(
-            p =>
-                p.classList.remove(
-                    "active"
-                )
-        );
-
-
-    document
-        .getElementById(page)
-        .classList.add("active");
-
-
-    document
-        .querySelectorAll(".menu")
-        .forEach(
-            m =>
-                m.classList.remove(
-                    "active"
-                )
-        );
-
-
-    button.classList.add(
-        "active"
-    );
-
-}
-
-
-/* =========================
-   SECURITY
-========================= */
+/* =========================================================
+   SECURITY / HTML ESCAPE
+   ========================================================= */
 
 function escapeHTML(text) {
 
-    const div =
-        document.createElement(
-            "div"
-        );
+    if (!text) return "";
 
-    div.textContent =
-        text;
-
-    return div.innerHTML;
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
 }
-
-
-/* =========================
-   CLOSE MODALS
-========================= */
-
-document
-    .getElementById(
-        "noteModal"
-    )
-    .addEventListener(
-        "click",
-        function(e) {
-
-            if(
-                e.target ===
-                this
-            )
-                closeNote();
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "loginModal"
-    )
-    .addEventListener(
-        "click",
-        function(e) {
-
-            if(
-                e.target ===
-                this
-            )
-                closeLogin();
-
-        }
-    );
-
-
-/* =========================
-   START
-========================= */
-
-renderNotes();
-
-renderTasks();
-
-renderMessages();
 
 </script>
 
