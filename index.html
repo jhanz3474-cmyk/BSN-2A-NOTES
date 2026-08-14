@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Seedling - BSN 2A Notes</title>
+
+    <title>BSN 2A Notes</title>
 
     <style>
+
         body {
             margin: 0;
             font-family: Georgia, serif;
             background: #f8f6f1;
             color: #302b25;
         }
+
+        /* SIDEBAR */
 
         .sidebar {
             position: fixed;
@@ -22,7 +26,7 @@
         }
 
         .logo {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             margin-bottom: 35px;
         }
@@ -43,6 +47,9 @@
             color: #328b6d;
         }
 
+
+        /* MAIN */
+
         .main {
             margin-left: 250px;
             padding: 45px;
@@ -50,13 +57,17 @@
 
         h1 {
             font-size: 36px;
+            margin-bottom: 30px;
         }
+
+
+        /* NOTES */
 
         .notes {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-            max-width: 900px;
+            grid-template-columns: repeat(2, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 950px;
         }
 
         .note {
@@ -64,21 +75,75 @@
             border: 1px solid #ddd4c6;
             border-radius: 14px;
             padding: 25px;
-            min-height: 120px;
+            min-height: 140px;
+
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
         }
 
         .note h2 {
             margin-top: 0;
+            font-size: 21px;
         }
 
         .note p {
             color: #756c63;
             line-height: 1.6;
+            white-space: pre-line;
         }
+
+
+        /* ADD BUTTON */
+
+        .add-button {
+            margin-top: 25px;
+            padding: 13px 20px;
+
+            border: 1px dashed #8b9d8f;
+            border-radius: 12px;
+
+            background: transparent;
+
+            font-family: Georgia, serif;
+            font-size: 15px;
+
+            color: #328b6d;
+
+            cursor: pointer;
+        }
+
+        .add-button:hover {
+            background: #e9e3d8;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 160px;
+            }
+
+            .main {
+                margin-left: 180px;
+                padding: 25px;
+            }
+
+            .notes {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
     </style>
+
 </head>
 
+
 <body>
+
+
+    <!-- SIDEBAR -->
 
     <div class="sidebar">
 
@@ -101,29 +166,126 @@
     </div>
 
 
+    <!-- MAIN CONTENT -->
+
     <div class="main">
 
         <h1>Notes</h1>
 
+
         <div class="notes">
 
-            <div class="note">
-                <h2>Welcome</h2>
-                <p>
-                    This is the BSN 2A notes page.
-                </p>
-            </div>
 
             <div class="note">
-                <h2>Class Notes</h2>
+
+                <h2>📌 NCM 101</h2>
+
                 <p>
-                    Your notes will go here.
+Exam coverage
+
+Important discussions
+
+Review materials
                 </p>
+
             </div>
+
+
+            <div class="note">
+
+                <h2>📌 NCM 102</h2>
+
+                <p>
+Exam coverage
+
+Important topics
+
+Review materials
+                </p>
+
+            </div>
+
+
+            <div class="note">
+
+                <h2>📌 Microbiology</h2>
+
+                <p>
+Chapter notes
+
+Important microorganisms
+
+Review materials
+                </p>
+
+            </div>
+
+
+            <div class="note">
+
+                <h2>📌 English</h2>
+
+                <p>
+Assignments
+
+Activities
+
+Important reminders
+                </p>
+
+            </div>
+
 
         </div>
 
+
+        <button
+            class="add-button"
+            onclick="addNote()"
+        >
+            ＋ Add Note
+        </button>
+
+
     </div>
+
+
+<script>
+
+    function addNote() {
+
+        let title =
+            prompt("Enter the note title:");
+
+        if (!title) {
+            return;
+        }
+
+        let content =
+            prompt("Enter the note:");
+
+        if (!content) {
+            return;
+        }
+
+        let note =
+            document.createElement("div");
+
+        note.className = "note";
+
+        note.innerHTML = `
+            <h2>📌 ${title}</h2>
+            <p>${content}</p>
+        `;
+
+        document
+            .querySelector(".notes")
+            .appendChild(note);
+
+    }
+
+</script>
+
 
 </body>
 </html>
