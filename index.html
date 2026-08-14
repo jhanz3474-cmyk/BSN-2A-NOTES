@@ -1,600 +1,697 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>BSN 2A Notes</title>
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>BSN 2A NOTES</title>
 
 <style>
+
+/* =========================
+   GLOBAL
+========================= */
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, sans-serif;
     background: #f7f4ed;
     color: #29251f;
 }
 
+
 /* =========================
-   HEADER
+   USERNAME SCREEN
 ========================= */
 
-header {
-    height: 72px;
-    background: #fffdf8;
-    border-bottom: 1px solid #ded8ca;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 25px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
+#usernameScreen {
 
-.logo-area {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: bold;
-    font-size: 20px;
-}
+    position: fixed;
 
-.bsn-logo {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: #4d927e;
-    color: white;
+    inset: 0;
+
+    background: #f7f4ed;
+
     display: flex;
-    flex-direction: column;
-    align-items: center;
+
     justify-content: center;
-    line-height: 15px;
-    font-weight: bold;
-    box-shadow: 0 3px 10px rgba(0,0,0,.12);
-}
 
-.bsn-logo span:first-child {
-    font-size: 15px;
-}
-
-.bsn-logo span:last-child {
-    font-size: 11px;
-}
-
-.header-right {
-    display: flex;
     align-items: center;
-    gap: 12px;
+
+    z-index: 9999;
 }
 
-.status {
-    font-size: 14px;
-    color: #4d927e;
+
+.loginBox {
+
+    width: min(420px, 90%);
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.12);
+
+    text-align: center;
 }
 
-.user-name {
+
+.logo {
+
+    width: 75px;
+
+    height: 75px;
+
+    border-radius: 20px;
+
+    background: #dcebdc;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    margin: auto auto 20px;
+
+    font-size: 16px;
+
     font-weight: bold;
+
+    color: #4f7859;
 }
+
+
+.loginBox h1 {
+
+    margin-bottom: 8px;
+
+}
+
+
+.loginBox p {
+
+    color: #777;
+
+}
+
+
+input,
+textarea {
+
+    width: 100%;
+
+    border: 1px solid #ddd5c8;
+
+    border-radius: 10px;
+
+    padding: 12px;
+
+    font-size: 15px;
+
+    outline: none;
+
+}
+
+
+textarea {
+
+    min-height: 250px;
+
+    resize: vertical;
+
+    line-height: 1.6;
+}
+
 
 button {
+
     border: none;
+
+    border-radius: 10px;
+
+    padding: 11px 16px;
+
     cursor: pointer;
-    font-family: inherit;
+
+    font-size: 14px;
 }
 
-.btn {
-    padding: 10px 16px;
-    border-radius: 10px;
+
+.primary {
+
+    background: #557a5d;
+
+    color: white;
+}
+
+
+.primary:hover {
+
+    opacity: .9;
+}
+
+
+/* =========================
+   APP
+========================= */
+
+#app {
+
+    display: none;
+
+    min-height: 100vh;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+
+    position: fixed;
+
+    left: 0;
+
+    top: 0;
+
+    bottom: 0;
+
+    width: 240px;
+
+    background: #eee8dc;
+
+    padding: 25px 15px;
+}
+
+
+.brand {
+
+    font-size: 21px;
+
+    font-weight: bold;
+
+    padding: 10px 15px 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.brandLogo {
+
+    display: inline-flex;
+
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 12px;
+
+    background: #d4e7d6;
+
+    color: #4e7757;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    text-align: center;
+}
+
+
+.nav button {
+
+    display: block;
+
+    width: 100%;
+
+    text-align: left;
+
+    background: transparent;
+
+    margin-bottom: 5px;
+
+    color: #514c45;
+}
+
+
+.nav button:hover,
+.nav button.active {
+
+    background: #ddd5c8;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.main {
+
+    margin-left: 240px;
+
+    padding: 30px;
+
+    min-height: 100vh;
+}
+
+
+.topbar {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 35px;
+
+    gap: 20px;
+}
+
+
+.topbar h1 {
+
+    font-family: Georgia, serif;
+
+    font-size: 40px;
+
+    margin: 0;
+}
+
+
+.userArea {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+
+.status {
+
+    color: #63836a;
+
+    font-size: 14px;
+}
+
+
+.adminBadge {
+
+    display: none;
+
+    background: #dcebdc;
+
+    color: #4f7859;
+
+    padding: 7px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
     font-weight: bold;
 }
 
-.primary {
-    background: #4d927e;
-    color: white;
+
+#adminButton {
+
+    background: #e3dfd5;
+
+    color: #514c45;
 }
 
-.primary:hover {
-    background: #3d7b6a;
-}
-
-.secondary {
-    background: #ebe5d8;
-    color: #403b34;
-}
-
-.danger {
-    background: #c75d5d;
-    color: white;
-}
-
-.edit-btn {
-    background: #e5eee9;
-    color: #39725f;
-}
 
 /* =========================
-   LAYOUT
+   SECTIONS
 ========================= */
 
-.app {
-    display: flex;
-    min-height: calc(100vh - 72px);
-}
+.section {
 
-.sidebar {
-    width: 245px;
-    background: #eee8dc;
-    border-right: 1px solid #ded8ca;
-    padding: 22px 14px;
-    flex-shrink: 0;
-}
-
-.nav-item {
-    width: 100%;
-    text-align: left;
-    background: transparent;
-    padding: 13px 15px;
-    margin-bottom: 5px;
-    border-radius: 12px;
-    font-size: 15px;
-    color: #403b34;
-}
-
-.nav-item:hover,
-.nav-item.active {
-    background: #dfd7c9;
-}
-
-.main {
-    flex: 1;
-    padding: 35px;
-    min-width: 0;
-}
-
-.page {
     display: none;
 }
 
-.page.active {
+
+.section.active {
+
     display: block;
 }
 
-.page-title {
-    font-family: Georgia, serif;
-    font-size: 42px;
-    margin: 0 0 8px;
-}
-
-.page-subtitle {
-    color: #80796d;
-    margin-bottom: 30px;
-}
 
 /* =========================
-   NOTE GRID
+   ACTIONS
 ========================= */
 
-.note-grid {
+.actions {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   CARDS
+========================= */
+
+.cards {
+
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(300px, 1fr)
+        );
+
     gap: 18px;
+
     width: 100%;
 }
 
-.note-card {
-    background: #fffdf8;
-    border: 1px solid #ddd6c8;
+
+.card {
+
+    background: #f4eee3;
+
+    border: 1px solid #dfd6c7;
+
     border-radius: 15px;
-    padding: 22px;
-    box-shadow: 0 3px 12px rgba(50,40,20,.05);
+
+    padding: 25px;
+
+    min-height: 170px;
+
     cursor: pointer;
+
     transition: .15s;
-    min-width: 0;
-}
 
-.note-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(50,40,20,.09);
-}
-
-.note-title {
-    font-family: Georgia, serif;
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 12px;
-    word-break: break-word;
-}
-
-.note-content {
     width: 100%;
-    max-width: 100%;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    color: #686157;
-    line-height: 1.65;
-    font-size: 15px;
+
+    overflow: hidden;
 }
 
-.note-info {
-    margin-top: 18px;
-    padding-top: 12px;
-    border-top: 1px solid #e6e0d5;
-    color: #999184;
-    font-size: 12px;
+
+.card:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 20px rgba(0,0,0,.07);
 }
 
-/* =========================
-   TASKS
-========================= */
 
-.task-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
+.card h2 {
 
-.task-card {
-    background: #fffdf8;
-    border: 1px solid #ddd6c8;
-    border-radius: 14px;
-    padding: 18px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+    margin: 0 0 12px;
 
-.task-check {
-    width: 22px;
-    height: 22px;
-    cursor: pointer;
-}
+    font-family: Georgia, serif;
 
-.task-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.task-title {
-    font-weight: bold;
-    font-size: 16px;
     word-break: break-word;
 }
 
-.task-details {
-    color: #777066;
-    margin-top: 5px;
+
+/*
+   IMPORTANT:
+   Keeps the note text directly
+   below the title instead of
+   appearing on the far right.
+*/
+
+.cardText {
+
+    color: #716b62;
+
+    line-height: 1.6;
+
     white-space: pre-wrap;
+
     overflow-wrap: anywhere;
+
+    word-break: break-word;
+
+    width: 100%;
+
+    display: block;
+
+    text-align: left;
 }
 
-.task-date {
-    color: #4d927e;
-    font-size: 13px;
-    margin-top: 6px;
-}
 
 /* =========================
-   PEOPLE
+   BUTTONS
 ========================= */
 
-.people-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 12px;
+.editBtn {
+
+    background: #e3dfd5;
+
+    color: #514c45;
+
+    margin-right: 5px;
 }
 
-.person {
-    background: #fffdf8;
-    border: 1px solid #ddd6c8;
-    border-radius: 13px;
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+
+.deleteBtn {
+
+    background: #ead1d1;
+
+    color: #963f3f;
 }
 
-.online-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #49a56f;
-    box-shadow: 0 0 0 3px #dcefe3;
-}
-
-.person-name {
-    font-weight: bold;
-}
-
-.online-label {
-    color: #888076;
-    font-size: 12px;
-}
 
 /* =========================
    MODALS
 ========================= */
 
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(25,22,18,.55);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 500;
-    padding: 20px;
-}
-
-.modal-overlay.show {
-    display: flex;
-}
-
 .modal {
-    width: 100%;
-    max-width: 650px;
-    background: #fffdf8;
-    border-radius: 18px;
-    padding: 25px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.25);
-    max-height: 90vh;
-    overflow-y: auto;
-}
 
-.modal h2 {
-    font-family: Georgia, serif;
-    margin-top: 0;
-}
+    display: none;
 
-label {
-    display: block;
-    font-size: 13px;
-    font-weight: bold;
-    margin: 15px 0 7px;
-}
-
-input,
-textarea,
-select {
-    width: 100%;
-    border: 1px solid #d8d0c2;
-    background: white;
-    border-radius: 10px;
-    padding: 12px;
-    font-family: inherit;
-    font-size: 15px;
-    outline: none;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #4d927e;
-}
-
-textarea {
-    min-height: 220px;
-    resize: vertical;
-}
-
-.modal-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-/* =========================
-   AI ASSISTANT
-========================= */
-
-.ai-box {
-    background: #fffdf8;
-    border: 1px solid #ddd6c8;
-    border-radius: 18px;
-    padding: 25px;
-    max-width: 800px;
-}
-
-.ai-answer {
-    margin-top: 20px;
-    background: #f0ebe0;
-    border-radius: 12px;
-    padding: 18px;
-    white-space: pre-wrap;
-    line-height: 1.6;
-}
-
-.quick-questions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 15px;
-}
-
-/* =========================
-   LOGIN
-========================= */
-
-.login-screen {
     position: fixed;
+
     inset: 0;
-    background: #f7f4ed;
+
+    background: rgba(0,0,0,.45);
+
     z-index: 1000;
-    display: flex;
-    align-items: center;
+
     justify-content: center;
+
+    align-items: center;
+
     padding: 20px;
 }
 
-.login-box {
+
+.modalBox {
+
+    width: min(750px, 95%);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
     background: #fffdf8;
-    width: 100%;
-    max-width: 430px;
-    padding: 35px;
-    border-radius: 20px;
-    border: 1px solid #ddd6c8;
-    box-shadow: 0 15px 50px rgba(50,40,20,.1);
-    text-align: center;
+
+    border-radius: 18px;
+
+    padding: 30px;
 }
 
-.login-logo {
-    margin: auto auto 20px;
-    width: 70px;
-    height: 70px;
-    border-radius: 20px;
-    background: #4d927e;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-}
 
-.login-logo b {
-    font-size: 22px;
-}
+.modalBox h2 {
 
-.login-logo span {
-    font-size: 15px;
-}
+    margin-top: 0;
 
-.login-box h1 {
     font-family: Georgia, serif;
-    margin-bottom: 8px;
 }
 
-.login-box p {
-    color: #81796d;
-    margin-bottom: 25px;
-}
 
-.login-box input {
-    margin-bottom: 12px;
-}
+.modalActions {
 
-.login-box .btn {
-    width: 100%;
-}
-
-/* =========================
-   ADMIN
-========================= */
-
-.admin-badge {
-    background: #4d927e;
-    color: white;
-    font-size: 11px;
-    padding: 5px 8px;
-    border-radius: 8px;
-    display: none;
-}
-
-.admin-badge.show {
-    display: inline-block;
-}
-
-.admin-controls {
     display: flex;
-    gap: 8px;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
     margin-top: 15px;
 }
 
+
+.closeBtn {
+
+    background: #e8e3da;
+}
+
+
 /* =========================
-   EMPTY
+   PEOPLE
 ========================= */
 
-.empty {
-    padding: 50px;
-    text-align: center;
-    color: #8a8277;
-    background: #fffdf8;
-    border: 1px dashed #d4cdbf;
-    border-radius: 15px;
+.online {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #557a5d;
 }
+
+
+.dot {
+
+    width: 8px;
+
+    height: 8px;
+
+    background: #5c9b66;
+
+    border-radius: 50%;
+}
+
 
 /* =========================
    MOBILE
 ========================= */
 
-@media (max-width: 750px) {
-
-    header {
-        padding: 0 14px;
-    }
+@media(max-width: 700px) {
 
     .sidebar {
+
         width: 70px;
-        padding: 15px 7px;
+
+        padding: 15px 8px;
     }
 
-    .nav-item {
-        font-size: 0;
-        text-align: center;
-        padding: 14px 5px;
+
+    .brand {
+
+        padding: 10px 5px 25px;
+
+        justify-content: center;
     }
 
-    .nav-item::first-letter {
-        font-size: 20px;
+
+    .brandText {
+
+        display: none;
     }
+
 
     .main {
-        padding: 22px 15px;
+
+        margin-left: 70px;
+
+        padding: 20px;
     }
 
-    .page-title {
-        font-size: 32px;
+
+    .topbar {
+
+        align-items: flex-start;
+
+        flex-direction: column;
     }
 
-    .status {
-        display: none;
+
+    .topbar h1 {
+
+        font-size: 30px;
     }
 
-    .user-name {
-        display: none;
-    }
 
-    .note-grid {
+    .cards {
+
         grid-template-columns: 1fr;
     }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
-<!-- =========================
-     LOGIN
-========================= -->
 
-<div class="login-screen" id="loginScreen">
+<!-- =====================================================
+     USERNAME SCREEN
+===================================================== -->
 
-    <div class="login-box">
+<div id="usernameScreen">
 
-        <div class="login-logo">
-            <b>BSN</b>
-            <span>2A</span>
+    <div class="loginBox">
+
+        <div class="logo">
+
+            BSN<br>2A
+
         </div>
 
-        <h1>BSN 2A Notes</h1>
 
-        <p>Enter your name to continue.</p>
+        <h1>
+
+            BSN 2A NOTES
+
+        </h1>
+
+
+        <p>
+
+            Enter your name to continue
+
+        </p>
+
 
         <input
-            type="text"
             id="usernameInput"
             placeholder="Your name"
-            maxlength="30"
+            autocomplete="off"
         >
 
-        <button class="btn primary" onclick="enterSite()">
-            Enter Notes
+
+        <br>
+        <br>
+
+
+        <button
+            class="primary"
+            onclick="enterSite()"
+        >
+
+            Enter
+
         </button>
 
     </div>
@@ -602,428 +699,393 @@ textarea {
 </div>
 
 
-<!-- =========================
-     HEADER
-========================= -->
 
-<header>
+<!-- =====================================================
+     MAIN APP
+===================================================== -->
 
-    <div class="logo-area">
+<div id="app">
 
-        <div class="bsn-logo">
-            <span>BSN</span>
-            <span>2A</span>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+
+        <div class="brand">
+
+
+            <span class="brandLogo">
+
+                BSN<br>2A
+
+            </span>
+
+
+            <span class="brandText">
+
+                BSN 2A
+
+            </span>
+
+
         </div>
 
-        <span>BSN 2A NOTES</span>
-
-    </div>
-
-    <div class="header-right">
-
-        <span class="status">
-            🟢 <span id="activeCount">0</span> active
-        </span>
-
-        <span class="user-name" id="currentUser"></span>
-
-        <span class="admin-badge" id="adminBadge">
-            ADMIN
-        </span>
-
-        <button
-            class="btn secondary"
-            onclick="openAdminLogin()"
-        >
-            🔐 Admin
-        </button>
-
-    </div>
-
-</header>
 
 
-<div class="app">
+        <div class="nav">
 
-<!-- =========================
-     SIDEBAR
-========================= -->
-
-<aside class="sidebar">
-
-    <button
-        class="nav-item active"
-        onclick="showPage('notesPage', this)"
-    >
-        📝 Notes
-    </button>
-
-    <button
-        class="nav-item"
-        onclick="showPage('tasksPage', this)"
-    >
-        ☑️ Tasks
-    </button>
-
-    <button
-        class="nav-item"
-        onclick="showPage('peoplePage', this)"
-    >
-        👥 People
-    </button>
-
-    <button
-        class="nav-item"
-        onclick="showPage('assistantPage', this)"
-    >
-        🤖 Assistant
-    </button>
-
-</aside>
-
-
-<!-- =========================
-     MAIN
-========================= -->
-
-<main class="main">
-
-
-<!-- NOTES -->
-
-<section id="notesPage" class="page active">
-
-    <h1 class="page-title">Notes</h1>
-
-    <div class="page-subtitle">
-        Class notes for BSN 2A
-    </div>
-
-    <div style="margin-bottom:20px">
-
-        <button
-            class="btn primary"
-            onclick="openNoteEditor()"
-        >
-            + Add Note
-        </button>
-
-    </div>
-
-    <div id="notesContainer" class="note-grid">
-
-        <div class="empty">
-            No notes yet. Add your first note!
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- TASKS -->
-
-<section id="tasksPage" class="page">
-
-    <h1 class="page-title">Tasks</h1>
-
-    <div class="page-subtitle">
-        Assignments, quizzes, exams and upcoming activities
-    </div>
-
-    <div style="margin-bottom:20px">
-
-        <button
-            class="btn primary"
-            onclick="openTaskEditor()"
-        >
-            + Add Task
-        </button>
-
-    </div>
-
-    <div id="tasksContainer" class="task-list">
-
-        <div class="empty">
-            No tasks yet.
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- PEOPLE -->
-
-<section id="peoplePage" class="page">
-
-    <h1 class="page-title">People</h1>
-
-    <div class="page-subtitle">
-        People currently viewing BSN 2A Notes
-    </div>
-
-    <div
-        id="peopleContainer"
-        class="people-grid"
-    ></div>
-
-</section>
-
-
-<!-- ASSISTANT -->
-
-<section id="assistantPage" class="page">
-
-    <h1 class="page-title">Assistant</h1>
-
-    <div class="page-subtitle">
-        Ask about your upcoming tasks and notes.
-    </div>
-
-    <div class="ai-box">
-
-        <input
-            type="text"
-            id="aiQuestion"
-            placeholder="Example: What is due tomorrow?"
-            onkeydown="if(event.key==='Enter') askAssistant()"
-        >
-
-        <div class="quick-questions">
 
             <button
-                class="btn secondary"
-                onclick="setQuestion('What is due tomorrow?')"
+                class="active"
+                onclick="showSection('notes', this)"
             >
-                Due tomorrow?
+
+                📝 Notes
+
             </button>
 
-            <button
-                class="btn secondary"
-                onclick="setQuestion('What is due this week?')"
-            >
-                This week?
-            </button>
 
             <button
-                class="btn secondary"
-                onclick="setQuestion('What exams are coming up?')"
+                onclick="showSection('tasks', this)"
             >
-                Upcoming exams?
+
+                ☑️ Tasks
+
             </button>
+
+
+            <button
+                onclick="showSection('people', this)"
+            >
+
+                👥 People
+
+            </button>
+
 
         </div>
 
-        <button
-            class="btn primary"
-            style="margin-top:15px"
-            onclick="askAssistant()"
+
+    </aside>
+
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+        <div class="topbar">
+
+
+            <h1 id="pageTitle">
+
+                Notes
+
+            </h1>
+
+
+            <div class="userArea">
+
+
+                <span class="status">
+
+                    👤
+                    <span id="currentUser"></span>
+
+                </span>
+
+
+                <span
+                    id="adminBadge"
+                    class="adminBadge"
+                >
+
+                    ADMIN
+
+                </span>
+
+
+                <button
+                    id="adminButton"
+                    onclick="adminLogin()"
+                >
+
+                    🔒 Admin
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             NOTES
+        ================================================= -->
+
+        <section
+            id="notes"
+            class="section active"
         >
-            🤖 Ask
-        </button>
-
-        <div
-            id="aiAnswer"
-            class="ai-answer"
-            style="display:none"
-        ></div>
-
-    </div>
-
-</section>
 
 
-</main>
+            <div
+                class="actions"
+            >
+
+                <button
+                    class="primary"
+                    onclick="openNoteEditor()"
+                >
+
+                    + Add Note
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="notesList"
+                class="cards"
+            >
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             TASKS
+        ================================================= -->
+
+        <section
+            id="tasks"
+            class="section"
+        >
+
+
+            <div
+                class="actions"
+            >
+
+                <button
+                    class="primary"
+                    onclick="openTaskEditor()"
+                >
+
+                    + Add Task
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="tasksList"
+                class="cards"
+            >
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             PEOPLE
+        ================================================= -->
+
+        <section
+            id="people"
+            class="section"
+        >
+
+
+            <h2>
+
+                Active People
+
+            </h2>
+
+
+            <div
+                id="peopleList"
+                class="cards"
+            >
+
+            </div>
+
+
+        </section>
+
+
+    </main>
 
 </div>
 
 
-<!-- =========================
-     NOTE EDITOR
-========================= -->
 
-<div class="modal-overlay" id="noteModal">
+<!-- =====================================================
+     NOTE MODAL
+===================================================== -->
 
-    <div class="modal">
+<div
+    id="noteModal"
+    class="modal"
+>
+
+
+    <div class="modalBox">
+
 
         <h2 id="noteModalTitle">
-            Add Note
+
+            New Note
+
         </h2>
 
-        <label>Title</label>
 
         <input
-            type="text"
             id="noteTitle"
             placeholder="Note title"
         >
 
-        <label>Note</label>
+
+        <br>
+        <br>
+
 
         <textarea
-            id="noteContent"
-            placeholder="Write your notes here..."
+            id="noteText"
+            placeholder="Write your note here..."
         ></textarea>
 
-        <div class="modal-buttons">
+
+        <div class="modalActions">
+
 
             <button
-                class="btn secondary"
-                onclick="closeNoteEditor()"
+                class="closeBtn"
+                onclick="closeModal('noteModal')"
             >
+
                 Cancel
+
             </button>
 
-            <button
-                class="btn danger"
-                id="deleteNoteButton"
-                onclick="deleteCurrentNote()"
-                style="display:none"
-            >
-                Delete
-            </button>
 
             <button
-                class="btn primary"
+                class="primary"
                 onclick="saveNote()"
             >
+
                 Save
+
             </button>
 
+
         </div>
+
 
     </div>
 
 </div>
 
 
-<!-- =========================
-     TASK EDITOR
-========================= -->
 
-<div class="modal-overlay" id="taskModal">
+<!-- =====================================================
+     TASK MODAL
+===================================================== -->
 
-    <div class="modal">
+<div
+    id="taskModal"
+    class="modal"
+>
+
+
+    <div class="modalBox">
+
 
         <h2 id="taskModalTitle">
-            Add Task
+
+            New Task
+
         </h2>
 
-        <label>Task</label>
 
         <input
-            type="text"
             id="taskTitle"
-            placeholder="Example: NCM 105 Quiz"
+            placeholder="Task title"
         >
 
-        <label>Details</label>
+
+        <br>
+        <br>
+
 
         <textarea
-            id="taskDetails"
-            style="min-height:140px"
-            placeholder="Describe the task..."
+            id="taskText"
+            placeholder="Task details..."
         ></textarea>
 
-        <label>Due date</label>
 
-        <input
-            type="date"
-            id="taskDate"
-        >
+        <div class="modalActions">
 
-        <div class="modal-buttons">
 
             <button
-                class="btn secondary"
-                onclick="closeTaskEditor()"
+                class="closeBtn"
+                onclick="closeModal('taskModal')"
             >
+
                 Cancel
+
             </button>
 
-            <button
-                class="btn danger"
-                id="deleteTaskButton"
-                onclick="deleteCurrentTask()"
-                style="display:none"
-            >
-                Delete
-            </button>
 
             <button
-                class="btn primary"
+                class="primary"
                 onclick="saveTask()"
             >
+
                 Save
+
             </button>
 
+
         </div>
+
 
     </div>
 
 </div>
 
 
-<!-- =========================
-     ADMIN LOGIN
-========================= -->
 
-<div class="modal-overlay" id="adminModal">
-
-    <div class="modal" style="max-width:400px">
-
-        <h2>Admin Access</h2>
-
-        <p>
-            Enter the administrator password.
-        </p>
-
-        <input
-            type="password"
-            id="adminPassword"
-            placeholder="Admin password"
-            onkeydown="if(event.key==='Enter') loginAdmin()"
-        >
-
-        <div
-            id="adminError"
-            style="color:#c75d5d;margin-top:10px;display:none"
-        >
-            Incorrect password.
-        </div>
-
-        <div class="modal-buttons">
-
-            <button
-                class="btn secondary"
-                onclick="closeAdminLogin()"
-            >
-                Cancel
-            </button>
-
-            <button
-                class="btn primary"
-                onclick="loginAdmin()"
-            >
-                Login
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================
+<!-- =====================================================
      FIREBASE
-========================= -->
+===================================================== -->
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
+/* =========================
+   FIREBASE IMPORTS
+========================= */
+
+import {
+    initializeApp
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
 
 import {
     getDatabase,
@@ -1033,19 +1095,28 @@ import {
     update,
     remove,
     onValue,
-    onDisconnect,
     serverTimestamp
 }
-from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
 
-/* =========================================
-   YOUR FIREBASE CONFIG
-========================================= */
+import {
+    getAuth,
+    signInAnonymously,
+    onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+
+/* =========================
+   FIREBASE CONFIG
+========================= */
 
 const firebaseConfig = {
 
-    apiKey: "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
+    apiKey:
+        "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
 
     authDomain:
         "bsn-2a-notes.firebaseapp.com",
@@ -1067,273 +1138,507 @@ const firebaseConfig = {
 
     measurementId:
         "G-WNTP9GZJ4B"
+
 };
 
 
-const app = initializeApp(firebaseConfig);
 
-const db = getDatabase(app);
+const app =
+    initializeApp(firebaseConfig);
 
 
-/* =========================================
-   VARIABLES
-========================================= */
+const db =
+    getDatabase(app);
 
-let currentUser = "";
+
+const auth =
+    getAuth(app);
+
+
+
+/* =====================================================
+   ADMIN
+===================================================== */
+
+/*
+   IMPORTANT:
+
+   This is the admin password you requested.
+
+   Everyone starts as a normal viewer.
+*/
+
+const ADMIN_PASSWORD =
+    "supperlol123123";
+
 
 let isAdmin = false;
 
+
 let editingNoteId = null;
+
 
 let editingTaskId = null;
 
-let notesData = {};
-
-let tasksData = {};
 
 
-/* =========================================
-   LOGIN
-========================================= */
+/* =====================================================
+   USERNAME
+===================================================== */
 
-window.enterSite = function() {
+window.enterSite = function () {
+
 
     const input =
-        document.getElementById("usernameInput");
+        document.getElementById(
+            "usernameInput"
+        );
+
 
     const name =
         input.value.trim();
 
+
     if (!name) {
 
-        alert("Please enter your name.");
+        alert(
+            "Please enter your name."
+        );
 
         return;
     }
 
-    currentUser = name;
 
     localStorage.setItem(
-        "bsn2a_username",
+        "bsnUsername",
         name
     );
 
-    document.getElementById(
-        "loginScreen"
-    ).style.display = "none";
 
-    document.getElementById(
-        "currentUser"
-    ).textContent = name;
+    document
+        .getElementById(
+            "usernameScreen"
+        )
+        .style.display = "none";
 
-    createPresence();
+
+    document
+        .getElementById(
+            "app"
+        )
+        .style.display = "block";
+
+
+    document
+        .getElementById(
+            "currentUser"
+        )
+        .textContent = name;
+
+
+    updatePresence();
 
 };
 
 
-/* =========================================
-   AUTO LOGIN
-========================================= */
 
-const savedName =
-    localStorage.getItem("bsn2a_username");
+/* =====================================================
+   ADMIN LOGIN
+===================================================== */
 
-if (savedName) {
-
-    currentUser = savedName;
-
-    document.getElementById(
-        "loginScreen"
-    ).style.display = "none";
-
-    document.getElementById(
-        "currentUser"
-    ).textContent = savedName;
-
-    createPresence();
-
-}
+window.adminLogin = function () {
 
 
-/* =========================================
-   ONLINE PRESENCE
-========================================= */
+    /*
+       If already admin,
+       don't ask again.
+    */
 
-function createPresence() {
+    if (isAdmin) {
 
-    if (!currentUser) return;
-
-    const safeName =
-        currentUser
-            .replace(/[.#$[\]]/g, "_");
-
-    const presenceRef =
-        ref(
-            db,
-            "presence/" + safeName
+        alert(
+            "You are already in Admin Mode 🔓"
         );
-
-    set(presenceRef, {
-
-        name: currentUser,
-
-        online: true,
-
-        lastSeen: serverTimestamp()
-
-    });
-
-    onDisconnect(presenceRef)
-        .remove();
-
-}
-
-
-/* =========================================
-   WATCH PEOPLE
-========================================= */
-
-const presenceRef =
-    ref(db, "presence");
-
-onValue(
-    presenceRef,
-    snapshot => {
-
-        const people =
-            snapshot.val() || {};
-
-        const container =
-            document.getElementById(
-                "peopleContainer"
-            );
-
-        container.innerHTML = "";
-
-        const names =
-            Object.values(people);
-
-        document.getElementById(
-            "activeCount"
-        ).textContent = names.length;
-
-        if (!names.length) {
-
-            container.innerHTML =
-                `<div class="empty">
-                    Nobody is currently online.
-                </div>`;
-
-            return;
-        }
-
-        names.forEach(person => {
-
-            const div =
-                document.createElement("div");
-
-            div.className = "person";
-
-            div.innerHTML = `
-
-                <div class="online-dot"></div>
-
-                <div>
-
-                    <div class="person-name">
-                        ${escapeHTML(person.name)}
-                    </div>
-
-                    <div class="online-label">
-                        Online
-                    </div>
-
-                </div>
-
-            `;
-
-            container.appendChild(div);
-
-        });
-
-    }
-);
-
-
-/* =========================================
-   NOTES
-========================================= */
-
-const notesRef =
-    ref(db, "notes");
-
-onValue(
-    notesRef,
-    snapshot => {
-
-        notesData =
-            snapshot.val() || {};
-
-        renderNotes();
-
-    }
-);
-
-
-function renderNotes() {
-
-    const container =
-        document.getElementById(
-            "notesContainer"
-        );
-
-    container.innerHTML = "";
-
-    const entries =
-        Object.entries(notesData);
-
-    if (!entries.length) {
-
-        container.innerHTML =
-            `<div class="empty">
-                No notes yet. Add your first note!
-            </div>`;
 
         return;
     }
 
-    entries.reverse();
 
-    entries.forEach(
-        ([id, note]) => {
+    const password =
+        prompt(
+            "Enter Admin Password:"
+        );
 
-            const card =
-                document.createElement("div");
 
-            card.className = "note-card";
+    if (
+        password ===
+        ADMIN_PASSWORD
+    ) {
 
-            card.onclick =
-                () => openNoteEditor(
-                    id
+
+        isAdmin = true;
+
+
+        document
+            .getElementById(
+                "adminButton"
+            )
+            .textContent =
+            "🔓 Admin Mode";
+
+
+        document
+            .getElementById(
+                "adminBadge"
+            )
+            .style.display =
+            "inline-block";
+
+
+        /*
+           Refresh the cards so
+           edit/delete buttons appear.
+        */
+
+        loadNotes();
+
+        loadTasks();
+
+
+        alert(
+            "Admin access granted! 🔓"
+        );
+
+
+    } else {
+
+
+        alert(
+            "Incorrect admin password ❌"
+        );
+
+    }
+
+};
+
+
+
+/* =====================================================
+   ADMIN CHECK
+===================================================== */
+
+function requireAdmin() {
+
+
+    if (!isAdmin) {
+
+
+        alert(
+            "🔒 Admin access required.\n\n" +
+            "Click the 🔒 Admin button first."
+        );
+
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+
+/* =====================================================
+   FIREBASE ANONYMOUS LOGIN
+===================================================== */
+
+onAuthStateChanged(
+    auth,
+    async function(user) {
+
+
+        if (!user) {
+
+
+            try {
+
+                await signInAnonymously(
+                    auth
                 );
 
-            card.innerHTML = `
+            }
 
-                <div class="note-title">
-                    ${escapeHTML(note.title)}
-                </div>
+            catch(error) {
 
-                <div class="note-content">
-                    ${escapeHTML(note.content)}
-                </div>
+                console.error(
+                    error
+                );
 
-                <div class="note-info">
-                    Added by ${escapeHTML(note.author || "Unknown")}
-                </div>
+            }
 
-            `;
 
-            container.appendChild(card);
+            return;
+
+        }
+
+
+        updatePresence();
+
+    }
+);
+
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+window.showSection =
+function(section, button) {
+
+
+    document
+        .querySelectorAll(
+            ".section"
+        )
+        .forEach(
+            function(element) {
+
+                element.classList
+                    .remove("active");
+
+            }
+        );
+
+
+    document
+        .getElementById(section)
+        .classList
+        .add("active");
+
+
+    document
+        .querySelectorAll(
+            ".nav button"
+        )
+        .forEach(
+            function(element) {
+
+                element.classList
+                    .remove("active");
+
+            }
+        );
+
+
+    button.classList
+        .add("active");
+
+
+    const titles = {
+
+        notes: "Notes",
+
+        tasks: "Tasks",
+
+        people: "People"
+
+    };
+
+
+    document
+        .getElementById(
+            "pageTitle"
+        )
+        .textContent =
+        titles[section];
+
+};
+
+
+
+/* =====================================================
+   NOTES
+===================================================== */
+
+const notesRef =
+    ref(
+        db,
+        "notes"
+    );
+
+
+
+function loadNotes() {
+
+
+    onValue(
+        notesRef,
+        function(snapshot) {
+
+
+            const data =
+                snapshot.val() || {};
+
+
+            const list =
+                document
+                    .getElementById(
+                        "notesList"
+                    );
+
+
+            list.innerHTML = "";
+
+
+            const entries =
+                Object.entries(data);
+
+
+            if (
+                entries.length === 0
+            ) {
+
+
+                list.innerHTML = `
+
+                    <div class="card">
+
+                        <h2>
+                            No Notes Yet
+                        </h2>
+
+                        <div class="cardText">
+
+                            ${
+                                isAdmin
+                                ? "Click + Add Note to create one."
+                                : "No notes have been added yet."
+                            }
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                return;
+
+            }
+
+
+
+            entries.forEach(
+                function([id, note]) {
+
+
+                    const card =
+                        document
+                            .createElement(
+                                "div"
+                            );
+
+
+                    card.className =
+                        "card";
+
+
+
+                    const adminButtons =
+                        isAdmin
+
+                        ? `
+
+                            <br>
+
+                            <button
+                                class="editBtn"
+                                onclick="
+                                    event.stopPropagation();
+                                    editNote('${id}');
+                                "
+                            >
+
+                                ✏️ Edit
+
+                            </button>
+
+
+                            <button
+                                class="deleteBtn"
+                                onclick="
+                                    event.stopPropagation();
+                                    deleteNote('${id}');
+                                "
+                            >
+
+                                🗑️ Delete
+
+                            </button>
+
+                        `
+
+                        : "";
+
+
+
+                    card.innerHTML = `
+
+                        <h2>
+
+                            ${escapeHTML(
+                                note.title ||
+                                "Untitled"
+                            )}
+
+                        </h2>
+
+
+                        <div class="cardText">
+
+                            ${escapeHTML(
+                                note.text ||
+                                ""
+                            )}
+
+                        </div>
+
+
+                        ${adminButtons}
+
+                    `;
+
+
+
+                    /*
+                       Clicking the card opens
+                       the note.
+
+                       Normal users can READ.
+                       Admin can EDIT.
+                    */
+
+                    card.onclick =
+                        function() {
+
+                            openNote(
+                                id,
+                                note
+                            );
+
+                        };
+
+
+
+                    list.appendChild(
+                        card
+                    );
+
+                }
+            );
 
         }
     );
@@ -1341,299 +1646,571 @@ function renderNotes() {
 }
 
 
-/* =========================================
-   NOTE EDITOR
-========================================= */
+loadNotes();
+
+
+
+/* =====================================================
+   OPEN NOTE
+===================================================== */
+
+window.openNote =
+function(id, note) {
+
+
+    editingNoteId =
+        id;
+
+
+    document
+        .getElementById(
+            "noteModalTitle"
+        )
+        .textContent =
+        note.title ||
+        "Note";
+
+
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .value =
+        note.title ||
+        "";
+
+
+    document
+        .getElementById(
+            "noteText"
+        )
+        .value =
+        note.text ||
+        "";
+
+
+
+    /*
+       Normal user:
+
+       READ ONLY
+    */
+
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .disabled =
+        !isAdmin;
+
+
+    document
+        .getElementById(
+            "noteText"
+        )
+        .disabled =
+        !isAdmin;
+
+
+
+    document
+        .querySelector(
+            "#noteModal .primary"
+        )
+        .style.display =
+        isAdmin
+        ? "block"
+        : "none";
+
+
+
+    document
+        .getElementById(
+            "noteModal"
+        )
+        .style.display =
+        "flex";
+
+};
+
+
+
+/* =====================================================
+   ADD NOTE
+===================================================== */
 
 window.openNoteEditor =
-function(id = null) {
-
-    editingNoteId = id;
-
-    const modal =
-        document.getElementById(
-            "noteModal"
-        );
-
-    const deleteButton =
-        document.getElementById(
-            "deleteNoteButton"
-        );
-
-    if (id && notesData[id]) {
-
-        document.getElementById(
-            "noteModalTitle"
-        ).textContent = "Edit Note";
-
-        document.getElementById(
-            "noteTitle"
-        ).value =
-            notesData[id].title || "";
-
-        document.getElementById(
-            "noteContent"
-        ).value =
-            notesData[id].content || "";
-
-        deleteButton.style.display =
-            "inline-block";
-
-    } else {
-
-        document.getElementById(
-            "noteModalTitle"
-        ).textContent = "Add Note";
-
-        document.getElementById(
-            "noteTitle"
-        ).value = "";
-
-        document.getElementById(
-            "noteContent"
-        ).value = "";
-
-        deleteButton.style.display =
-            "none";
-
-    }
-
-    modal.classList.add("show");
-
-};
-
-
-window.closeNoteEditor =
 function() {
 
-    document.getElementById(
-        "noteModal"
-    ).classList.remove("show");
 
-    editingNoteId = null;
+    if (
+        !requireAdmin()
+    ) return;
+
+
+    editingNoteId =
+        null;
+
+
+    document
+        .getElementById(
+            "noteModalTitle"
+        )
+        .textContent =
+        "New Note";
+
+
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "noteText"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .disabled = false;
+
+
+    document
+        .getElementById(
+            "noteText"
+        )
+        .disabled = false;
+
+
+    document
+        .querySelector(
+            "#noteModal .primary"
+        )
+        .style.display =
+        "block";
+
+
+    document
+        .getElementById(
+            "noteModal"
+        )
+        .style.display =
+        "flex";
 
 };
 
+
+
+/* =====================================================
+   EDIT NOTE
+===================================================== */
+
+window.editNote =
+function(id) {
+
+
+    if (
+        !requireAdmin()
+    ) return;
+
+
+    onValue(
+        ref(
+            db,
+            "notes/" + id
+        ),
+
+        function(snapshot) {
+
+
+            const note =
+                snapshot.val();
+
+
+            if (note) {
+
+                openNote(
+                    id,
+                    note
+                );
+
+            }
+
+        },
+
+        {
+            onlyOnce: true
+        }
+
+    );
+
+};
+
+
+
+/* =====================================================
+   SAVE NOTE
+===================================================== */
 
 window.saveNote =
 async function() {
 
-    const title =
-        document.getElementById(
-            "noteTitle"
-        ).value.trim();
 
-    const content =
-        document.getElementById(
-            "noteContent"
-        ).value.trim();
+    if (
+        !requireAdmin()
+    ) return;
+
+
+    const title =
+        document
+            .getElementById(
+                "noteTitle"
+            )
+            .value
+            .trim();
+
+
+    const text =
+        document
+            .getElementById(
+                "noteText"
+            )
+            .value
+            .trim();
+
+
 
     if (!title) {
 
-        alert("Please enter a title.");
+        alert(
+            "Please enter a title."
+        );
 
         return;
+
     }
 
-    if (!content) {
 
-        alert("Please enter some note text.");
 
+    try {
+
+
+        if (editingNoteId) {
+
+
+            await update(
+
+                ref(
+                    db,
+                    "notes/" +
+                    editingNoteId
+                ),
+
+                {
+
+                    title: title,
+
+                    text: text,
+
+                    updatedAt:
+                        serverTimestamp()
+
+                }
+
+            );
+
+
+        }
+
+        else {
+
+
+            const newNote =
+                push(notesRef);
+
+
+            await set(
+
+                newNote,
+
+                {
+
+                    title: title,
+
+                    text: text,
+
+                    createdAt:
+                        serverTimestamp()
+
+                }
+
+            );
+
+        }
+
+
+        closeModal(
+            "noteModal"
+        );
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            "Unable to save the note."
+        );
+
+    }
+
+};
+
+
+
+/* =====================================================
+   DELETE NOTE
+===================================================== */
+
+window.deleteNote =
+async function(id) {
+
+
+    if (
+        !requireAdmin()
+    ) return;
+
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this note?"
+        );
+
+
+    if (!confirmed)
         return;
-    }
 
-    if (editingNoteId) {
 
-        await update(
+
+    try {
+
+
+        await remove(
+
             ref(
                 db,
                 "notes/" +
-                editingNoteId
-            ),
-            {
+                id
+            )
 
-                title,
-
-                content,
-
-                editedBy:
-                    currentUser,
-
-                updatedAt:
-                    Date.now()
-
-            }
         );
 
-    } else {
 
-        const newRef =
-            push(notesRef);
+    }
 
-        await set(
-            newRef,
-            {
+    catch(error) {
 
-                title,
 
-                content,
+        console.error(
+            error
+        );
 
-                author:
-                    currentUser,
 
-                createdAt:
-                    Date.now()
-
-            }
+        alert(
+            "Unable to delete the note."
         );
 
     }
 
-    closeNoteEditor();
-
 };
 
 
-window.deleteCurrentNote =
-async function() {
 
-    if (!editingNoteId) return;
-
-    if (!confirm(
-        "Delete this note?"
-    )) return;
-
-    await remove(
-        ref(
-            db,
-            "notes/" +
-            editingNoteId
-        )
-    );
-
-    closeNoteEditor();
-
-};
-
-
-/* =========================================
+/* =====================================================
    TASKS
-========================================= */
+===================================================== */
 
 const tasksRef =
-    ref(db, "tasks");
-
-onValue(
-    tasksRef,
-    snapshot => {
-
-        tasksData =
-            snapshot.val() || {};
-
-        renderTasks();
-
-    }
-);
-
-
-function renderTasks() {
-
-    const container =
-        document.getElementById(
-            "tasksContainer"
-        );
-
-    container.innerHTML = "";
-
-    const entries =
-        Object.entries(tasksData);
-
-    if (!entries.length) {
-
-        container.innerHTML =
-            `<div class="empty">
-                No tasks yet.
-            </div>`;
-
-        return;
-    }
-
-    entries.sort(
-        (a,b) =>
-            (a[1].dueDate || "")
-            .localeCompare(
-                b[1].dueDate || ""
-            )
+    ref(
+        db,
+        "tasks"
     );
 
-    entries.forEach(
-        ([id, task]) => {
 
-            const card =
-                document.createElement(
-                    "div"
-                );
 
-            card.className =
-                "task-card";
+function loadTasks() {
 
-            card.innerHTML = `
 
-                <input
-                    type="checkbox"
-                    class="task-check"
-                    ${task.completed ? "checked" : ""}
-                    onclick="
-                        event.stopPropagation();
-                        toggleTask('${id}')
-                    "
-                >
+    onValue(
+        tasksRef,
+        function(snapshot) {
 
-                <div
-                    class="task-info"
-                    onclick="openTaskEditor('${id}')"
-                >
 
-                    <div
-                        class="task-title"
-                        style="${
-                            task.completed
-                            ? 'text-decoration:line-through;opacity:.55'
-                            : ''
-                        }"
-                    >
-                        ${escapeHTML(task.title)}
+            const data =
+                snapshot.val() || {};
+
+
+            const list =
+                document
+                    .getElementById(
+                        "tasksList"
+                    );
+
+
+            list.innerHTML = "";
+
+
+            const entries =
+                Object.entries(data);
+
+
+
+            if (
+                entries.length === 0
+            ) {
+
+
+                list.innerHTML = `
+
+                    <div class="card">
+
+                        <h2>
+                            No Tasks Yet
+                        </h2>
+
+                        <div class="cardText">
+
+                            ${
+                                isAdmin
+                                ? "Click + Add Task to create one."
+                                : "No tasks have been added yet."
+                            }
+
+                        </div>
+
                     </div>
 
-                    <div class="task-details">
-                        ${escapeHTML(task.details || "")}
-                    </div>
+                `;
 
-                    ${
-                        task.dueDate
-                        ?
-                        `<div class="task-date">
-                            📅 ${formatDate(task.dueDate)}
-                        </div>`
-                        :
-                        ""
-                    }
 
-                </div>
+                return;
 
-                <button
-                    class="btn edit-btn"
-                    onclick="
-                        event.stopPropagation();
-                        openTaskEditor('${id}')
-                    "
-                >
-                    Edit
-                </button>
+            }
 
-            `;
 
-            container.appendChild(card);
+
+            entries.forEach(
+                function([id, task]) {
+
+
+                    const card =
+                        document
+                            .createElement(
+                                "div"
+                            );
+
+
+                    card.className =
+                        "card";
+
+
+
+                    const adminButtons =
+                        isAdmin
+
+                        ? `
+
+                            <br>
+
+                            <button
+                                class="editBtn"
+                                onclick="
+                                    event.stopPropagation();
+                                    editTask('${id}');
+                                "
+                            >
+
+                                ✏️ Edit
+
+                            </button>
+
+
+                            <button
+                                class="deleteBtn"
+                                onclick="
+                                    event.stopPropagation();
+                                    deleteTask('${id}');
+                                "
+                            >
+
+                                🗑️ Delete
+
+                            </button>
+
+                        `
+
+                        : "";
+
+
+
+                    card.innerHTML = `
+
+                        <h2>
+
+                            ${escapeHTML(
+                                task.title ||
+                                "Untitled"
+                            )}
+
+                        </h2>
+
+
+                        <div class="cardText">
+
+                            ${escapeHTML(
+                                task.text ||
+                                ""
+                            )}
+
+                        </div>
+
+
+                        ${adminButtons}
+
+                    `;
+
+
+
+                    card.onclick =
+                        function() {
+
+                            openTask(
+                                id,
+                                task
+                            );
+
+                        };
+
+
+
+                    list.appendChild(
+                        card
+                    );
+
+                }
+            );
 
         }
     );
@@ -1641,622 +2218,637 @@ function renderTasks() {
 }
 
 
-/* =========================================
-   TASK EDITOR
-========================================= */
+loadTasks();
+
+
+
+/* =====================================================
+   OPEN TASK
+===================================================== */
+
+window.openTask =
+function(id, task) {
+
+
+    editingTaskId =
+        id;
+
+
+    document
+        .getElementById(
+            "taskModalTitle"
+        )
+        .textContent =
+        task.title ||
+        "Task";
+
+
+    document
+        .getElementById(
+            "taskTitle"
+        )
+        .value =
+        task.title ||
+        "";
+
+
+    document
+        .getElementById(
+            "taskText"
+        )
+        .value =
+        task.text ||
+        "";
+
+
+
+    document
+        .getElementById(
+            "taskTitle"
+        )
+        .disabled =
+        !isAdmin;
+
+
+    document
+        .getElementById(
+            "taskText"
+        )
+        .disabled =
+        !isAdmin;
+
+
+    document
+        .querySelector(
+            "#taskModal .primary"
+        )
+        .style.display =
+        isAdmin
+        ? "block"
+        : "none";
+
+
+    document
+        .getElementById(
+            "taskModal"
+        )
+        .style.display =
+        "flex";
+
+};
+
+
+
+/* =====================================================
+   ADD TASK
+===================================================== */
 
 window.openTaskEditor =
-function(id = null) {
-
-    editingTaskId = id;
-
-    const modal =
-        document.getElementById(
-            "taskModal"
-        );
-
-    const deleteButton =
-        document.getElementById(
-            "deleteTaskButton"
-        );
-
-    if (id && tasksData[id]) {
-
-        const task =
-            tasksData[id];
-
-        document.getElementById(
-            "taskModalTitle"
-        ).textContent = "Edit Task";
-
-        document.getElementById(
-            "taskTitle"
-        ).value =
-            task.title || "";
-
-        document.getElementById(
-            "taskDetails"
-        ).value =
-            task.details || "";
-
-        document.getElementById(
-            "taskDate"
-        ).value =
-            task.dueDate || "";
-
-        deleteButton.style.display =
-            "inline-block";
-
-    } else {
-
-        document.getElementById(
-            "taskModalTitle"
-        ).textContent = "Add Task";
-
-        document.getElementById(
-            "taskTitle"
-        ).value = "";
-
-        document.getElementById(
-            "taskDetails"
-        ).value = "";
-
-        document.getElementById(
-            "taskDate"
-        ).value = "";
-
-        deleteButton.style.display =
-            "none";
-
-    }
-
-    modal.classList.add("show");
-
-};
-
-
-window.closeTaskEditor =
 function() {
 
-    document.getElementById(
-        "taskModal"
-    ).classList.remove("show");
 
-    editingTaskId = null;
+    if (
+        !requireAdmin()
+    ) return;
+
+
+    editingTaskId =
+        null;
+
+
+    document
+        .getElementById(
+            "taskModalTitle"
+        )
+        .textContent =
+        "New Task";
+
+
+    document
+        .getElementById(
+            "taskTitle"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "taskText"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "taskTitle"
+        )
+        .disabled = false;
+
+
+    document
+        .getElementById(
+            "taskText"
+        )
+        .disabled = false;
+
+
+    document
+        .querySelector(
+            "#taskModal .primary"
+        )
+        .style.display =
+        "block";
+
+
+    document
+        .getElementById(
+            "taskModal"
+        )
+        .style.display =
+        "flex";
 
 };
 
+
+
+/* =====================================================
+   EDIT TASK
+===================================================== */
+
+window.editTask =
+function(id) {
+
+
+    if (
+        !requireAdmin()
+    ) return;
+
+
+    onValue(
+
+        ref(
+            db,
+            "tasks/" +
+            id
+        ),
+
+        function(snapshot) {
+
+
+            const task =
+                snapshot.val();
+
+
+            if (task) {
+
+                openTask(
+                    id,
+                    task
+                );
+
+            }
+
+        },
+
+        {
+            onlyOnce: true
+        }
+
+    );
+
+};
+
+
+
+/* =====================================================
+   SAVE TASK
+===================================================== */
 
 window.saveTask =
 async function() {
 
+
+    if (
+        !requireAdmin()
+    ) return;
+
+
     const title =
-        document.getElementById(
-            "taskTitle"
-        ).value.trim();
+        document
+            .getElementById(
+                "taskTitle"
+            )
+            .value
+            .trim();
 
-    const details =
-        document.getElementById(
-            "taskDetails"
-        ).value.trim();
 
-    const dueDate =
-        document.getElementById(
-            "taskDate"
-        ).value;
+    const text =
+        document
+            .getElementById(
+                "taskText"
+            )
+            .value
+            .trim();
+
+
 
     if (!title) {
 
-        alert("Please enter a task.");
+        alert(
+            "Please enter a task title."
+        );
 
         return;
+
     }
 
-    if (editingTaskId) {
 
-        await update(
+
+    try {
+
+
+        if (editingTaskId) {
+
+
+            await update(
+
+                ref(
+                    db,
+                    "tasks/" +
+                    editingTaskId
+                ),
+
+                {
+
+                    title: title,
+
+                    text: text,
+
+                    updatedAt:
+                        serverTimestamp()
+
+                }
+
+            );
+
+
+        }
+
+        else {
+
+
+            const newTask =
+                push(tasksRef);
+
+
+            await set(
+
+                newTask,
+
+                {
+
+                    title: title,
+
+                    text: text,
+
+                    createdAt:
+                        serverTimestamp()
+
+                }
+
+            );
+
+        }
+
+
+        closeModal(
+            "taskModal"
+        );
+
+
+    }
+
+    catch(error) {
+
+
+        console.error(
+            error
+        );
+
+
+        alert(
+            "Unable to save the task."
+        );
+
+    }
+
+};
+
+
+
+/* =====================================================
+   DELETE TASK
+===================================================== */
+
+window.deleteTask =
+async function(id) {
+
+
+    if (
+        !requireAdmin()
+    ) return;
+
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this task?"
+        );
+
+
+    if (!confirmed)
+        return;
+
+
+
+    try {
+
+
+        await remove(
+
             ref(
                 db,
                 "tasks/" +
-                editingTaskId
-            ),
-            {
+                id
+            )
 
-                title,
-
-                details,
-
-                dueDate,
-
-                editedBy:
-                    currentUser,
-
-                updatedAt:
-                    Date.now()
-
-            }
         );
 
-    } else {
-
-        const newRef =
-            push(tasksRef);
-
-        await set(
-            newRef,
-            {
-
-                title,
-
-                details,
-
-                dueDate,
-
-                completed: false,
-
-                author:
-                    currentUser,
-
-                createdAt:
-                    Date.now()
-
-            }
-        );
 
     }
 
-    closeTaskEditor();
-
-};
+    catch(error) {
 
 
-window.deleteCurrentTask =
-async function() {
+        console.error(
+            error
+        );
 
-    if (!editingTaskId) return;
-
-    if (!confirm(
-        "Delete this task?"
-    )) return;
-
-    await remove(
-        ref(
-            db,
-            "tasks/" +
-            editingTaskId
-        )
-    );
-
-    closeTaskEditor();
-
-};
-
-
-window.toggleTask =
-async function(id) {
-
-    if (!tasksData[id]) return;
-
-    await update(
-        ref(
-            db,
-            "tasks/" + id
-        ),
-        {
-            completed:
-                !tasksData[id].completed
-        }
-    );
-
-};
-
-
-/* =========================================
-   ADMIN
-========================================= */
-
-window.openAdminLogin =
-function() {
-
-    document.getElementById(
-        "adminModal"
-    ).classList.add("show");
-
-    document.getElementById(
-        "adminPassword"
-    ).value = "";
-
-};
-
-
-window.closeAdminLogin =
-function() {
-
-    document.getElementById(
-        "adminModal"
-    ).classList.remove("show");
-
-};
-
-
-window.loginAdmin =
-function() {
-
-    const password =
-        document.getElementById(
-            "adminPassword"
-        ).value;
-
-    /*
-       Your admin password
-    */
-
-    if (
-        password ===
-        "supperlol123123"
-    ) {
-
-        isAdmin = true;
-
-        document.getElementById(
-            "adminBadge"
-        ).classList.add("show");
-
-        closeAdminLogin();
 
         alert(
-            "Admin mode enabled!"
+            "Unable to delete the task."
         );
-
-    } else {
-
-        document.getElementById(
-            "adminError"
-        ).style.display =
-            "block";
 
     }
 
 };
 
 
-/* =========================================
-   PAGE NAVIGATION
-========================================= */
 
-window.showPage =
-function(pageId, button) {
+/* =====================================================
+   PEOPLE / ACTIVE USERS
+===================================================== */
 
-    document
-        .querySelectorAll(".page")
-        .forEach(
-            page =>
-                page.classList.remove(
-                    "active"
-                )
+const presenceRef =
+    ref(
+        db,
+        "presence"
+    );
+
+
+
+async function updatePresence() {
+
+
+    const username =
+        localStorage.getItem(
+            "bsnUsername"
         );
 
-    document
-        .querySelectorAll(".nav-item")
-        .forEach(
-            item =>
-                item.classList.remove(
-                    "active"
-                )
-        );
 
-    document
-        .getElementById(pageId)
-        .classList.add("active");
+    const user =
+        auth.currentUser;
 
-    button.classList.add("active");
-
-};
-
-
-/* =========================================
-   ASSISTANT
-========================================= */
-
-window.setQuestion =
-function(question) {
-
-    document.getElementById(
-        "aiQuestion"
-    ).value = question;
-
-};
-
-
-window.askAssistant =
-function() {
-
-    const question =
-        document.getElementById(
-            "aiQuestion"
-        ).value
-        .trim()
-        .toLowerCase();
-
-    const answer =
-        document.getElementById(
-            "aiAnswer"
-        );
-
-    answer.style.display =
-        "block";
-
-
-    if (!question) {
-
-        answer.textContent =
-            "Ask me something like: What is due tomorrow?";
-
-        return;
-
-    }
-
-
-    const tasks =
-        Object.values(tasksData);
-
-
-    /* =====================================
-       TOMORROW
-    ===================================== */
 
     if (
-        question.includes("tomorrow")
-    ) {
-
-        const tomorrow =
-            new Date();
-
-        tomorrow.setDate(
-            tomorrow.getDate() + 1
-        );
-
-        const tomorrowString =
-            tomorrow
-                .toISOString()
-                .split("T")[0];
+        !user ||
+        !username
+    ) return;
 
 
-        const due =
-            tasks.filter(
-                task =>
-                    task.dueDate ===
-                    tomorrowString &&
-                    !task.completed
-            );
 
+    await set(
 
-        if (!due.length) {
+        ref(
+            db,
+            "presence/" +
+            user.uid
+        ),
 
-            answer.textContent =
-                "🎉 Nothing is due tomorrow!";
-
-            return;
-
-        }
-
-
-        answer.textContent =
-            "📅 Due tomorrow:\n\n" +
-            due
-                .map(
-                    task =>
-                        "• " +
-                        task.title +
-                        (
-                            task.details
-                            ?
-                            "\n  " +
-                            task.details
-                            :
-                            ""
-                        )
-                )
-                .join("\n\n");
-
-        return;
-
-    }
-
-
-    /* =====================================
-       THIS WEEK
-    ===================================== */
-
-    if (
-        question.includes("this week") ||
-        question.includes("week")
-    ) {
-
-        const today =
-            new Date();
-
-        const end =
-            new Date();
-
-        end.setDate(
-            today.getDate() + 7
-        );
-
-
-        const due =
-            tasks.filter(task => {
-
-                if (
-                    !task.dueDate ||
-                    task.completed
-                )
-                    return false;
-
-                const date =
-                    new Date(
-                        task.dueDate +
-                        "T00:00:00"
-                    );
-
-                return (
-                    date >= today &&
-                    date <= end
-                );
-
-            });
-
-
-        if (!due.length) {
-
-            answer.textContent =
-                "No upcoming tasks found for the next 7 days.";
-
-            return;
-
-        }
-
-
-        answer.textContent =
-            "📚 Upcoming this week:\n\n" +
-            due
-                .map(
-                    task =>
-                        "• " +
-                        task.title +
-                        " — " +
-                        formatDate(
-                            task.dueDate
-                        )
-                )
-                .join("\n");
-
-        return;
-
-    }
-
-
-    /* =====================================
-       EXAMS
-    ===================================== */
-
-    if (
-        question.includes("exam") ||
-        question.includes("quiz")
-    ) {
-
-        const matches =
-            tasks.filter(
-                task =>
-                    (
-                        task.title +
-                        " " +
-                        task.details
-                    )
-                    .toLowerCase()
-                    .includes("exam") ||
-                    (
-                        task.title +
-                        " " +
-                        task.details
-                    )
-                    .toLowerCase()
-                    .includes("quiz")
-            );
-
-
-        if (!matches.length) {
-
-            answer.textContent =
-                "I couldn't find any exams or quizzes in the tasks.";
-
-            return;
-
-        }
-
-
-        answer.textContent =
-            "📝 Exams / quizzes:\n\n" +
-            matches
-                .map(
-                    task =>
-                        "• " +
-                        task.title +
-                        (
-                            task.dueDate
-                            ?
-                            " — " +
-                            formatDate(
-                                task.dueDate
-                            )
-                            :
-                            ""
-                        )
-                )
-                .join("\n");
-
-        return;
-
-    }
-
-
-    /* =====================================
-       GENERAL
-    ===================================== */
-
-    answer.textContent =
-        "🤖 I can currently help you find:\n\n" +
-        "• What is due tomorrow\n" +
-        "• What is due this week\n" +
-        "• Upcoming exams and quizzes\n\n" +
-        "Try asking: \"What is due tomorrow?\"";
-
-};
-
-
-/* =========================================
-   HELPERS
-========================================= */
-
-function formatDate(dateString) {
-
-    if (!dateString)
-        return "";
-
-    const date =
-        new Date(
-            dateString +
-            "T00:00:00"
-        );
-
-    return date.toLocaleDateString(
-        undefined,
         {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
+
+            name: username,
+
+            online: true,
+
+            lastSeen:
+                serverTimestamp()
+
         }
+
     );
 
 }
 
 
-function escapeHTML(text) {
 
-    if (text === undefined ||
-        text === null)
-        return "";
+onValue(
 
-    return String(text)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    presenceRef,
+
+    function(snapshot) {
+
+
+        const data =
+            snapshot.val() || {};
+
+
+        const list =
+            document
+                .getElementById(
+                    "peopleList"
+                );
+
+
+        list.innerHTML = "";
+
+
+        const people =
+            Object.values(data)
+                .filter(
+                    function(person) {
+
+                        return person.online;
+
+                    }
+                );
+
+
+
+        if (
+            people.length === 0
+        ) {
+
+
+            list.innerHTML = `
+
+                <div class="card">
+
+                    <h2>
+                        No active people
+                    </h2>
+
+                </div>
+
+            `;
+
+
+            return;
+
+        }
+
+
+
+        people.forEach(
+            function(person) {
+
+
+                const card =
+                    document
+                        .createElement(
+                            "div"
+                        );
+
+
+                card.className =
+                    "card";
+
+
+                card.innerHTML = `
+
+                    <h2>
+
+                        👤
+                        ${escapeHTML(
+                            person.name
+                        )}
+
+                    </h2>
+
+
+                    <div class="online">
+
+                        <span class="dot"></span>
+
+                        Active
+
+                    </div>
+
+                `;
+
+
+                list.appendChild(
+                    card
+                );
+
+            }
+        );
+
+    }
+
+);
+
+
+
+/* =====================================================
+   MODAL CLOSE
+===================================================== */
+
+window.closeModal =
+function(id) {
+
+
+    document
+        .getElementById(id)
+        .style.display =
+        "none";
+
+};
+
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(value) {
+
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+
+/* =====================================================
+   REMEMBER USERNAME
+===================================================== */
+
+const savedUsername =
+    localStorage.getItem(
+        "bsnUsername"
+    );
+
+
+if (savedUsername) {
+
+
+    document
+        .getElementById(
+            "usernameInput"
+        )
+        .value =
+        savedUsername;
 
 }
 
 </script>
 
+
 </body>
+
 </html>
