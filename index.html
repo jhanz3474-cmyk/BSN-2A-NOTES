@@ -14,14 +14,15 @@
 
 :root{
     --green:#245c43;
+    --green-dark:#173f2d;
     --green2:#3d7a5b;
-    --dark:#173f2d;
     --light-green:#e7f0e8;
     --cream:#f6f2e9;
     --white:#fff;
     --text:#1e2b25;
     --muted:#718078;
     --danger:#c94b4b;
+    --border:#e3e0d8;
     --shadow:0 5px 20px rgba(30,50,40,.10);
 }
 
@@ -38,14 +39,12 @@ body{
     position:fixed;
     left:0;
     top:0;
-    width:250px;
+    width:240px;
     height:100vh;
     background:linear-gradient(180deg,#173f2d,#285c43);
     color:white;
     padding:25px 18px;
-    z-index:20;
-    display:flex;
-    flex-direction:column;
+    z-index:50;
 }
 
 .logo{
@@ -54,8 +53,8 @@ body{
 }
 
 .logo-symbol{
-    width:78px;
-    height:78px;
+    width:80px;
+    height:80px;
     border:4px solid #dcebd7;
     border-radius:20px;
     margin:auto;
@@ -63,7 +62,7 @@ body{
     align-items:center;
     justify-content:center;
     text-align:center;
-    font-size:24px;
+    font-size:23px;
     line-height:1.05;
     font-weight:bold;
     background:rgba(255,255,255,.08);
@@ -72,7 +71,7 @@ body{
 .logo h1{
     margin-top:12px;
     font-family:Georgia,serif;
-    font-size:27px;
+    font-size:28px;
 }
 
 .logo p{
@@ -96,6 +95,7 @@ body{
     border-radius:12px;
     cursor:pointer;
     font-size:15px;
+    transition:.2s;
 }
 
 .nav button:hover,
@@ -103,53 +103,12 @@ body{
     background:rgba(255,255,255,.17);
 }
 
-/* ================= ONLINE PEOPLE ================= */
-
-.online-box{
-    margin-top:auto;
-    margin-bottom:12px;
-    padding:13px;
-    background:rgba(255,255,255,.10);
-    border-radius:14px;
-    max-height:180px;
-    overflow-y:auto;
-}
-
-.online-title{
-    font-size:13px;
-    font-weight:bold;
-    margin-bottom:9px;
-    display:flex;
-    align-items:center;
-    gap:6px;
-}
-
-.online-dot{
-    width:9px;
-    height:9px;
-    background:#66d17a;
-    border-radius:50%;
-    display:inline-block;
-    box-shadow:0 0 6px #66d17a;
-}
-
-.online-user{
-    font-size:12px;
-    padding:5px 2px;
-    display:flex;
-    align-items:center;
-    gap:7px;
-}
-
-.online-user-dot{
-    width:7px;
-    height:7px;
-    background:#7ee68c;
-    border-radius:50%;
-}
-
 .user-box{
-    padding:12px;
+    position:absolute;
+    bottom:20px;
+    left:18px;
+    right:18px;
+    padding:13px;
     background:rgba(255,255,255,.12);
     border-radius:14px;
     font-size:13px;
@@ -160,13 +119,62 @@ body{
     margin-top:4px;
 }
 
+/* ================= ONLINE PEOPLE ================= */
+
+.online-panel{
+    position:fixed;
+    left:255px;
+    bottom:18px;
+    width:230px;
+    max-height:220px;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:15px;
+    box-shadow:var(--shadow);
+    z-index:40;
+    overflow:hidden;
+}
+
+.online-header{
+    padding:11px 14px;
+    font-weight:bold;
+    color:var(--green);
+    border-bottom:1px solid #eee;
+}
+
+.online-list{
+    max-height:170px;
+    overflow-y:auto;
+    padding:7px;
+}
+
+.online-user{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:7px;
+    border-radius:8px;
+    font-size:13px;
+}
+
+.online-user:hover{
+    background:#f1f5f1;
+}
+
+.online-dot{
+    width:9px;
+    height:9px;
+    background:#35a853;
+    border-radius:50%;
+    flex-shrink:0;
+}
+
 /* ================= MAIN ================= */
 
 .main{
-    margin-left:250px;
+    margin-left:240px;
     min-height:100vh;
-    padding:25px 35px;
-    padding-bottom:60px;
+    padding:25px 35px 100px;
 }
 
 .topbar{
@@ -182,7 +190,7 @@ body{
     border-radius:14px;
     padding:13px 18px;
     width:min(600px,100%);
-    border:1px solid #e3e0d8;
+    border:1px solid var(--border);
     outline:none;
     font-size:15px;
 }
@@ -215,6 +223,10 @@ body{
     background:var(--danger);
 }
 
+.btn.full{
+    width:100%;
+}
+
 /* ================= HERO ================= */
 
 .hero{
@@ -228,7 +240,7 @@ body{
 .hero h2{
     font-family:Georgia,serif;
     font-size:clamp(30px,4vw,48px);
-    color:var(--dark);
+    color:var(--green-dark);
 }
 
 .hero p{
@@ -253,7 +265,7 @@ body{
     justify-content:space-between;
     align-items:center;
     margin:25px 0 15px;
-    gap:15px;
+    gap:10px;
 }
 
 .section-title h2{
@@ -264,8 +276,9 @@ body{
 
 .cards{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));
     gap:18px;
+    width:100%;
 }
 
 .card{
@@ -274,27 +287,43 @@ body{
     padding:22px;
     box-shadow:var(--shadow);
     border:1px solid #e9e6df;
+    transition:.2s;
+    width:100%;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+}
+
+.card:hover{
+    transform:translateY(-2px);
 }
 
 .card h3{
     font-family:Georgia,serif;
     font-size:22px;
-    margin-bottom:12px;
-    color:var(--dark);
+    color:var(--green-dark);
+    width:100%;
+    margin:0 0 12px;
+    line-height:1.3;
+    overflow-wrap:anywhere;
+    word-break:break-word;
 }
 
 .card-text{
     width:100%;
     max-width:100%;
     display:block;
-    white-space:pre-wrap;
-    word-break:break-word;
-    overflow-wrap:anywhere;
+    margin:0;
+    padding:0;
     line-height:1.65;
     color:#526158;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+    word-break:break-word;
 }
 
 .card-date{
+    width:100%;
     color:var(--muted);
     font-size:12px;
     margin-top:15px;
@@ -302,9 +331,10 @@ body{
 
 .card-buttons{
     display:flex;
-    gap:7px;
-    margin-top:16px;
     flex-wrap:wrap;
+    gap:7px;
+    width:100%;
+    margin-top:16px;
 }
 
 .small-btn{
@@ -338,6 +368,7 @@ body{
     width:22px;
     height:22px;
     margin-top:2px;
+    flex-shrink:0;
     cursor:pointer;
 }
 
@@ -348,6 +379,7 @@ body{
 
 .task-title{
     font-weight:bold;
+    overflow-wrap:anywhere;
     word-break:break-word;
 }
 
@@ -357,130 +389,53 @@ body{
     margin-top:5px;
 }
 
+.task-description{
+    margin-top:8px;
+    color:#65726b;
+    line-height:1.6;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+}
+
 .completed .task-title{
     text-decoration:line-through;
     opacity:.55;
 }
 
-.task-description{
-    margin-top:8px;
-    color:#65726b;
-    white-space:pre-wrap;
-    word-break:break-word;
-}
-
-.task-status{
-    margin-top:8px;
-    font-size:12px;
-    color:var(--muted);
-}
-
 /* ================= DOCUMENTS ================= */
 
-.document{
+.document-card{
     background:white;
+    border-radius:15px;
     padding:18px;
-    border-radius:14px;
-    box-shadow:var(--shadow);
     margin-bottom:12px;
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
-
-.document-icon{
-    width:45px;
-    height:45px;
-    border-radius:10px;
-    background:#e7f0e8;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:21px;
-}
-
-.document-info{
-    flex:1;
-    min-width:0;
+    box-shadow:var(--shadow);
+    border:1px solid #e9e6df;
 }
 
 .document-title{
     font-weight:bold;
-    word-break:break-word;
+    font-size:17px;
+    color:var(--green-dark);
+    overflow-wrap:anywhere;
+}
+
+.document-meta{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:5px;
+}
+
+.document-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:12px;
 }
 
 .document-link{
-    color:var(--green);
     text-decoration:none;
-    font-size:13px;
-}
-
-.document-link:hover{
-    text-decoration:underline;
-}
-
-/* ================= CHAT ================= */
-
-.chat-box{
-    background:white;
-    border-radius:18px;
-    box-shadow:var(--shadow);
-    padding:20px;
-    width:100%;
-    max-width:1000px;
-}
-
-.chat-messages{
-    min-height:350px;
-    max-height:520px;
-    overflow-y:auto;
-    padding:10px;
-}
-
-.message{
-    margin-bottom:15px;
-    padding:12px 15px;
-    border-radius:12px;
-    max-width:85%;
-    line-height:1.5;
-    white-space:pre-wrap;
-    word-break:break-word;
-}
-
-.message.user{
-    background:var(--light-green);
-    margin-left:auto;
-}
-
-.message.ai{
-    background:#f1eee6;
-}
-
-.message.admin{
-    background:#dfece3;
-    border-left:4px solid var(--green);
-}
-
-.message-name{
-    font-size:11px;
-    font-weight:bold;
-    margin-bottom:5px;
-    opacity:.7;
-}
-
-.chat-input{
-    display:flex;
-    gap:10px;
-    margin-top:15px;
-}
-
-.chat-input input{
-    flex:1;
-    min-width:0;
-    padding:13px;
-    border-radius:10px;
-    border:1px solid #ddd;
-    outline:none;
 }
 
 /* ================= MODAL ================= */
@@ -538,6 +493,79 @@ body{
     gap:10px;
 }
 
+/* ================= CHAT ================= */
+
+.chat-box{
+    background:white;
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:20px;
+    width:100%;
+    max-width:1000px;
+}
+
+.chat-messages{
+    min-height:350px;
+    max-height:550px;
+    overflow-y:auto;
+    padding:10px;
+}
+
+.message{
+    margin-bottom:15px;
+    padding:12px 15px;
+    border-radius:12px;
+    max-width:85%;
+    line-height:1.5;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+}
+
+.message.user{
+    background:var(--light-green);
+    margin-left:auto;
+}
+
+.message.other{
+    background:#f1eee6;
+}
+
+.message.ai{
+    background:#f1eee6;
+}
+
+.message.admin{
+    background:#e5edf9;
+    border-left:4px solid #496b9b;
+}
+
+.message-name{
+    font-size:11px;
+    font-weight:bold;
+    margin-bottom:5px;
+    color:var(--green);
+}
+
+.chat-input{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.chat-input input{
+    flex:1;
+    padding:13px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    outline:none;
+}
+
+.chat-image{
+    max-width:100%;
+    border-radius:10px;
+    margin-top:8px;
+}
+
 /* ================= LOGIN ================= */
 
 .login-screen{
@@ -562,7 +590,7 @@ body{
 .login-box h1{
     font-family:Georgia,serif;
     color:var(--green);
-    margin-bottom:8px;
+    margin:15px 0 8px;
 }
 
 .login-box p{
@@ -576,10 +604,6 @@ body{
     border:1px solid #ddd;
     border-radius:10px;
     margin-bottom:12px;
-}
-
-.full{
-    width:100%;
 }
 
 /* ================= EMPTY ================= */
@@ -597,15 +621,14 @@ body{
 @media(max-width:800px){
 
     .sidebar{
-        width:75px;
-        padding:15px 8px;
+        width:70px;
+        padding:15px 7px;
     }
 
     .logo h1,
     .logo p,
     .nav span,
-    .user-box,
-    .online-box{
+    .user-box{
         display:none;
     }
 
@@ -613,17 +636,18 @@ body{
         width:55px;
         height:55px;
         font-size:17px;
+        border-radius:15px;
     }
 
     .nav button{
         text-align:center;
         padding:14px 5px;
-        font-size:20px;
+        font-size:19px;
     }
 
     .main{
-        margin-left:75px;
-        padding:18px;
+        margin-left:70px;
+        padding:18px 14px 100px;
     }
 
     .hero{
@@ -636,11 +660,25 @@ body{
     }
 
     .top-actions{
-        flex-wrap:wrap;
+        width:100%;
+    }
+
+    .top-actions .btn{
+        flex:1;
+    }
+
+    .online-panel{
+        left:82px;
+        bottom:10px;
+        width:200px;
     }
 
     .chat-input{
         flex-direction:column;
+    }
+
+    .chat-input .btn{
+        width:100%;
     }
 }
 </style>
@@ -668,12 +706,10 @@ body{
             id="usernameInput"
             placeholder="Enter your name"
             autocomplete="off"
+            onkeydown="if(event.key==='Enter') enterSite()"
         >
 
-        <button
-            class="btn full"
-            onclick="enterSite()"
-        >
+        <button class="btn full" onclick="enterSite()">
             Enter Website
         </button>
 
@@ -700,82 +736,46 @@ body{
 
     </div>
 
-
     <nav class="nav">
 
-        <button
-            class="active"
-            onclick="showSection('notes',this)"
-        >
+        <button class="active"
+                onclick="showSection('notes',this)">
             📝 <span>Notes</span>
         </button>
 
-        <button
-            onclick="showSection('tasks',this)"
-        >
+        <button onclick="showSection('tasks',this)">
             ✅ <span>Tasks</span>
         </button>
 
-        <button
-            onclick="showSection('documents',this)"
-        >
+        <button onclick="showSection('documents',this)">
             📚 <span>Documents</span>
         </button>
 
-        <button
-            onclick="showSection('chat',this)"
-        >
+        <button onclick="showSection('chat',this)">
             💬 <span>Class Chat</span>
         </button>
 
-        <button
-            onclick="showSection('assistant',this)"
-        >
-            🤖 <span>Assistant</span>
+        <button onclick="showSection('ai',this)">
+            🤖 <span>AI Assistant</span>
         </button>
 
-        <button
-            onclick="showSection('about',this)"
-        >
+        <button onclick="showSection('adminChat',this)">
+            🔒 <span>Admin Chat</span>
+        </button>
+
+        <button onclick="showSection('about',this)">
             ℹ️ <span>About</span>
         </button>
 
         <button onclick="adminLogin()">
-            🔒 <span id="adminButtonText">Admin</span>
+            🔐 <span id="adminButtonText">Admin</span>
         </button>
 
     </nav>
 
-
-    <!-- ALWAYS VISIBLE ONLINE PEOPLE -->
-
-    <div class="online-box">
-
-        <div class="online-title">
-
-            <span class="online-dot"></span>
-
-            Online
-            (<span id="onlineCount">0</span>)
-
-        </div>
-
-        <div id="onlinePeople">
-
-            <div style="font-size:12px;opacity:.7">
-                Nobody online
-            </div>
-
-        </div>
-
-    </div>
-
-
     <div class="user-box">
 
-        👤 <b id="currentUser">
-            Guest
-        </b>
+        👤 <b id="currentUser">Guest</b>
 
         <div id="adminStatus">
             Student mode
@@ -784,6 +784,24 @@ body{
     </div>
 
 </aside>
+
+
+<!-- ================= ONLINE USERS ================= -->
+
+<div class="online-panel">
+
+    <div class="online-header">
+        🟢 Online People
+        <span id="onlineCount">0</span>
+    </div>
+
+    <div class="online-list" id="onlineList">
+        <div style="padding:8px;color:#718078">
+            Loading...
+        </div>
+    </div>
+
+</div>
 
 
 <!-- ================= MAIN ================= -->
@@ -795,7 +813,7 @@ body{
         <input
             class="search"
             id="searchInput"
-            placeholder="Search notes and tasks..."
+            placeholder="Search notes, tasks and documents..."
             oninput="searchEverything()"
         >
 
@@ -807,7 +825,7 @@ body{
                 onclick="openNoteModal()"
                 style="display:none"
             >
-                + Add Note
+                + Note
             </button>
 
             <button
@@ -833,267 +851,274 @@ body{
     </div>
 
 
-    <!-- ================= NOTES ================= -->
+<!-- ================= NOTES ================= -->
 
-    <section
-        class="section active"
-        id="notes"
-    >
+<section class="section active" id="notes">
 
-        <div class="hero">
+    <div class="hero">
 
-            <h2>
-                Welcome to BSN 2A 🌱
-            </h2>
+        <h2>
+            Welcome to BSN 2A 🌱
+        </h2>
 
-            <p>
-                Keep your notes, tasks, documents and
-                class information organized in one place.
-                Changes are synchronized for everyone in real time.
-            </p>
+        <p>
+            Keep your class notes, tasks, documents and
+            conversations organized in one place.
+        </p>
 
-        </div>
+    </div>
+
+    <div class="section-title">
+
+        <h2>Class Notes</h2>
+
+        <span id="noteCount">
+            0 notes
+        </span>
+
+    </div>
+
+    <div class="cards" id="notesContainer"></div>
+
+</section>
 
 
-        <div class="section-title">
+<!-- ================= TASKS ================= -->
 
-            <h2>
-                Class Notes
-            </h2>
+<section class="section" id="tasks">
 
-            <span id="noteCount">
-                0 notes
-            </span>
+    <div class="section-title">
 
-        </div>
+        <h2>Tasks & Deadlines</h2>
 
+        <button
+            class="btn"
+            id="taskAddButton"
+            onclick="openTaskModal()"
+            style="display:none"
+        >
+            + Add Task
+        </button>
+
+    </div>
+
+    <div id="tasksContainer"></div>
+
+</section>
+
+
+<!-- ================= DOCUMENTS ================= -->
+
+<section class="section" id="documents">
+
+    <div class="section-title">
+
+        <h2>📚 Documents</h2>
+
+        <button
+            class="btn"
+            id="documentAddButton"
+            onclick="openDocumentModal()"
+            style="display:none"
+        >
+            + Add Document
+        </button>
+
+    </div>
+
+    <div class="hero">
+
+        <h2 style="font-size:32px">
+            Class Files
+        </h2>
+
+        <p>
+            PDFs, PowerPoint presentations and other
+            class resources can be listed here.
+        </p>
+
+    </div>
+
+    <div id="documentsContainer"></div>
+
+</section>
+
+
+<!-- ================= CLASS CHAT ================= -->
+
+<section class="section" id="chat">
+
+    <div class="section-title">
+
+        <h2>💬 BSN 2A Class Chat</h2>
+
+    </div>
+
+    <div class="chat-box">
 
         <div
-            class="cards"
-            id="notesContainer"
+            class="chat-messages"
+            id="classChatMessages"
         ></div>
 
-    </section>
+        <div class="chat-input">
 
-
-    <!-- ================= TASKS ================= -->
-
-    <section
-        class="section"
-        id="tasks"
-    >
-
-        <div class="section-title">
-
-            <h2>
-                Tasks & Deadlines
-            </h2>
+            <input
+                id="classChatInput"
+                placeholder="Type a message..."
+                onkeydown="if(event.key==='Enter')sendClassChat()"
+            >
 
             <button
                 class="btn"
-                id="taskAddButton"
-                onclick="openTaskModal()"
-                style="display:none"
+                onclick="sendClassChat()"
             >
-                + Add Task
+                Send
             </button>
 
         </div>
 
+    </div>
 
-        <div id="tasksContainer"></div>
-
-    </section>
-
-
-    <!-- ================= DOCUMENTS ================= -->
-
-    <section
-        class="section"
-        id="documents"
-    >
-
-        <div class="hero">
-
-            <h2>
-                📚 Documents
-            </h2>
-
-            <p>
-                Open class PDFs, PowerPoints and other
-                learning materials shared by the administrator.
-            </p>
-
-        </div>
+</section>
 
 
-        <div id="documentsContainer"></div>
+<!-- ================= AI ================= -->
 
-    </section>
+<section class="section" id="ai">
 
+    <div class="section-title">
 
-    <!-- ================= CLASS CHAT ================= -->
+        <h2>🤖 BSN 2A Assistant</h2>
 
-    <section
-        class="section"
-        id="chat"
-    >
+    </div>
 
-        <div class="section-title">
+    <div class="chat-box">
 
-            <h2>
-                💬 BSN 2A Class Chat
-            </h2>
+        <div
+            class="chat-messages"
+            id="aiMessages"
+        >
 
-        </div>
+            <div class="message ai">
 
+                <b>BSN 2A Assistant</b><br><br>
 
-        <div class="chat-box">
+                Hey! 👋 I can search your class information.
 
-            <div
-                class="chat-messages"
-                id="classChatMessages"
-            ></div>
+                Try asking:
 
-
-            <div class="chat-input">
-
-                <input
-                    id="classChatInput"
-                    placeholder="Message the class..."
-                    onkeydown="
-                    if(event.key==='Enter')
-                    sendClassMessage()
-                    "
-                >
-
-                <button
-                    class="btn"
-                    onclick="sendClassMessage()"
-                >
-                    Send
-                </button>
+                • What is due tomorrow?
+                • What tasks do I have?
+                • What's upcoming?
+                • Show my notes.
+                • Show notes about NCM 105.
 
             </div>
 
         </div>
 
-    </section>
+        <div class="chat-input">
 
-
-    <!-- ================= AI ASSISTANT ================= -->
-
-    <section
-        class="section"
-        id="assistant"
-    >
-
-        <div class="section-title">
-
-            <h2>
-                🤖 BSN 2A Assistant
-            </h2>
-
-        </div>
-
-
-        <div class="chat-box">
-
-            <div
-                class="chat-messages"
-                id="assistantMessages"
+            <input
+                id="aiInput"
+                placeholder="Ask something..."
+                onkeydown="if(event.key==='Enter')askAssistant()"
             >
 
-                <div class="message ai">
-
-                    <div class="message-name">
-                        BSN 2A Assistant
-                    </div>
-
-                    Hey! 👋
-
-                    Try asking:
-
-                    • What is due tomorrow?
-                    • What tasks do I have?
-                    • What's upcoming?
-                    • Show my notes about NCM 105.
-
-                </div>
-
-            </div>
-
-
-            <div class="chat-input">
-
-                <input
-                    id="assistantInput"
-                    placeholder="Ask something..."
-                    onkeydown="
-                    if(event.key==='Enter')
-                    askAssistant()
-                    "
-                >
-
-                <button
-                    class="btn"
-                    onclick="askAssistant()"
-                >
-                    Ask
-                </button>
-
-            </div>
+            <button
+                class="btn"
+                onclick="askAssistant()"
+            >
+                Ask
+            </button>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
 
 
-    <!-- ================= ABOUT ================= -->
+<!-- ================= ADMIN CHAT ================= -->
 
-    <section
-        class="section"
-        id="about"
+<section class="section" id="adminChat">
+
+    <div class="section-title">
+
+        <h2>🔒 Admin Chat</h2>
+
+    </div>
+
+    <div id="adminChatLocked" class="empty">
+
+        🔒 Admin access required.
+
+    </div>
+
+    <div
+        class="chat-box"
+        id="adminChatBox"
+        style="display:none"
     >
 
-        <div class="hero">
+        <div
+            class="chat-messages"
+            id="adminChatMessages"
+        ></div>
 
-            <h2>
-                BSN 2A 🌱
-            </h2>
+        <div class="chat-input">
 
-            <p>
-                A shared class notes and task system
-                for BSN 2A.
-            </p>
+            <input
+                id="adminChatInput"
+                placeholder="Admin-only message..."
+                onkeydown="if(event.key==='Enter')sendAdminChat()"
+            >
 
-            <br>
-
-            <p>
-                🔄 Notes and tasks synchronize through
-                Firebase Realtime Database.
-            </p>
-
-            <br>
-
-            <p>
-                👥 The online list shows classmates who
-                currently have the website open.
-            </p>
+            <button
+                class="btn"
+                onclick="sendAdminChat()"
+            >
+                Send
+            </button>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
+
+
+<!-- ================= ABOUT ================= -->
+
+<section class="section" id="about">
+
+    <div class="hero">
+
+        <h2>BSN 2A 🌱</h2>
+
+        <p>
+            A shared class notes and task system for BSN 2A.
+            Students can view information, participate in
+            chat and maintain their own task checklists.
+        </p>
+
+        <br>
+
+        <p>
+            🔄 Data is synchronized using Firebase Realtime Database.
+        </p>
+
+    </div>
+
+</section>
 
 </main>
 
 
 <!-- ================= NOTE MODAL ================= -->
 
-<div
-    class="modal-bg"
-    id="noteModal"
->
+<div class="modal-bg" id="noteModal">
 
     <div class="modal">
 
@@ -1138,10 +1163,7 @@ body{
 
 <!-- ================= TASK MODAL ================= -->
 
-<div
-    class="modal-bg"
-    id="taskModal"
->
+<div class="modal-bg" id="taskModal">
 
     <div class="modal">
 
@@ -1193,10 +1215,7 @@ body{
 
 <!-- ================= DOCUMENT MODAL ================= -->
 
-<div
-    class="modal-bg"
-    id="documentModal"
->
+<div class="modal-bg" id="documentModal">
 
     <div class="modal">
 
@@ -1210,11 +1229,26 @@ body{
             placeholder="Document title"
         >
 
+        <select
+            class="input"
+            id="documentType"
+        >
+            <option value="PDF">PDF</option>
+            <option value="PPT">PowerPoint</option>
+            <option value="Other">Other</option>
+        </select>
+
         <input
             class="input"
             id="documentUrl"
-            placeholder="Paste PDF/PPT/Google Drive link"
+            placeholder="Paste the file URL here"
         >
+
+        <p style="color:#718078;font-size:13px;margin-bottom:15px">
+            For now, paste a shareable file URL.
+            The file itself should be hosted somewhere accessible
+            to your class.
+        </p>
 
         <div class="modal-actions">
 
@@ -1245,11 +1279,8 @@ body{
    FIREBASE
 ============================================================ */
 
-import {
-    initializeApp
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
     getDatabase,
@@ -1262,43 +1293,40 @@ import {
     onDisconnect,
     serverTimestamp
 }
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
 const firebaseConfig = {
 
     apiKey:
-    "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
+        "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
 
     authDomain:
-    "bsn-2a-notes.firebaseapp.com",
+        "bsn-2a-notes.firebaseapp.com",
 
     databaseURL:
-    "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
+        "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
 
     projectId:
-    "bsn-2a-notes",
+        "bsn-2a-notes",
 
     storageBucket:
-    "bsn-2a-notes.firebasestorage.app",
+        "bsn-2a-notes.firebasestorage.app",
 
     messagingSenderId:
-    "991210260962",
+        "991210260962",
 
     appId:
-    "1:991210260962:web:8f6a886c7478be096991bb",
+        "1:991210260962:web:8f6a886c7478be096991bb",
 
     measurementId:
-    "G-WNTP9GZJ4B"
+        "G-WNTP9GZJ4B"
 };
 
 
-const app =
-    initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-const db =
-    getDatabase(app);
+const db = getDatabase(app);
 
 
 /* ============================================================
@@ -1314,8 +1342,8 @@ const tasksRef =
 const documentsRef =
     ref(db,"documents");
 
-const chatRef =
-    ref(db,"chat");
+const classChatRef =
+    ref(db,"classChat");
 
 const adminChatRef =
     ref(db,"adminChat");
@@ -1325,44 +1353,30 @@ const presenceRef =
 
 
 /* ============================================================
-   VARIABLES
+   GLOBAL VARIABLES
 ============================================================ */
 
 let notes = {};
+
 let tasks = {};
+
 let documents = {};
-let chat = {};
-let adminChat = {};
+
+let classMessages = {};
+
+let adminMessages = {};
+
 let onlineUsers = {};
 
 let admin = false;
 
 let editingNoteId = null;
+
 let editingTaskId = null;
 
+let currentUser = "";
 
-/* ============================================================
-   USER ID
-============================================================ */
-
-let userId =
-    localStorage.getItem("bsnUserId");
-
-if(!userId){
-
-    userId =
-        "user_" +
-        Date.now() +
-        "_" +
-        Math.random()
-        .toString(36)
-        .substring(2,9);
-
-    localStorage.setItem(
-        "bsnUserId",
-        userId
-    );
-}
+let presenceId = null;
 
 
 /* ============================================================
@@ -1371,11 +1385,11 @@ if(!userId){
 
 window.enterSite = function(){
 
+    const input =
+        document.getElementById("usernameInput");
+
     const name =
-        document
-        .getElementById("usernameInput")
-        .value
-        .trim();
+        input.value.trim();
 
     if(!name){
 
@@ -1384,40 +1398,41 @@ window.enterSite = function(){
         return;
     }
 
+    currentUser = name;
+
     localStorage.setItem(
         "bsnUsername",
         name
     );
 
-    document
-    .getElementById("currentUser")
-    .textContent = name;
+    document.getElementById(
+        "currentUser"
+    ).textContent = name;
 
-    document
-    .getElementById("loginScreen")
-    .style.display = "none";
+    document.getElementById(
+        "loginScreen"
+    ).style.display = "none";
 
     setupPresence();
-
 };
 
 
 function loadUsername(){
 
     const saved =
-        localStorage.getItem(
-            "bsnUsername"
-        );
+        localStorage.getItem("bsnUsername");
 
     if(saved){
 
-        document
-        .getElementById("currentUser")
-        .textContent = saved;
+        currentUser = saved;
 
-        document
-        .getElementById("loginScreen")
-        .style.display = "none";
+        document.getElementById(
+            "currentUser"
+        ).textContent = saved;
+
+        document.getElementById(
+            "loginScreen"
+        ).style.display = "none";
 
         setupPresence();
 
@@ -1432,144 +1447,91 @@ function loadUsername(){
 
 function setupPresence(){
 
-    const name =
-        localStorage.getItem(
-            "bsnUsername"
-        ) || "Guest";
+    if(!currentUser) return;
 
+    presenceId =
+        Date.now().toString() +
+        "_" +
+        Math.random()
+            .toString(36)
+            .substring(2,8);
 
-    const connectedRef =
+    const myPresence =
         ref(
             db,
-            ".info/connected"
+            "presence/" + presenceId
         );
 
+    set(myPresence,{
+
+        name:currentUser,
+
+        online:true,
+
+        lastSeen:Date.now()
+
+    });
+
+    onDisconnect(myPresence)
+        .remove();
 
     onValue(
-        connectedRef,
-        async snapshot => {
+        presenceRef,
+        snapshot => {
 
-            if(snapshot.val() !== true){
+            onlineUsers =
+                snapshot.val() || {};
 
-                return;
-            }
-
-
-            const myPresenceRef =
-                ref(
-                    db,
-                    "presence/" + userId
-                );
-
-
-            await onDisconnect(
-                myPresenceRef
-            ).remove();
-
-
-            await set(
-                myPresenceRef,
-                {
-
-                    name:name,
-
-                    lastSeen:
-                        serverTimestamp()
-
-                }
-            );
+            renderOnlineUsers();
 
         }
     );
-
 }
 
 
-/* ============================================================
-   ONLINE LISTENER
-============================================================ */
+function renderOnlineUsers(){
 
-onValue(
-    presenceRef,
-    snapshot => {
+    const list =
+        document.getElementById(
+            "onlineList"
+        );
 
-        onlineUsers =
-            snapshot.val() || {};
+    const users =
+        Object.values(onlineUsers);
 
-        renderOnlinePeople();
+    document.getElementById(
+        "onlineCount"
+    ).textContent =
+        users.length;
 
-    }
-);
+    list.innerHTML = "";
 
+    if(!users.length){
 
-function renderOnlinePeople(){
-
-    const container =
-        document
-        .getElementById("onlinePeople");
-
-    const count =
-        Object.keys(
-            onlineUsers
-        ).length;
-
-    document
-    .getElementById("onlineCount")
-    .textContent = count;
-
-
-    container.innerHTML = "";
-
-
-    if(count === 0){
-
-        container.innerHTML = `
-            <div style="
-                font-size:12px;
-                opacity:.7;
-            ">
+        list.innerHTML =
+            `<div style="padding:8px;color:#718078">
                 Nobody online
-            </div>
-        `;
+             </div>`;
 
         return;
     }
 
+    users.forEach(user => {
 
-    Object.entries(
-        onlineUsers
-    ).forEach(
-        ([id,user]) => {
+        const div =
+            document.createElement("div");
 
-            const div =
-                document.createElement(
-                    "div"
-                );
+        div.className =
+            "online-user";
 
-            div.className =
-                "online-user";
+        div.innerHTML = `
+            <span class="online-dot"></span>
+            <span>${escapeHTML(user.name || "Unknown")}</span>
+        `;
 
-            div.innerHTML = `
+        list.appendChild(div);
 
-                <span class="online-user-dot"></span>
-
-                ${escapeHTML(
-                    user.name || "Unknown"
-                )}
-
-                ${
-                    id === userId
-                    ? "<b> (You)</b>"
-                    : ""
-                }
-
-            `;
-
-            container.appendChild(div);
-
-        }
-    );
-
+    });
 }
 
 
@@ -1585,125 +1547,89 @@ window.adminLogin = function(){
 
         updateAdminUI();
 
-        alert(
-            "Admin mode disabled."
-        );
+        alert("Admin mode disabled.");
 
         return;
     }
 
-
     const password =
-        prompt(
-            "Enter admin password:"
-        );
+        prompt("Enter admin password:");
 
-
-    if(
-        password ===
-        "supperlol123123"
-    ){
+    if(password === "supperlol123123"){
 
         admin = true;
 
         updateAdminUI();
 
-        alert(
-            "Admin mode enabled 🔓"
-        );
+        alert("Admin mode enabled 🔓");
 
     }else{
 
-        alert(
-            "Wrong password."
-        );
+        alert("Wrong password.");
 
     }
-
 };
 
 
 function updateAdminUI(){
 
-    const noteButton =
-        document.getElementById(
-            "addNoteButton"
-        );
+    const ids = [
 
-    const taskButton =
-        document.getElementById(
-            "addTaskButton"
-        );
+        "addNoteButton",
+        "addTaskButton",
+        "taskAddButton",
+        "addDocumentButton",
+        "documentAddButton"
 
-    const taskAddButton =
-        document.getElementById(
-            "taskAddButton"
-        );
+    ];
 
-    const documentButton =
-        document.getElementById(
-            "addDocumentButton"
-        );
+    ids.forEach(id => {
 
-    const adminText =
-        document.getElementById(
-            "adminButtonText"
-        );
+        const el =
+            document.getElementById(id);
 
-    const status =
-        document.getElementById(
-            "adminStatus"
-        );
+        if(el)
+            el.style.display =
+                admin ? "block" : "none";
+
+    });
 
 
-    if(admin){
+    document.getElementById(
+        "adminButtonText"
+    ).textContent =
+        admin
+        ? "Admin 🔓"
+        : "Admin 🔒";
 
-        noteButton.style.display =
-            "block";
 
-        taskButton.style.display =
-            "block";
+    document.getElementById(
+        "adminStatus"
+    ).textContent =
+        admin
+        ? "Administrator mode"
+        : "Student mode";
 
-        taskAddButton.style.display =
-            "block";
 
-        documentButton.style.display =
-            "block";
+    document.getElementById(
+        "adminChatLocked"
+    ).style.display =
+        admin ? "none" : "block";
 
-        adminText.textContent =
-            "Admin 🔓";
 
-        status.textContent =
-            "Administrator mode";
-
-    }else{
-
-        noteButton.style.display =
-            "none";
-
-        taskButton.style.display =
-            "none";
-
-        taskAddButton.style.display =
-            "none";
-
-        documentButton.style.display =
-            "none";
-
-        adminText.textContent =
-            "Admin 🔒";
-
-        status.textContent =
-            "Student mode";
-
-    }
+    document.getElementById(
+        "adminChatBox"
+    ).style.display =
+        admin ? "block" : "none";
 
 
     renderNotes();
+
     renderTasks();
+
     renderDocuments();
 
-}
+};
 
 
 /* ============================================================
@@ -1714,37 +1640,25 @@ window.showSection =
 function(id,button){
 
     document
-    .querySelectorAll(".section")
-    .forEach(
-        section =>
-        section.classList.remove(
-            "active"
-        )
-    );
-
-
-    document
-    .getElementById(id)
-    .classList.add("active");
-
-
-    document
-    .querySelectorAll(".nav button")
-    .forEach(
-        btn =>
-        btn.classList.remove(
-            "active"
-        )
-    );
-
-
-    if(button){
-
-        button.classList.add(
-            "active"
+        .querySelectorAll(".section")
+        .forEach(section =>
+            section.classList.remove("active")
         );
 
-    }
+    document
+        .getElementById(id)
+        .classList.add("active");
+
+
+    document
+        .querySelectorAll(".nav button")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+
+    if(button)
+        button.classList.add("active");
 
 };
 
@@ -1801,14 +1715,14 @@ onValue(
 
 
 /* ============================================================
-   CHAT LISTENER
+   CLASS CHAT LISTENER
 ============================================================ */
 
 onValue(
-    chatRef,
+    classChatRef,
     snapshot => {
 
-        chat =
+        classMessages =
             snapshot.val() || {};
 
         renderClassChat();
@@ -1825,7 +1739,7 @@ onValue(
     adminChatRef,
     snapshot => {
 
-        adminChat =
+        adminMessages =
             snapshot.val() || {};
 
         renderAdminChat();
@@ -1838,9 +1752,7 @@ onValue(
    NOTES
 ============================================================ */
 
-function renderNotes(
-    search=""
-){
+function renderNotes(search=""){
 
     const container =
         document.getElementById(
@@ -1853,9 +1765,8 @@ function renderNotes(
 
 
     Object.entries(notes)
-    .reverse()
-    .forEach(
-        ([id,note]) => {
+        .reverse()
+        .forEach(([id,note]) => {
 
             const title =
                 note.title ||
@@ -1879,9 +1790,7 @@ function renderNotes(
                     search.toLowerCase()
                 )
             ){
-
                 return;
-
             }
 
 
@@ -1889,9 +1798,7 @@ function renderNotes(
 
 
             const card =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
             card.className =
                 "card";
@@ -1908,18 +1815,12 @@ function renderNotes(
                 </div>
 
                 <div class="card-date">
-
                     ${
                         note.author
-                        ?
-                        "Added by " +
-                        escapeHTML(
-                            note.author
-                        )
-                        :
-                        ""
+                        ? "Added by " +
+                          escapeHTML(note.author)
+                        : ""
                     }
-
                 </div>
 
                 ${
@@ -1930,18 +1831,14 @@ function renderNotes(
 
                         <button
                             class="small-btn"
-                            onclick="
-                            editNote('${id}')
-                            "
+                            onclick="editNote('${id}')"
                         >
                             ✏️ Edit
                         </button>
 
                         <button
                             class="small-btn delete"
-                            onclick="
-                            deleteNote('${id}')
-                            "
+                            onclick="deleteNote('${id}')"
                         >
                             🗑️ Delete
                         </button>
@@ -1955,40 +1852,33 @@ function renderNotes(
             `;
 
 
-            card.addEventListener(
-                "click",
-                function(e){
+            if(!admin){
 
-                    if(
-                        !e.target.closest(
-                            "button"
-                        )
-                    ){
+                card.addEventListener(
+                    "click",
+                    function(e){
+
+                        if(
+                            e.target.closest("button")
+                        ) return;
 
                         openReadNote(id);
 
                     }
+                );
 
-                }
-            );
+            }
 
 
             container.appendChild(card);
 
-        }
-    );
+        });
 
 
-    document
-    .getElementById("noteCount")
-    .textContent =
-        count +
-        " note" +
-        (
-            count === 1
-            ? ""
-            : "s"
-        );
+    document.getElementById(
+        "noteCount"
+    ).textContent =
+        `${count} note${count===1?"":"s"}`;
 
 
     if(count === 0){
@@ -1996,7 +1886,17 @@ function renderNotes(
         container.innerHTML = `
 
             <div class="empty">
+
                 No notes found.
+
+                ${
+                    admin
+                    ?
+                    "<br><br>Click + Add Note to create one."
+                    :
+                    ""
+                }
+
             </div>
 
         `;
@@ -2015,45 +1915,34 @@ function(){
 
     if(!admin){
 
-        alert(
-            "Admin access required."
-        );
+        alert("Admin access required.");
 
         return;
-
     }
 
 
     editingNoteId = null;
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteModalTitle"
-    )
-    .textContent =
+    ).textContent =
         "Add Note";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteTitle"
     ).value = "";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteText"
     ).value = "";
 
 
     document
-    .getElementById(
-        "noteModal"
-    )
-    .classList.add(
-        "show"
-    );
+        .getElementById("noteModal")
+        .classList.add("show");
 
 };
 
@@ -2062,19 +1951,11 @@ window.closeNoteModal =
 function(){
 
     document
-    .getElementById(
-        "noteModal"
-    )
-    .classList.remove(
-        "show"
-    );
+        .getElementById("noteModal")
+        .classList.remove("show");
 
 };
 
-
-/* ============================================================
-   SAVE NOTE
-============================================================ */
 
 window.saveNote =
 async function(){
@@ -2083,31 +1964,22 @@ async function(){
 
 
     const title =
-        document
-        .getElementById(
+        document.getElementById(
             "noteTitle"
-        )
-        .value
-        .trim();
+        ).value.trim();
 
 
     const text =
-        document
-        .getElementById(
+        document.getElementById(
             "noteText"
-        )
-        .value
-        .trim();
+        ).value.trim();
 
 
     if(!title){
 
-        alert(
-            "Please enter a title."
-        );
+        alert("Please enter a title.");
 
         return;
-
     }
 
 
@@ -2130,9 +2002,7 @@ async function(){
                 {
                     title,
                     text,
-                    author,
-                    updatedAt:
-                        Date.now()
+                    author
                 }
             );
 
@@ -2144,13 +2014,10 @@ async function(){
             await set(
                 newNote,
                 {
-
                     title,
                     text,
                     author,
-                    createdAt:
-                        Date.now()
-
+                    createdAt:Date.now()
                 }
             );
 
@@ -2164,7 +2031,7 @@ async function(){
         console.error(error);
 
         alert(
-            "Could not save note."
+            "Could not save the note."
         );
 
     }
@@ -2188,39 +2055,30 @@ function(id){
     if(!note) return;
 
 
-    editingNoteId =
-        id;
+    editingNoteId = id;
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteModalTitle"
-    )
-    .textContent =
+    ).textContent =
         "Edit Note";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteTitle"
     ).value =
         note.title || "";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteText"
     ).value =
         note.text || "";
 
 
     document
-    .getElementById(
-        "noteModal"
-    )
-    .classList.add(
-        "show"
-    );
+        .getElementById("noteModal")
+        .classList.add("show");
 
 };
 
@@ -2237,45 +2095,37 @@ function openReadNote(id){
     if(!note) return;
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteModalTitle"
-    )
-    .textContent =
+    ).textContent =
         note.title || "Note";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteTitle"
     ).value =
         note.title || "";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteText"
     ).value =
         note.text || "";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteTitle"
     ).disabled = true;
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteText"
     ).disabled = true;
 
 
-    document
-    .querySelector(
+    document.querySelector(
         "#noteModal .modal-actions"
-    )
-    .innerHTML = `
+    ).innerHTML = `
 
         <button
             class="btn"
@@ -2288,12 +2138,8 @@ function openReadNote(id){
 
 
     document
-    .getElementById(
-        "noteModal"
-    )
-    .classList.add(
-        "show"
-    );
+        .getElementById("noteModal")
+        .classList.add("show");
 
 }
 
@@ -2301,23 +2147,19 @@ function openReadNote(id){
 window.closeReadNote =
 function(){
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteTitle"
     ).disabled = false;
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "noteText"
     ).disabled = false;
 
 
-    document
-    .querySelector(
+    document.querySelector(
         "#noteModal .modal-actions"
-    )
-    .innerHTML = `
+    ).innerHTML = `
 
         <button
             class="btn secondary"
@@ -2384,9 +2226,7 @@ async function(id){
    TASKS
 ============================================================ */
 
-function renderTasks(
-    search=""
-){
+function renderTasks(search=""){
 
     const container =
         document.getElementById(
@@ -2400,185 +2240,159 @@ function renderTasks(
         Object.entries(tasks);
 
 
-    if(entries.length === 0){
+    if(!entries.length){
 
         container.innerHTML = `
+
             <div class="empty">
                 No tasks yet.
             </div>
+
         `;
 
         return;
-
     }
 
 
     entries
-    .sort(
-        (a,b) =>
-            (a[1].due || "")
-            .localeCompare(
-                b[1].due || ""
-            )
-    )
-    .forEach(
-        ([id,task]) => {
-
-            const combined =
-                (
-                    task.title || ""
-                ) +
-                " " +
-                (
-                    task.description || ""
-                );
-
-
-            if(
-                search &&
-                !combined
-                .toLowerCase()
-                .includes(
-                    search.toLowerCase()
+        .sort(
+            (a,b) =>
+                (a[1].due || "")
+                .localeCompare(
+                    b[1].due || ""
                 )
-            ){
+        )
+        .forEach(
+            ([id,task]) => {
 
-                return;
-
-            }
-
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            const myChecks =
-                task.checks || {};
+                const combined =
+                    (
+                        (task.title || "") +
+                        " " +
+                        (task.description || "")
+                    ).toLowerCase();
 
 
-            const myCompleted =
-                !!myChecks[userId];
+                if(
+                    search &&
+                    !combined.includes(
+                        search.toLowerCase()
+                    )
+                ){
+                    return;
+                }
 
 
-            div.className =
-                "task " +
-                (
-                    myCompleted
-                    ?
-                    "completed"
-                    :
-                    ""
-                );
+                const userKey =
+                    getUserKey();
 
 
-            div.innerHTML = `
+                const personalChecked =
+                    task.checks &&
+                    task.checks[userKey] === true;
 
-                <input
-                    class="task-check"
-                    type="checkbox"
-                    ${
-                        myCompleted
+
+                const div =
+                    document.createElement("div");
+
+
+                div.className =
+                    "task " +
+                    (
+                        personalChecked
                         ?
-                        "checked"
+                        "completed"
                         :
                         ""
-                    }
-                    onchange="
-                    toggleTask('${id}')
-                    "
-                >
+                    );
 
-                <div class="task-info">
 
-                    <div class="task-title">
+                div.innerHTML = `
 
-                        ${escapeHTML(
-                            task.title ||
-                            "Untitled"
-                        )}
+                    <input
+                        class="task-check"
+                        type="checkbox"
+                        ${
+                            personalChecked
+                            ? "checked"
+                            : ""
+                        }
+                        onchange="toggleTask('${id}')"
+                    >
 
-                    </div>
+                    <div class="task-info">
 
-                    <div class="task-due">
+                        <div class="task-title">
+                            ${escapeHTML(
+                                task.title ||
+                                "Untitled"
+                            )}
+                        </div>
+
+                        <div class="task-due">
+
+                            ${
+                                task.due
+                                ?
+                                "Due: " +
+                                formatDate(
+                                    task.due
+                                )
+                                :
+                                "No due date"
+                            }
+
+                        </div>
 
                         ${
-                            task.due
+                            task.description
                             ?
-                            "Due: " +
-                            formatDate(
-                                task.due
-                            )
+                            `
+                            <div class="task-description">
+                                ${escapeHTML(
+                                    task.description
+                                )}
+                            </div>
+                            `
                             :
-                            "No due date"
+                            ""
+                        }
+
+                        ${
+                            admin
+                            ?
+                            `
+                            <div class="card-buttons">
+
+                                <button
+                                    class="small-btn"
+                                    onclick="editTask('${id}')"
+                                >
+                                    ✏️ Edit
+                                </button>
+
+                                <button
+                                    class="small-btn delete"
+                                    onclick="deleteTask('${id}')"
+                                >
+                                    🗑️ Delete
+                                </button>
+
+                            </div>
+                            `
+                            :
+                            ""
                         }
 
                     </div>
 
-                    ${
-                        task.description
-                        ?
-                        `
-                        <div class="task-description">
-
-                            ${escapeHTML(
-                                task.description
-                            )}
-
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-                    <div class="task-status">
-
-                        Your checklist is personal
-                        and does not affect classmates.
-
-                    </div>
+                `;
 
 
-                    ${
-                        admin
-                        ?
-                        `
-                        <div class="card-buttons">
+                container.appendChild(div);
 
-                            <button
-                                class="small-btn"
-                                onclick="
-                                editTask('${id}')
-                                "
-                            >
-                                ✏️ Edit
-                            </button>
-
-                            <button
-                                class="small-btn delete"
-                                onclick="
-                                deleteTask('${id}')
-                                "
-                            >
-                                🗑️ Delete
-                            </button>
-
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-                </div>
-
-            `;
-
-
-            container.appendChild(div);
-
-        }
-    );
+            }
+        );
 
 }
 
@@ -2597,46 +2411,36 @@ function(){
         );
 
         return;
-
     }
 
 
     editingTaskId = null;
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "taskModalTitle"
-    )
-    .textContent =
+    ).textContent =
         "Add Task";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "taskTitle"
     ).value = "";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "taskDue"
     ).value = "";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "taskDescription"
     ).value = "";
 
 
     document
-    .getElementById(
-        "taskModal"
-    )
-    .classList.add(
-        "show"
-    );
+        .getElementById("taskModal")
+        .classList.add("show");
 
 };
 
@@ -2645,19 +2449,11 @@ window.closeTaskModal =
 function(){
 
     document
-    .getElementById(
-        "taskModal"
-    )
-    .classList.remove(
-        "show"
-    );
+        .getElementById("taskModal")
+        .classList.remove("show");
 
 };
 
-
-/* ============================================================
-   SAVE TASK
-============================================================ */
 
 window.saveTask =
 async function(){
@@ -2666,28 +2462,21 @@ async function(){
 
 
     const title =
-        document
-        .getElementById(
+        document.getElementById(
             "taskTitle"
-        )
-        .value
-        .trim();
+        ).value.trim();
 
 
     const due =
-        document
-        .getElementById(
+        document.getElementById(
             "taskDue"
         ).value;
 
 
     const description =
-        document
-        .getElementById(
+        document.getElementById(
             "taskDescription"
-        )
-        .value
-        .trim();
+        ).value.trim();
 
 
     if(!title){
@@ -2697,7 +2486,6 @@ async function(){
         );
 
         return;
-
     }
 
 
@@ -2712,11 +2500,9 @@ async function(){
                     editingTaskId
                 ),
                 {
-
                     title,
                     due,
                     description
-
                 }
             );
 
@@ -2728,14 +2514,10 @@ async function(){
             await set(
                 newTask,
                 {
-
                     title,
                     due,
                     description,
-                    checks:{},
-                    createdAt:
-                        Date.now()
-
+                    createdAt:Date.now()
                 }
             );
 
@@ -2773,46 +2555,36 @@ function(id){
     if(!task) return;
 
 
-    editingTaskId =
-        id;
+    editingTaskId = id;
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "taskModalTitle"
-    )
-    .textContent =
+    ).textContent =
         "Edit Task";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "taskTitle"
     ).value =
         task.title || "";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "taskDue"
     ).value =
         task.due || "";
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "taskDescription"
     ).value =
         task.description || "";
 
 
     document
-    .getElementById(
-        "taskModal"
-    )
-    .classList.add(
-        "show"
-    );
+        .getElementById("taskModal")
+        .classList.add("show");
 
 };
 
@@ -2830,22 +2602,25 @@ async function(id){
     if(!task) return;
 
 
+    const userKey =
+        getUserKey();
+
+
     const current =
-        !!(
-            task.checks &&
-            task.checks[userId]
-        );
+        task.checks &&
+        task.checks[userKey] === true;
 
 
-    await set(
+    await update(
         ref(
             db,
             "tasks/" +
             id +
-            "/checks/" +
-            userId
+            "/checks"
         ),
-        !current
+        {
+            [userKey]:!current
+        }
     );
 
 };
@@ -2894,7 +2669,7 @@ async function(id){
    DOCUMENTS
 ============================================================ */
 
-function renderDocuments(){
+function renderDocuments(search=""){
 
     const container =
         document.getElementById(
@@ -2905,98 +2680,127 @@ function renderDocuments(){
 
 
     const entries =
-        Object.entries(
-            documents
-        ).reverse();
+        Object.entries(documents)
+            .reverse();
 
 
-    if(entries.length === 0){
-
-        container.innerHTML = `
-
-            <div class="empty">
-
-                No documents yet.
-
-                ${
-                    admin
-                    ?
-                    `
-                    <br><br>
-                    Click + Document to add
-                    a PDF/PPT link.
-                    `
-                    :
-                    ""
-                }
-
-            </div>
-
-        `;
-
-        return;
-
-    }
+    let shown = 0;
 
 
     entries.forEach(
         ([id,doc]) => {
+
+            const combined =
+                (
+                    (doc.title || "") +
+                    " " +
+                    (doc.type || "")
+                ).toLowerCase();
+
+
+            if(
+                search &&
+                !combined.includes(
+                    search.toLowerCase()
+                )
+            ){
+                return;
+            }
+
+
+            shown++;
+
 
             const div =
                 document.createElement(
                     "div"
                 );
 
+
             div.className =
-                "document";
+                "document-card";
 
 
             div.innerHTML = `
 
-                <div class="document-icon">
-                    📄
-                </div>
+                <div class="document-title">
 
-                <div class="document-info">
+                    ${
+                        doc.type === "PDF"
+                        ? "📄"
+                        :
+                        doc.type === "PPT"
+                        ? "📊"
+                        :
+                        "📁"
+                    }
 
-                    <div class="document-title">
-
-                        ${escapeHTML(
-                            doc.title ||
-                            "Document"
-                        )}
-
-                    </div>
-
-                    <a
-                        class="document-link"
-                        href="${escapeHTML(
-                            doc.url || "#"
-                        )}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Open document ↗
-                    </a>
+                    ${escapeHTML(
+                        doc.title ||
+                        "Untitled Document"
+                    )}
 
                 </div>
 
-                ${
-                    admin
-                    ?
-                    `
-                    <button
-                        class="small-btn delete"
-                        onclick="
-                        deleteDocument('${id}')
-                        "
-                    >
-                        🗑️
-                    </button>
-                    `
-                    :
-                    ""
-                }
+                <div class="document-meta">
+
+                    ${escapeHTML(
+                        doc.type ||
+                        "Document"
+                    )}
+
+                    ${
+                        doc.author
+                        ?
+                        " • Added by " +
+                        escapeHTML(
+                            doc.author
+                        )
+                        :
+                        ""
+                    }
+
+                </div>
+
+                <div class="document-actions">
+
+                    ${
+                        doc.url
+                        ?
+                        `
+                        <a
+                            class="btn document-link"
+                            href="${escapeAttribute(doc.url)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            👁️ Open
+                        </a>
+                        `
+                        :
+                        `
+                        <span style="color:#718078">
+                            No file link
+                        </span>
+                        `
+                    }
+
+                    ${
+                        admin
+                        ?
+                        `
+                        <button
+                            class="small-btn delete"
+                            onclick="deleteDocument('${id}')"
+                        >
+                            🗑️ Delete
+                        </button>
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
 
             `;
 
@@ -3006,12 +2810,21 @@ function renderDocuments(){
         }
     );
 
+
+    if(shown === 0){
+
+        container.innerHTML = `
+
+            <div class="empty">
+                No documents found.
+            </div>
+
+        `;
+
+    }
+
 }
 
-
-/* ============================================================
-   DOCUMENT MODAL
-============================================================ */
 
 window.openDocumentModal =
 function(){
@@ -3023,29 +2836,29 @@ function(){
         );
 
         return;
-
     }
 
 
-    document
-    .getElementById(
+    document.getElementById(
         "documentTitle"
     ).value = "";
 
 
-    document
-    .getElementById(
+    document.getElementById(
+        "documentType"
+    ).value = "PDF";
+
+
+    document.getElementById(
         "documentUrl"
     ).value = "";
 
 
     document
-    .getElementById(
-        "documentModal"
-    )
-    .classList.add(
-        "show"
-    );
+        .getElementById(
+            "documentModal"
+        )
+        .classList.add("show");
 
 };
 
@@ -3054,12 +2867,10 @@ window.closeDocumentModal =
 function(){
 
     document
-    .getElementById(
-        "documentModal"
-    )
-    .classList.remove(
-        "show"
-    );
+        .getElementById(
+            "documentModal"
+        )
+        .classList.remove("show");
 
 };
 
@@ -3071,76 +2882,65 @@ async function(){
 
 
     const title =
-        document
-        .getElementById(
+        document.getElementById(
             "documentTitle"
-        )
-        .value
-        .trim();
+        ).value.trim();
+
+
+    const type =
+        document.getElementById(
+            "documentType"
+        ).value;
 
 
     const url =
-        document
-        .getElementById(
+        document.getElementById(
             "documentUrl"
-        )
-        .value
-        .trim();
+        ).value.trim();
 
 
-    if(!title || !url){
+    if(!title){
 
         alert(
-            "Enter both a title and link."
+            "Enter a document title."
         );
 
         return;
-
     }
 
 
-    try{
-
-        const newDocument =
-            push(documentsRef);
-
-
-        await set(
-            newDocument,
-            {
-
-                title,
-                url,
-                author:
-                    localStorage.getItem(
-                        "bsnUsername"
-                    ) || "Admin",
-
-                createdAt:
-                    Date.now()
-
-            }
-        );
-
-
-        closeDocumentModal();
-
-    }catch(error){
-
-        console.error(error);
+    if(!url){
 
         alert(
-            "Could not add document."
+            "Paste the document URL."
         );
 
+        return;
     }
+
+
+    const newDocument =
+        push(documentsRef);
+
+
+    await set(
+        newDocument,
+        {
+            title,
+            type,
+            url,
+            author:
+                currentUser ||
+                "Admin",
+            createdAt:Date.now()
+        }
+    );
+
+
+    closeDocumentModal();
 
 };
 
-
-/* ============================================================
-   DELETE DOCUMENT
-============================================================ */
 
 window.deleteDocument =
 async function(id){
@@ -3179,13 +2979,18 @@ function renderClassChat(){
     container.innerHTML = "";
 
 
-    Object.entries(chat)
-    .sort(
-        (a,b) =>
-            (a[1].createdAt || 0) -
-            (b[1].createdAt || 0)
-    )
-    .forEach(
+    const entries =
+        Object.entries(
+            classMessages
+        )
+        .sort(
+            (a,b) =>
+                (a[1].createdAt || 0) -
+                (b[1].createdAt || 0)
+        );
+
+
+    entries.forEach(
         ([id,message]) => {
 
             const div =
@@ -3193,8 +2998,10 @@ function renderClassChat(){
                     "div"
                 );
 
+
             const mine =
-                message.userId === userId;
+                message.name ===
+                currentUser;
 
 
             div.className =
@@ -3204,23 +3011,22 @@ function renderClassChat(){
                     ?
                     "user"
                     :
-                    "ai"
+                    "other"
                 );
 
 
             div.innerHTML = `
 
                 <div class="message-name">
-
                     ${escapeHTML(
                         message.name ||
                         "Unknown"
                     )}
-
                 </div>
 
                 ${escapeHTML(
-                    message.text || ""
+                    message.text ||
+                    ""
                 )}
 
             `;
@@ -3238,11 +3044,7 @@ function renderClassChat(){
 }
 
 
-/* ============================================================
-   SEND CLASS MESSAGE
-============================================================ */
-
-window.sendClassMessage =
+window.sendClassChat =
 async function(){
 
     const input =
@@ -3258,31 +3060,31 @@ async function(){
     if(!text) return;
 
 
-    const name =
-        localStorage.getItem(
-            "bsnUsername"
-        ) || "Guest";
-
-
     const newMessage =
-        push(chatRef);
+        push(classChatRef);
 
 
     await set(
         newMessage,
         {
+            name:
+                currentUser ||
+                "Anonymous",
 
-            name,
-            userId,
             text,
+
             createdAt:
                 Date.now()
-
         }
     );
 
 
     input.value = "";
+
+
+    cleanupOldChat(
+        classChatRef
+    );
 
 };
 
@@ -3293,19 +3095,72 @@ async function(){
 
 function renderAdminChat(){
 
+    const container =
+        document.getElementById(
+            "adminChatMessages"
+        );
+
+    container.innerHTML = "";
+
+
     if(!admin) return;
 
 
-    /*
-       Admin chat is kept separate
-       from normal class chat.
-    */
+    const entries =
+        Object.entries(
+            adminMessages
+        )
+        .sort(
+            (a,b) =>
+                (a[1].createdAt || 0) -
+                (b[1].createdAt || 0)
+        );
+
+
+    entries.forEach(
+        ([id,message]) => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "message admin";
+
+
+            div.innerHTML = `
+
+                <div class="message-name">
+                    ${escapeHTML(
+                        message.name ||
+                        "Admin"
+                    )}
+                </div>
+
+                ${escapeHTML(
+                    message.text ||
+                    ""
+                )}
+
+            `;
+
+
+            container.appendChild(div);
+
+        }
+    );
+
+
+    container.scrollTop =
+        container.scrollHeight;
 
 }
 
 
-window.openAdminChat =
-function(){
+window.sendAdminChat =
+async function(){
 
     if(!admin){
 
@@ -3314,14 +3169,138 @@ function(){
         );
 
         return;
-
     }
+
+
+    const input =
+        document.getElementById(
+            "adminChatInput"
+        );
+
+
+    const text =
+        input.value.trim();
+
+
+    if(!text) return;
+
+
+    const newMessage =
+        push(adminChatRef);
+
+
+    await set(
+        newMessage,
+        {
+            name:
+                currentUser ||
+                "Admin",
+
+            text,
+
+            createdAt:
+                Date.now()
+        }
+    );
+
+
+    input.value = "";
+
+
+    cleanupOldChat(
+        adminChatRef
+    );
 
 };
 
 
 /* ============================================================
-   ASSISTANT
+   CHAT CLEANUP
+   DELETE MESSAGES OLDER THAN 1 MONTH
+============================================================ */
+
+async function cleanupOldChat(chatRef){
+
+    const oneMonth =
+        30 *
+        24 *
+        60 *
+        60 *
+        1000;
+
+
+    const cutoff =
+        Date.now() -
+        oneMonth;
+
+
+    onValue(
+        chatRef,
+        async snapshot => {
+
+            const data =
+                snapshot.val() || {};
+
+
+            for(
+                const [id,message]
+                of Object.entries(data)
+            ){
+
+                if(
+                    message.createdAt &&
+                    message.createdAt <
+                    cutoff
+                ){
+
+                    await remove(
+                        ref(
+                            db,
+                            chatRef.key +
+                            "/" +
+                            id
+                        )
+                    );
+
+                }
+
+            }
+
+        },
+        {
+            onlyOnce:true
+        }
+    );
+
+}
+
+
+/* ============================================================
+   SEARCH
+============================================================ */
+
+window.searchEverything =
+function(){
+
+    const query =
+        document.getElementById(
+            "searchInput"
+        )
+        .value
+        .trim();
+
+
+    renderNotes(query);
+
+    renderTasks(query);
+
+    renderDocuments(query);
+
+};
+
+
+/* ============================================================
+   AI ASSISTANT
 ============================================================ */
 
 window.askAssistant =
@@ -3329,7 +3308,7 @@ function(){
 
     const input =
         document.getElementById(
-            "assistantInput"
+            "aiInput"
         );
 
 
@@ -3340,7 +3319,7 @@ function(){
     if(!question) return;
 
 
-    addAssistantMessage(
+    addAIMessage(
         question,
         "user"
     );
@@ -3352,10 +3331,14 @@ function(){
     setTimeout(
         () => {
 
-            addAssistantMessage(
+            const answer =
                 generateAssistantAnswer(
                     question
-                ),
+                );
+
+
+            addAIMessage(
+                answer,
                 "ai"
             );
 
@@ -3366,14 +3349,14 @@ function(){
 };
 
 
-function addAssistantMessage(
+function addAIMessage(
     text,
     type
 ){
 
     const container =
         document.getElementById(
-            "assistantMessages"
+            "aiMessages"
         );
 
 
@@ -3384,7 +3367,8 @@ function addAssistantMessage(
 
 
     message.className =
-        "message " + type;
+        "message " +
+        type;
 
 
     message.textContent =
@@ -3427,86 +3411,66 @@ function generateAssistantAnswer(
 
 
         const date =
-            tomorrow
-            .toISOString()
-            .split("T")[0];
+            localDateString(
+                tomorrow
+            );
 
 
         const due =
             Object.values(tasks)
             .filter(
                 task =>
-                    task.due === date &&
-                    !(
-                        task.checks &&
-                        task.checks[userId]
-                    )
+                    task.due === date
             );
 
 
         if(!due.length){
 
-            return
-                "🎉 You have no unfinished tasks due tomorrow.";
+            return "🎉 You have no tasks due tomorrow.";
 
         }
 
 
         return (
-
             "📚 Due tomorrow:\n\n" +
 
-            due
-            .map(
+            due.map(
                 task =>
                     "• " +
                     task.title
-            )
-            .join("\n")
-
+            ).join("\n")
         );
 
     }
 
 
-    /* TASKS */
+    /* ALL TASKS */
 
     if(
         q.includes("task") ||
         q.includes("assignment") ||
+        q.includes("deadline") ||
         q.includes("due")
     ){
 
         const list =
-            Object.values(tasks)
-            .filter(
-                task =>
-                    !(
-                        task.checks &&
-                        task.checks[userId]
-                    )
-            );
+            Object.values(tasks);
 
 
         if(!list.length){
 
-            return
-                "🎉 You currently have no unfinished tasks.";
+            return "🎉 There are currently no tasks.";
 
         }
 
 
         return (
+            "📋 Tasks:\n\n" +
 
-            "📋 Your unfinished tasks:\n\n" +
-
-            list
-            .map(
+            list.map(
                 task =>
-
                     "• " +
                     task.title +
-
                     (
                         task.due
                         ?
@@ -3517,70 +3481,7 @@ function generateAssistantAnswer(
                         :
                         ""
                     )
-
-            )
-            .join("\n")
-
-        );
-
-    }
-
-
-    /* NOTES */
-
-    const matchingNotes =
-        Object.values(notes)
-        .filter(
-            note => {
-
-                const combined =
-                    (
-                        (note.title || "") +
-                        " " +
-                        (note.text || "")
-                    )
-                    .toLowerCase();
-
-
-                return q
-                .split(" ")
-                .some(
-                    word =>
-                        word.length > 2 &&
-                        combined.includes(word)
-                );
-
-            }
-        );
-
-
-    if(
-        q.includes("note") ||
-        q.includes("notes") ||
-        matchingNotes.length
-    ){
-
-        if(!matchingNotes.length){
-
-            return
-                "🔎 I couldn't find a matching note.";
-
-        }
-
-
-        return (
-
-            "📝 I found these notes:\n\n" +
-
-            matchingNotes
-            .slice(0,5)
-            .map(
-                note =>
-                    "• " +
-                    note.title
-            )
-            .join("\n")
-
+            ).join("\n")
         );
 
     }
@@ -3590,19 +3491,15 @@ function generateAssistantAnswer(
 
     if(
         q.includes("upcoming") ||
-        q.includes("next") ||
-        q.includes("coming")
+        q.includes("coming") ||
+        q.includes("next")
     ){
 
         const upcoming =
             Object.values(tasks)
             .filter(
                 task =>
-                    task.due &&
-                    !(
-                        task.checks &&
-                        task.checks[userId]
-                    )
+                    task.due
             )
             .sort(
                 (a,b) =>
@@ -3615,18 +3512,15 @@ function generateAssistantAnswer(
 
         if(!upcoming.length){
 
-            return
-                "You don't have any upcoming dated tasks.";
+            return "There are no upcoming dated tasks.";
 
         }
 
 
         return (
-
             "📅 Upcoming:\n\n" +
 
-            upcoming
-            .map(
+            upcoming.map(
                 task =>
                     "• " +
                     task.title +
@@ -3634,9 +3528,73 @@ function generateAssistantAnswer(
                     formatDate(
                         task.due
                     )
-            )
-            .join("\n")
+            ).join("\n")
+        );
 
+    }
+
+
+    /* NOTES */
+
+    if(
+        q.includes("note") ||
+        q.includes("notes")
+    ){
+
+        const list =
+            Object.values(notes);
+
+
+        if(!list.length){
+
+            return "There are currently no notes.";
+
+        }
+
+
+        const matches =
+            list.filter(
+                note => {
+
+                    const text =
+                        (
+                            (note.title || "") +
+                            " " +
+                            (note.text || "")
+                        ).toLowerCase();
+
+
+                    return q
+                        .split(/\s+/)
+                        .some(
+                            word =>
+                                word.length > 2 &&
+                                text.includes(word)
+                        );
+
+                }
+            );
+
+
+        const result =
+            matches.length
+            ?
+            matches
+            :
+            list;
+
+
+        return (
+            "📝 Notes:\n\n" +
+
+            result
+                .slice(0,8)
+                .map(
+                    note =>
+                        "• " +
+                        note.title
+                )
+                .join("\n")
         );
 
     }
@@ -3644,13 +3602,13 @@ function generateAssistantAnswer(
 
     return `
 
-🤖 I can help you check BSN 2A information.
+🤖 I can help you with the BSN 2A information.
 
-Try asking:
+Try:
 
 • What is due tomorrow?
 • What tasks do I have?
-• What is upcoming?
+• What's upcoming?
 • Show my notes.
 • Show notes about NCM 105.
 
@@ -3660,30 +3618,7 @@ Try asking:
 
 
 /* ============================================================
-   SEARCH
-============================================================ */
-
-window.searchEverything =
-function(){
-
-    const query =
-        document
-        .getElementById(
-            "searchInput"
-        )
-        .value
-        .trim();
-
-
-    renderNotes(query);
-
-    renderTasks(query);
-
-};
-
-
-/* ============================================================
-   FORMAT DATE
+   HELPERS
 ============================================================ */
 
 function formatDate(
@@ -3704,47 +3639,84 @@ function formatDate(
     return date.toLocaleDateString(
         undefined,
         {
-
             month:"long",
             day:"numeric",
             year:"numeric"
-
         }
     );
 
 }
 
 
-/* ============================================================
-   ESCAPE HTML
-============================================================ */
+function localDateString(
+    date
+){
+
+    const year =
+        date.getFullYear();
+
+
+    const month =
+        String(
+            date.getMonth()+1
+        ).padStart(2,"0");
+
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2,"0");
+
+
+    return (
+        year +
+        "-" +
+        month +
+        "-" +
+        day
+    );
+
+}
+
+
+function getUserKey(){
+
+    const name =
+        currentUser ||
+        "guest";
+
+
+    return name
+        .toLowerCase()
+        .replace(
+            /[^a-z0-9]/g,
+            "_"
+        );
+
+}
+
 
 function escapeHTML(
     value
 ){
 
     return String(value)
-
         .replace(
             /&/g,
             "&amp;"
         )
-
         .replace(
             /</g,
             "&lt;"
         )
-
         .replace(
             />/g,
             "&gt;"
         )
-
         .replace(
             /"/g,
             "&quot;"
         )
-
         .replace(
             /'/g,
             "&#039;"
@@ -3753,53 +3725,27 @@ function escapeHTML(
 }
 
 
-/* ============================================================
-   CLEAN OLD CHAT
-============================================================ */
+function escapeAttribute(
+    value
+){
 
-async function cleanOldChat(){
-
-    const oneMonth =
-        30 * 24 * 60 * 60 * 1000;
-
-
-    const cutoff =
-        Date.now() -
-        oneMonth;
-
-
-    Object.entries(chat)
-    .forEach(
-        async ([id,message]) => {
-
-            if(
-                message.createdAt &&
-                message.createdAt <
-                cutoff
-            ){
-
-                try{
-
-                    await remove(
-                        ref(
-                            db,
-                            "chat/" + id
-                        )
-                    );
-
-                }catch(error){
-
-                    console.error(
-                        "Chat cleanup error:",
-                        error
-                    );
-
-                }
-
-            }
-
-        }
-    );
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        );
 
 }
 
@@ -3809,17 +3755,6 @@ async function cleanOldChat(){
 ============================================================ */
 
 loadUsername();
-
-
-/*
-   Wait briefly for chat data,
-   then perform cleanup.
-*/
-
-setTimeout(
-    cleanOldChat,
-    3000
-);
 
 </script>
 
