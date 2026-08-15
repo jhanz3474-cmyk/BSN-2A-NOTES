@@ -7,635 +7,699 @@
 <title>BSN 2A Notes</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-:root {
-    --green: #245c43;
-    --green2: #3d7a5b;
-    --light-green: #e7f0e8;
-    --cream: #f6f2e9;
-    --white: #ffffff;
-    --text: #1e2b25;
-    --muted: #718078;
-    --danger: #c94b4b;
-    --shadow: 0 5px 20px rgba(30, 50, 40, 0.10);
+:root{
+    --green:#245c43;
+    --green2:#3d7a5b;
+    --light-green:#e7f0e8;
+    --cream:#f6f2e9;
+    --white:#fff;
+    --text:#1e2b25;
+    --muted:#718078;
+    --danger:#c94b4b;
+    --shadow:0 5px 20px rgba(30,50,40,.10);
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background: var(--cream);
-    color: var(--text);
-    min-height: 100vh;
+body{
+    font-family:Arial,sans-serif;
+    background:var(--cream);
+    color:var(--text);
+    min-height:100vh;
 }
 
 /* =========================
    SIDEBAR
 ========================= */
 
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 240px;
-    height: 100vh;
-    background: linear-gradient(180deg, #173f2d, #285c43);
-    color: white;
-    padding: 25px 18px;
-    z-index: 20;
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:240px;
+    height:100vh;
+    background:linear-gradient(180deg,#173f2d,#285c43);
+    color:white;
+    padding:25px 18px;
+    z-index:20;
 }
 
-.logo {
-    text-align: center;
-    margin-bottom: 35px;
+.logo{
+    text-align:center;
+    margin-bottom:35px;
 }
 
-.logo-symbol {
-    width: 80px;
-    height: 80px;
-    border: 4px solid #dcebd7;
-    border-radius: 20px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 27px;
-    font-weight: bold;
-    background: rgba(255,255,255,0.08);
-    line-height: 1.05;
+.logo-symbol{
+    width:80px;
+    height:80px;
+    border:4px solid #dcebd7;
+    border-radius:20px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:27px;
+    font-weight:bold;
+    background:rgba(255,255,255,.08);
+    line-height:1.05;
 }
 
-.logo h1 {
-    margin-top: 12px;
-    font-family: Georgia, serif;
-    font-size: 28px;
+.logo h1{
+    margin-top:12px;
+    font-family:Georgia,serif;
+    font-size:28px;
 }
 
-.logo p {
-    margin-top: 5px;
-    opacity: .8;
-    font-size: 13px;
+.logo p{
+    margin-top:5px;
+    opacity:.8;
+    font-size:13px;
 }
 
-.nav {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
 }
 
-.nav button {
-    border: none;
-    background: transparent;
-    color: white;
-    text-align: left;
-    padding: 13px 15px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 15px;
-    transition: .2s;
+.nav button{
+    border:none;
+    background:transparent;
+    color:white;
+    text-align:left;
+    padding:13px 15px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:15px;
+    transition:.2s;
 }
 
 .nav button:hover,
-.nav button.active {
-    background: rgba(255,255,255,.17);
+.nav button.active{
+    background:rgba(255,255,255,.17);
 }
 
-.user-box {
-    position: absolute;
-    bottom: 20px;
-    left: 18px;
-    right: 18px;
-    padding: 13px;
-    background: rgba(255,255,255,.12);
-    border-radius: 14px;
-    font-size: 13px;
+/* ONLINE PEOPLE — stays bottom-left */
+
+.user-box{
+    position:absolute;
+    bottom:20px;
+    left:18px;
+    right:18px;
+    padding:13px;
+    background:rgba(255,255,255,.12);
+    border-radius:14px;
+    font-size:13px;
 }
 
-#adminStatus {
-    color: #b8e5bd;
-    margin-top: 4px;
+#adminStatus{
+    color:#b8e5bd;
+    margin-top:4px;
+}
+
+.online-title{
+    margin-top:12px;
+    font-weight:bold;
+    color:#fff;
+}
+
+.online-list{
+    margin-top:7px;
+    max-height:110px;
+    overflow-y:auto;
+}
+
+.online-person{
+    padding:3px 0;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.online-dot{
+    display:inline-block;
+    width:8px;
+    height:8px;
+    background:#79df91;
+    border-radius:50%;
+    margin-right:5px;
 }
 
 /* =========================
    MAIN
 ========================= */
 
-.main {
-    margin-left: 240px;
-    min-height: 100vh;
-    padding: 25px 35px;
+.main{
+    margin-left:240px;
+    min-height:100vh;
+    padding:25px 35px;
 }
 
-.topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    gap: 20px;
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    gap:20px;
 }
 
-.search {
-    background: white;
-    border-radius: 14px;
-    padding: 13px 18px;
-    width: min(600px, 100%);
-    border: 1px solid #e3e0d8;
-    outline: none;
-    font-size: 15px;
+.search{
+    background:white;
+    border-radius:14px;
+    padding:13px 18px;
+    width:min(600px,100%);
+    border:1px solid #e3e0d8;
+    outline:none;
+    font-size:15px;
 }
 
-.top-actions {
-    display: flex;
-    gap: 10px;
+.top-actions{
+    display:flex;
+    gap:10px;
 }
 
-.btn {
-    border: none;
-    background: var(--green);
-    color: white;
-    border-radius: 10px;
-    padding: 11px 16px;
-    cursor: pointer;
-    font-weight: bold;
+.btn{
+    border:none;
+    background:var(--green);
+    color:white;
+    border-radius:10px;
+    padding:11px 16px;
+    cursor:pointer;
+    font-weight:bold;
 }
 
-.btn:hover {
-    opacity: .9;
+.btn:hover{
+    opacity:.9;
 }
 
-.btn.secondary {
-    background: #e4ebe4;
-    color: var(--green);
+.btn.secondary{
+    background:#e4ebe4;
+    color:var(--green);
 }
 
-.btn.danger {
-    background: var(--danger);
-}
-
-.full {
-    width: 100%;
+.btn.danger{
+    background:var(--danger);
 }
 
 /* =========================
    HERO
 ========================= */
 
-.hero {
-    background: linear-gradient(110deg, #e4efdc, #f4f2df);
-    border-radius: 22px;
-    padding: 35px;
-    margin-bottom: 25px;
-    box-shadow: var(--shadow);
+.hero{
+    background:linear-gradient(110deg,#e4efdc,#f4f2df);
+    border-radius:22px;
+    padding:35px;
+    margin-bottom:25px;
+    box-shadow:var(--shadow);
 }
 
-.hero h2 {
-    font-family: Georgia, serif;
-    font-size: clamp(30px, 4vw, 48px);
-    color: #173f2d;
+.hero h2{
+    font-family:Georgia,serif;
+    font-size:clamp(30px,4vw,48px);
+    color:#173f2d;
 }
 
-.hero p {
-    margin-top: 10px;
-    max-width: 800px;
-    line-height: 1.6;
-    color: #526158;
+.hero p{
+    margin-top:10px;
+    max-width:800px;
+    line-height:1.6;
+    color:#526158;
 }
 
 /* =========================
    SECTIONS
 ========================= */
 
-.section {
-    display: none;
+.section{
+    display:none;
 }
 
-.section.active {
-    display: block;
+.section.active{
+    display:block;
 }
 
-.section-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 25px 0 15px;
-    gap: 15px;
+.section-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:25px 0 15px;
+    gap:15px;
 }
 
-.section-title h2 {
-    font-family: Georgia, serif;
+.section-title h2{
+    font-family:Georgia,serif;
 }
 
 /* =========================
-   NOTE CARDS
+   CARDS
 ========================= */
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 18px;
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:18px;
 }
 
-.card {
-    background: white;
-    border-radius: 17px;
-    padding: 22px;
-    box-shadow: var(--shadow);
-    border: 1px solid #e9e6df;
-    transition: .2s;
-
-    width: 100%;
-    min-width: 0;
-    overflow: hidden;
+.card{
+    display:block !important;
+    width:100%;
+    background:white;
+    border-radius:17px;
+    padding:22px;
+    box-shadow:var(--shadow);
+    border:1px solid #e9e6df;
+    transition:.2s;
+    position:relative;
 }
 
-.card:hover {
-    transform: translateY(-2px);
+.card:hover{
+    transform:translateY(-2px);
 }
 
-/* FIXED TEXT POSITION */
-
-.card h3 {
-    font-family: Georgia, serif;
-    font-size: 22px;
-    margin: 0 0 10px 0;
-    padding: 0;
-
-    color: #173f2d;
-    text-align: left;
-    width: 100%;
+.card h3{
+    display:block !important;
+    width:100% !important;
+    margin:0 0 12px 0 !important;
+    font-family:Georgia,serif;
+    font-size:22px;
+    color:#173f2d;
+    line-height:1.3;
 }
 
-.card-text {
-    display: block;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-
-    text-align: left;
-
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-
-    line-height: 1.65;
-    color: #526158;
+.card-text{
+    display:block !important;
+    width:100% !important;
+    max-width:none !important;
+    clear:both;
+    white-space:pre-wrap;
+    word-wrap:break-word;
+    overflow-wrap:anywhere;
+    line-height:1.65;
+    color:#526158;
+    text-align:left;
 }
 
-.card-date {
-    color: var(--muted);
-    font-size: 12px;
-    margin-top: 15px;
+.card-date{
+    display:block;
+    width:100%;
+    color:var(--muted);
+    font-size:12px;
+    margin-top:15px;
 }
 
-.card-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    margin-top: 16px;
+.card-buttons{
+    display:flex;
+    gap:7px;
+    margin-top:16px;
+    flex-wrap:wrap;
 }
 
-.small-btn {
-    border: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    background: #e8efe9;
-    color: var(--green);
+.small-btn{
+    border:none;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    background:#e8efe9;
+    color:var(--green);
 }
 
-.small-btn.delete {
-    background: #f9e1e1;
-    color: var(--danger);
+.small-btn.delete{
+    background:#f9e1e1;
+    color:var(--danger);
+}
+
+.drag-handle{
+    display:none;
+    position:absolute;
+    right:15px;
+    top:15px;
+    cursor:grab;
+    font-size:18px;
+    opacity:.65;
+}
+
+.admin-arrange .drag-handle{
+    display:block;
+}
+
+.admin-arrange .card,
+.admin-arrange .task,
+.admin-arrange .document-card{
+    cursor:grab;
+}
+
+.dragging{
+    opacity:.45;
 }
 
 /* =========================
    TASKS
 ========================= */
 
-.task {
-    display: flex;
-    align-items: flex-start;
-    gap: 13px;
-    padding: 17px;
-    background: white;
-    border-radius: 13px;
-    margin-bottom: 10px;
-    box-shadow: var(--shadow);
-
-    width: 100%;
-    min-width: 0;
+.task{
+    display:flex;
+    align-items:flex-start;
+    gap:13px;
+    padding:17px;
+    background:white;
+    border-radius:13px;
+    margin-bottom:10px;
+    box-shadow:var(--shadow);
+    position:relative;
 }
 
-.task-check {
-    width: 22px;
-    height: 22px;
-    margin-top: 2px;
-    flex-shrink: 0;
+.task-check{
+    width:22px;
+    height:22px;
+    margin-top:2px;
+    cursor:pointer;
 }
 
-.task-info {
-    flex: 1;
-    min-width: 0;
+.task-info{
+    flex:1;
+    min-width:0;
 }
 
-.task-title {
-    font-weight: bold;
-    overflow-wrap: anywhere;
-    word-break: break-word;
+.task-title{
+    font-weight:bold;
+    line-height:1.4;
+    word-break:break-word;
 }
 
-.task-due {
-    color: var(--muted);
-    font-size: 13px;
-    margin-top: 5px;
+.task-due{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:5px;
 }
 
-.task-description {
-    margin-top: 8px;
-    color: #65726b;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    line-height: 1.55;
+.task-description{
+    margin-top:8px;
+    color:#65726b;
+    white-space:pre-wrap;
+    word-wrap:break-word;
+    overflow-wrap:anywhere;
+    line-height:1.55;
 }
 
-.completed .task-title {
-    text-decoration: line-through;
-    opacity: .55;
+.completed .task-title{
+    text-decoration:line-through;
+    opacity:.55;
 }
 
 /* =========================
-   MODALS
+   DOCUMENTS
 ========================= */
 
-.modal-bg {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.55);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    z-index: 100;
+.document-card{
+    background:white;
+    border-radius:17px;
+    padding:22px;
+    margin-bottom:15px;
+    box-shadow:var(--shadow);
+    border:1px solid #e9e6df;
+    position:relative;
 }
 
-.modal-bg.show {
-    display: flex;
+.document-icon{
+    font-size:34px;
+    margin-bottom:10px;
 }
 
-.modal {
-    background: white;
-    width: min(700px, 100%);
-    max-height: 90vh;
-    overflow-y: auto;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+.document-title{
+    font-family:Georgia,serif;
+    font-size:21px;
+    font-weight:bold;
+    color:#173f2d;
+    padding-right:30px;
 }
 
-.modal h2 {
-    font-family: Georgia, serif;
-    margin-bottom: 20px;
+.document-info{
+    margin-top:8px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.document-actions{
+    margin-top:15px;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.file-viewer{
+    width:100%;
+    height:70vh;
+    border:none;
+    border-radius:10px;
+    background:#eee;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal-bg{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
+}
+
+.modal-bg.show{
+    display:flex;
+}
+
+.modal{
+    background:white;
+    width:min(700px,100%);
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.modal h2{
+    font-family:Georgia,serif;
+    margin-bottom:20px;
 }
 
 .input,
-.textarea {
-    width: 100%;
-    padding: 13px;
-    border: 1px solid #dcded9;
-    border-radius: 10px;
-    margin-bottom: 14px;
-    outline: none;
-    font-family: inherit;
+.textarea,
+.select{
+    width:100%;
+    padding:13px;
+    border:1px solid #dcded9;
+    border-radius:10px;
+    margin-bottom:14px;
+    outline:none;
+    font-family:inherit;
 }
 
-.textarea {
-    min-height: 250px;
-    resize: vertical;
-    line-height: 1.6;
+.textarea{
+    min-height:250px;
+    resize:vertical;
+    line-height:1.6;
 }
 
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+.modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    flex-wrap:wrap;
 }
 
 /* =========================
    CHAT
 ========================= */
 
-.chat-box {
-    background: white;
-    border-radius: 18px;
-    box-shadow: var(--shadow);
-    padding: 20px;
-    max-width: 100%;
+.chat-box{
+    background:white;
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:20px;
+    max-width:850px;
 }
 
-.chat-messages {
-    min-height: 350px;
-    max-height: 500px;
-    overflow-y: auto;
-    padding: 10px;
+.chat-messages{
+    min-height:350px;
+    max-height:500px;
+    overflow-y:auto;
+    padding:10px;
 }
 
-.message {
-    margin-bottom: 15px;
-    padding: 12px 15px;
-    border-radius: 12px;
-    max-width: 85%;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
+.message{
+    margin-bottom:15px;
+    padding:12px 15px;
+    border-radius:12px;
+    max-width:85%;
+    line-height:1.5;
+    white-space:pre-wrap;
+    word-wrap:break-word;
+    overflow-wrap:anywhere;
 }
 
-.message.user {
-    background: var(--light-green);
-    margin-left: auto;
+.message.user{
+    background:var(--light-green);
+    margin-left:auto;
 }
 
-.message.ai {
-    background: #f1eee6;
+.message.ai{
+    background:#f1eee6;
 }
 
-.message.admin {
-    background: #e3edf8;
+.message.admin{
+    background:#e4eefc;
 }
 
-.message-name {
-    font-size: 11px;
-    font-weight: bold;
-    opacity: .65;
-    margin-bottom: 4px;
+.chat-input{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
 }
 
-.chat-input {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.chat-input input {
-    flex: 1;
-    padding: 13px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    outline: none;
-}
-
-/* =========================
-   ONLINE PEOPLE
-========================= */
-
-.online-panel {
-    position: fixed;
-    left: 18px;
-    bottom: 105px;
-    width: 204px;
-    color: white;
-    z-index: 21;
-}
-
-.online-title {
-    font-size: 12px;
-    opacity: .75;
-    margin-bottom: 7px;
-}
-
-.online-list {
-    max-height: 120px;
-    overflow-y: auto;
-}
-
-.online-person {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 12px;
-    padding: 4px 0;
-}
-
-.online-dot {
-    width: 8px;
-    height: 8px;
-    background: #6fe08a;
-    border-radius: 50%;
-    flex-shrink: 0;
+.chat-input input{
+    flex:1;
+    padding:13px;
+    border-radius:10px;
+    border:1px solid #ddd;
 }
 
 /* =========================
    LOGIN
 ========================= */
 
-.login-screen {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(135deg, #173f2d, #3d7a5b);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
+.login-screen{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(135deg,#173f2d,#3d7a5b);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:999;
 }
 
-.login-box {
-    background: white;
-    width: min(420px, 90%);
-    padding: 35px;
-    border-radius: 22px;
-    text-align: center;
-    box-shadow: 0 20px 70px rgba(0,0,0,.25);
+.login-box{
+    background:white;
+    width:min(420px,90%);
+    padding:35px;
+    border-radius:22px;
+    text-align:center;
+    box-shadow:0 20px 70px rgba(0,0,0,.25);
 }
 
-.login-box h1 {
-    font-family: Georgia, serif;
-    color: var(--green);
-    margin-bottom: 8px;
+.login-box h1{
+    font-family:Georgia,serif;
+    color:var(--green);
+    margin-bottom:8px;
 }
 
-.login-box p {
-    color: var(--muted);
-    margin-bottom: 25px;
+.login-box p{
+    color:var(--muted);
+    margin-bottom:25px;
 }
 
-.login-box input {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    margin-bottom: 12px;
+.login-box input{
+    width:100%;
+    padding:14px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    margin-bottom:12px;
+}
+
+.full{
+    width:100%;
 }
 
 /* =========================
    EMPTY
 ========================= */
 
-.empty {
-    background: white;
-    border-radius: 15px;
-    padding: 35px;
-    text-align: center;
-    color: var(--muted);
+.empty{
+    background:white;
+    border-radius:15px;
+    padding:35px;
+    text-align:center;
+    color:var(--muted);
+}
+
+/* =========================
+   ADMIN CHAT
+========================= */
+
+.admin-chat-panel{
+    margin-top:25px;
+    background:#fff;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:var(--shadow);
+    max-width:850px;
 }
 
 /* =========================
    RESPONSIVE
 ========================= */
 
-@media(max-width: 800px) {
+@media(max-width:800px){
 
-    .sidebar {
-        width: 75px;
-        padding: 15px 8px;
+    .sidebar{
+        width:75px;
+        padding:15px 8px;
     }
 
     .logo h1,
     .logo p,
-    .nav span,
-    .user-box {
-        display: none;
+    .nav span{
+        display:none;
     }
 
-    .logo-symbol {
-        width: 55px;
-        height: 55px;
-        font-size: 18px;
+    .logo-symbol{
+        width:55px;
+        height:55px;
+        font-size:18px;
     }
 
-    .nav button {
-        text-align: center;
-        padding: 14px 5px;
-        font-size: 20px;
+    .nav button{
+        text-align:center;
+        padding:14px 5px;
+        font-size:20px;
     }
 
-    .main {
-        margin-left: 75px;
-        padding: 18px;
+    .user-box{
+        left:8px;
+        right:8px;
+        padding:8px;
     }
 
-    .hero {
-        padding: 25px;
+    .user-box > *:not(#adminStatus){
+        display:none;
     }
 
-    .topbar {
-        flex-direction: column;
-        align-items: stretch;
+    .online-title,
+    .online-list{
+        display:none;
     }
 
-    .online-panel {
-        left: 8px;
-        width: 60px;
+    .main{
+        margin-left:75px;
+        padding:18px;
     }
 
-    .online-title {
-        font-size: 9px;
+    .hero{
+        padding:25px;
     }
 
-    .online-person {
-        font-size: 9px;
+    .topbar{
+        flex-direction:column;
+        align-items:stretch;
     }
 }
 </style>
@@ -663,11 +727,14 @@ body {
 
         <input
             id="usernameInput"
-            placeholder="Enter your name"
+            placeholder="Enter your username"
             autocomplete="off"
         >
 
-        <button class="btn full" onclick="enterSite()">
+        <button
+            class="btn full"
+            onclick="enterSite()"
+        >
             Enter Website
         </button>
 
@@ -696,77 +763,89 @@ body {
 
     </div>
 
+
     <nav class="nav">
 
         <button
             class="active"
-            onclick="showSection('notes', this)"
+            onclick="showSection('notes',this)"
         >
             📝 <span>Notes</span>
         </button>
 
         <button
-            onclick="showSection('tasks', this)"
+            onclick="showSection('tasks',this)"
         >
             ✅ <span>Tasks</span>
         </button>
 
         <button
-            onclick="showSection('chat', this)"
+            onclick="showSection('documents',this)"
+        >
+            📚 <span>Files</span>
+        </button>
+
+        <button
+            onclick="showSection('chat',this)"
         >
             💬 <span>Chat</span>
         </button>
 
         <button
-            onclick="showSection('ai', this)"
+            onclick="showSection('ai',this)"
         >
             🤖 <span>AI Assistant</span>
         </button>
 
         <button
-            onclick="showSection('adminChat', this)"
             id="adminChatNav"
+            onclick="showSection('adminChat',this)"
             style="display:none"
         >
             🔐 <span>Admin Chat</span>
         </button>
 
         <button
-            onclick="showSection('about', this)"
+            onclick="showSection('about',this)"
         >
             ℹ️ <span>About</span>
         </button>
 
-        <button onclick="adminLogin()">
+        <button
+            onclick="adminLogin()"
+        >
             🔒 <span id="adminButtonText">Admin</span>
         </button>
 
     </nav>
 
-</aside>
 
+    <!-- KEEPING ONLINE PEOPLE AT BOTTOM LEFT -->
 
-<!-- =========================
-     ONLINE PEOPLE
-========================= -->
+    <div class="user-box">
 
-<div class="online-panel">
+        👤 <b id="currentUser">
+            Guest
+        </b>
 
-    <div class="online-title">
-        🟢 Online now
-    </div>
-
-    <div
-        class="online-list"
-        id="onlineList"
-    >
-        <div class="online-person">
-            <span class="online-dot"></span>
-            Loading...
+        <div id="adminStatus">
+            Student mode
         </div>
+
+        <div class="online-title">
+            🟢 Online now
+        </div>
+
+        <div
+            class="online-list"
+            id="onlineList"
+        >
+            Nobody else online
+        </div>
+
     </div>
 
-</div>
+</aside>
 
 
 <!-- =========================
@@ -802,6 +881,24 @@ body {
                 style="display:none"
             >
                 + Task
+            </button>
+
+            <button
+                class="btn secondary"
+                id="addDocumentButton"
+                onclick="openDocumentModal()"
+                style="display:none"
+            >
+                + File
+            </button>
+
+            <button
+                class="btn secondary"
+                id="arrangeButton"
+                onclick="toggleArrangeMode()"
+                style="display:none"
+            >
+                ↕ Arrange
             </button>
 
         </div>
@@ -883,6 +980,41 @@ body {
 
 
     <!-- =========================
+         DOCUMENTS
+    ========================= -->
+
+    <section
+        class="section"
+        id="documents"
+    >
+
+        <div class="section-title">
+
+            <h2>
+                📚 Class Files
+            </h2>
+
+            <button
+                class="btn"
+                id="documentAddButton"
+                onclick="openDocumentModal()"
+                style="display:none"
+            >
+                + Add PDF/PPT
+            </button>
+
+        </div>
+
+        <p style="color:#718078;margin-bottom:15px;">
+            Admins can add class PDFs and PowerPoint files here.
+        </p>
+
+        <div id="documentsContainer"></div>
+
+    </section>
+
+
+    <!-- =========================
          NORMAL CHAT
     ========================= -->
 
@@ -903,23 +1035,20 @@ body {
 
             <div
                 class="chat-messages"
-                id="normalChatMessages"
+                id="chatMessages"
             ></div>
 
             <div class="chat-input">
 
                 <input
-                    id="normalChatInput"
+                    id="chatInput"
                     placeholder="Type a message..."
-                    onkeydown="
-                        if(event.key === 'Enter')
-                        sendNormalChat()
-                    "
+                    onkeydown="if(event.key==='Enter')sendChatMessage()"
                 >
 
                 <button
                     class="btn"
-                    onclick="sendNormalChat()"
+                    onclick="sendChatMessage()"
                 >
                     Send
                 </button>
@@ -952,25 +1081,19 @@ body {
 
             <div
                 class="chat-messages"
-                id="chatMessages"
+                id="aiMessages"
             >
 
                 <div class="message ai">
+Hey! 👋 I'm your BSN 2A assistant.
 
-                    <div class="message-name">
-                        BSN Assistant
-                    </div>
+Try asking:
 
-                    Hey! 👋 I'm your BSN 2A assistant.
-
-                    Try asking:
-
-                    • What is due tomorrow?
-                    • What tasks do I have?
-                    • What's coming up?
-                    • Show my notes.
-                    • Show my notes about NCM 105.
-
+• What is due tomorrow?
+• What tasks do I have?
+• What is upcoming?
+• Show my notes.
+• Show notes about NCM 105.
                 </div>
 
             </div>
@@ -978,12 +1101,9 @@ body {
             <div class="chat-input">
 
                 <input
-                    id="chatInput"
+                    id="aiInput"
                     placeholder="Ask something..."
-                    onkeydown="
-                        if(event.key === 'Enter')
-                        askAssistant()
-                    "
+                    onkeydown="if(event.key==='Enter')askAssistant()"
                 >
 
                 <button
@@ -1017,7 +1137,11 @@ body {
 
         </div>
 
-        <div class="chat-box">
+        <div class="admin-chat-panel">
+
+            <p style="color:#718078;margin-bottom:15px;">
+                Private chat for administrators.
+            </p>
 
             <div
                 class="chat-messages"
@@ -1029,10 +1153,7 @@ body {
                 <input
                     id="adminChatInput"
                     placeholder="Message other admins..."
-                    onkeydown="
-                        if(event.key === 'Enter')
-                        sendAdminChat()
-                    "
+                    onkeydown="if(event.key==='Enter')sendAdminChat()"
                 >
 
                 <button
@@ -1065,15 +1186,21 @@ body {
             </h2>
 
             <p>
-                A shared class notes and task system
-                for BSN 2A.
+                A shared class notes and task system for BSN 2A.
+                Everyone can view the latest information while
+                administrators can manage notes, tasks and files.
             </p>
 
             <br>
 
             <p>
-                🔄 Data is synchronized through
-                Firebase Realtime Database.
+                🔄 Data is synchronized using Firebase Realtime Database.
+            </p>
+
+            <br>
+
+            <p>
+                👥 Online users are shown in the bottom-left panel.
             </p>
 
         </div>
@@ -1190,6 +1317,107 @@ body {
 </div>
 
 
+<!-- =========================
+     DOCUMENT MODAL
+========================= -->
+
+<div
+    class="modal-bg"
+    id="documentModal"
+>
+
+    <div class="modal">
+
+        <h2>
+            Add Class File
+        </h2>
+
+        <input
+            class="input"
+            id="documentTitle"
+            placeholder="File title"
+        >
+
+        <select
+            class="select"
+            id="documentCategory"
+        >
+            <option value="PDF">PDF</option>
+            <option value="PPT">PowerPoint</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <input
+            class="input"
+            id="documentFile"
+            type="file"
+            accept=".pdf,.ppt,.pptx"
+        >
+
+        <p
+            id="fileSizeWarning"
+            style="font-size:13px;color:#718078;margin-bottom:15px;"
+        >
+            Keep files reasonably small because this version uses
+            Firebase Realtime Database instead of Cloud Storage.
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                class="btn secondary"
+                onclick="closeDocumentModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="btn"
+                onclick="saveDocument()"
+            >
+                Upload File
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     FILE VIEWER MODAL
+========================= -->
+
+<div
+    class="modal-bg"
+    id="viewerModal"
+>
+
+    <div class="modal">
+
+        <h2 id="viewerTitle">
+            File
+        </h2>
+
+        <div id="viewerContent"></div>
+
+        <div class="modal-actions">
+
+            <button
+                class="btn"
+                onclick="closeViewer()"
+            >
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 <script type="module">
 
 /* ============================================================
@@ -1254,86 +1482,71 @@ const db =
 ============================================================ */
 
 const notesRef =
-    ref(db, "notes");
+    ref(db,"notes");
 
 const tasksRef =
-    ref(db, "tasks");
+    ref(db,"tasks");
+
+const documentsRef =
+    ref(db,"documents");
 
 const chatRef =
-    ref(db, "chat");
+    ref(db,"chat");
 
 const adminChatRef =
-    ref(db, "adminChat");
+    ref(db,"adminChat");
 
-const onlineRef =
-    ref(db, "online");
+const presenceRef =
+    ref(db,"presence");
 
 
 /* ============================================================
-   VARIABLES
+   GLOBAL VARIABLES
 ============================================================ */
 
 let notes = {};
 
 let tasks = {};
 
-let chatMessages = {};
+let documents = {};
 
-let adminMessages = {};
+let chat = {};
 
-let onlineUsers = {};
+let adminChat = {};
+
+let presence = {};
 
 let admin = false;
+
+let arranging = false;
 
 let editingNoteId = null;
 
 let editingTaskId = null;
 
-
-/* ============================================================
-   LOCAL USER ID
-============================================================ */
-
-let userId =
-    localStorage.getItem("bsnUserId");
-
-if (!userId) {
-
-    userId =
-        "user_" +
-        Date.now() +
-        "_" +
-        Math.random()
-            .toString(36)
-            .substring(2, 9);
-
-    localStorage.setItem(
-        "bsnUserId",
-        userId
-    );
-}
+let currentUser = "";
 
 
 /* ============================================================
    USERNAME
 ============================================================ */
 
-window.enterSite = function() {
+window.enterSite = function(){
 
     const name =
         document
-            .getElementById("usernameInput")
-            .value
-            .trim();
+        .getElementById("usernameInput")
+        .value
+        .trim();
 
-    if (!name) {
+    if(!name){
 
-        alert(
-            "Please enter your name."
-        );
+        alert("Please enter your username.");
 
         return;
     }
+
+    currentUser = name;
 
     localStorage.setItem(
         "bsnUsername",
@@ -1341,24 +1554,28 @@ window.enterSite = function() {
     );
 
     document
-        .getElementById("currentUser");
+        .getElementById("currentUser")
+        .textContent = name;
 
     document
         .getElementById("loginScreen")
         .style.display = "none";
 
     setupPresence();
+
 };
 
 
-function loadUsername() {
+function loadUsername(){
 
     const saved =
         localStorage.getItem(
             "bsnUsername"
         );
 
-    if (saved) {
+    if(saved){
+
+        currentUser = saved;
 
         document
             .getElementById("currentUser")
@@ -1370,91 +1587,77 @@ function loadUsername() {
 
         setupPresence();
 
-    } else {
-
-        document
-            .getElementById("loginScreen")
-            .style.display = "flex";
     }
 }
 
 
 /* ============================================================
-   ONLINE PRESENCE
+   PRESENCE / ONLINE PEOPLE
 ============================================================ */
 
-async function setupPresence() {
+function setupPresence(){
 
-    const name =
-        localStorage.getItem(
-            "bsnUsername"
-        );
+    if(!currentUser)
+        return;
 
-    if (!name) return;
+    const safeName =
+        currentUser
+        .replace(/[.#$[\]]/g,"_");
 
-    const userPresenceRef =
+    const userPresence =
         ref(
             db,
-            "online/" + userId
+            "presence/" + safeName
         );
 
-    await onDisconnect(
-        userPresenceRef
-    ).remove();
-
-    await set(
-        userPresenceRef,
+    set(
+        userPresence,
         {
-            name: name,
-            lastSeen: Date.now()
+            name:currentUser,
+            lastSeen:Date.now()
         }
     );
+
+    onDisconnect(userPresence)
+        .remove();
+
 }
 
 
-/* ============================================================
-   ONLINE LISTENER
-============================================================ */
-
 onValue(
-    onlineRef,
-    snapshot => {
+    presenceRef,
+    snapshot=>{
 
-        onlineUsers =
+        presence =
             snapshot.val() || {};
 
-        renderOnlineUsers();
+        renderOnlinePeople();
 
     }
 );
 
 
-function renderOnlineUsers() {
+function renderOnlinePeople(){
 
     const container =
         document.getElementById(
             "onlineList"
         );
 
-    container.innerHTML = "";
+    const people =
+        Object.values(presence);
 
-    const users =
-        Object.values(
-            onlineUsers
-        );
+    if(!people.length){
 
-    if (!users.length) {
-
-        container.innerHTML = `
-            <div class="online-person">
-                No one online
-            </div>
-        `;
+        container.textContent =
+            "Nobody else online";
 
         return;
     }
 
-    users.forEach(user => {
+    container.innerHTML = "";
+
+    people.forEach(person=>{
 
         const div =
             document.createElement("div");
@@ -1462,14 +1665,14 @@ function renderOnlineUsers() {
         div.className =
             "online-person";
 
-        div.innerHTML = `
-            <span class="online-dot"></span>
-            ${escapeHTML(user.name)}
-        `;
+        div.innerHTML =
+            `<span class="online-dot"></span>
+             ${escapeHTML(person.name || "Unknown")}`;
 
         container.appendChild(div);
 
     });
+
 }
 
 
@@ -1477,32 +1680,35 @@ function renderOnlineUsers() {
    ADMIN
 ============================================================ */
 
-window.adminLogin = function() {
+/*
+   NOTE:
+   This is client-side admin protection.
+   It is NOT true Firebase security because the password
+   exists inside the webpage source.
 
-    if (admin) {
+   For a real public production website, Firebase Authentication
+   + database security rules should be used.
+*/
+
+window.adminLogin = function(){
+
+    if(admin){
 
         admin = false;
 
         updateAdminUI();
 
-        alert(
-            "Admin mode disabled."
-        );
+        alert("Admin mode disabled.");
 
         return;
     }
-
 
     const password =
         prompt(
             "Enter admin password:"
         );
 
-
-    if (
-        password ===
-        "supperlol123123"
-    ) {
+    if(password === "supperlol123123"){
 
         admin = true;
 
@@ -1512,16 +1718,18 @@ window.adminLogin = function() {
             "Admin mode enabled 🔓"
         );
 
-    } else {
+    }else{
 
         alert(
             "Wrong password."
         );
+
     }
+
 };
 
 
-function updateAdminUI() {
+function updateAdminUI(){
 
     const noteButton =
         document.getElementById(
@@ -1538,9 +1746,29 @@ function updateAdminUI() {
             "taskAddButton"
         );
 
+    const documentButton =
+        document.getElementById(
+            "addDocumentButton"
+        );
+
+    const documentAddButton =
+        document.getElementById(
+            "documentAddButton"
+        );
+
+    const arrangeButton =
+        document.getElementById(
+            "arrangeButton"
+        );
+
     const adminText =
         document.getElementById(
             "adminButtonText"
+        );
+
+    const status =
+        document.getElementById(
+            "adminStatus"
         );
 
     const adminChatNav =
@@ -1549,7 +1777,7 @@ function updateAdminUI() {
         );
 
 
-    if (admin) {
+    if(admin){
 
         noteButton.style.display =
             "block";
@@ -1558,15 +1786,27 @@ function updateAdminUI() {
             "block";
 
         taskAddButton.style.display =
+            "block";
+
+        documentButton.style.display =
+            "block";
+
+        documentAddButton.style.display =
+            "block";
+
+        arrangeButton.style.display =
+            "block";
+
+        adminChatNav.style.display =
             "block";
 
         adminText.textContent =
             "Admin 🔓";
 
-        adminChatNav.style.display =
-            "block";
+        status.textContent =
+            "Administrator mode";
 
-    } else {
+    }else{
 
         noteButton.style.display =
             "none";
@@ -1577,28 +1817,78 @@ function updateAdminUI() {
         taskAddButton.style.display =
             "none";
 
-        adminText.textContent =
-            "Admin 🔒";
+        documentButton.style.display =
+            "none";
+
+        documentAddButton.style.display =
+            "none";
+
+        arrangeButton.style.display =
+            "none";
 
         adminChatNav.style.display =
             "none";
 
-        if (
-            document
-                .getElementById("adminChat")
-                .classList
-                .contains("active")
-        ) {
+        adminText.textContent =
+            "Admin 🔒";
 
-            showSection("notes");
+        status.textContent =
+            "Student mode";
 
-        }
+        arranging = false;
+
+        document.body
+            .classList
+            .remove("admin-arrange");
+
     }
+
 
     renderNotes();
 
     renderTasks();
+
+    renderDocuments();
+
 }
+
+
+/* ============================================================
+   ARRANGE MODE
+============================================================ */
+
+window.toggleArrangeMode = function(){
+
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+    }
+
+    arranging = !arranging;
+
+    document.body
+        .classList
+        .toggle(
+            "admin-arrange",
+            arranging
+        );
+
+    document.getElementById(
+        "arrangeButton"
+    ).textContent =
+        arranging
+        ? "✓ Done Arranging"
+        : "↕ Arrange";
+
+    renderNotes();
+    renderTasks();
+    renderDocuments();
+
+};
 
 
 /* ============================================================
@@ -1608,61 +1898,38 @@ function updateAdminUI() {
 window.showSection = function(
     id,
     button
-) {
+){
 
     document
         .querySelectorAll(".section")
-        .forEach(section => {
-
+        .forEach(section=>{
             section.classList.remove(
                 "active"
             );
-
         });
 
-
-    const section =
-        document.getElementById(id);
-
-    if (!section) return;
-
-
-    if (
-        id === "adminChat" &&
-        !admin
-    ) {
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-    }
-
-
-    section.classList.add(
-        "active"
-    );
+    document
+        .getElementById(id)
+        .classList.add("active");
 
 
     document
         .querySelectorAll(".nav button")
-        .forEach(btn => {
-
+        .forEach(btn=>{
             btn.classList.remove(
                 "active"
             );
-
         });
 
 
-    if (button) {
+    if(button){
 
         button.classList.add(
             "active"
         );
 
     }
+
 };
 
 
@@ -1672,7 +1939,7 @@ window.showSection = function(
 
 onValue(
     notesRef,
-    snapshot => {
+    snapshot=>{
 
         notes =
             snapshot.val() || {};
@@ -1684,12 +1951,12 @@ onValue(
 
 
 /* ============================================================
-   TASK LISTENER
+   TASKS LISTENER
 ============================================================ */
 
 onValue(
     tasksRef,
-    snapshot => {
+    snapshot=>{
 
         tasks =
             snapshot.val() || {};
@@ -1701,17 +1968,34 @@ onValue(
 
 
 /* ============================================================
+   DOCUMENT LISTENER
+============================================================ */
+
+onValue(
+    documentsRef,
+    snapshot=>{
+
+        documents =
+            snapshot.val() || {};
+
+        renderDocuments();
+
+    }
+);
+
+
+/* ============================================================
    CHAT LISTENER
 ============================================================ */
 
 onValue(
     chatRef,
-    snapshot => {
+    snapshot=>{
 
-        chatMessages =
+        chat =
             snapshot.val() || {};
 
-        renderNormalChat();
+        renderChat();
 
     }
 );
@@ -1723,9 +2007,9 @@ onValue(
 
 onValue(
     adminChatRef,
-    snapshot => {
+    snapshot=>{
 
-        adminMessages =
+        adminChat =
             snapshot.val() || {};
 
         renderAdminChat();
@@ -1735,12 +2019,12 @@ onValue(
 
 
 /* ============================================================
-   RENDER NOTES
+   NOTES
 ============================================================ */
 
 function renderNotes(
-    search = ""
-) {
+    search=""
+){
 
     const container =
         document.getElementById(
@@ -1749,158 +2033,175 @@ function renderNotes(
 
     container.innerHTML = "";
 
+    let entries =
+        Object.entries(notes);
+
+
+    entries.sort(
+        (a,b)=>
+            (a[1].order ?? 999999)
+            -
+            (b[1].order ?? 999999)
+    );
+
+
+    if(!entries.length){
+
+        container.innerHTML =
+            `<div class="empty">
+                No notes found.
+            </div>`;
+
+        document.getElementById(
+            "noteCount"
+        ).textContent =
+            "0 notes";
+
+        return;
+    }
+
+
     let count = 0;
 
 
-    Object.entries(notes)
-        .reverse()
-        .forEach(
-            ([id, note]) => {
+    entries.forEach(
+        ([id,note],index)=>{
 
-                const title =
-                    note.title ||
-                    "Untitled Note";
+        const title =
+            note.title ||
+            "Untitled Note";
 
-                const text =
-                    note.text || "";
+        const text =
+            note.text ||
+            "";
 
-
-                const combined =
-                    (
-                        title +
-                        " " +
-                        text
-                    ).toLowerCase();
+        const combined =
+            (
+                title +
+                " " +
+                text
+            ).toLowerCase();
 
 
-                if (
-                    search &&
-                    !combined.includes(
-                        search.toLowerCase()
-                    )
-                ) {
+        if(
+            search &&
+            !combined.includes(
+                search.toLowerCase()
+            )
+        ){
 
-                    return;
-                }
+            return;
 
-
-                count++;
+        }
 
 
-                const card =
-                    document.createElement(
-                        "div"
-                    );
-
-                card.className =
-                    "card";
+        count++;
 
 
-                /*
-                 * IMPORTANT:
-                 * No whitespace between
-                 * the title and card-text.
-                 */
+        const card =
+            document.createElement(
+                "div"
+            );
 
-                card.innerHTML = `
+        card.className =
+            "card";
 
-                    <h3>${escapeHTML(title)}</h3>
+        card.dataset.id =
+            id;
 
-                    <div class="card-text">${escapeHTML(text)}</div>
-
-                    <div class="card-date">
-                        ${
-                            note.author
-                            ? "Added by " +
-                              escapeHTML(note.author)
-                            : ""
-                        }
-                    </div>
-
-                    ${
-                        admin
-                        ?
-                        `
-                        <div class="card-buttons">
-
-                            <button
-                                class="small-btn"
-                                onclick="editNote('${id}')"
-                            >
-                                ✏️ Edit
-                            </button>
-
-                            <button
-                                class="small-btn delete"
-                                onclick="deleteNote('${id}')"
-                            >
-                                🗑️ Delete
-                            </button>
-
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-                `;
+        card.draggable =
+            admin && arranging;
 
 
-                card.addEventListener(
-                    "click",
-                    function(e) {
+        card.innerHTML = `
 
-                        if (
-                            e.target.closest(
-                                "button"
-                            )
-                        ) {
-
-                            return;
-                        }
-
-                        openReadNote(id);
-
-                    }
-                );
-
-
-                container.appendChild(
-                    card
-                );
-
-            }
-        );
-
-
-    document
-        .getElementById(
-            "noteCount"
-        )
-        .textContent =
-        `${count} note${count === 1 ? "" : "s"}`;
-
-
-    if (count === 0) {
-
-        container.innerHTML = `
-
-            <div class="empty">
-
-                No notes found.
-
-                ${
-                    admin
-                    ?
-                    "<br><br>Click + Add Note to create one."
-                    :
-                    ""
-                }
-
+            <div class="drag-handle">
+                ☷
             </div>
 
+            <h3>
+                ${escapeHTML(title)}
+            </h3>
+
+            <div class="card-text">
+                ${escapeHTML(text)}
+            </div>
+
+            <div class="card-date">
+                ${
+                    note.author
+                    ? "Added by " +
+                      escapeHTML(note.author)
+                    : ""
+                }
+            </div>
+
+            ${
+                admin
+                ?
+                `
+                <div class="card-buttons">
+
+                    <button
+                        class="small-btn"
+                        onclick="editNote('${id}')"
+                    >
+                        ✏️ Edit
+                    </button>
+
+                    <button
+                        class="small-btn delete"
+                        onclick="deleteNote('${id}')"
+                    >
+                        🗑️ Delete
+                    </button>
+
+                </div>
+                `
+                :
+                ""
+            }
+
         `;
-    }
+
+
+        if(
+            admin &&
+            arranging
+        ){
+
+            setupDrag(
+                card,
+                "notes"
+            );
+
+        }
+
+
+        if(!admin){
+
+            card.addEventListener(
+                "click",
+                ()=>{
+                    openReadNote(id);
+                }
+            );
+
+        }
+
+
+        container.appendChild(
+            card
+        );
+
+    });
+
+
+    document.getElementById(
+        "noteCount"
+    ).textContent =
+        `${count} note${count===1?"":"s"}`;
+
 }
 
 
@@ -1908,10 +2209,9 @@ function renderNotes(
    ADD NOTE
 ============================================================ */
 
-window.openNoteModal =
-function() {
+window.openNoteModal = function(){
 
-    if (!admin) {
+    if(!admin){
 
         alert(
             "Admin access required."
@@ -1920,84 +2220,60 @@ function() {
         return;
     }
 
-
     editingNoteId = null;
 
-
-    document
-        .getElementById(
-            "noteModalTitle"
-        )
-        .textContent =
+    document.getElementById(
+        "noteModalTitle"
+    ).textContent =
         "Add Note";
 
+    document.getElementById(
+        "noteTitle"
+    ).value = "";
 
-    document
-        .getElementById(
-            "noteTitle"
-        )
-        .value = "";
-
-
-    document
-        .getElementById(
-            "noteText"
-        )
-        .value = "";
-
+    document.getElementById(
+        "noteText"
+    ).value = "";
 
     document
         .getElementById(
             "noteModal"
         )
-        .classList
-        .add("show");
+        .classList.add("show");
 
 };
 
 
-window.closeNoteModal =
-function() {
+window.closeNoteModal = function(){
 
     document
         .getElementById(
             "noteModal"
         )
-        .classList
-        .remove("show");
+        .classList.remove("show");
 
 };
 
 
-/* ============================================================
-   SAVE NOTE
-============================================================ */
+window.saveNote = async function(){
 
-window.saveNote =
-async function() {
-
-    if (!admin) return;
-
+    if(!admin)
+        return;
 
     const title =
         document
-            .getElementById(
-                "noteTitle"
-            )
-            .value
-            .trim();
-
+        .getElementById("noteTitle")
+        .value
+        .trim();
 
     const text =
         document
-            .getElementById(
-                "noteText"
-            )
-            .value
-            .trim();
+        .getElementById("noteText")
+        .value
+        .trim();
 
 
-    if (!title) {
+    if(!title){
 
         alert(
             "Please enter a title."
@@ -2010,13 +2286,12 @@ async function() {
     const author =
         localStorage.getItem(
             "bsnUsername"
-        ) ||
-        "Admin";
+        ) || "Admin";
 
 
-    try {
+    try{
 
-        if (editingNoteId) {
+        if(editingNoteId){
 
             await update(
                 ref(
@@ -2031,10 +2306,25 @@ async function() {
                 }
             );
 
-        } else {
+        }else{
 
             const newNote =
                 push(notesRef);
+
+            const currentOrders =
+                Object.values(notes)
+                .map(n =>
+                    Number(n.order)
+                )
+                .filter(Number.isFinite);
+
+            const nextOrder =
+                currentOrders.length
+                ? Math.max(
+                    ...currentOrders
+                  ) + 1
+                : 0;
+
 
             await set(
                 newNote,
@@ -2042,17 +2332,17 @@ async function() {
                     title,
                     text,
                     author,
-                    createdAt:
-                        Date.now()
+                    order:nextOrder,
+                    createdAt:Date.now()
                 }
             );
+
         }
 
 
         closeNoteModal();
 
-
-    } catch(error) {
+    }catch(error){
 
         console.error(error);
 
@@ -2061,6 +2351,7 @@ async function() {
         );
 
     }
+
 };
 
 
@@ -2068,52 +2359,40 @@ async function() {
    EDIT NOTE
 ============================================================ */
 
-window.editNote =
-function(id) {
+window.editNote = function(id){
 
-    if (!admin) return;
-
+    if(!admin)
+        return;
 
     const note =
         notes[id];
 
-    if (!note) return;
-
+    if(!note)
+        return;
 
     editingNoteId =
         id;
 
-
-    document
-        .getElementById(
-            "noteModalTitle"
-        )
-        .textContent =
+    document.getElementById(
+        "noteModalTitle"
+    ).textContent =
         "Edit Note";
 
-
-    document
-        .getElementById(
-            "noteTitle"
-        )
-        .value =
+    document.getElementById(
+        "noteTitle"
+    ).value =
         note.title || "";
 
-
-    document
-        .getElementById(
-            "noteText"
-        )
-        .value =
+    document.getElementById(
+        "noteText"
+    ).value =
         note.text || "";
-
 
     document
         .getElementById(
             "noteModal"
         )
-        .classList
-        .add("show");
+        .classList.add("show");
 
 };
 
@@ -2122,122 +2401,96 @@ function(id) {
    READ NOTE
 ============================================================ */
 
-function openReadNote(id) {
+function openReadNote(id){
 
     const note =
         notes[id];
 
-    if (!note) return;
+    if(!note)
+        return;
 
+    document.getElementById(
+        "noteModalTitle"
+    ).textContent =
+        note.title || "Note";
 
-    document
-        .getElementById(
-            "noteModalTitle"
-        )
-        .textContent =
+    document.getElementById(
+        "noteTitle"
+    ).value =
         note.title || "";
 
-
-    document
-        .getElementById(
-            "noteTitle"
-        )
-        .value =
-        note.title || "";
-
-
-    document
-        .getElementById(
-            "noteText"
-        )
-        .value =
+    document.getElementById(
+        "noteText"
+    ).value =
         note.text || "";
 
 
-    document
-        .getElementById(
-            "noteTitle"
-        )
-        .disabled =
-        true;
+    document.getElementById(
+        "noteTitle"
+    ).disabled = true;
+
+    document.getElementById(
+        "noteText"
+    ).disabled = true;
 
 
-    document
-        .getElementById(
-            "noteText"
-        )
-        .disabled =
-        true;
+    document.querySelector(
+        "#noteModal .modal-actions"
+    ).innerHTML = `
 
+        <button
+            class="btn"
+            onclick="closeReadNote()"
+        >
+            Close
+        </button>
 
-    document
-        .querySelector(
-            "#noteModal .modal-actions"
-        )
-        .innerHTML = `
-
-            <button
-                class="btn"
-                onclick="closeReadNote()"
-            >
-                Close
-            </button>
-
-        `;
+    `;
 
 
     document
         .getElementById(
             "noteModal"
         )
-        .classList
-        .add("show");
+        .classList.add("show");
+
 }
 
 
-window.closeReadNote =
-function() {
+window.closeReadNote = function(){
 
-    document
-        .getElementById(
-            "noteTitle"
-        )
-        .disabled =
-        false;
+    document.getElementById(
+        "noteTitle"
+    ).disabled = false;
 
-
-    document
-        .getElementById(
-            "noteText"
-        )
-        .disabled =
-        false;
+    document.getElementById(
+        "noteText"
+    ).disabled = false;
 
 
-    document
-        .querySelector(
-            "#noteModal .modal-actions"
-        )
-        .innerHTML = `
+    document.querySelector(
+        "#noteModal .modal-actions"
+    ).innerHTML = `
 
-            <button
-                class="btn secondary"
-                onclick="closeNoteModal()"
-            >
-                Cancel
-            </button>
+        <button
+            class="btn secondary"
+            onclick="closeNoteModal()"
+        >
+            Cancel
+        </button>
 
-            <button
-                class="btn"
-                onclick="saveNote()"
-            >
-                Save Note
-            </button>
+        <button
+            class="btn"
+            onclick="saveNote()"
+        >
+            Save Note
+        </button>
 
-        `;
+    `;
 
 
     closeNoteModal();
+
 };
 
 
@@ -2245,20 +2498,20 @@ function() {
    DELETE NOTE
 ============================================================ */
 
-window.deleteNote =
-async function(id) {
+window.deleteNote = async function(id){
 
-    if (!admin) return;
+    if(!admin)
+        return;
 
-
-    if (
+    if(
         !confirm(
             "Delete this note?"
         )
-    ) return;
+    )
+        return;
 
 
-    try {
+    try{
 
         await remove(
             ref(
@@ -2267,7 +2520,7 @@ async function(id) {
             )
         );
 
-    } catch(error) {
+    }catch(error){
 
         console.error(error);
 
@@ -2276,16 +2529,17 @@ async function(id) {
         );
 
     }
+
 };
 
 
 /* ============================================================
-   RENDER TASKS
+   TASKS
 ============================================================ */
 
 function renderTasks(
-    search = ""
-) {
+    search=""
+){
 
     const container =
         document.getElementById(
@@ -2295,181 +2549,200 @@ function renderTasks(
     container.innerHTML = "";
 
 
-    const entries =
+    let entries =
         Object.entries(tasks);
 
 
-    if (!entries.length) {
+    entries.sort(
+        (a,b)=>{
 
-        container.innerHTML = `
+            const ao =
+                Number(a[1].order);
 
-            <div class="empty">
+            const bo =
+                Number(b[1].order);
+
+            if(
+                Number.isFinite(ao) &&
+                Number.isFinite(bo)
+            ){
+
+                return ao-bo;
+
+            }
+
+            return (
+                a[1].due || ""
+            ).localeCompare(
+                b[1].due || ""
+            );
+
+        }
+    );
+
+
+    if(!entries.length){
+
+        container.innerHTML =
+            `<div class="empty">
                 No tasks yet.
-            </div>
-
-        `;
+            </div>`;
 
         return;
     }
 
 
-    entries
-        .sort(
-            (a,b) =>
-                (
-                    a[1].due || ""
-                ).localeCompare(
-                    b[1].due || ""
-                )
+    entries.forEach(
+        ([id,task])=>{
+
+        const combined =
+            (
+                (task.title || "") +
+                " " +
+                (task.description || "")
+            ).toLowerCase();
+
+
+        if(
+            search &&
+            !combined.includes(
+                search.toLowerCase()
+            )
         )
-        .forEach(
-            ([id, task]) => {
-
-                const combined =
-                    (
-                        (task.title || "") +
-                        " " +
-                        (task.description || "")
-                    ).toLowerCase();
+            return;
 
 
-                if (
-                    search &&
-                    !combined.includes(
-                        search.toLowerCase()
-                    )
-                ) {
+        const div =
+            document.createElement(
+                "div"
+            );
 
-                    return;
+        div.className =
+            "task " +
+            (
+                task.completedBy &&
+                task.completedBy[
+                    getUserKey()
+                ]
+                ?
+                "completed"
+                :
+                ""
+            );
+
+        div.dataset.id =
+            id;
+
+        div.draggable =
+            admin && arranging;
+
+
+        const checked =
+            task.completedBy &&
+            task.completedBy[
+                getUserKey()
+            ];
+
+
+        div.innerHTML = `
+
+            <div class="drag-handle">
+                ☷
+            </div>
+
+            <input
+                class="task-check"
+                type="checkbox"
+                ${checked ? "checked" : ""}
+                onchange="toggleTask('${id}')"
+            >
+
+            <div class="task-info">
+
+                <div class="task-title">
+                    ${escapeHTML(
+                        task.title ||
+                        "Untitled"
+                    )}
+                </div>
+
+                <div class="task-due">
+
+                    ${
+                        task.due
+                        ?
+                        "Due: " +
+                        formatDate(task.due)
+                        :
+                        "No due date"
+                    }
+
+                </div>
+
+                ${
+                    task.description
+                    ?
+                    `
+                    <div class="task-description">
+                        ${escapeHTML(
+                            task.description
+                        )}
+                    </div>
+                    `
+                    :
+                    ""
                 }
 
+                ${
+                    admin
+                    ?
+                    `
+                    <div class="card-buttons">
 
-                /*
-                 * IMPORTANT:
-                 * Completion is stored under
-                 * the individual user's ID.
-                 */
+                        <button
+                            class="small-btn"
+                            onclick="editTask('${id}')"
+                        >
+                            ✏️ Edit
+                        </button>
 
-                const personalCompleted =
-                    !!(
-                        task.completedBy &&
-                        task.completedBy[userId]
-                    );
-
-
-                const div =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                div.className =
-                    "task " +
-                    (
-                        personalCompleted
-                        ?
-                        "completed"
-                        :
-                        ""
-                    );
-
-
-                div.innerHTML = `
-
-                    <input
-                        class="task-check"
-                        type="checkbox"
-                        ${
-                            personalCompleted
-                            ?
-                            "checked"
-                            :
-                            ""
-                        }
-                        onchange="
-                            toggleTask('${id}')
-                        "
-                    >
-
-                    <div class="task-info">
-
-                        <div class="task-title">
-                            ${escapeHTML(
-                                task.title ||
-                                "Untitled"
-                            )}
-                        </div>
-
-                        <div class="task-due">
-
-                            ${
-                                task.due
-                                ?
-                                "Due: " +
-                                formatDate(
-                                    task.due
-                                )
-                                :
-                                "No due date"
-                            }
-
-                        </div>
-
-                        ${
-                            task.description
-                            ?
-                            `
-                            <div class="task-description">
-                                ${escapeHTML(
-                                    task.description
-                                )}
-                            </div>
-                            `
-                            :
-                            ""
-                        }
-
-                        ${
-                            admin
-                            ?
-                            `
-                            <div class="card-buttons">
-
-                                <button
-                                    class="small-btn"
-                                    onclick="
-                                        editTask('${id}')
-                                    "
-                                >
-                                    ✏️ Edit
-                                </button>
-
-                                <button
-                                    class="small-btn delete"
-                                    onclick="
-                                        deleteTask('${id}')
-                                    "
-                                >
-                                    🗑️ Delete
-                                </button>
-
-                            </div>
-                            `
-                            :
-                            ""
-                        }
+                        <button
+                            class="small-btn delete"
+                            onclick="deleteTask('${id}')"
+                        >
+                            🗑️ Delete
+                        </button>
 
                     </div>
+                    `
+                    :
+                    ""
+                }
 
-                `;
+            </div>
+
+        `;
 
 
-                container.appendChild(
-                    div
-                );
+        if(
+            admin &&
+            arranging
+        ){
 
-            }
+            setupDrag(
+                div,
+                "tasks"
+            );
+
+        }
+
+
+        container.appendChild(
+            div
         );
+
+    });
+
 }
 
 
@@ -2477,10 +2750,9 @@ function renderTasks(
    ADD TASK
 ============================================================ */
 
-window.openTaskModal =
-function() {
+window.openTaskModal = function(){
 
-    if (!admin) {
+    if(!admin){
 
         alert(
             "Admin access required."
@@ -2490,99 +2762,77 @@ function() {
     }
 
 
-    editingTaskId =
-        null;
+    editingTaskId = null;
 
-
-    document
-        .getElementById(
-            "taskModalTitle"
-        )
-        .textContent =
+    document.getElementById(
+        "taskModalTitle"
+    ).textContent =
         "Add Task";
 
+    document.getElementById(
+        "taskTitle"
+    ).value = "";
 
-    document
-        .getElementById(
-            "taskTitle"
-        )
-        .value = "";
+    document.getElementById(
+        "taskDue"
+    ).value = "";
 
-
-    document
-        .getElementById(
-            "taskDue"
-        )
-        .value = "";
-
-
-    document
-        .getElementById(
-            "taskDescription"
-        )
-        .value = "";
+    document.getElementById(
+        "taskDescription"
+    ).value = "";
 
 
     document
         .getElementById(
             "taskModal"
         )
-        .classList
-        .add("show");
+        .classList.add("show");
 
 };
 
 
-window.closeTaskModal =
-function() {
+window.closeTaskModal = function(){
 
     document
         .getElementById(
             "taskModal"
         )
-        .classList
-        .remove("show");
+        .classList.remove("show");
 
 };
 
 
-/* ============================================================
-   SAVE TASK
-============================================================ */
+window.saveTask = async function(){
 
-window.saveTask =
-async function() {
-
-    if (!admin) return;
+    if(!admin)
+        return;
 
 
     const title =
         document
-            .getElementById(
-                "taskTitle"
-            )
-            .value
-            .trim();
-
+        .getElementById(
+            "taskTitle"
+        )
+        .value
+        .trim();
 
     const due =
         document
-            .getElementById(
-                "taskDue"
-            )
-            .value;
-
+        .getElementById(
+            "taskDue"
+        )
+        .value;
 
     const description =
         document
-            .getElementById(
-                "taskDescription"
-            )
-            .value
-            .trim();
+        .getElementById(
+            "taskDescription"
+        )
+        .value
+        .trim();
 
 
-    if (!title) {
+    if(!title){
 
         alert(
             "Please enter a task title."
@@ -2592,9 +2842,9 @@ async function() {
     }
 
 
-    try {
+    try{
 
-        if (editingTaskId) {
+        if(editingTaskId){
 
             await update(
                 ref(
@@ -2609,10 +2859,23 @@ async function() {
                 }
             );
 
-        } else {
+        }else{
 
             const newTask =
                 push(tasksRef);
+
+            const orders =
+                Object.values(tasks)
+                .map(t =>
+                    Number(t.order)
+                )
+                .filter(Number.isFinite);
+
+            const nextOrder =
+                orders.length
+                ? Math.max(...orders)+1
+                : 0;
+
 
             await set(
                 newTask,
@@ -2620,18 +2883,18 @@ async function() {
                     title,
                     due,
                     description,
-                    completedBy: {},
-                    createdAt:
-                        Date.now()
+                    completedBy:{},
+                    order:nextOrder,
+                    createdAt:Date.now()
                 }
             );
+
         }
 
 
         closeTaskModal();
 
-
-    } catch(error) {
+    }catch(error){
 
         console.error(error);
 
@@ -2640,6 +2903,7 @@ async function() {
         );
 
     }
+
 };
 
 
@@ -2647,51 +2911,44 @@ async function() {
    EDIT TASK
 ============================================================ */
 
-window.editTask =
-function(id) {
+window.editTask = function(id){
 
-    if (!admin) return;
+    if(!admin)
+        return;
 
 
     const task =
         tasks[id];
 
-    if (!task) return;
+    if(!task)
+        return;
 
 
     editingTaskId =
         id;
 
 
-    document
-        .getElementById(
-            "taskModalTitle"
-        )
-        .textContent =
+    document.getElementById(
+        "taskModalTitle"
+    ).textContent =
         "Edit Task";
 
 
-    document
-        .getElementById(
-            "taskTitle"
-        )
-        .value =
+    document.getElementById(
+        "taskTitle"
+    ).value =
         task.title || "";
 
 
-    document
-        .getElementById(
-            "taskDue"
-        )
-        .value =
+    document.getElementById(
+        "taskDue"
+    ).value =
         task.due || "";
 
 
-    document
-        .getElementById(
-            "taskDescription"
-        )
-        .value =
+    document.getElementById(
+        "taskDescription"
+    ).value =
         task.description || "";
 
 
@@ -2699,55 +2956,47 @@ function(id) {
         .getElementById(
             "taskModal"
         )
-        .classList
-        .add("show");
+        .classList.add("show");
 
 };
 
 
 /* ============================================================
-   PERSONAL TASK CHECKBOX
+   INDIVIDUAL TASK CHECKLIST
 ============================================================ */
 
-window.toggleTask =
-async function(id) {
+window.toggleTask = async function(id){
 
     const task =
         tasks[id];
 
-    if (!task) return;
+    if(!task)
+        return;
 
+
+    const userKey =
+        getUserKey();
 
     const current =
-        !!(
-            task.completedBy &&
-            task.completedBy[userId]
-        );
+        task.completedBy &&
+        task.completedBy[userKey]
+        ?
+        true
+        :
+        false;
 
 
-    try {
+    await update(
+        ref(
+            db,
+            "tasks/" + id +
+            "/completedBy"
+        ),
+        {
+            [userKey]:!current
+        }
+    );
 
-        await update(
-            ref(
-                db,
-                "tasks/" + id +
-                "/completedBy"
-            ),
-            {
-                [userId]:
-                    !current
-            }
-        );
-
-    } catch(error) {
-
-        console.error(error);
-
-        alert(
-            "Could not update task."
-        );
-
-    }
 };
 
 
@@ -2755,20 +3004,21 @@ async function(id) {
    DELETE TASK
 ============================================================ */
 
-window.deleteTask =
-async function(id) {
+window.deleteTask = async function(id){
 
-    if (!admin) return;
+    if(!admin)
+        return;
 
 
-    if (
+    if(
         !confirm(
             "Delete this task?"
         )
-    ) return;
+    )
+        return;
 
 
-    try {
+    try{
 
         await remove(
             ref(
@@ -2777,7 +3027,7 @@ async function(id) {
             )
         );
 
-    } catch(error) {
+    }catch(error){
 
         console.error(error);
 
@@ -2786,28 +3036,716 @@ async function(id) {
         );
 
     }
+
 };
+
+
+/* ============================================================
+   DOCUMENTS / PDF / PPT
+============================================================ */
+
+function renderDocuments(){
+
+    const container =
+        document.getElementById(
+            "documentsContainer"
+        );
+
+    container.innerHTML = "";
+
+
+    let entries =
+        Object.entries(documents);
+
+
+    entries.sort(
+        (a,b)=>
+            (
+                Number(a[1].order ?? 999999)
+            )
+            -
+            (
+                Number(b[1].order ?? 999999)
+            )
+    );
+
+
+    if(!entries.length){
+
+        container.innerHTML =
+            `<div class="empty">
+                No class files have been added yet.
+            </div>`;
+
+        return;
+    }
+
+
+    entries.forEach(
+        ([id,file])=>{
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.className =
+            "document-card";
+
+        div.dataset.id =
+            id;
+
+        div.draggable =
+            admin && arranging;
+
+
+        let icon =
+            file.type === "PDF"
+            ? "📕"
+            :
+            file.type === "PPT"
+            ? "📊"
+            :
+            "📄";
+
+
+        div.innerHTML = `
+
+            <div class="drag-handle">
+                ☷
+            </div>
+
+            <div class="document-icon">
+                ${icon}
+            </div>
+
+            <div class="document-title">
+                ${escapeHTML(
+                    file.title ||
+                    file.name ||
+                    "Class File"
+                )}
+            </div>
+
+            <div class="document-info">
+                ${escapeHTML(
+                    file.type || "File"
+                )}
+                ${
+                    file.author
+                    ?
+                    " • Added by " +
+                    escapeHTML(file.author)
+                    :
+                    ""
+                }
+            </div>
+
+            <div class="document-actions">
+
+                <button
+                    class="small-btn"
+                    onclick="openDocument('${id}')"
+                >
+                    👁️ View
+                </button>
+
+                <button
+                    class="small-btn"
+                    onclick="downloadDocument('${id}')"
+                >
+                    ⬇️ Download
+                </button>
+
+                ${
+                    admin
+                    ?
+                    `
+                    <button
+                        class="small-btn delete"
+                        onclick="deleteDocument('${id}')"
+                    >
+                        🗑️ Delete
+                    </button>
+                    `
+                    :
+                    ""
+                }
+
+            </div>
+
+        `;
+
+
+        if(
+            admin &&
+            arranging
+        ){
+
+            setupDrag(
+                div,
+                "documents"
+            );
+
+        }
+
+
+        container.appendChild(
+            div
+        );
+
+    });
+
+}
+
+
+/* ============================================================
+   OPEN DOCUMENT MODAL
+============================================================ */
+
+window.openDocumentModal = function(){
+
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+    }
+
+
+    document.getElementById(
+        "documentTitle"
+    ).value = "";
+
+    document.getElementById(
+        "documentFile"
+    ).value = "";
+
+
+    document
+        .getElementById(
+            "documentModal"
+        )
+        .classList.add("show");
+
+};
+
+
+window.closeDocumentModal = function(){
+
+    document
+        .getElementById(
+            "documentModal"
+        )
+        .classList.remove("show");
+
+};
+
+
+/* ============================================================
+   FILE TO BASE64
+============================================================ */
+
+function fileToBase64(file){
+
+    return new Promise(
+        (resolve,reject)=>{
+
+        const reader =
+            new FileReader();
+
+        reader.onload = () =>
+            resolve(
+                reader.result
+            );
+
+        reader.onerror =
+            reject;
+
+        reader.readAsDataURL(
+            file
+        );
+
+    });
+
+}
+
+
+/* ============================================================
+   SAVE DOCUMENT
+============================================================ */
+
+window.saveDocument = async function(){
+
+    if(!admin)
+        return;
+
+
+    const title =
+        document.getElementById(
+            "documentTitle"
+        ).value.trim();
+
+    const category =
+        document.getElementById(
+            "documentCategory"
+        ).value;
+
+    const file =
+        document.getElementById(
+            "documentFile"
+        ).files[0];
+
+
+    if(!title){
+
+        alert(
+            "Please enter a file title."
+        );
+
+        return;
+    }
+
+
+    if(!file){
+
+        alert(
+            "Please choose a file."
+        );
+
+        return;
+    }
+
+
+    /*
+       Realtime Database is not designed for huge files.
+       This keeps the free setup practical.
+    */
+
+    const MAX_FILE_SIZE =
+        7 * 1024 * 1024;
+
+
+    if(file.size > MAX_FILE_SIZE){
+
+        alert(
+            "That file is too large for this free database setup. " +
+            "Please use a file smaller than about 7 MB."
+        );
+
+        return;
+    }
+
+
+    try{
+
+        const base64 =
+            await fileToBase64(
+                file
+            );
+
+
+        const newFile =
+            push(documentsRef);
+
+
+        const orders =
+            Object.values(documents)
+            .map(d =>
+                Number(d.order)
+            )
+            .filter(Number.isFinite);
+
+
+        const nextOrder =
+            orders.length
+            ? Math.max(...orders)+1
+            : 0;
+
+
+        await set(
+            newFile,
+            {
+                title,
+                name:file.name,
+                type:category,
+                mimeType:file.type ||
+                    "application/octet-stream",
+                data:base64,
+                author:
+                    localStorage.getItem(
+                        "bsnUsername"
+                    ) || "Admin",
+                order:nextOrder,
+                createdAt:Date.now()
+            }
+        );
+
+
+        closeDocumentModal();
+
+        alert(
+            "File added successfully."
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Could not upload the file."
+        );
+
+    }
+
+};
+
+
+/* ============================================================
+   OPEN DOCUMENT
+============================================================ */
+
+window.openDocument = function(id){
+
+    const file =
+        documents[id];
+
+    if(!file)
+        return;
+
+
+    document.getElementById(
+        "viewerTitle"
+    ).textContent =
+        file.title ||
+        file.name ||
+        "File";
+
+
+    const content =
+        document.getElementById(
+            "viewerContent"
+        );
+
+    content.innerHTML = "";
+
+
+    if(
+        file.mimeType ===
+        "application/pdf" ||
+        file.type === "PDF"
+    ){
+
+        const iframe =
+            document.createElement(
+                "iframe"
+            );
+
+        iframe.className =
+            "file-viewer";
+
+        iframe.src =
+            file.data;
+
+        content.appendChild(
+            iframe
+        );
+
+    }else{
+
+        content.innerHTML = `
+
+            <div class="empty">
+
+                <div style="font-size:50px;">
+                    📊
+                </div>
+
+                <h3 style="margin:10px;">
+                    PowerPoint file
+                </h3>
+
+                <p>
+                    Your browser may not preview
+                    this PowerPoint directly.
+                </p>
+
+                <br>
+
+                <button
+                    class="btn"
+                    onclick="downloadDocument('${id}')"
+                >
+                    ⬇️ Download / Open
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+
+    document
+        .getElementById(
+            "viewerModal"
+        )
+        .classList.add("show");
+
+};
+
+
+window.closeViewer = function(){
+
+    document
+        .getElementById(
+            "viewerModal"
+        )
+        .classList.remove("show");
+
+    document.getElementById(
+        "viewerContent"
+    ).innerHTML = "";
+
+};
+
+
+/* ============================================================
+   DOWNLOAD DOCUMENT
+============================================================ */
+
+window.downloadDocument = function(id){
+
+    const file =
+        documents[id];
+
+    if(!file)
+        return;
+
+
+    const a =
+        document.createElement(
+            "a"
+        );
+
+    a.href =
+        file.data;
+
+    a.download =
+        file.name ||
+        file.title ||
+        "class-file";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+};
+
+
+/* ============================================================
+   DELETE DOCUMENT
+============================================================ */
+
+window.deleteDocument = async function(id){
+
+    if(!admin)
+        return;
+
+
+    if(
+        !confirm(
+            "Delete this file?"
+        )
+    )
+        return;
+
+
+    await remove(
+        ref(
+            db,
+            "documents/" + id
+        )
+    );
+
+};
+
+
+/* ============================================================
+   DRAG AND DROP ARRANGING
+============================================================ */
+
+function setupDrag(
+    element,
+    collection
+){
+
+    element.addEventListener(
+        "dragstart",
+        ()=>{
+            element.classList.add(
+                "dragging"
+            );
+        }
+    );
+
+
+    element.addEventListener(
+        "dragend",
+        async ()=>{
+            element.classList.remove(
+                "dragging"
+            );
+
+            await saveOrder(
+                collection
+            );
+        }
+    );
+
+
+    element.addEventListener(
+        "dragover",
+        event=>{
+
+            event.preventDefault();
+
+            const container =
+                element.parentElement;
+
+            const dragging =
+                container.querySelector(
+                    ".dragging"
+                );
+
+            if(
+                !dragging ||
+                dragging === element
+            )
+                return;
+
+
+            const rect =
+                element.getBoundingClientRect();
+
+            const after =
+                event.clientY -
+                rect.top >
+                rect.height / 2;
+
+
+            if(after){
+
+                element.after(
+                    dragging
+                );
+
+            }else{
+
+                element.before(
+                    dragging
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+async function saveOrder(
+    collection
+){
+
+    if(!admin)
+        return;
+
+
+    let containerId = "";
+
+    if(collection === "notes")
+        containerId =
+            "notesContainer";
+
+    if(collection === "tasks")
+        containerId =
+            "tasksContainer";
+
+    if(collection === "documents")
+        containerId =
+            "documentsContainer";
+
+
+    const container =
+        document.getElementById(
+            containerId
+        );
+
+
+    const updates = {};
+
+
+    [...container.children]
+    .forEach(
+        (element,index)=>{
+
+            const id =
+                element.dataset.id;
+
+            if(id){
+
+                updates[
+                    collection +
+                    "/" +
+                    id +
+                    "/order"
+                ] = index;
+
+            }
+
+        }
+    );
+
+
+    if(
+        Object.keys(updates).length
+    ){
+
+        await update(
+            ref(db),
+            updates
+        );
+
+    }
+
+}
 
 
 /* ============================================================
    SEARCH
 ============================================================ */
 
-window.searchEverything =
-function() {
+window.searchEverything = function(){
 
     const query =
         document
-            .getElementById(
-                "searchInput"
-            )
-            .value
-            .trim();
+        .getElementById(
+            "searchInput"
+        )
+        .value
+        .trim();
 
 
     renderNotes(query);
 
     renderTasks(query);
+
 };
 
 
@@ -2815,140 +3753,108 @@ function() {
    NORMAL CHAT
 ============================================================ */
 
-window.sendNormalChat =
-async function() {
+window.sendChatMessage = async function(){
 
     const input =
-        document
-            .getElementById(
-                "normalChatInput"
-            );
-
+        document.getElementById(
+            "chatInput"
+        );
 
     const text =
         input.value.trim();
 
 
-    if (!text) return;
+    if(!text)
+        return;
 
 
-    const name =
-        localStorage.getItem(
-            "bsnUsername"
-        ) ||
-        "Anonymous";
+    input.value = "";
 
 
-    try {
-
-        const newMessage =
-            push(chatRef);
+    const message =
+        push(chatRef);
 
 
-        await set(
-            newMessage,
-            {
-                name,
-                text,
-                createdAt:
-                    Date.now()
-            }
-        );
+    await set(
+        message,
+        {
+            name:
+                currentUser ||
+                "Guest",
 
+            text,
 
-        input.value = "";
+            createdAt:
+                Date.now()
+        }
+    );
 
-
-    } catch(error) {
-
-        console.error(error);
-
-        alert(
-            "Could not send message."
-        );
-
-    }
 };
 
 
-/* ============================================================
-   RENDER NORMAL CHAT
-============================================================ */
-
-function renderNormalChat() {
+function renderChat(){
 
     const container =
         document.getElementById(
-            "normalChatMessages"
+            "chatMessages"
         );
-
 
     container.innerHTML = "";
 
 
-    Object.entries(chatMessages)
+    const messages =
+        Object.values(chat)
         .sort(
-            (a,b) =>
-                (
-                    a[1].createdAt || 0
-                ) -
-                (
-                    b[1].createdAt || 0
-                )
-        )
-        .forEach(
-            ([id, message]) => {
-
-                const div =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                const currentName =
-                    localStorage.getItem(
-                        "bsnUsername"
-                    );
-
-
-                div.className =
-                    "message " +
-                    (
-                        message.name ===
-                        currentName
-                        ?
-                        "user"
-                        :
-                        "ai"
-                    );
-
-
-                div.innerHTML = `
-
-                    <div class="message-name">
-                        ${escapeHTML(
-                            message.name ||
-                            "Anonymous"
-                        )}
-                    </div>
-
-                    ${escapeHTML(
-                        message.text || ""
-                    )}
-
-                `;
-
-
-                container.appendChild(
-                    div
-                );
-
-            }
+            (a,b)=>
+                (a.createdAt || 0) -
+                (b.createdAt || 0)
         );
+
+
+    messages.forEach(
+        message=>{
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        const isMine =
+            message.name ===
+            currentUser;
+
+
+        div.className =
+            "message " +
+            (
+                isMine
+                ? "user"
+                : "ai"
+            );
+
+
+        div.textContent =
+            (
+                message.name ||
+                "Unknown"
+            ) +
+            ":\n" +
+            (
+                message.text ||
+                ""
+            );
+
+
+        container.appendChild(
+            div
+        );
+
+    });
 
 
     container.scrollTop =
         container.scrollHeight;
+
 }
 
 
@@ -2956,10 +3862,9 @@ function renderNormalChat() {
    ADMIN CHAT
 ============================================================ */
 
-window.sendAdminChat =
-async function() {
+window.sendAdminChat = async function(){
 
-    if (!admin) {
+    if(!admin){
 
         alert(
             "Admin access required."
@@ -2974,117 +3879,95 @@ async function() {
             "adminChatInput"
         );
 
-
     const text =
         input.value.trim();
 
 
-    if (!text) return;
+    if(!text)
+        return;
 
 
-    const name =
-        localStorage.getItem(
-            "bsnUsername"
-        ) ||
-        "Admin";
+    input.value = "";
 
 
-    try {
-
-        const newMessage =
-            push(adminChatRef);
+    const message =
+        push(adminChatRef);
 
 
-        await set(
-            newMessage,
-            {
-                name,
-                text,
-                createdAt:
-                    Date.now()
-            }
-        );
+    await set(
+        message,
+        {
+            name:
+                currentUser ||
+                "Admin",
 
+            text,
 
-        input.value = "";
+            createdAt:
+                Date.now()
+        }
+    );
 
-
-    } catch(error) {
-
-        console.error(error);
-
-        alert(
-            "Could not send admin message."
-        );
-
-    }
 };
 
 
-/* ============================================================
-   RENDER ADMIN CHAT
-============================================================ */
-
-function renderAdminChat() {
+function renderAdminChat(){
 
     const container =
         document.getElementById(
             "adminChatMessages"
         );
 
-
     container.innerHTML = "";
 
 
-    Object.entries(adminMessages)
+    if(!admin)
+        return;
+
+
+    const messages =
+        Object.values(adminChat)
         .sort(
-            (a,b) =>
-                (
-                    a[1].createdAt || 0
-                ) -
-                (
-                    b[1].createdAt || 0
-                )
-        )
-        .forEach(
-            ([id, message]) => {
-
-                const div =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                div.className =
-                    "message admin";
-
-
-                div.innerHTML = `
-
-                    <div class="message-name">
-                        🔐 ${escapeHTML(
-                            message.name ||
-                            "Admin"
-                        )}
-                    </div>
-
-                    ${escapeHTML(
-                        message.text || ""
-                    )}
-
-                `;
-
-
-                container.appendChild(
-                    div
-                );
-
-            }
+            (a,b)=>
+                (a.createdAt || 0) -
+                (b.createdAt || 0)
         );
+
+
+    messages.forEach(
+        message=>{
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.className =
+            "message admin";
+
+
+        div.textContent =
+            (
+                message.name ||
+                "Admin"
+            ) +
+            ":\n" +
+            (
+                message.text ||
+                ""
+            );
+
+
+        container.appendChild(
+            div
+        );
+
+    });
 
 
     container.scrollTop =
         container.scrollHeight;
+
 }
 
 
@@ -3092,20 +3975,19 @@ function renderAdminChat() {
    AI ASSISTANT
 ============================================================ */
 
-window.askAssistant =
-function() {
+window.askAssistant = function(){
 
     const input =
         document.getElementById(
-            "chatInput"
+            "aiInput"
         );
-
 
     const question =
         input.value.trim();
 
 
-    if (!question) return;
+    if(!question)
+        return;
 
 
     addAIMessage(
@@ -3117,69 +3999,56 @@ function() {
     input.value = "";
 
 
-    const answer =
-        generateAssistantAnswer(
-            question
-        );
-
-
     setTimeout(
-        () => {
-
+        ()=>{
             addAIMessage(
-                answer,
+                generateAssistantAnswer(
+                    question
+                ),
                 "ai"
             );
-
         },
         250
     );
+
 };
 
 
 function addAIMessage(
     text,
     type
-) {
+){
 
     const container =
         document.getElementById(
-            "chatMessages"
+            "aiMessages"
         );
-
 
     const message =
         document.createElement(
             "div"
         );
 
-
     message.className =
         "message " +
         type;
 
-
     message.textContent =
         text;
-
 
     container.appendChild(
         message
     );
 
-
     container.scrollTop =
         container.scrollHeight;
+
 }
 
 
-/* ============================================================
-   AI LOGIC
-============================================================ */
-
 function generateAssistantAnswer(
     question
-) {
+){
 
     const q =
         question.toLowerCase();
@@ -3187,343 +4056,289 @@ function generateAssistantAnswer(
 
     /* TOMORROW */
 
-    if (
+    if(
         q.includes("tomorrow") ||
         q.includes("due tomorrow")
-    ) {
+    ){
 
         const tomorrow =
             new Date();
 
-
         tomorrow.setDate(
-            tomorrow.getDate() + 1
+            tomorrow.getDate()+1
         );
 
 
         const date =
-            localDateString(
-                tomorrow
-            );
+            tomorrow
+            .toISOString()
+            .split("T")[0];
 
 
         const due =
             Object.values(tasks)
-                .filter(
-                    task =>
-                        task.due === date &&
-                        !isPersonallyCompleted(
-                            task
-                        )
-                );
+            .filter(
+                task =>
+                    task.due === date &&
+                    !isTaskCompleted(task)
+            );
 
 
-        if (!due.length) {
+        if(!due.length){
 
             return (
-                "🎉 You have no " +
-                "unfinished tasks due tomorrow."
+                "🎉 You have no unfinished " +
+                "tasks due tomorrow."
             );
+
         }
 
 
         return (
             "📚 Due tomorrow:\n\n" +
             due
-                .map(
-                    task =>
-                        "• " +
-                        task.title
-                )
-                .join("\n")
+            .map(
+                task =>
+                    "• " +
+                    task.title
+            )
+            .join("\n")
         );
-    }
 
-
-    /* TODAY */
-
-    if (
-        q.includes("today") ||
-        q.includes("due today")
-    ) {
-
-        const today =
-            localDateString(
-                new Date()
-            );
-
-
-        const due =
-            Object.values(tasks)
-                .filter(
-                    task =>
-                        task.due === today &&
-                        !isPersonallyCompleted(
-                            task
-                        )
-                );
-
-
-        if (!due.length) {
-
-            return (
-                "🎉 You have no " +
-                "unfinished tasks due today."
-            );
-        }
-
-
-        return (
-            "📚 Due today:\n\n" +
-            due
-                .map(
-                    task =>
-                        "• " +
-                        task.title
-                )
-                .join("\n")
-        );
     }
 
 
     /* TASKS */
 
-    if (
+    if(
         q.includes("task") ||
         q.includes("assignment") ||
         q.includes("due")
-    ) {
+    ){
 
         const list =
             Object.values(tasks)
-                .filter(
-                    task =>
-                        !isPersonallyCompleted(
-                            task
-                        )
-                );
+            .filter(
+                task =>
+                    !isTaskCompleted(task)
+            );
 
 
-        if (!list.length) {
+        if(!list.length){
 
             return (
                 "🎉 You currently have " +
                 "no unfinished tasks."
             );
+
         }
 
 
         return (
             "📋 Your unfinished tasks:\n\n" +
             list
-                .map(
-                    task =>
-                        "• " +
-                        task.title +
-                        (
+            .map(
+                task =>
+                    "• " +
+                    task.title +
+                    (
+                        task.due
+                        ?
+                        " — " +
+                        formatDate(
                             task.due
-                            ?
-                            " — " +
-                            formatDate(
-                                task.due
-                            )
-                            :
-                            ""
                         )
-                )
-                .join("\n")
+                        :
+                        ""
+                    )
+            )
+            .join("\n")
         );
-    }
 
-
-    /* NOTES */
-
-    const matchingNotes =
-        Object.values(notes)
-            .filter(
-                note => {
-
-                    const combined =
-                        (
-                            (
-                                note.title ||
-                                ""
-                            ) +
-                            " " +
-                            (
-                                note.text ||
-                                ""
-                            )
-                        ).toLowerCase();
-
-
-                    return q
-                        .split(" ")
-                        .some(
-                            word =>
-                                word.length > 2 &&
-                                combined.includes(
-                                    word
-                                )
-                        );
-                }
-            );
-
-
-    if (
-        q.includes("note") ||
-        q.includes("notes") ||
-        matchingNotes.length
-    ) {
-
-        if (!matchingNotes.length) {
-
-            return (
-                "🔎 I couldn't find " +
-                "a matching note."
-            );
-        }
-
-
-        return (
-            "📝 I found these notes:\n\n" +
-            matchingNotes
-                .slice(0, 5)
-                .map(
-                    note =>
-                        "• " +
-                        note.title
-                )
-                .join("\n")
-        );
     }
 
 
     /* UPCOMING */
 
-    if (
+    if(
         q.includes("upcoming") ||
         q.includes("next") ||
         q.includes("coming")
-    ) {
+    ){
 
         const upcoming =
             Object.values(tasks)
-                .filter(
-                    task =>
-                        !isPersonallyCompleted(
-                            task
-                        ) &&
-                        task.due
-                )
-                .sort(
-                    (a,b) =>
-                        a.due.localeCompare(
-                            b.due
-                        )
-                )
-                .slice(0, 5);
+            .filter(
+                task =>
+                    !isTaskCompleted(task) &&
+                    task.due
+            )
+            .sort(
+                (a,b)=>
+                    a.due.localeCompare(
+                        b.due
+                    )
+            )
+            .slice(0,5);
 
 
-        if (!upcoming.length) {
+        if(!upcoming.length){
 
             return (
                 "You don't have any " +
                 "upcoming dated tasks."
             );
+
         }
 
 
         return (
             "📅 Upcoming:\n\n" +
             upcoming
-                .map(
-                    task =>
-                        "• " +
-                        task.title +
-                        " — " +
-                        formatDate(
-                            task.due
-                        )
-                )
-                .join("\n")
+            .map(
+                task =>
+                    "• " +
+                    task.title +
+                    " — " +
+                    formatDate(
+                        task.due
+                    )
+            )
+            .join("\n")
         );
+
+    }
+
+
+    /* NOTES */
+
+    const words =
+        q
+        .split(/\s+/)
+        .filter(
+            word =>
+                word.length > 2
+        );
+
+
+    const matchingNotes =
+        Object.values(notes)
+        .filter(
+            note=>{
+
+                const combined =
+                    (
+                        (note.title || "") +
+                        " " +
+                        (note.text || "")
+                    ).toLowerCase();
+
+
+                return words.some(
+                    word =>
+                        combined.includes(
+                            word
+                        )
+                );
+
+            }
+        );
+
+
+    if(
+        q.includes("note") ||
+        q.includes("notes") ||
+        matchingNotes.length
+    ){
+
+        if(
+            !matchingNotes.length
+        ){
+
+            return (
+                "🔎 I couldn't find " +
+                "a matching note."
+            );
+
+        }
+
+
+        return (
+            "📝 I found these notes:\n\n" +
+            matchingNotes
+            .slice(0,5)
+            .map(
+                note =>
+                    "• " +
+                    note.title
+            )
+            .join("\n")
+        );
+
     }
 
 
     return `
-🤖 I can help you check your BSN 2A information.
+🤖 I can help you check BSN 2A information.
 
 Try asking:
 
 • What is due tomorrow?
-• What is due today?
 • What tasks do I have?
 • What is upcoming?
 • Show my notes.
 • Show notes about NCM 105.
     `.trim();
+
 }
 
 
 /* ============================================================
-   PERSONAL TASK STATUS
+   TASK STATUS HELPER
 ============================================================ */
 
-function isPersonallyCompleted(
-    task
-) {
+function isTaskCompleted(task){
 
     return !!(
         task.completedBy &&
-        task.completedBy[userId]
+        task.completedBy[
+            getUserKey()
+        ]
     );
+
 }
 
 
 /* ============================================================
-   DATE HELPERS
+   USER KEY
 ============================================================ */
 
-function localDateString(
-    date
-) {
+function getUserKey(){
 
-    const year =
-        date.getFullYear();
+    const name =
+        currentUser ||
+        "Guest";
 
-    const month =
-        String(
-            date.getMonth() + 1
-        ).padStart(
-            2,
-            "0"
+
+    return name
+        .toLowerCase()
+        .replace(
+            /[^a-z0-9_-]/g,
+            "_"
         );
 
-    const day =
-        String(
-            date.getDate()
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    return (
-        year +
-        "-" +
-        month +
-        "-" +
-        day
-    );
 }
 
 
+/* ============================================================
+   DATE
+============================================================ */
+
 function formatDate(
     dateString
-) {
+){
 
-    if (!dateString)
+    if(!dateString)
         return "";
 
 
@@ -3537,11 +4352,12 @@ function formatDate(
     return date.toLocaleDateString(
         undefined,
         {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
+            month:"long",
+            day:"numeric",
+            year:"numeric"
         }
     );
+
 }
 
 
@@ -3551,34 +4367,30 @@ function formatDate(
 
 function escapeHTML(
     value
-) {
+){
 
     return String(value)
-
         .replace(
             /&/g,
             "&amp;"
         )
-
         .replace(
             /</g,
             "&lt;"
         )
-
         .replace(
             />/g,
             "&gt;"
         )
-
         .replace(
             /"/g,
             "&quot;"
         )
-
         .replace(
             /'/g,
             "&#039;"
         );
+
 }
 
 
