@@ -1,9 +1,10 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#245c43">
+<meta name="description" content="BSN 2A shared notes, tasks, files and chat">
 <title>BSN 2A Notes</title>
 
 <style>
@@ -16,12 +17,14 @@
 :root{
     --green:#245c43;
     --green2:#3d7a5b;
+    --dark:#173f2d;
     --light-green:#e7f0e8;
     --cream:#f6f2e9;
     --white:#fff;
     --text:#1e2b25;
     --muted:#718078;
     --danger:#c94b4b;
+    --blue:#4b70c9;
     --shadow:0 5px 20px rgba(30,50,40,.10);
 }
 
@@ -32,7 +35,9 @@ body{
     min-height:100vh;
 }
 
-/* ================= SIDEBAR ================= */
+/* =========================
+   SIDEBAR
+========================= */
 
 .sidebar{
     position:fixed;
@@ -61,10 +66,11 @@ body{
     align-items:center;
     justify-content:center;
     text-align:center;
-    font-size:24px;
-    font-weight:bold;
+    font-size:20px;
     line-height:1.05;
+    font-weight:bold;
     background:rgba(255,255,255,.08);
+    letter-spacing:1px;
 }
 
 .logo h1{
@@ -94,14 +100,13 @@ body{
     border-radius:12px;
     cursor:pointer;
     font-size:15px;
+    transition:.2s;
 }
 
 .nav button:hover,
 .nav button.active{
     background:rgba(255,255,255,.17);
 }
-
-/* ONLINE PEOPLE - KEPT AT BOTTOM LEFT */
 
 .user-box{
     position:absolute;
@@ -119,34 +124,45 @@ body{
     margin-top:4px;
 }
 
-.online-title{
-    margin-top:12px;
-    font-weight:bold;
-    font-size:12px;
+.connection-status{
+    margin-top:7px;
+    font-size:11px;
+    opacity:.85;
 }
 
-#onlinePeople{
-    margin-top:7px;
-    max-height:110px;
+.online-panel{
+    margin-top:10px;
+    max-height:145px;
     overflow-y:auto;
+    padding-top:7px;
+    border-top:1px solid rgba(255,255,255,.15);
+}
+
+.online-title{
+    font-size:11px;
+    opacity:.75;
+    margin-bottom:5px;
 }
 
 .online-person{
     display:flex;
     align-items:center;
     gap:6px;
-    margin-top:5px;
+    padding:3px 0;
     font-size:12px;
 }
 
 .online-dot{
-    width:7px;
-    height:7px;
+    width:8px;
+    height:8px;
     border-radius:50%;
-    background:#7ee08d;
+    background:#75e391;
+    flex:none;
 }
 
-/* ================= MAIN ================= */
+/* =========================
+   MAIN
+========================= */
 
 .main{
     margin-left:240px;
@@ -200,7 +216,13 @@ body{
     background:var(--danger);
 }
 
-/* ================= HERO ================= */
+.btn.blue{
+    background:var(--blue);
+}
+
+/* =========================
+   HERO
+========================= */
 
 .hero{
     background:linear-gradient(110deg,#e4efdc,#f4f2df);
@@ -223,7 +245,9 @@ body{
     color:#526158;
 }
 
-/* ================= SECTIONS ================= */
+/* =========================
+   SECTIONS
+========================= */
 
 .section{
     display:none;
@@ -238,13 +262,16 @@ body{
     justify-content:space-between;
     align-items:center;
     margin:25px 0 15px;
+    gap:15px;
 }
 
 .section-title h2{
     font-family:Georgia,serif;
 }
 
-/* ================= CARDS ================= */
+/* =========================
+   CARDS / NOTES
+========================= */
 
 .cards{
     display:grid;
@@ -260,6 +287,7 @@ body{
     border:1px solid #e9e6df;
     transition:.2s;
     min-width:0;
+    overflow:hidden;
 }
 
 .card:hover{
@@ -271,24 +299,24 @@ body{
     font-size:22px;
     margin:0 0 10px 0;
     color:#173f2d;
-    line-height:1.3;
     width:100%;
+    display:block;
+    overflow-wrap:anywhere;
+    word-break:break-word;
 }
-
-/* FIXED NOTE TEXT POSITION */
 
 .card-text{
     display:block;
     width:100%;
-    max-width:100%;
     margin:0;
     padding:0;
-    text-align:left;
     white-space:pre-wrap;
-    word-break:normal;
+    word-wrap:break-word;
     overflow-wrap:anywhere;
+    word-break:break-word;
     line-height:1.65;
     color:#526158;
+    text-align:left;
 }
 
 .card-date{
@@ -318,7 +346,21 @@ body{
     color:var(--danger);
 }
 
-/* ================= TASKS ================= */
+.small-btn.move{
+    background:#e8edf9;
+    color:#4b70c9;
+}
+
+.drag-handle{
+    float:right;
+    cursor:grab;
+    color:#9aa49e;
+    font-size:18px;
+}
+
+/* =========================
+   TASKS
+========================= */
 
 .task{
     display:flex;
@@ -335,6 +377,7 @@ body{
     width:22px;
     height:22px;
     margin-top:2px;
+    cursor:pointer;
 }
 
 .task-info{
@@ -344,7 +387,7 @@ body{
 
 .task-title{
     font-weight:bold;
-    line-height:1.4;
+    overflow-wrap:anywhere;
     word-break:break-word;
 }
 
@@ -359,6 +402,7 @@ body{
     color:#65726b;
     white-space:pre-wrap;
     overflow-wrap:anywhere;
+    word-break:break-word;
     line-height:1.5;
 }
 
@@ -367,33 +411,57 @@ body{
     opacity:.55;
 }
 
-/* ================= FILES ================= */
+.personal-check-note{
+    color:#89938d;
+    font-size:11px;
+    margin-top:4px;
+}
+
+/* =========================
+   FILES
+========================= */
+
+.file-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:18px;
+}
 
 .file-card{
     background:white;
     border-radius:17px;
     padding:20px;
     box-shadow:var(--shadow);
-    margin-bottom:12px;
+    border:1px solid #e9e6df;
 }
 
 .file-icon{
-    font-size:32px;
+    font-size:38px;
     margin-bottom:10px;
 }
 
 .file-name{
     font-weight:bold;
+    overflow-wrap:anywhere;
     word-break:break-word;
+    margin-bottom:7px;
 }
 
-.file-info{
-    color:var(--muted);
+.file-meta{
     font-size:12px;
-    margin-top:6px;
+    color:var(--muted);
+    margin-bottom:14px;
 }
 
-/* ================= MODAL ================= */
+.file-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+}
+
+/* =========================
+   MODAL
+========================= */
 
 .modal-bg{
     position:fixed;
@@ -426,7 +494,8 @@ body{
 }
 
 .input,
-.textarea{
+.textarea,
+.select{
     width:100%;
     padding:13px;
     border:1px solid #dcded9;
@@ -446,9 +515,12 @@ body{
     display:flex;
     justify-content:flex-end;
     gap:10px;
+    flex-wrap:wrap;
 }
 
-/* ================= CHAT ================= */
+/* =========================
+   CHAT
+========================= */
 
 .chat-box{
     background:white;
@@ -472,7 +544,7 @@ body{
     max-width:85%;
     line-height:1.5;
     white-space:pre-wrap;
-    word-break:break-word;
+    overflow-wrap:anywhere;
 }
 
 .message.user{
@@ -480,19 +552,27 @@ body{
     margin-left:auto;
 }
 
-.message.other{
-    background:#eee;
-}
-
 .message.ai{
     background:#f1eee6;
+}
+
+.message.admin{
+    background:#e7edf9;
 }
 
 .message-name{
     font-size:11px;
     font-weight:bold;
-    margin-bottom:4px;
+    margin-bottom:5px;
     opacity:.7;
+}
+
+.chat-image{
+    max-width:280px;
+    max-height:250px;
+    border-radius:10px;
+    margin-top:8px;
+    display:block;
 }
 
 .chat-input{
@@ -506,9 +586,31 @@ body{
     padding:13px;
     border-radius:10px;
     border:1px solid #ddd;
+    outline:none;
 }
 
-/* ================= LOGIN ================= */
+.chat-tools{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+    flex-wrap:wrap;
+}
+
+.photo-label{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    background:#e8efe9;
+    color:var(--green);
+    border-radius:8px;
+    padding:8px 12px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+/* =========================
+   LOGIN
+========================= */
 
 .login-screen{
     position:fixed;
@@ -532,7 +634,7 @@ body{
 .login-box h1{
     font-family:Georgia,serif;
     color:var(--green);
-    margin-bottom:8px;
+    margin:15px 0 8px;
 }
 
 .login-box p{
@@ -546,13 +648,16 @@ body{
     border:1px solid #ddd;
     border-radius:10px;
     margin-bottom:12px;
+    outline:none;
 }
 
 .full{
     width:100%;
 }
 
-/* ================= EMPTY ================= */
+/* =========================
+   EMPTY
+========================= */
 
 .empty{
     background:white;
@@ -560,9 +665,34 @@ body{
     padding:35px;
     text-align:center;
     color:var(--muted);
+    grid-column:1/-1;
 }
 
-/* ================= RESPONSIVE ================= */
+/* =========================
+   OFFLINE
+========================= */
+
+.offline-banner{
+    display:none;
+    position:fixed;
+    top:0;
+    left:240px;
+    right:0;
+    z-index:80;
+    background:#a96b2b;
+    color:white;
+    text-align:center;
+    padding:7px;
+    font-size:12px;
+}
+
+.offline-banner.show{
+    display:block;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media(max-width:800px){
 
@@ -581,7 +711,7 @@ body{
     .logo-symbol{
         width:55px;
         height:55px;
-        font-size:18px;
+        font-size:14px;
     }
 
     .nav button{
@@ -603,16 +733,22 @@ body{
         flex-direction:column;
         align-items:stretch;
     }
+
+    .offline-banner{
+        left:75px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= LOGIN ================= -->
+<div class="offline-banner" id="offlineBanner">
+    ⚠️ You're offline. Changes will sync when internet returns.
+</div>
 
+<!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
-
     <div class="login-box">
 
         <div class="logo-symbol">
@@ -631,17 +767,18 @@ body{
             autocomplete="off"
         >
 
-        <button class="btn full" onclick="enterSite()">
+        <button
+            class="btn full"
+            onclick="enterSite()"
+        >
             Enter Website
         </button>
 
     </div>
-
 </div>
 
 
-<!-- ================= SIDEBAR ================= -->
-
+<!-- SIDEBAR -->
 <aside class="sidebar">
 
     <div class="logo">
@@ -658,29 +795,51 @@ body{
 
     </div>
 
+
     <nav class="nav">
 
-        <button class="active" onclick="showSection('notes',this)">
+        <button
+            class="active"
+            onclick="showSection('notes',this)"
+        >
             📝 <span>Notes</span>
         </button>
 
-        <button onclick="showSection('tasks',this)">
+        <button
+            onclick="showSection('tasks',this)"
+        >
             ✅ <span>Tasks</span>
         </button>
 
-        <button onclick="showSection('files',this)">
+        <button
+            onclick="showSection('files',this)"
+        >
             📚 <span>Files</span>
         </button>
 
-        <button onclick="showSection('chat',this)">
-            💬 <span>Chat</span>
+        <button
+            onclick="showSection('chat',this)"
+        >
+            💬 <span>Class Chat</span>
         </button>
 
-        <button onclick="showSection('ai',this)">
+        <button
+            onclick="showSection('ai',this)"
+        >
             🤖 <span>AI Assistant</span>
         </button>
 
-        <button onclick="showSection('about',this)">
+        <button
+            id="adminChatNav"
+            onclick="showAdminChat()"
+            style="display:none"
+        >
+            🔐 <span>Admin Chat</span>
+        </button>
+
+        <button
+            onclick="showSection('about',this)"
+        >
             ℹ️ <span>About</span>
         </button>
 
@@ -690,8 +849,8 @@ body{
 
     </nav>
 
-    <!-- BOTTOM LEFT ONLINE PEOPLE -->
 
+    <!-- BOTTOM LEFT ONLINE AREA -->
     <div class="user-box">
 
         👤 <b id="currentUser">Guest</b>
@@ -700,12 +859,23 @@ body{
             Student mode
         </div>
 
-        <div class="online-title">
-            🟢 Online now
+        <div
+            class="connection-status"
+            id="connectionStatus"
+        >
+            🟢 Connected
         </div>
 
-        <div id="onlinePeople">
-            Loading...
+        <div class="online-panel">
+
+            <div class="online-title">
+                🟢 Online now
+            </div>
+
+            <div id="onlinePeople">
+                Loading...
+            </div>
+
         </div>
 
     </div>
@@ -713,8 +883,7 @@ body{
 </aside>
 
 
-<!-- ================= MAIN ================= -->
-
+<!-- MAIN -->
 <main class="main">
 
     <div class="topbar">
@@ -746,222 +915,344 @@ body{
                 + Task
             </button>
 
-        </div>
-
-    </div>
-
-
-<!-- ================= NOTES ================= -->
-
-<section class="section active" id="notes">
-
-    <div class="hero">
-
-        <h2>
-            Welcome to BSN 2A 🌱
-        </h2>
-
-        <p>
-            Keep your notes, tasks, schedules and important
-            information organized in one place.
-        </p>
-
-    </div>
-
-    <div class="section-title">
-
-        <h2>Class Notes</h2>
-
-        <span id="noteCount">
-            0 notes
-        </span>
-
-    </div>
-
-    <div class="cards" id="notesContainer"></div>
-
-</section>
-
-
-<!-- ================= TASKS ================= -->
-
-<section class="section" id="tasks">
-
-    <div class="section-title">
-
-        <h2>Tasks & Deadlines</h2>
-
-        <button
-            class="btn"
-            id="taskAddButton"
-            onclick="openTaskModal()"
-            style="display:none"
-        >
-            + Add Task
-        </button>
-
-    </div>
-
-    <div id="tasksContainer"></div>
-
-</section>
-
-
-<!-- ================= FILES ================= -->
-
-<section class="section" id="files">
-
-    <div class="section-title">
-
-        <h2>📚 Class Files</h2>
-
-        <button
-            class="btn"
-            id="addFileButton"
-            onclick="openFileModal()"
-            style="display:none"
-        >
-            + Add File
-        </button>
-
-    </div>
-
-    <div id="filesContainer"></div>
-
-</section>
-
-
-<!-- ================= NORMAL CHAT ================= -->
-
-<section class="section" id="chat">
-
-    <div class="section-title">
-
-        <h2>💬 BSN 2A Chat</h2>
-
-    </div>
-
-    <div class="chat-box">
-
-        <div
-            class="chat-messages"
-            id="normalChatMessages"
-        ></div>
-
-        <div class="chat-input">
-
-            <input
-                id="normalChatInput"
-                placeholder="Send a message..."
-                onkeydown="
-                    if(event.key==='Enter')
-                    sendNormalChat()
-                "
-            >
-
             <button
-                class="btn"
-                onclick="sendNormalChat()"
+                class="btn blue"
+                id="addFileButton"
+                onclick="openFileModal()"
+                style="display:none"
             >
-                Send
+                + File
             </button>
 
         </div>
 
     </div>
 
-</section>
 
+    <!-- NOTES -->
+    <section
+        class="section active"
+        id="notes"
+    >
 
-<!-- ================= AI ================= -->
+        <div class="hero">
 
-<section class="section" id="ai">
+            <h2>
+                Welcome to BSN 2A 🌱
+            </h2>
 
-    <div class="section-title">
+            <p>
+                Keep your notes, tasks, files, schedules and
+                class information organized in one place.
+            </p>
 
-        <h2>🤖 BSN 2A Assistant</h2>
+        </div>
 
-    </div>
+        <div class="section-title">
 
-    <div class="chat-box">
+            <h2>
+                Class Notes
+            </h2>
+
+            <span id="noteCount">
+                0 notes
+            </span>
+
+        </div>
 
         <div
-            class="chat-messages"
-            id="aiMessages"
-        >
+            class="cards"
+            id="notesContainer"
+        ></div>
 
-            <div class="message ai">
+    </section>
 
-Hey! 👋 I'm your BSN 2A assistant.
 
-Try asking:
+    <!-- TASKS -->
+    <section
+        class="section"
+        id="tasks"
+    >
 
-• What is due tomorrow?
-• What tasks do I have?
-• What's coming up?
-• Show my notes about NCM 105.
+        <div class="section-title">
+
+            <h2>
+                Tasks & Deadlines
+            </h2>
+
+            <button
+                class="btn"
+                id="taskAddButton"
+                onclick="openTaskModal()"
+                style="display:none"
+            >
+                + Add Task
+            </button>
+
+        </div>
+
+        <div id="tasksContainer"></div>
+
+    </section>
+
+
+    <!-- FILES -->
+    <section
+        class="section"
+        id="files"
+    >
+
+        <div class="section-title">
+
+            <h2>
+                📚 Class Files
+            </h2>
+
+            <span id="fileCount">
+                0 files
+            </span>
+
+        </div>
+
+        <div
+            class="file-grid"
+            id="filesContainer"
+        ></div>
+
+    </section>
+
+
+    <!-- CLASS CHAT -->
+    <section
+        class="section"
+        id="chat"
+    >
+
+        <div class="section-title">
+
+            <h2>
+                💬 BSN 2A Class Chat
+            </h2>
+
+        </div>
+
+        <div class="chat-box">
+
+            <div
+                class="chat-messages"
+                id="chatMessages"
+            ></div>
+
+            <div class="chat-input">
+
+                <input
+                    id="chatInput"
+                    placeholder="Send a message..."
+                    onkeydown="if(event.key==='Enter')sendChat()"
+                >
+
+                <button
+                    class="btn"
+                    onclick="sendChat()"
+                >
+                    Send
+                </button>
+
+            </div>
+
+            <div class="chat-tools">
+
+                <label class="photo-label">
+                    📷 Add Photo
+                    <input
+                        id="chatPhoto"
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onchange="sendChatPhoto()"
+                    >
+                </label>
 
             </div>
 
         </div>
 
-        <div class="chat-input">
+    </section>
 
-            <input
-                id="aiInput"
-                placeholder="Ask something..."
-                onkeydown="
-                    if(event.key==='Enter')
-                    askAssistant()
-                "
-            >
 
-            <button
-                class="btn"
-                onclick="askAssistant()"
-            >
-                Ask
-            </button>
+    <!-- AI -->
+    <section
+        class="section"
+        id="ai"
+    >
+
+        <div class="section-title">
+
+            <h2>
+                🤖 BSN 2A Assistant
+            </h2>
 
         </div>
 
-    </div>
+        <div class="chat-box">
 
-</section>
+            <div
+                class="chat-messages"
+                id="aiMessages"
+            >
+
+                <div class="message ai">
+
+                    <div class="message-name">
+                        BSN 2A Assistant
+                    </div>
+
+                    Hey! 👋 I'm your BSN 2A assistant.
+
+                    Try asking:
+
+                    • What is due tomorrow?
+                    • What tasks do I have?
+                    • What is upcoming?
+                    • Show my notes.
+                    • Show notes about NCM 105.
+
+                </div>
+
+            </div>
+
+            <div class="chat-input">
+
+                <input
+                    id="aiInput"
+                    placeholder="Ask something..."
+                    onkeydown="if(event.key==='Enter')askAssistant()"
+                >
+
+                <button
+                    class="btn"
+                    onclick="askAssistant()"
+                >
+                    Ask
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
 
 
-<!-- ================= ABOUT ================= -->
+    <!-- ADMIN CHAT -->
+    <section
+        class="section"
+        id="adminChat"
+    >
 
-<section class="section" id="about">
+        <div class="section-title">
 
-    <div class="hero">
+            <h2>
+                🔐 Administrator Chat
+            </h2>
 
-        <h2>
-            BSN 2A 🌱
-        </h2>
+        </div>
 
-        <p>
-            A shared class notes and task system for BSN 2A.
-            Everyone can view the latest information while
-            administrators can manage the content.
-        </p>
+        <div class="chat-box">
 
-        <br>
+            <div
+                class="chat-messages"
+                id="adminChatMessages"
+            ></div>
 
-        <p>
-            🔄 Data is synchronized through Firebase Realtime Database.
-        </p>
+            <div class="chat-input">
 
-    </div>
+                <input
+                    id="adminChatInput"
+                    placeholder="Message other administrators..."
+                    onkeydown="if(event.key==='Enter')sendAdminChat()"
+                >
 
-</section>
+                <button
+                    class="btn"
+                    onclick="sendAdminChat()"
+                >
+                    Send
+                </button>
+
+            </div>
+
+            <div class="chat-tools">
+
+                <label class="photo-label">
+                    📷 Add Photo
+                    <input
+                        id="adminChatPhoto"
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onchange="sendAdminChatPhoto()"
+                    >
+                </label>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+    <section
+        class="section"
+        id="about"
+    >
+
+        <div class="hero">
+
+            <h2>
+                BSN 2A 🌱
+            </h2>
+
+            <p>
+                A shared class notes and task system for BSN 2A.
+                Students can view information, use the class chat,
+                check their own tasks and access class files.
+                Administrators can manage the shared content.
+            </p>
+
+            <br>
+
+            <p>
+                🔄 Data synchronizes through Firebase Realtime Database.
+            </p>
+
+            <br>
+
+            <p>
+                📱 Offline changes are temporarily stored on the device
+                and can sync when the internet connection returns.
+            </p>
+
+            <br>
+
+            <p>
+                🗑️ Notes, tasks and files older than 30 days can be
+                automatically cleaned from the shared database when
+                cleanup runs.
+            </p>
+
+        </div>
+
+    </section>
 
 </main>
 
 
-<!-- ================= NOTE MODAL ================= -->
-
-<div class="modal-bg" id="noteModal">
+<!-- NOTE MODAL -->
+<div
+    class="modal-bg"
+    id="noteModal"
+>
 
     <div class="modal">
 
@@ -1004,9 +1295,11 @@ Try asking:
 </div>
 
 
-<!-- ================= TASK MODAL ================= -->
-
-<div class="modal-bg" id="taskModal">
+<!-- TASK MODAL -->
+<div
+    class="modal-bg"
+    id="taskModal"
+>
 
     <div class="modal">
 
@@ -1056,9 +1349,11 @@ Try asking:
 </div>
 
 
-<!-- ================= FILE MODAL ================= -->
-
-<div class="modal-bg" id="fileModal">
+<!-- FILE MODAL -->
+<div
+    class="modal-bg"
+    id="fileModal"
+>
 
     <div class="modal">
 
@@ -1069,23 +1364,26 @@ Try asking:
         <input
             class="input"
             id="fileTitle"
-            placeholder="File name / title"
+            placeholder="File title"
         >
 
         <input
             class="input"
-            id="fileUrl"
-            placeholder="Paste PDF/PPT link here"
+            id="fileInput"
+            type="file"
+            accept=".pdf,.ppt,.pptx"
         >
 
-        <p style="
+        <p
+            style="
             color:#718078;
             font-size:13px;
             line-height:1.5;
             margin-bottom:15px;
-        ">
-            You can paste a Google Drive, OneDrive, Dropbox,
-            or other publicly accessible PDF/PPT link.
+            "
+        >
+            Supported files: PDF, PPT and PPTX.
+            The file will be uploaded to Firebase Storage.
         </p>
 
         <div class="modal-actions">
@@ -1101,7 +1399,7 @@ Try asking:
                 class="btn"
                 onclick="saveFile()"
             >
-                Add File
+                Upload File
             </button>
 
         </div>
@@ -1114,33 +1412,45 @@ Try asking:
 <script type="module">
 
 /* ============================================================
-   FIREBASE
+   FIREBASE IMPORTS
 ============================================================ */
 
 import {
     initializeApp
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
     getDatabase,
-    ref,
+    ref as dbRef,
     push,
     set,
     update,
     remove,
     onValue,
     onDisconnect
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+import {
+    getAuth,
+    signInAnonymously
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+    getStorage,
+    ref as storageRef,
+    uploadBytes,
+    getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+
+/* ============================================================
+   FIREBASE CONFIG
+============================================================ */
 
 const firebaseConfig = {
 
     apiKey:
-        "AIzaSyA3IzxU0upKaOBSszJiMRBaKYGB4ajt24A",
+        "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
 
     authDomain:
         "bsn-2a-notes.firebaseapp.com",
@@ -1165,27 +1475,40 @@ const firebaseConfig = {
 };
 
 
+/* ============================================================
+   INITIALIZE
+============================================================ */
+
 const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
 
+const auth = getAuth(app);
 
-/* DATABASE REFERENCES */
+const storage = getStorage(app);
+
+
+/* ============================================================
+   DATABASE REFERENCES
+============================================================ */
 
 const notesRef =
-    ref(db,"notes");
+    dbRef(db,"notes");
 
 const tasksRef =
-    ref(db,"tasks");
-
-const chatRef =
-    ref(db,"chat");
+    dbRef(db,"tasks");
 
 const filesRef =
-    ref(db,"files");
+    dbRef(db,"files");
+
+const chatRef =
+    dbRef(db,"chat");
+
+const adminChatRef =
+    dbRef(db,"adminChat");
 
 const presenceRef =
-    ref(db,"presence");
+    dbRef(db,"presence");
 
 
 /* ============================================================
@@ -1198,14 +1521,181 @@ let tasks = {};
 
 let files = {};
 
+let chats = {};
+
+let adminChats = {};
+
+let onlineUsers = {};
+
 let admin = false;
 
 let editingNoteId = null;
 
 let editingTaskId = null;
 
-let username =
-    localStorage.getItem("bsnUsername") || "";
+let currentUserId = null;
+
+let currentUserName = "";
+
+let draggedNoteId = null;
+
+
+/* ============================================================
+   ADMIN PASSWORD
+============================================================ */
+
+const ADMIN_PASSWORD =
+    "supperlol123123";
+
+
+/* ============================================================
+   OFFLINE LOCAL CACHE
+============================================================ */
+
+function cacheData(){
+
+    try{
+
+        localStorage.setItem(
+            "bsnNotesCache",
+            JSON.stringify(notes)
+        );
+
+        localStorage.setItem(
+            "bsnTasksCache",
+            JSON.stringify(tasks)
+        );
+
+        localStorage.setItem(
+            "bsnFilesCache",
+            JSON.stringify(files)
+        );
+
+        localStorage.setItem(
+            "bsnChatCache",
+            JSON.stringify(chats)
+        );
+
+    }catch(error){
+
+        console.warn(
+            "Local cache failed",
+            error
+        );
+    }
+}
+
+
+function loadCachedData(){
+
+    try{
+
+        const cachedNotes =
+            localStorage.getItem("bsnNotesCache");
+
+        const cachedTasks =
+            localStorage.getItem("bsnTasksCache");
+
+        const cachedFiles =
+            localStorage.getItem("bsnFilesCache");
+
+        const cachedChat =
+            localStorage.getItem("bsnChatCache");
+
+
+        if(cachedNotes){
+
+            notes =
+                JSON.parse(cachedNotes);
+
+            renderNotes();
+
+        }
+
+        if(cachedTasks){
+
+            tasks =
+                JSON.parse(cachedTasks);
+
+            renderTasks();
+
+        }
+
+        if(cachedFiles){
+
+            files =
+                JSON.parse(cachedFiles);
+
+            renderFiles();
+
+        }
+
+        if(cachedChat){
+
+            chats =
+                JSON.parse(cachedChat);
+
+            renderChat();
+
+        }
+
+    }catch(error){
+
+        console.warn(
+            "Could not load cache",
+            error
+        );
+    }
+}
+
+
+/* ============================================================
+   ONLINE / OFFLINE
+============================================================ */
+
+function updateConnectionUI(){
+
+    const banner =
+        document.getElementById("offlineBanner");
+
+    const status =
+        document.getElementById("connectionStatus");
+
+
+    if(navigator.onLine){
+
+        banner.classList.remove("show");
+
+        status.textContent =
+            "🟢 Connected";
+
+    }else{
+
+        banner.classList.add("show");
+
+        status.textContent =
+            "🟠 Offline";
+
+    }
+}
+
+
+window.addEventListener(
+    "online",
+    async () => {
+
+        updateConnectionUI();
+
+        await syncPendingChanges();
+
+    }
+);
+
+
+window.addEventListener(
+    "offline",
+    updateConnectionUI
+);
 
 
 /* ============================================================
@@ -1214,33 +1704,42 @@ let username =
 
 window.enterSite = function(){
 
+    const input =
+        document.getElementById(
+            "usernameInput"
+        );
+
     const name =
-        document
-        .getElementById("usernameInput")
-        .value
-        .trim();
+        input.value.trim();
+
 
     if(!name){
 
-        alert("Please enter your username.");
+        alert(
+            "Please enter your username."
+        );
 
         return;
     }
 
-    username = name;
+
+    currentUserName = name;
 
     localStorage.setItem(
         "bsnUsername",
         name
     );
 
-    document
-        .getElementById("currentUser")
-        .textContent = name;
 
-    document
-        .getElementById("loginScreen")
-        .style.display = "none";
+    document.getElementById(
+        "currentUser"
+    ).textContent = name;
+
+
+    document.getElementById(
+        "loginScreen"
+    ).style.display = "none";
+
 
     setupPresence();
 };
@@ -1249,82 +1748,125 @@ window.enterSite = function(){
 function loadUsername(){
 
     const saved =
-        localStorage.getItem("bsnUsername");
+        localStorage.getItem(
+            "bsnUsername"
+        );
+
 
     if(saved){
 
-        username = saved;
+        currentUserName = saved;
 
-        document
-            .getElementById("currentUser")
-            .textContent = saved;
+        document.getElementById(
+            "currentUser"
+        ).textContent = saved;
 
-        document
-            .getElementById("loginScreen")
-            .style.display = "none";
+        document.getElementById(
+            "loginScreen"
+        ).style.display = "none";
 
-        setupPresence();
+    }else{
+
+        document.getElementById(
+            "loginScreen"
+        ).style.display = "flex";
 
     }
 }
 
 
 /* ============================================================
-   SAFE USER ID
+   FIREBASE ANONYMOUS AUTH
 ============================================================ */
 
-function safeUserId(name){
+async function startAuthentication(){
 
-    return String(name)
-        .toLowerCase()
-        .replace(/[.#$[\]/]/g,"_")
-        .replace(/\s+/g,"_")
-        .slice(0,50);
+    try{
+
+        const result =
+            await signInAnonymously(auth);
+
+        currentUserId =
+            result.user.uid;
+
+        if(currentUserName){
+
+            setupPresence();
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Anonymous authentication failed:",
+            error
+        );
+
+        /*
+           The website can still show cached data
+           even if Firebase authentication is unavailable.
+        */
+    }
 }
 
 
 /* ============================================================
-   ONLINE PRESENCE
+   PRESENCE
 ============================================================ */
 
-function setupPresence(){
+async function setupPresence(){
 
-    if(!username) return;
+    if(!currentUserId){
 
-    const userId =
-        safeUserId(username);
+        return;
+    }
 
-    const myPresence =
-        ref(db,"presence/"+userId);
+    if(!currentUserName){
 
-    set(myPresence,{
+        return;
+    }
 
-        name:username,
 
-        online:true,
+    const myPresenceRef =
+        dbRef(
+            db,
+            "presence/" +
+            currentUserId
+        );
 
-        lastSeen:Date.now()
 
-    });
+    try{
 
-    onDisconnect(myPresence)
-        .remove();
+        await onDisconnect(
+            myPresenceRef
+        ).remove();
 
-    onValue(
-        presenceRef,
-        snapshot => {
 
-            const people =
-                snapshot.val() || {};
+        await set(
+            myPresenceRef,
+            {
+                name:
+                    currentUserName,
 
-            renderOnlinePeople(people);
+                online:
+                    true,
 
-        }
-    );
+                lastSeen:
+                    Date.now()
+            }
+        );
+
+    }catch(error){
+
+        console.error(
+            "Presence error:",
+            error
+        );
+    }
 }
 
 
-function renderOnlinePeople(people){
+function renderOnlinePeople(){
 
     const container =
         document.getElementById(
@@ -1333,38 +1875,73 @@ function renderOnlinePeople(people){
 
     container.innerHTML = "";
 
-    const list =
-        Object.values(people);
 
-    if(!list.length){
+    const people =
+        Object.entries(
+            onlineUsers
+        );
+
+
+    if(!people.length){
 
         container.innerHTML =
-            "<div>No one else online</div>";
+            `<div style="opacity:.6">
+                Nobody else online
+            </div>`;
 
         return;
     }
 
-    list.forEach(person => {
 
-        const div =
-            document.createElement("div");
+    people.forEach(
+        ([id,user]) => {
 
-        div.className =
-            "online-person";
+            if(!user || !user.name){
 
-        div.innerHTML = `
+                return;
+            }
 
-            <span class="online-dot"></span>
 
-            <span>
-                ${escapeHTML(person.name)}
-            </span>
+            const div =
+                document.createElement(
+                    "div"
+                );
 
-        `;
+            div.className =
+                "online-person";
 
-        container.appendChild(div);
 
-    });
+            const dot =
+                document.createElement(
+                    "span"
+                );
+
+            dot.className =
+                "online-dot";
+
+
+            const name =
+                document.createElement(
+                    "span"
+                );
+
+            name.textContent =
+                user.name +
+                (
+                    id === currentUserId
+                    ? " (You)"
+                    : ""
+                );
+
+
+            div.appendChild(dot);
+
+            div.appendChild(name);
+
+            container.appendChild(div);
+
+        }
+    );
 }
 
 
@@ -1378,6 +1955,10 @@ window.adminLogin = function(){
 
         admin = false;
 
+        localStorage.removeItem(
+            "bsnAdmin"
+        );
+
         updateAdminUI();
 
         alert(
@@ -1387,16 +1968,29 @@ window.adminLogin = function(){
         return;
     }
 
+
     const password =
         prompt(
             "Enter admin password:"
         );
 
-    if(password === "supperlol123123"){
+
+    if(password === ADMIN_PASSWORD){
 
         admin = true;
 
+        localStorage.setItem(
+            "bsnAdmin",
+            "true"
+        );
+
         updateAdminUI();
+
+        /*
+           Cleanup is attempted when
+           an administrator enters the site.
+        */
+        cleanupOldData();
 
         alert(
             "Admin mode enabled 🔓"
@@ -1407,10 +2001,30 @@ window.adminLogin = function(){
         alert(
             "Wrong password."
         );
+    }
+};
+
+
+function restoreAdmin(){
+
+    const saved =
+        localStorage.getItem(
+            "bsnAdmin"
+        );
+
+
+    if(saved === "true"){
+
+        admin = true;
+
+    }else{
+
+        admin = false;
 
     }
 
-};
+    updateAdminUI();
+}
 
 
 function updateAdminUI(){
@@ -1445,6 +2059,11 @@ function updateAdminUI(){
             "adminStatus"
         );
 
+    const adminChatNav =
+        document.getElementById(
+            "adminChatNav"
+        );
+
 
     if(admin){
 
@@ -1458,6 +2077,9 @@ function updateAdminUI(){
             "block";
 
         fileButton.style.display =
+            "block";
+
+        adminChatNav.style.display =
             "block";
 
         adminText.textContent =
@@ -1480,6 +2102,9 @@ function updateAdminUI(){
         fileButton.style.display =
             "none";
 
+        adminChatNav.style.display =
+            "none";
+
         adminText.textContent =
             "Admin 🔒";
 
@@ -1488,12 +2113,12 @@ function updateAdminUI(){
 
     }
 
+
     renderNotes();
 
     renderTasks();
 
     renderFiles();
-
 }
 
 
@@ -1501,30 +2126,43 @@ function updateAdminUI(){
    NAVIGATION
 ============================================================ */
 
-window.showSection = function(
-    id,
-    button
-){
+window.showSection =
+function(id,button){
 
     document
-        .querySelectorAll(".section")
-        .forEach(section =>
-            section.classList.remove(
-                "active"
-            )
+        .querySelectorAll(
+            ".section"
+        )
+        .forEach(
+            section =>
+                section.classList.remove(
+                    "active"
+                )
         );
 
-    document
-        .getElementById(id)
-        .classList.add("active");
+
+    const target =
+        document.getElementById(id);
+
+
+    if(target){
+
+        target.classList.add(
+            "active"
+        );
+
+    }
 
 
     document
-        .querySelectorAll(".nav button")
-        .forEach(btn =>
-            btn.classList.remove(
-                "active"
-            )
+        .querySelectorAll(
+            ".nav button"
+        )
+        .forEach(
+            btn =>
+                btn.classList.remove(
+                    "active"
+                )
         );
 
 
@@ -1539,8 +2177,30 @@ window.showSection = function(
 };
 
 
+window.showAdminChat =
+function(){
+
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+    }
+
+
+    showSection(
+        "adminChat",
+        document.getElementById(
+            "adminChatNav"
+        )
+    );
+};
+
+
 /* ============================================================
-   FIREBASE LISTENERS
+   NOTES LISTENER
 ============================================================ */
 
 onValue(
@@ -1550,13 +2210,25 @@ onValue(
         notes =
             snapshot.val() || {};
 
-        autoDeleteOldContent();
+        cacheData();
 
         renderNotes();
+
+    },
+    error => {
+
+        console.error(
+            "Notes listener:",
+            error
+        );
 
     }
 );
 
+
+/* ============================================================
+   TASK LISTENER
+============================================================ */
 
 onValue(
     tasksRef,
@@ -1565,13 +2237,17 @@ onValue(
         tasks =
             snapshot.val() || {};
 
-        autoDeleteOldContent();
+        cacheData();
 
         renderTasks();
 
     }
 );
 
+
+/* ============================================================
+   FILE LISTENER
+============================================================ */
 
 onValue(
     filesRef,
@@ -1580,7 +2256,7 @@ onValue(
         files =
             snapshot.val() || {};
 
-        autoDeleteOldContent();
+        cacheData();
 
         renderFiles();
 
@@ -1589,132 +2265,100 @@ onValue(
 
 
 /* ============================================================
-   AUTO DELETE AFTER 1 MONTH
+   CHAT LISTENER
 ============================================================ */
 
-async function autoDeleteOldContent(){
+onValue(
+    chatRef,
+    snapshot => {
 
-    const month =
-        30 * 24 * 60 * 60 * 1000;
+        chats =
+            snapshot.val() || {};
 
-    const cutoff =
-        Date.now() - month;
+        cacheData();
 
-
-    /* NOTES */
-
-    for(
-        const [id,note]
-        of Object.entries(notes)
-    ){
-
-        if(
-            note.createdAt &&
-            note.createdAt < cutoff
-        ){
-
-            try{
-
-                await remove(
-                    ref(
-                        db,
-                        "notes/"+id
-                    )
-                );
-
-            }catch(error){
-
-                console.error(
-                    "Note cleanup error:",
-                    error
-                );
-
-            }
-
-        }
+        renderChat();
 
     }
+);
 
 
-    /* TASKS */
+/* ============================================================
+   ADMIN CHAT LISTENER
+============================================================ */
 
-    for(
-        const [id,task]
-        of Object.entries(tasks)
-    ){
+onValue(
+    adminChatRef,
+    snapshot => {
 
-        if(
-            task.createdAt &&
-            task.createdAt < cutoff
-        ){
+        adminChats =
+            snapshot.val() || {};
 
-            try{
-
-                await remove(
-                    ref(
-                        db,
-                        "tasks/"+id
-                    )
-                );
-
-            }catch(error){
-
-                console.error(
-                    "Task cleanup error:",
-                    error
-                );
-
-            }
-
-        }
+        renderAdminChat();
 
     }
+);
 
 
-    /* FILE RECORDS */
+/* ============================================================
+   PRESENCE LISTENER
+============================================================ */
 
-    for(
-        const [id,file]
-        of Object.entries(files)
-    ){
+onValue(
+    presenceRef,
+    snapshot => {
 
-        if(
-            file.createdAt &&
-            file.createdAt < cutoff
-        ){
+        onlineUsers =
+            snapshot.val() || {};
 
-            try{
-
-                await remove(
-                    ref(
-                        db,
-                        "files/"+id
-                    )
-                );
-
-            }catch(error){
-
-                console.error(
-                    "File cleanup error:",
-                    error
-                );
-
-            }
-
-        }
+        renderOnlinePeople();
 
     }
-
-}
+);
 
 
 /* ============================================================
    NOTES
 ============================================================ */
 
-function renderNotes(
-    search=""
-){
+function getSortedNotes(){
+
+    return Object.entries(
+        notes
+    ).sort(
+        (a,b) => {
+
+            const orderA =
+                Number(
+                    a[1].order ?? 0
+                );
+
+            const orderB =
+                Number(
+                    b[1].order ?? 0
+                );
+
+
+            if(orderA !== orderB){
+
+                return orderA - orderB;
+
+            }
+
+
+            return Number(
+                b[1].createdAt || 0
+            ) -
+            Number(
+                a[1].createdAt || 0
+            );
+
+        }
+    );
+}
+
+
+function renderNotes(search=""){
 
     const container =
         document.getElementById(
@@ -1726,159 +2370,213 @@ function renderNotes(
     let count = 0;
 
 
-    const entries =
-        Object.entries(notes)
-        .sort(
-            (a,b) =>
-                (a[1].order ?? 0) -
-                (b[1].order ?? 0)
-        );
+    getSortedNotes()
+        .forEach(
+            ([id,note]) => {
+
+                const title =
+                    note.title ||
+                    "Untitled Note";
+
+                const text =
+                    note.text || "";
 
 
-    entries.forEach(
-        ([id,note]) => {
-
-            const title =
-                note.title ||
-                "Untitled Note";
-
-            const text =
-                note.text || "";
+                const combined =
+                    (
+                        title +
+                        " " +
+                        text
+                    ).toLowerCase();
 
 
-            const combined =
-                (
-                    title+
-                    " "+
-                    text
-                ).toLowerCase();
+                if(
+                    search &&
+                    !combined.includes(
+                        search.toLowerCase()
+                    )
+                ){
+
+                    return;
+
+                }
 
 
-            if(
-                search &&
-                !combined.includes(
-                    search.toLowerCase()
-                )
-            ){
-
-                return;
-
-            }
+                count++;
 
 
-            count++;
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+                card.className =
+                    "card";
 
 
-            const card =
-                document.createElement(
-                    "div"
-                );
+                if(admin){
 
-            card.className =
-                "card";
+                    card.draggable =
+                        true;
 
+                    card.addEventListener(
+                        "dragstart",
+                        () => {
 
-            let buttons = "";
+                            draggedNoteId =
+                                id;
 
+                        }
+                    );
 
-            if(admin){
+                    card.addEventListener(
+                        "dragover",
+                        e => {
 
-                buttons = `
+                            e.preventDefault();
 
-                    <div class="card-buttons">
+                        }
+                    );
 
-                        <button
-                            class="small-btn"
-                            onclick="
-                                editNote('${id}')
-                            "
-                        >
-                            ✏️ Edit
-                        </button>
+                    card.addEventListener(
+                        "drop",
+                        async e => {
 
-                        <button
-                            class="small-btn delete"
-                            onclick="
-                                deleteNote('${id}')
-                            "
-                        >
-                            🗑️ Delete
-                        </button>
+                            e.preventDefault();
 
-                        <button
-                            class="small-btn"
-                            onclick="
-                                moveNote('${id}',-1)
-                            "
-                        >
-                            ↑
-                        </button>
+                            await reorderNotes(
+                                draggedNoteId,
+                                id
+                            );
 
-                        <button
-                            class="small-btn"
-                            onclick="
-                                moveNote('${id}',1)
-                            "
-                        >
-                            ↓
-                        </button>
+                        }
+                    );
 
-                    </div>
-
-                `;
-
-            }
+                }
 
 
-            card.innerHTML = `
+                card.innerHTML = `
 
-                <h3>
-                    ${escapeHTML(title)}
-                </h3>
-
-                <div class="card-text">
-${escapeHTML(text)}
-                </div>
-
-                <div class="card-date">
                     ${
-                        note.author
+                        admin
                         ?
-                        "Added by "+
-                        escapeHTML(
-                            note.author
-                        )
+                        `<span
+                            class="drag-handle"
+                            title="Drag to arrange"
+                        >
+                            ⋮⋮
+                        </span>`
                         :
                         ""
                     }
-                </div>
 
-                ${buttons}
+                    <h3>
+                        ${escapeHTML(title)}
+                    </h3>
 
-            `;
+                    <div class="card-text">
+                        ${escapeHTML(text)}
+                    </div>
+
+                    <div class="card-date">
+                        ${
+                            note.author
+                            ?
+                            "Added by " +
+                            escapeHTML(
+                                note.author
+                            )
+                            :
+                            ""
+                        }
+                    </div>
+
+                    ${
+                        admin
+                        ?
+                        `
+                        <div class="card-buttons">
+
+                            <button
+                                class="small-btn"
+                                onclick="editNote('${id}')"
+                            >
+                                ✏️ Edit
+                            </button>
+
+                            <button
+                                class="small-btn delete"
+                                onclick="deleteNote('${id}')"
+                            >
+                                🗑️ Delete
+                            </button>
+
+                            <button
+                                class="small-btn move"
+                                onclick="moveNoteUp('${id}')"
+                            >
+                                ↑
+                            </button>
+
+                            <button
+                                class="small-btn move"
+                                onclick="moveNoteDown('${id}')"
+                            >
+                                ↓
+                            </button>
+
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+                `;
 
 
-            container.appendChild(card);
+                if(!admin){
 
-        }
-    );
+                    card.addEventListener(
+                        "click",
+                        e => {
+
+                            openReadNote(id);
+
+                        }
+                    );
+
+                }
 
 
-    document
-        .getElementById(
-            "noteCount"
-        )
-        .textContent =
-        `${count} note${count===1?"":"s"}`;
+                container.appendChild(
+                    card
+                );
+
+            }
+        );
 
 
-    if(count===0){
+    document.getElementById(
+        "noteCount"
+    ).textContent =
+        `${count} note${count === 1 ? "" : "s"}`;
+
+
+    if(count === 0){
 
         container.innerHTML = `
 
             <div class="empty">
 
                 No notes found.
+
+                ${
+                    admin
+                    ?
+                    "<br><br>Click + Add Note to create one."
+                    :
+                    ""
+                }
 
             </div>
 
@@ -1890,68 +2588,225 @@ ${escapeHTML(text)}
 
 
 /* ============================================================
-   ADD NOTE
+   NOTE ORDERING
 ============================================================ */
 
-window.openNoteModal = function(){
+async function reorderNotes(
+    draggedId,
+    targetId
+){
 
     if(!admin){
 
-        alert(
-            "Admin access required."
+        return;
+    }
+
+    if(
+        !draggedId ||
+        !targetId ||
+        draggedId === targetId
+    ){
+
+        return;
+    }
+
+
+    const sorted =
+        getSortedNotes();
+
+
+    const fromIndex =
+        sorted.findIndex(
+            x => x[0] === draggedId
         );
+
+    const toIndex =
+        sorted.findIndex(
+            x => x[0] === targetId
+        );
+
+
+    if(
+        fromIndex < 0 ||
+        toIndex < 0
+    ){
 
         return;
 
     }
 
 
-    editingNoteId = null;
+    const copy =
+        [...sorted];
 
 
-    document
-        .getElementById(
-            "noteModalTitle"
-        )
-        .textContent =
-        "Add Note";
+    const moved =
+        copy.splice(
+            fromIndex,
+            1
+        )[0];
 
 
-    document
-        .getElementById(
-            "noteTitle"
-        )
-        .value = "";
+    copy.splice(
+        toIndex,
+        0,
+        moved
+    );
 
 
-    document
-        .getElementById(
-            "noteText"
-        )
-        .value = "";
+    const changes = {};
 
 
-    document
-        .getElementById(
-            "noteModal"
-        )
-        .classList.add("show");
+    copy.forEach(
+        ([id]) => {
 
+            changes[
+                "notes/" +
+                id +
+                "/order"
+            ] = copy.indexOf(
+                copy.find(
+                    x => x[0] === id
+                )
+            );
+
+        }
+    );
+
+
+    try{
+
+        await update(
+            dbRef(db),
+            changes
+        );
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+        alert(
+            "Could not rearrange notes."
+        );
+
+    }
+
+}
+
+
+window.moveNoteUp =
+async function(id){
+
+    if(!admin){
+
+        return;
+    }
+
+
+    const sorted =
+        getSortedNotes();
+
+
+    const index =
+        sorted.findIndex(
+            x => x[0] === id
+        );
+
+
+    if(index <= 0){
+
+        return;
+    }
+
+
+    const current =
+        sorted[index][0];
+
+    const previous =
+        sorted[index-1][0];
+
+
+    await update(
+        dbRef(db),
+        {
+
+            ["notes/" +
+            current +
+            "/order"]:
+                index - 1,
+
+            ["notes/" +
+            previous +
+            "/order"]:
+                index
+
+        }
+    );
 };
 
 
-window.closeNoteModal = function(){
+window.moveNoteDown =
+async function(id){
 
-    document
-        .getElementById(
-            "noteModal"
-        )
-        .classList.remove("show");
+    if(!admin){
 
+        return;
+    }
+
+
+    const sorted =
+        getSortedNotes();
+
+
+    const index =
+        sorted.findIndex(
+            x => x[0] === id
+        );
+
+
+    if(
+        index < 0 ||
+        index >= sorted.length - 1
+    ){
+
+        return;
+    }
+
+
+    const current =
+        sorted[index][0];
+
+    const next =
+        sorted[index+1][0];
+
+
+    await update(
+        dbRef(db),
+        {
+
+            ["notes/" +
+            current +
+            "/order"]:
+                index + 1,
+
+            ["notes/" +
+            next +
+            "/order"]:
+                index
+
+        }
+    );
 };
 
 
-window.saveNote = async function(){
+/* ============================================================
+   ADD NOTE
+============================================================ */
+
+window.openNoteModal =
+function(){
 
     if(!admin){
 
@@ -1960,26 +2815,73 @@ window.saveNote = async function(){
         );
 
         return;
+    }
 
+
+    editingNoteId =
+        null;
+
+
+    document.getElementById(
+        "noteModalTitle"
+    ).textContent =
+        "Add Note";
+
+
+    document.getElementById(
+        "noteTitle"
+    ).value = "";
+
+
+    document.getElementById(
+        "noteText"
+    ).value = "";
+
+
+    document.getElementById(
+        "noteModal"
+    ).classList.add(
+        "show"
+    );
+
+};
+
+
+window.closeNoteModal =
+function(){
+
+    document.getElementById(
+        "noteModal"
+    ).classList.remove(
+        "show"
+    );
+
+};
+
+
+window.saveNote =
+async function(){
+
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
     }
 
 
     const title =
-        document
-        .getElementById(
+        document.getElementById(
             "noteTitle"
-        )
-        .value
-        .trim();
+        ).value.trim();
 
 
     const text =
-        document
-        .getElementById(
+        document.getElementById(
             "noteText"
-        )
-        .value
-        .trim();
+        ).value.trim();
 
 
     if(!title){
@@ -1989,12 +2891,12 @@ window.saveNote = async function(){
         );
 
         return;
-
     }
 
 
     const author =
-        username || "Admin";
+        currentUserName ||
+        "Admin";
 
 
     try{
@@ -2002,14 +2904,17 @@ window.saveNote = async function(){
         if(editingNoteId){
 
             await update(
-                ref(
+                dbRef(
                     db,
-                    "notes/"+editingNoteId
+                    "notes/" +
+                    editingNoteId
                 ),
                 {
                     title,
                     text,
-                    author
+                    author,
+                    updatedAt:
+                        Date.now()
                 }
             );
 
@@ -2018,9 +2923,12 @@ window.saveNote = async function(){
             const newNote =
                 push(notesRef);
 
-            const order =
-                Object.keys(notes)
-                    .length;
+
+            const currentLength =
+                Object.keys(
+                    notes
+                ).length;
+
 
             await set(
                 newNote,
@@ -2028,7 +2936,8 @@ window.saveNote = async function(){
                     title,
                     text,
                     author,
-                    order,
+                    order:
+                        currentLength,
                     createdAt:
                         Date.now()
                 }
@@ -2044,7 +2953,7 @@ window.saveNote = async function(){
         console.error(error);
 
         alert(
-            "Could not save note."
+            "Could not save the note."
         );
 
     }
@@ -2056,49 +2965,169 @@ window.saveNote = async function(){
    EDIT NOTE
 ============================================================ */
 
-window.editNote = function(id){
+window.editNote =
+function(id){
 
-    if(!admin) return;
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+    }
 
 
     const note =
         notes[id];
 
-    if(!note) return;
+
+    if(!note){
+
+        return;
+
+    }
 
 
-    editingNoteId = id;
+    editingNoteId =
+        id;
 
 
-    document
-        .getElementById(
-            "noteModalTitle"
-        )
-        .textContent =
+    document.getElementById(
+        "noteModalTitle"
+    ).textContent =
         "Edit Note";
 
 
-    document
-        .getElementById(
-            "noteTitle"
-        )
-        .value =
+    document.getElementById(
+        "noteTitle"
+    ).value =
         note.title || "";
 
 
-    document
-        .getElementById(
-            "noteText"
-        )
-        .value =
+    document.getElementById(
+        "noteText"
+    ).value =
         note.text || "";
 
 
-    document
-        .getElementById(
-            "noteModal"
-        )
-        .classList.add("show");
+    document.getElementById(
+        "noteModal"
+    ).classList.add(
+        "show"
+    );
+
+};
+
+
+/* ============================================================
+   READ NOTE
+============================================================ */
+
+function openReadNote(id){
+
+    const note =
+        notes[id];
+
+
+    if(!note){
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "noteModalTitle"
+    ).textContent =
+        note.title ||
+        "Note";
+
+
+    document.getElementById(
+        "noteTitle"
+    ).value =
+        note.title || "";
+
+
+    document.getElementById(
+        "noteText"
+    ).value =
+        note.text || "";
+
+
+    document.getElementById(
+        "noteTitle"
+    ).disabled =
+        true;
+
+
+    document.getElementById(
+        "noteText"
+    ).disabled =
+        true;
+
+
+    document.querySelector(
+        "#noteModal .modal-actions"
+    ).innerHTML = `
+
+        <button
+            class="btn"
+            onclick="closeReadNote()"
+        >
+            Close
+        </button>
+
+    `;
+
+
+    document.getElementById(
+        "noteModal"
+    ).classList.add(
+        "show"
+    );
+
+}
+
+
+window.closeReadNote =
+function(){
+
+    document.getElementById(
+        "noteTitle"
+    ).disabled =
+        false;
+
+
+    document.getElementById(
+        "noteText"
+    ).disabled =
+        false;
+
+
+    document.querySelector(
+        "#noteModal .modal-actions"
+    ).innerHTML = `
+
+        <button
+            class="btn secondary"
+            onclick="closeNoteModal()"
+        >
+            Cancel
+        </button>
+
+        <button
+            class="btn"
+            onclick="saveNote()"
+        >
+            Save Note
+        </button>
+
+    `;
+
+
+    closeNoteModal();
 
 };
 
@@ -2107,24 +3136,37 @@ window.editNote = function(id){
    DELETE NOTE
 ============================================================ */
 
-window.deleteNote = async function(id){
+window.deleteNote =
+async function(id){
 
-    if(!admin) return;
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+    }
 
 
     if(
         !confirm(
             "Delete this note?"
         )
-    ) return;
+    ){
+
+        return;
+
+    }
 
 
     try{
 
         await remove(
-            ref(
+            dbRef(
                 db,
-                "notes/"+id
+                "notes/" +
+                id
             )
         );
 
@@ -2142,92 +3184,58 @@ window.deleteNote = async function(id){
 
 
 /* ============================================================
-   ARRANGE NOTES
-============================================================ */
-
-window.moveNote = async function(
-    id,
-    direction
-){
-
-    if(!admin) return;
-
-
-    const ordered =
-        Object.entries(notes)
-        .sort(
-            (a,b) =>
-                (a[1].order ?? 0) -
-                (b[1].order ?? 0)
-        );
-
-
-    const index =
-        ordered.findIndex(
-            item => item[0] === id
-        );
-
-
-    const newIndex =
-        index + direction;
-
-
-    if(
-        index < 0 ||
-        newIndex < 0 ||
-        newIndex >= ordered.length
-    ){
-
-        return;
-
-    }
-
-
-    [
-        ordered[index],
-        ordered[newIndex]
-    ] =
-    [
-        ordered[newIndex],
-        ordered[index]
-    ];
-
-
-    const changes = {};
-
-
-    ordered.forEach(
-        ([noteId]) => {
-
-            changes[
-                "notes/"
-                +noteId
-                +"/order"
-            ] =
-                ordered.findIndex(
-                    item =>
-                        item[0] === noteId
-                );
-
-        }
-    );
-
-
-    await update(
-        ref(db),
-        changes
-    );
-
-};
-
-
-/* ============================================================
    TASKS
 ============================================================ */
 
-function renderTasks(
-    search=""
+function getTaskChecked(taskId){
+
+    if(!currentUserId){
+
+        return false;
+    }
+
+
+    const key =
+        "bsnTask_" +
+        currentUserId +
+        "_" +
+        taskId;
+
+
+    return (
+        localStorage.getItem(
+            key
+        ) === "true"
+    );
+}
+
+
+function setTaskChecked(
+    taskId,
+    value
 ){
+
+    if(!currentUserId){
+
+        return;
+    }
+
+
+    const key =
+        "bsnTask_" +
+        currentUserId +
+        "_" +
+        taskId;
+
+
+    localStorage.setItem(
+        key,
+        String(value)
+    );
+}
+
+
+function renderTasks(search=""){
 
     const container =
         document.getElementById(
@@ -2238,17 +3246,12 @@ function renderTasks(
 
 
     const entries =
-        Object.entries(tasks)
-        .sort(
-            (a,b) =>
-                (a[1].due || "")
-                .localeCompare(
-                    b[1].due || ""
-                )
+        Object.entries(
+            tasks
         );
 
 
-    if(!entries.length){
+    if(entries.length === 0){
 
         container.innerHTML = `
 
@@ -2263,168 +3266,170 @@ function renderTasks(
     }
 
 
-    entries.forEach(
-        ([id,task]) => {
+    entries
+        .sort(
+            (a,b) => {
 
-            const combined =
-                (
-                    task.title || ""
-                )+
-                " "+
-                (
-                    task.description || ""
+                const dateA =
+                    a[1].due || "";
+
+                const dateB =
+                    b[1].due || "";
+
+                return dateA.localeCompare(
+                    dateB
                 );
-
-
-            if(
-                search &&
-                !combined
-                .toLowerCase()
-                .includes(
-                    search.toLowerCase()
-                )
-            ){
-
-                return;
 
             }
+        )
+        .forEach(
+            ([id,task]) => {
+
+                const combined =
+                    (
+                        task.title || ""
+                    ) +
+                    " " +
+                    (
+                        task.description || ""
+                    );
 
 
-            /*
-              IMPORTANT:
-              Completion is stored PER USER.
-              One person's checkbox does NOT
-              change another person's checkbox.
-            */
+                if(
+                    search &&
+                    !combined
+                        .toLowerCase()
+                        .includes(
+                            search.toLowerCase()
+                        )
+                ){
 
-            const uid =
-                safeUserId(
-                    username || "guest"
-                );
+                    return;
 
-
-            const completedBy =
-                task.completedBy || {};
+                }
 
 
-            const checked =
-                completedBy[uid] === true;
+                const checked =
+                    getTaskChecked(id);
 
 
-            const div =
-                document.createElement(
-                    "div"
-                );
+                const div =
+                    document.createElement(
+                        "div"
+                    );
 
 
-            div.className =
-                "task "+
-                (
-                    checked
-                    ? "completed"
-                    : ""
-                );
+                div.className =
+                    "task " +
+                    (
+                        checked
+                        ?
+                        "completed"
+                        :
+                        ""
+                    );
 
 
-            div.innerHTML = `
+                div.innerHTML = `
 
-                <input
-                    class="task-check"
-                    type="checkbox"
-                    ${checked ? "checked" : ""}
-                    onchange="
-                        toggleTask('${id}')
-                    "
-                >
+                    <input
+                        class="task-check"
+                        type="checkbox"
+                        ${
+                            checked
+                            ?
+                            "checked"
+                            :
+                            ""
+                        }
+                        onchange="toggleTask('${id}')"
+                    >
 
-                <div class="task-info">
+                    <div class="task-info">
 
-                    <div class="task-title">
-                        ${escapeHTML(
-                            task.title ||
-                            "Untitled"
-                        )}
-                    </div>
+                        <div class="task-title">
+                            ${escapeHTML(
+                                task.title ||
+                                "Untitled"
+                            )}
+                        </div>
 
-                    <div class="task-due">
+                        <div class="task-due">
+
+                            ${
+                                task.due
+                                ?
+                                "Due: " +
+                                formatDate(
+                                    task.due
+                                )
+                                :
+                                "No due date"
+                            }
+
+                        </div>
 
                         ${
-                            task.due
+                            task.description
                             ?
-                            "Due: "+
-                            formatDate(
-                                task.due
-                            )
+                            `
+                            <div class="task-description">
+                                ${escapeHTML(
+                                    task.description
+                                )}
+                            </div>
+                            `
                             :
-                            "No due date"
+                            ""
+                        }
+
+                        <div class="personal-check-note">
+                            ☑️ Your checkbox is private to your device/account.
+                        </div>
+
+                        ${
+                            admin
+                            ?
+                            `
+                            <div class="card-buttons">
+
+                                <button
+                                    class="small-btn"
+                                    onclick="editTask('${id}')"
+                                >
+                                    ✏️ Edit
+                                </button>
+
+                                <button
+                                    class="small-btn delete"
+                                    onclick="deleteTask('${id}')"
+                                >
+                                    🗑️ Delete
+                                </button>
+
+                            </div>
+                            `
+                            :
+                            ""
                         }
 
                     </div>
 
-                    ${
-                        task.description
-                        ?
-                        `
-                        <div
-                            class="task-description"
-                        >
-                            ${escapeHTML(
-                                task.description
-                            )}
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-                    ${
-                        admin
-                        ?
-                        `
-                        <div class="card-buttons">
-
-                            <button
-                                class="small-btn"
-                                onclick="
-                                    editTask('${id}')
-                                "
-                            >
-                                ✏️ Edit
-                            </button>
-
-                            <button
-                                class="small-btn delete"
-                                onclick="
-                                    deleteTask('${id}')
-                                "
-                            >
-                                🗑️ Delete
-                            </button>
-
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-                </div>
-
-            `;
+                `;
 
 
-            container.appendChild(div);
+                container.appendChild(
+                    div
+                );
 
-        }
-    );
+            }
+        );
 
 }
 
 
-/* ============================================================
-   ADD TASK
-============================================================ */
-
-window.openTaskModal = function(){
+window.openTaskModal =
+function(){
 
     if(!admin){
 
@@ -2437,87 +3442,81 @@ window.openTaskModal = function(){
     }
 
 
-    editingTaskId = null;
+    editingTaskId =
+        null;
 
 
-    document
-        .getElementById(
-            "taskModalTitle"
-        )
-        .textContent =
+    document.getElementById(
+        "taskModalTitle"
+    ).textContent =
         "Add Task";
 
 
-    document
-        .getElementById(
-            "taskTitle"
-        )
-        .value = "";
+    document.getElementById(
+        "taskTitle"
+    ).value = "";
 
 
-    document
-        .getElementById(
-            "taskDue"
-        )
-        .value = "";
+    document.getElementById(
+        "taskDue"
+    ).value = "";
 
 
-    document
-        .getElementById(
-            "taskDescription"
-        )
-        .value = "";
+    document.getElementById(
+        "taskDescription"
+    ).value = "";
 
 
-    document
-        .getElementById(
-            "taskModal"
-        )
-        .classList.add("show");
+    document.getElementById(
+        "taskModal"
+    ).classList.add(
+        "show"
+    );
 
 };
 
 
-window.closeTaskModal = function(){
+window.closeTaskModal =
+function(){
 
-    document
-        .getElementById(
-            "taskModal"
-        )
-        .classList.remove("show");
+    document.getElementById(
+        "taskModal"
+    ).classList.remove(
+        "show"
+    );
 
 };
 
 
-window.saveTask = async function(){
+window.saveTask =
+async function(){
 
-    if(!admin) return;
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+    }
 
 
     const title =
-        document
-        .getElementById(
+        document.getElementById(
             "taskTitle"
-        )
-        .value
-        .trim();
+        ).value.trim();
 
 
     const due =
-        document
-        .getElementById(
+        document.getElementById(
             "taskDue"
-        )
-        .value;
+        ).value;
 
 
     const description =
-        document
-        .getElementById(
+        document.getElementById(
             "taskDescription"
-        )
-        .value
-        .trim();
+        ).value.trim();
 
 
     if(!title){
@@ -2527,7 +3526,6 @@ window.saveTask = async function(){
         );
 
         return;
-
     }
 
 
@@ -2536,14 +3534,17 @@ window.saveTask = async function(){
         if(editingTaskId){
 
             await update(
-                ref(
+                dbRef(
                     db,
-                    "tasks/"+editingTaskId
+                    "tasks/" +
+                    editingTaskId
                 ),
                 {
                     title,
                     due,
-                    description
+                    description,
+                    updatedAt:
+                        Date.now()
                 }
             );
 
@@ -2552,13 +3553,13 @@ window.saveTask = async function(){
             const newTask =
                 push(tasksRef);
 
+
             await set(
                 newTask,
                 {
                     title,
                     due,
                     description,
-                    completedBy:{},
                     createdAt:
                         Date.now()
                 }
@@ -2582,110 +3583,88 @@ window.saveTask = async function(){
 };
 
 
-/* ============================================================
-   EDIT TASK
-============================================================ */
+window.editTask =
+function(id){
 
-window.editTask = function(id){
-
-    if(!admin) return;
-
-
-    const task =
-        tasks[id];
-
-    if(!task) return;
-
-
-    editingTaskId = id;
-
-
-    document
-        .getElementById(
-            "taskModalTitle"
-        )
-        .textContent =
-        "Edit Task";
-
-
-    document
-        .getElementById(
-            "taskTitle"
-        )
-        .value =
-        task.title || "";
-
-
-    document
-        .getElementById(
-            "taskDue"
-        )
-        .value =
-        task.due || "";
-
-
-    document
-        .getElementById(
-            "taskDescription"
-        )
-        .value =
-        task.description || "";
-
-
-    document
-        .getElementById(
-            "taskModal"
-        )
-        .classList.add("show");
-
-};
-
-
-/* ============================================================
-   INDIVIDUAL TASK CHECKBOX
-============================================================ */
-
-window.toggleTask = async function(id){
-
-    if(!username){
+    if(!admin){
 
         alert(
-            "Please enter your name first."
+            "Admin access required."
         );
 
         return;
-
     }
 
 
     const task =
         tasks[id];
 
-    if(!task) return;
+
+    if(!task){
+
+        return;
+
+    }
 
 
-    const uid =
-        safeUserId(username);
+    editingTaskId =
+        id;
 
 
-    const completedBy =
-        {
-            ...(task.completedBy || {})
-        };
+    document.getElementById(
+        "taskModalTitle"
+    ).textContent =
+        "Edit Task";
 
 
-    completedBy[uid] =
-        completedBy[uid] !== true;
+    document.getElementById(
+        "taskTitle"
+    ).value =
+        task.title || "";
 
 
-    await update(
-        ref(
-            db,
-            "tasks/"+id
-        ),
-        {
-            completedBy
-        }
+    document.getElementById(
+        "taskDue"
+    ).value =
+        task.due || "";
+
+
+    document.getElementById(
+        "taskDescription"
+    ).value =
+        task.description || "";
+
+
+    document.getElementById(
+        "taskModal"
+    ).classList.add(
+        "show"
+    );
+
+};
+
+
+/* ============================================================
+   PERSONAL TASK CHECKBOX
+============================================================ */
+
+window.toggleTask =
+function(id){
+
+    const current =
+        getTaskChecked(id);
+
+
+    setTaskChecked(
+        id,
+        !current
+    );
+
+
+    renderTasks(
+        document.getElementById(
+            "searchInput"
+        ).value.trim()
     );
 
 };
@@ -2695,24 +3674,38 @@ window.toggleTask = async function(id){
    DELETE TASK
 ============================================================ */
 
-window.deleteTask = async function(id){
+window.deleteTask =
+async function(id){
 
-    if(!admin) return;
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+
+    }
 
 
     if(
         !confirm(
-            "Delete this task?"
+            "Delete this task for everyone?"
         )
-    ) return;
+    ){
+
+        return;
+
+    }
 
 
     try{
 
         await remove(
-            ref(
+            dbRef(
                 db,
-                "tasks/"+id
+                "tasks/" +
+                id
             )
         );
 
@@ -2744,12 +3737,19 @@ function renderFiles(){
 
 
     const entries =
-        Object.entries(files)
-        .sort(
-            (a,b) =>
-                (a[1].order ?? 0) -
-                (b[1].order ?? 0)
+        Object.entries(
+            files
         );
+
+
+    document.getElementById(
+        "fileCount"
+    ).textContent =
+        `${entries.length} file${
+            entries.length === 1
+            ? ""
+            : "s"
+        }`;
 
 
     if(!entries.length){
@@ -2763,7 +3763,7 @@ function renderFiles(){
                 ${
                     admin
                     ?
-                    "<br><br>Add a PDF or PPT link."
+                    "<br><br>Click + File to upload a PDF or PowerPoint."
                     :
                     ""
                 }
@@ -2777,177 +3777,137 @@ function renderFiles(){
     }
 
 
-    entries.forEach(
-        ([id,file]) => {
-
-            const extension =
-                (
-                    file.url || ""
+    entries
+        .sort(
+            (a,b) =>
+                Number(
+                    b[1].createdAt || 0
+                ) -
+                Number(
+                    a[1].createdAt || 0
                 )
-                .split("?")[0]
-                .split(".")
-                .pop()
-                .toLowerCase();
+        )
+        .forEach(
+            ([id,file]) => {
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+                div.className =
+                    "file-card";
 
 
-            const icon =
-                extension === "pdf"
-                ?
-                "📕"
-                :
-                (
-                    extension === "ppt" ||
-                    extension === "pptx"
+                const extension =
+                    getFileExtension(
+                        file.name || ""
+                    );
+
+
+                const icon =
+                    extension === "pdf"
                     ?
-                    "📊"
+                    "📕"
                     :
-                    "📄"
-                );
+                    "📊";
 
 
-            const div =
-                document.createElement(
-                    "div"
-                );
+                div.innerHTML = `
 
+                    <div class="file-icon">
+                        ${icon}
+                    </div>
 
-            div.className =
-                "file-card";
+                    <div class="file-name">
+                        ${escapeHTML(
+                            file.title ||
+                            file.name ||
+                            "Class File"
+                        )}
+                    </div>
 
+                    <div class="file-meta">
 
-            div.innerHTML = `
+                        ${escapeHTML(
+                            file.name || ""
+                        )}
 
-                <div class="file-icon">
-                    ${icon}
-                </div>
+                        <br>
 
-                <div class="file-name">
-                    ${escapeHTML(
-                        file.title ||
-                        "Class File"
-                    )}
-                </div>
-
-                <div class="file-info">
-                    Added by
-                    ${escapeHTML(
-                        file.author ||
-                        "Admin"
-                    )}
-                </div>
-
-                <div class="card-buttons">
-
-                    <button
-                        class="small-btn"
-                        onclick="
-                            window.open(
-                                '${escapeAttribute(
-                                    file.url
-                                )}',
-                                '_blank'
+                        ${
+                            file.author
+                            ?
+                            "Added by " +
+                            escapeHTML(
+                                file.author
                             )
-                        "
-                    >
-                        👁️ Open
-                    </button>
+                            :
+                            ""
+                        }
 
-                    ${
-                        admin
-                        ?
-                        `
+                    </div>
+
+                    <div class="file-buttons">
+
                         <button
-                            class="small-btn delete"
-                            onclick="
-                                deleteFile('${id}')
-                            "
+                            class="small-btn"
+                            onclick="openFile('${id}')"
                         >
-                            🗑️ Delete
+                            👁️ Open
                         </button>
-                        `
-                        :
-                        ""
-                    }
 
-                </div>
+                        ${
+                            admin
+                            ?
+                            `
+                            <button
+                                class="small-btn delete"
+                                onclick="deleteFile('${id}')"
+                            >
+                                🗑️ Delete
+                            </button>
+                            `
+                            :
+                            ""
+                        }
 
-            `;
+                    </div>
+
+                `;
 
 
-            container.appendChild(div);
+                container.appendChild(
+                    div
+                );
 
-        }
-    );
+            }
+        );
 
 }
 
 
-window.openFileModal = function(){
+function getFileExtension(name){
 
-    if(!admin) return;
+    return name
+        .split(".")
+        .pop()
+        .toLowerCase();
 
-
-    document
-        .getElementById(
-            "fileTitle"
-        )
-        .value = "";
+}
 
 
-    document
-        .getElementById(
-            "fileUrl"
-        )
-        .value = "";
+window.openFile =
+function(id){
+
+    const file =
+        files[id];
 
 
-    document
-        .getElementById(
-            "fileModal"
-        )
-        .classList.add("show");
-
-};
-
-
-window.closeFileModal = function(){
-
-    document
-        .getElementById(
-            "fileModal"
-        )
-        .classList.remove("show");
-
-};
-
-
-window.saveFile = async function(){
-
-    if(!admin) return;
-
-
-    const title =
-        document
-        .getElementById(
-            "fileTitle"
-        )
-        .value
-        .trim();
-
-
-    const url =
-        document
-        .getElementById(
-            "fileUrl"
-        )
-        .value
-        .trim();
-
-
-    if(!title || !url){
+    if(!file || !file.url){
 
         alert(
-            "Enter both a file name and link."
+            "File is not available."
         );
 
         return;
@@ -2955,93 +3915,355 @@ window.saveFile = async function(){
     }
 
 
-    const newFile =
-        push(filesRef);
-
-
-    await set(
-        newFile,
-        {
-
-            title,
-
-            url,
-
-            author:
-                username || "Admin",
-
-            createdAt:
-                Date.now(),
-
-            order:
-                Object.keys(files)
-                    .length
-
-        }
+    window.open(
+        file.url,
+        "_blank"
     );
-
-
-    closeFileModal();
 
 };
 
 
-window.deleteFile = async function(id){
+window.openFileModal =
+function(){
 
-    if(!admin) return;
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+    }
+
+
+    document.getElementById(
+        "fileTitle"
+    ).value = "";
+
+
+    document.getElementById(
+        "fileInput"
+    ).value = "";
+
+
+    document.getElementById(
+        "fileModal"
+    ).classList.add(
+        "show"
+    );
+
+};
+
+
+window.closeFileModal =
+function(){
+
+    document.getElementById(
+        "fileModal"
+    ).classList.remove(
+        "show"
+    );
+
+};
+
+
+window.saveFile =
+async function(){
+
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+    }
+
+
+    const title =
+        document.getElementById(
+            "fileTitle"
+        ).value.trim();
+
+
+    const input =
+        document.getElementById(
+            "fileInput"
+        );
+
+
+    const file =
+        input.files[0];
+
+
+    if(!file){
+
+        alert(
+            "Please select a PDF or PowerPoint file."
+        );
+
+        return;
+
+    }
+
+
+    const extension =
+        getFileExtension(
+            file.name
+        );
 
 
     if(
-        !confirm(
-            "Delete this file?"
+        ![
+            "pdf",
+            "ppt",
+            "pptx"
+        ].includes(
+            extension
         )
-    ) return;
+    ){
+
+        alert(
+            "Only PDF, PPT and PPTX files are allowed."
+        );
+
+        return;
+
+    }
 
 
-    await remove(
-        ref(
-            db,
-            "files/"+id
-        )
-    );
+    /*
+       Basic size protection.
+       Firebase Storage is much better than
+       storing files directly inside Realtime Database.
+    */
+
+    const maxSize =
+        50 * 1024 * 1024;
+
+
+    if(file.size > maxSize){
+
+        alert(
+            "For this version, files must be 50 MB or smaller."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const safeName =
+            file.name.replace(
+                /[^a-zA-Z0-9._-]/g,
+                "_"
+            );
+
+
+        const path =
+            "class-files/" +
+            Date.now() +
+            "_" +
+            safeName;
+
+
+        const fileStorageRef =
+            storageRef(
+                storage,
+                path
+            );
+
+
+        alert(
+            "Uploading file..."
+        );
+
+
+        await uploadBytes(
+            fileStorageRef,
+            file
+        );
+
+
+        const url =
+            await getDownloadURL(
+                fileStorageRef
+            );
+
+
+        const newFile =
+            push(filesRef);
+
+
+        await set(
+            newFile,
+            {
+
+                title:
+                    title ||
+                    file.name,
+
+                name:
+                    file.name,
+
+                url,
+
+                storagePath:
+                    path,
+
+                author:
+                    currentUserName ||
+                    "Admin",
+
+                size:
+                    file.size,
+
+                createdAt:
+                    Date.now()
+
+            }
+        );
+
+
+        closeFileModal();
+
+
+        alert(
+            "File uploaded successfully 📚"
+        );
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+        alert(
+            "Could not upload the file.\n\nCheck that Firebase Storage is enabled."
+        );
+
+    }
 
 };
 
 
 /* ============================================================
-   NORMAL SHARED CHAT
+   DELETE FILE
 ============================================================ */
 
-onValue(
-    chatRef,
-    snapshot => {
+window.deleteFile =
+async function(id){
 
-        const messages =
-            snapshot.val() || {};
+    if(!admin){
 
-        renderNormalChat(messages);
+        alert(
+            "Admin access required."
+        );
+
+        return;
+    }
+
+
+    const file =
+        files[id];
+
+
+    if(
+        !confirm(
+            "Delete this file from the class files?"
+        )
+    ){
+
+        return;
 
     }
-);
 
 
-function renderNormalChat(messages){
+    try{
+
+        await remove(
+            dbRef(
+                db,
+                "files/" +
+                id
+            )
+        );
+
+        /*
+           The database record is removed.
+           Firebase Storage cleanup is intentionally
+           not attempted here because doing it securely
+           requires server-side Storage permissions.
+        */
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+        alert(
+            "Could not delete file."
+        );
+
+    }
+
+};
+
+
+/* ============================================================
+   CLASS CHAT
+============================================================ */
+
+function renderChat(){
 
     const container =
         document.getElementById(
-            "normalChatMessages"
+            "chatMessages"
         );
 
     container.innerHTML = "";
 
 
-    Object.entries(messages)
-    .sort(
-        (a,b) =>
-            (a[1].createdAt || 0) -
-            (b[1].createdAt || 0)
-    )
-    .forEach(
+    const entries =
+        Object.entries(
+            chats
+        )
+        .sort(
+            (a,b) =>
+                Number(
+                    a[1].createdAt || 0
+                ) -
+                Number(
+                    b[1].createdAt || 0
+                )
+        );
+
+
+    if(!entries.length){
+
+        container.innerHTML = `
+
+            <div class="message ai">
+
+                <div class="message-name">
+                    BSN 2A
+                </div>
+
+                Welcome to the class chat! 👋
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    entries.forEach(
         ([id,message]) => {
 
             const div =
@@ -3050,38 +4272,79 @@ function renderNormalChat(messages){
                 );
 
 
-            const mine =
-                message.author === username;
-
-
             div.className =
-                "message "+
+                "message " +
                 (
-                    mine
+                    message.uid ===
+                    currentUserId
                     ?
                     "user"
                     :
-                    "other"
+                    "ai"
                 );
 
 
-            div.innerHTML = `
+            const name =
+                document.createElement(
+                    "div"
+                );
 
-                <div class="message-name">
-                    ${escapeHTML(
-                        message.author ||
-                        "Unknown"
-                    )}
-                </div>
+            name.className =
+                "message-name";
 
-                ${escapeHTML(
-                    message.text || ""
-                )}
-
-            `;
+            name.textContent =
+                message.name ||
+                "Student";
 
 
-            container.appendChild(div);
+            div.appendChild(
+                name
+            );
+
+
+            if(message.text){
+
+                const text =
+                    document.createElement(
+                        "div"
+                    );
+
+                text.textContent =
+                    message.text;
+
+                div.appendChild(
+                    text
+                );
+
+            }
+
+
+            if(message.imageUrl){
+
+                const img =
+                    document.createElement(
+                        "img"
+                    );
+
+                img.className =
+                    "chat-image";
+
+                img.src =
+                    message.imageUrl;
+
+                img.alt =
+                    "Chat photo";
+
+                div.appendChild(
+                    img
+                );
+
+            }
+
+
+            container.appendChild(
+                div
+            );
 
         }
     );
@@ -3093,11 +4356,12 @@ function renderNormalChat(messages){
 }
 
 
-window.sendNormalChat = async function(){
+window.sendChat =
+async function(){
 
     const input =
         document.getElementById(
-            "normalChatInput"
+            "chatInput"
         );
 
 
@@ -3105,13 +4369,89 @@ window.sendNormalChat = async function(){
         input.value.trim();
 
 
-    if(!text) return;
+    if(!text){
+
+        return;
+
+    }
 
 
-    if(!username){
+    try{
+
+        const newMessage =
+            push(chatRef);
+
+
+        await set(
+            newMessage,
+            {
+
+                uid:
+                    currentUserId ||
+                    "unknown",
+
+                name:
+                    currentUserName ||
+                    "Student",
+
+                text,
+
+                createdAt:
+                    Date.now()
+
+            }
+        );
+
+
+        input.value = "";
+
+    }catch(error){
+
+        console.error(
+            error
+        );
 
         alert(
-            "Please enter your name first."
+            "Could not send message."
+        );
+
+    }
+
+};
+
+
+/* ============================================================
+   CHAT PHOTOS
+============================================================ */
+
+window.sendChatPhoto =
+async function(){
+
+    const input =
+        document.getElementById(
+            "chatPhoto"
+        );
+
+
+    const file =
+        input.files[0];
+
+
+    if(!file){
+
+        return;
+
+    }
+
+
+    if(
+        !file.type.startsWith(
+            "image/"
+        )
+    ){
+
+        alert(
+            "Please choose an image."
         );
 
         return;
@@ -3119,26 +4459,437 @@ window.sendNormalChat = async function(){
     }
 
 
-    const newMessage =
-        push(chatRef);
+    if(
+        file.size >
+        10 * 1024 * 1024
+    ){
+
+        alert(
+            "Please keep chat photos under 10 MB."
+        );
+
+        return;
+
+    }
 
 
-    await set(
-        newMessage,
-        {
+    try{
 
-            author:username,
+        const safeName =
+            file.name.replace(
+                /[^a-zA-Z0-9._-]/g,
+                "_"
+            );
 
-            text,
 
-            createdAt:
-                Date.now()
+        const path =
+            "chat-images/" +
+            Date.now() +
+            "_" +
+            safeName;
+
+
+        const imageRef =
+            storageRef(
+                storage,
+                path
+            );
+
+
+        await uploadBytes(
+            imageRef,
+            file
+        );
+
+
+        const imageUrl =
+            await getDownloadURL(
+                imageRef
+            );
+
+
+        const newMessage =
+            push(chatRef);
+
+
+        await set(
+            newMessage,
+            {
+
+                uid:
+                    currentUserId ||
+                    "unknown",
+
+                name:
+                    currentUserName ||
+                    "Student",
+
+                imageUrl,
+
+                createdAt:
+                    Date.now()
+
+            }
+        );
+
+
+        input.value = "";
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+        alert(
+            "Could not upload photo."
+        );
+
+    }
+
+};
+
+
+/* ============================================================
+   ADMIN CHAT
+============================================================ */
+
+function renderAdminChat(){
+
+    const container =
+        document.getElementById(
+            "adminChatMessages"
+        );
+
+
+    container.innerHTML = "";
+
+
+    if(!admin){
+
+        return;
+
+    }
+
+
+    const entries =
+        Object.entries(
+            adminChats
+        )
+        .sort(
+            (a,b) =>
+                Number(
+                    a[1].createdAt || 0
+                ) -
+                Number(
+                    b[1].createdAt || 0
+                )
+        );
+
+
+    if(!entries.length){
+
+        container.innerHTML = `
+
+            <div class="message admin">
+
+                <div class="message-name">
+                    Administrator Chat
+                </div>
+
+                No admin messages yet.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    entries.forEach(
+        ([id,message]) => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "message admin";
+
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+            name.className =
+                "message-name";
+
+            name.textContent =
+                message.name ||
+                "Administrator";
+
+
+            div.appendChild(
+                name
+            );
+
+
+            if(message.text){
+
+                const text =
+                    document.createElement(
+                        "div"
+                    );
+
+                text.textContent =
+                    message.text;
+
+                div.appendChild(
+                    text
+                );
+
+            }
+
+
+            if(message.imageUrl){
+
+                const img =
+                    document.createElement(
+                        "img"
+                    );
+
+                img.className =
+                    "chat-image";
+
+                img.src =
+                    message.imageUrl;
+
+                img.alt =
+                    "Admin chat photo";
+
+                div.appendChild(
+                    img
+                );
+
+            }
+
+
+            container.appendChild(
+                div
+            );
 
         }
     );
 
 
-    input.value = "";
+    container.scrollTop =
+        container.scrollHeight;
+
+}
+
+
+window.sendAdminChat =
+async function(){
+
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+    }
+
+
+    const input =
+        document.getElementById(
+            "adminChatInput"
+        );
+
+
+    const text =
+        input.value.trim();
+
+
+    if(!text){
+
+        return;
+
+    }
+
+
+    try{
+
+        const message =
+            push(adminChatRef);
+
+
+        await set(
+            message,
+            {
+
+                uid:
+                    currentUserId,
+
+                name:
+                    currentUserName ||
+                    "Administrator",
+
+                text,
+
+                createdAt:
+                    Date.now()
+
+            }
+        );
+
+
+        input.value = "";
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+        alert(
+            "Could not send admin message."
+        );
+
+    }
+
+};
+
+
+window.sendAdminChatPhoto =
+async function(){
+
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+    }
+
+
+    const input =
+        document.getElementById(
+            "adminChatPhoto"
+        );
+
+
+    const file =
+        input.files[0];
+
+
+    if(!file){
+
+        return;
+
+    }
+
+
+    if(!file.type.startsWith("image/")){
+
+        alert(
+            "Please choose an image."
+        );
+
+        return;
+
+    }
+
+
+    if(file.size > 10 * 1024 * 1024){
+
+        alert(
+            "Please keep photos under 10 MB."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const safeName =
+            file.name.replace(
+                /[^a-zA-Z0-9._-]/g,
+                "_"
+            );
+
+
+        const path =
+            "admin-chat-images/" +
+            Date.now() +
+            "_" +
+            safeName;
+
+
+        const imageRef =
+            storageRef(
+                storage,
+                path
+            );
+
+
+        await uploadBytes(
+            imageRef,
+            file
+        );
+
+
+        const imageUrl =
+            await getDownloadURL(
+                imageRef
+            );
+
+
+        const message =
+            push(adminChatRef);
+
+
+        await set(
+            message,
+            {
+
+                uid:
+                    currentUserId,
+
+                name:
+                    currentUserName ||
+                    "Administrator",
+
+                imageUrl,
+
+                createdAt:
+                    Date.now()
+
+            }
+        );
+
+
+        input.value = "";
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+        alert(
+            "Could not upload admin photo."
+        );
+
+    }
 
 };
 
@@ -3147,7 +4898,8 @@ window.sendNormalChat = async function(){
    AI ASSISTANT
 ============================================================ */
 
-window.askAssistant = function(){
+window.askAssistant =
+function(){
 
     const input =
         document.getElementById(
@@ -3159,7 +4911,11 @@ window.askAssistant = function(){
         input.value.trim();
 
 
-    if(!question) return;
+    if(!question){
+
+        return;
+
+    }
 
 
     addAIMessage(
@@ -3171,18 +4927,22 @@ window.askAssistant = function(){
     input.value = "";
 
 
+    const answer =
+        generateAssistantAnswer(
+            question
+        );
+
+
     setTimeout(
         () => {
 
             addAIMessage(
-                generateAssistantAnswer(
-                    question
-                ),
+                answer,
                 "ai"
             );
 
         },
-        200
+        250
     );
 
 };
@@ -3206,7 +4966,8 @@ function addAIMessage(
 
 
     message.className =
-        "message "+type;
+        "message " +
+        type;
 
 
     message.textContent =
@@ -3232,10 +4993,9 @@ function generateAssistantAnswer(
         question.toLowerCase();
 
 
-    /* TOMORROW */
-
     if(
-        q.includes("tomorrow")
+        q.includes("tomorrow") ||
+        q.includes("due tomorrow")
     ){
 
         const tomorrow =
@@ -3243,18 +5003,20 @@ function generateAssistantAnswer(
 
 
         tomorrow.setDate(
-            tomorrow.getDate()+1
+            tomorrow.getDate() + 1
         );
 
 
         const date =
             tomorrow
-            .toISOString()
-            .split("T")[0];
+                .toISOString()
+                .split("T")[0];
 
 
         const due =
-            Object.values(tasks)
+            Object.values(
+                tasks
+            )
             .filter(
                 task =>
                     task.due === date
@@ -3271,10 +5033,10 @@ function generateAssistantAnswer(
 
 
         return (
-            "📚 Due tomorrow:\n\n"+
+            "📚 Due tomorrow:\n\n" +
             due.map(
                 task =>
-                    "• "+
+                    "• " +
                     task.title
             ).join("\n")
         );
@@ -3282,16 +5044,24 @@ function generateAssistantAnswer(
     }
 
 
-    /* TASKS */
-
     if(
         q.includes("task") ||
         q.includes("assignment") ||
+        q.includes("deadline") ||
         q.includes("due")
     ){
 
         const list =
-            Object.values(tasks);
+            Object.values(
+                tasks
+            )
+            .sort(
+                (a,b) =>
+                    (a.due || "")
+                    .localeCompare(
+                        b.due || ""
+                    )
+            );
 
 
         if(!list.length){
@@ -3304,15 +5074,15 @@ function generateAssistantAnswer(
 
 
         return (
-            "📋 Tasks:\n\n"+
+            "📋 Class tasks:\n\n" +
             list.map(
                 task =>
-                    "• "+
-                    task.title+
+                    "• " +
+                    task.title +
                     (
                         task.due
                         ?
-                        " — "+
+                        " — " +
                         formatDate(
                             task.due
                         )
@@ -3325,16 +5095,81 @@ function generateAssistantAnswer(
     }
 
 
-    /* UPCOMING */
+    const matchingNotes =
+        Object.values(
+            notes
+        )
+        .filter(
+            note => {
+
+                const combined =
+                    (
+                        note.title ||
+                        ""
+                    ) +
+                    " " +
+                    (
+                        note.text ||
+                        ""
+                    );
+
+
+                return q
+                    .split(" ")
+                    .some(
+                        word =>
+                            word.length > 2 &&
+                            combined
+                                .toLowerCase()
+                                .includes(
+                                    word
+                                )
+                    );
+
+            }
+        );
+
+
+    if(
+        q.includes("note") ||
+        q.includes("notes") ||
+        matchingNotes.length
+    ){
+
+        if(!matchingNotes.length){
+
+            return (
+                "🔎 I couldn't find a matching note."
+            );
+
+        }
+
+
+        return (
+            "📝 I found these notes:\n\n" +
+            matchingNotes
+                .slice(0,5)
+                .map(
+                    note =>
+                        "• " +
+                        note.title
+                )
+                .join("\n")
+        );
+
+    }
+
 
     if(
         q.includes("upcoming") ||
-        q.includes("coming") ||
-        q.includes("next")
+        q.includes("next") ||
+        q.includes("coming")
     ){
 
         const upcoming =
-            Object.values(tasks)
+            Object.values(
+                tasks
+            )
             .filter(
                 task =>
                     task.due
@@ -3351,19 +5186,19 @@ function generateAssistantAnswer(
         if(!upcoming.length){
 
             return (
-                "You don't have upcoming dated tasks."
+                "You don't have any upcoming dated tasks."
             );
 
         }
 
 
         return (
-            "📅 Upcoming:\n\n"+
+            "📅 Upcoming:\n\n" +
             upcoming.map(
                 task =>
-                    "• "+
-                    task.title+
-                    " — "+
+                    "• " +
+                    task.title +
+                    " — " +
                     formatDate(
                         task.due
                     )
@@ -3373,80 +5208,44 @@ function generateAssistantAnswer(
     }
 
 
-    /* NOTES */
-
-    const words =
-        q.split(/\s+/)
-        .filter(
-            word =>
-                word.length > 2
-        );
-
-
-    const matching =
-        Object.values(notes)
-        .filter(
-            note => {
-
-                const combined =
-                    (
-                        note.title || ""
-                    )+
-                    " "+
-                    (
-                        note.text || ""
-                    );
-
-                return words.some(
-                    word =>
-                        combined
-                        .toLowerCase()
-                        .includes(word)
-                );
-
-            }
-        );
-
-
     if(
-        q.includes("note") ||
-        q.includes("notes") ||
-        matching.length
+        q.includes("how many") &&
+        q.includes("note")
     ){
 
-        if(!matching.length){
-
-            return (
-                "🔎 I couldn't find a matching note."
-            );
-
-        }
-
-
         return (
-            "📝 Matching notes:\n\n"+
-            matching
-            .slice(0,5)
-            .map(
-                note =>
-                    "• "+
-                    note.title
-            )
-            .join("\n")
+            "📝 There are " +
+            Object.keys(notes).length +
+            " notes."
         );
 
     }
 
 
-    return `🤖 I can help with your BSN 2A information.
+    if(
+        q.includes("how many") &&
+        q.includes("task")
+    ){
 
-Try:
+        return (
+            "✅ There are " +
+            Object.keys(tasks).length +
+            " tasks."
+        );
+
+    }
+
+
+    return `🤖 I can help you check BSN 2A information.
+
+Try asking:
 
 • What is due tomorrow?
 • What tasks do I have?
-• What's upcoming?
+• What is upcoming?
 • Show my notes.
-• Show notes about NCM 105.`;
+• Show notes about NCM 105.
+• How many notes are there?`;
 
 }
 
@@ -3455,22 +5254,355 @@ Try:
    SEARCH
 ============================================================ */
 
-window.searchEverything = function(){
+window.searchEverything =
+function(){
 
     const query =
-        document
-        .getElementById(
+        document.getElementById(
             "searchInput"
-        )
-        .value
-        .trim();
+        ).value.trim();
 
+
+    /*
+       Search ONLY notes and tasks.
+       Chat is intentionally not searched.
+    */
 
     renderNotes(query);
 
     renderTasks(query);
 
 };
+
+
+/* ============================================================
+   AUTO DELETE AFTER 30 DAYS
+============================================================ */
+
+const AUTO_DELETE_DAYS =
+    30;
+
+
+const AUTO_DELETE_MS =
+    AUTO_DELETE_DAYS *
+    24 *
+    60 *
+    60 *
+    1000;
+
+
+async function cleanupOldData(){
+
+    if(!admin){
+
+        return;
+
+    }
+
+
+    const cutoff =
+        Date.now() -
+        AUTO_DELETE_MS;
+
+
+    try{
+
+        /*
+           NOTES
+        */
+
+        for(
+            const [id,note]
+            of Object.entries(notes)
+        ){
+
+            if(
+                Number(
+                    note.createdAt || 0
+                ) < cutoff
+            ){
+
+                await remove(
+                    dbRef(
+                        db,
+                        "notes/" +
+                        id
+                    )
+                );
+
+            }
+
+        }
+
+
+        /*
+           TASKS
+        */
+
+        for(
+            const [id,task]
+            of Object.entries(tasks)
+        ){
+
+            if(
+                Number(
+                    task.createdAt || 0
+                ) < cutoff
+            ){
+
+                await remove(
+                    dbRef(
+                        db,
+                        "tasks/" +
+                        id
+                    )
+                );
+
+            }
+
+        }
+
+
+        /*
+           FILE DATABASE RECORDS
+        */
+
+        for(
+            const [id,file]
+            of Object.entries(files)
+        ){
+
+            if(
+                Number(
+                    file.createdAt || 0
+                ) < cutoff
+            ){
+
+                await remove(
+                    dbRef(
+                        db,
+                        "files/" +
+                        id
+                    )
+                );
+
+            }
+
+        }
+
+
+        /*
+           CLASS CHAT
+        */
+
+        for(
+            const [id,message]
+            of Object.entries(chats)
+        ){
+
+            if(
+                Number(
+                    message.createdAt || 0
+                ) < cutoff
+            ){
+
+                await remove(
+                    dbRef(
+                        db,
+                        "chat/" +
+                        id
+                    )
+                );
+
+            }
+
+        }
+
+
+        /*
+           ADMIN CHAT
+        */
+
+        for(
+            const [id,message]
+            of Object.entries(adminChats)
+        ){
+
+            if(
+                Number(
+                    message.createdAt || 0
+                ) < cutoff
+            ){
+
+                await remove(
+                    dbRef(
+                        db,
+                        "adminChat/" +
+                        id
+                    )
+                );
+
+            }
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Automatic cleanup failed:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   OFFLINE PENDING ACTIONS
+============================================================ */
+
+function getPendingChanges(){
+
+    try{
+
+        return JSON.parse(
+            localStorage.getItem(
+                "bsnPendingChanges"
+            ) || "[]"
+        );
+
+    }catch{
+
+        return [];
+
+    }
+
+}
+
+
+function savePendingChanges(
+    changes
+){
+
+    localStorage.setItem(
+        "bsnPendingChanges",
+        JSON.stringify(
+            changes
+        )
+    );
+
+}
+
+
+async function queueChange(
+    action
+){
+
+    const changes =
+        getPendingChanges();
+
+
+    changes.push(
+        action
+    );
+
+
+    savePendingChanges(
+        changes
+    );
+
+}
+
+
+async function syncPendingChanges(){
+
+    if(!navigator.onLine){
+
+        return;
+
+    }
+
+
+    const changes =
+        getPendingChanges();
+
+
+    if(!changes.length){
+
+        return;
+
+    }
+
+
+    const remaining = [];
+
+
+    for(
+        const action
+        of changes
+    ){
+
+        try{
+
+            if(action.type === "set"){
+
+                await set(
+                    dbRef(
+                        db,
+                        action.path
+                    ),
+                    action.value
+                );
+
+            }
+
+
+            if(action.type === "update"){
+
+                await update(
+                    dbRef(
+                        db,
+                        action.path
+                    ),
+                    action.value
+                );
+
+            }
+
+
+            if(action.type === "remove"){
+
+                await remove(
+                    dbRef(
+                        db,
+                        action.path
+                    )
+                );
+
+            }
+
+        }catch(error){
+
+            console.error(
+                "Sync failed:",
+                error
+            );
+
+            remaining.push(
+                action
+            );
+
+        }
+
+    }
+
+
+    savePendingChanges(
+        remaining
+    );
+
+}
 
 
 /* ============================================================
@@ -3481,13 +5613,16 @@ function formatDate(
     dateString
 ){
 
-    if(!dateString)
+    if(!dateString){
+
         return "";
+
+    }
 
 
     const date =
         new Date(
-            dateString+
+            dateString +
             "T00:00:00"
         );
 
@@ -3504,43 +5639,33 @@ function formatDate(
 }
 
 
-function escapeHTML(value){
+function escapeHTML(
+    value
+){
 
-    return String(value)
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
-}
-
-
-function escapeAttribute(value){
-
-    return String(value)
-        .replace(/'/g,"%27")
-        .replace(/"/g,"%22");
+    return String(
+        value
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
@@ -3549,10 +5674,50 @@ function escapeAttribute(value){
    START
 ============================================================ */
 
+loadCachedData();
+
 loadUsername();
+
+restoreAdmin();
+
+updateConnectionUI();
+
+startAuthentication();
+
+
+/*
+   Run cleanup once after a short delay
+   if admin mode is already enabled.
+*/
+
+setTimeout(
+    () => {
+
+        if(admin){
+
+            cleanupOldData();
+
+        }
+
+    },
+    3000
+);
+
+
+/*
+   Try pending offline changes.
+*/
+
+if(navigator.onLine){
+
+    setTimeout(
+        syncPendingChanges,
+        2500
+    );
+
+}
 
 </script>
 
 </body>
 </html>
-```
