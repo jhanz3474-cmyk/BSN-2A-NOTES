@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#245c43">
-<meta name="description" content="BSN 2A shared notes, tasks, files and chat">
 <title>BSN 2A Notes</title>
 
 <style>
@@ -17,15 +16,31 @@
 :root{
     --green:#245c43;
     --green2:#3d7a5b;
-    --dark:#173f2d;
+    --darkgreen:#173f2d;
     --light-green:#e7f0e8;
     --cream:#f6f2e9;
-    --white:#fff;
+    --white:#ffffff;
     --text:#1e2b25;
     --muted:#718078;
     --danger:#c94b4b;
-    --blue:#4b70c9;
+    --border:#e3e0d8;
+    --card:#ffffff;
+    --input:#ffffff;
     --shadow:0 5px 20px rgba(30,50,40,.10);
+}
+
+body.dark{
+    --cream:#111715;
+    --white:#1a211e;
+    --text:#edf4ef;
+    --muted:#9baaa2;
+    --border:#303a35;
+    --card:#1b2420;
+    --input:#202a26;
+    --light-green:#263b31;
+    --shadow:0 5px 20px rgba(0,0,0,.35);
+    background:#111715;
+    color:#edf4ef;
 }
 
 body{
@@ -33,11 +48,10 @@ body{
     background:var(--cream);
     color:var(--text);
     min-height:100vh;
+    transition:.2s;
 }
 
-/* =========================
-   SIDEBAR
-========================= */
+/* SIDEBAR */
 
 .sidebar{
     position:fixed;
@@ -53,7 +67,7 @@ body{
 
 .logo{
     text-align:center;
-    margin-bottom:35px;
+    margin-bottom:30px;
 }
 
 .logo-symbol{
@@ -66,11 +80,10 @@ body{
     align-items:center;
     justify-content:center;
     text-align:center;
-    font-size:20px;
+    font-size:22px;
     line-height:1.05;
     font-weight:bold;
     background:rgba(255,255,255,.08);
-    letter-spacing:1px;
 }
 
 .logo h1{
@@ -108,6 +121,8 @@ body{
     background:rgba(255,255,255,.17);
 }
 
+/* ONLINE PEOPLE */
+
 .user-box{
     position:absolute;
     bottom:20px;
@@ -124,45 +139,36 @@ body{
     margin-top:4px;
 }
 
-.connection-status{
-    margin-top:7px;
-    font-size:11px;
-    opacity:.85;
-}
-
-.online-panel{
-    margin-top:10px;
-    max-height:145px;
-    overflow-y:auto;
-    padding-top:7px;
-    border-top:1px solid rgba(255,255,255,.15);
-}
-
 .online-title{
-    font-size:11px;
-    opacity:.75;
-    margin-bottom:5px;
+    margin-top:12px;
+    margin-bottom:7px;
+    font-weight:bold;
 }
 
-.online-person{
+.online-list{
+    max-height:150px;
+    overflow-y:auto;
+}
+
+.online-user{
     display:flex;
     align-items:center;
     gap:6px;
-    padding:3px 0;
-    font-size:12px;
+    margin:5px 0;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
 .online-dot{
     width:8px;
     height:8px;
     border-radius:50%;
-    background:#75e391;
-    flex:none;
+    background:#69d58b;
+    flex-shrink:0;
 }
 
-/* =========================
-   MAIN
-========================= */
+/* MAIN */
 
 .main{
     margin-left:240px;
@@ -179,13 +185,20 @@ body{
 }
 
 .search{
-    background:white;
+    background:var(--input);
+    color:var(--text);
     border-radius:14px;
     padding:13px 18px;
     width:min(600px,100%);
-    border:1px solid #e3e0d8;
+    border:1px solid var(--border);
     outline:none;
     font-size:15px;
+}
+
+.search::placeholder,
+input::placeholder,
+textarea::placeholder{
+    color:var(--muted);
 }
 
 .top-actions{
@@ -212,17 +225,26 @@ body{
     color:var(--green);
 }
 
+body.dark .btn.secondary{
+    background:#293731;
+    color:#cde4d4;
+}
+
 .btn.danger{
     background:var(--danger);
 }
 
-.btn.blue{
-    background:var(--blue);
+.theme-btn{
+    border:none;
+    background:var(--card);
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 13px;
+    cursor:pointer;
 }
 
-/* =========================
-   HERO
-========================= */
+/* HERO */
 
 .hero{
     background:linear-gradient(110deg,#e4efdc,#f4f2df);
@@ -232,10 +254,18 @@ body{
     box-shadow:var(--shadow);
 }
 
+body.dark .hero{
+    background:linear-gradient(110deg,#1d3027,#252c24);
+}
+
 .hero h2{
     font-family:Georgia,serif;
     font-size:clamp(30px,4vw,48px);
     color:#173f2d;
+}
+
+body.dark .hero h2{
+    color:#dceee2;
 }
 
 .hero p{
@@ -245,9 +275,11 @@ body{
     color:#526158;
 }
 
-/* =========================
-   SECTIONS
-========================= */
+body.dark .hero p{
+    color:#aab8b1;
+}
+
+/* SECTIONS */
 
 .section{
     display:none;
@@ -262,16 +294,14 @@ body{
     justify-content:space-between;
     align-items:center;
     margin:25px 0 15px;
-    gap:15px;
+    gap:10px;
 }
 
 .section-title h2{
     font-family:Georgia,serif;
 }
 
-/* =========================
-   CARDS / NOTES
-========================= */
+/* CARDS */
 
 .cards{
     display:grid;
@@ -280,14 +310,13 @@ body{
 }
 
 .card{
-    background:white;
+    background:var(--card);
     border-radius:17px;
     padding:22px;
     box-shadow:var(--shadow);
-    border:1px solid #e9e6df;
+    border:1px solid var(--border);
     transition:.2s;
     min-width:0;
-    overflow:hidden;
 }
 
 .card:hover{
@@ -299,24 +328,35 @@ body{
     font-size:22px;
     margin:0 0 10px 0;
     color:#173f2d;
-    width:100%;
-    display:block;
     overflow-wrap:anywhere;
     word-break:break-word;
 }
+
+body.dark .card h3{
+    color:#d8eee0;
+}
+
+/*
+ IMPORTANT:
+ The note title and text are separate normal block elements.
+ This prevents the text from appearing shifted to the right.
+*/
 
 .card-text{
     display:block;
     width:100%;
     margin:0;
     padding:0;
+    text-align:left;
     white-space:pre-wrap;
-    word-wrap:break-word;
-    overflow-wrap:anywhere;
     word-break:break-word;
+    overflow-wrap:anywhere;
     line-height:1.65;
     color:#526158;
-    text-align:left;
+}
+
+body.dark .card-text{
+    color:#b8c5be;
 }
 
 .card-date{
@@ -341,36 +381,80 @@ body{
     color:var(--green);
 }
 
+body.dark .small-btn{
+    background:#293731;
+    color:#cde4d4;
+}
+
 .small-btn.delete{
     background:#f9e1e1;
     color:var(--danger);
 }
 
-.small-btn.move{
-    background:#e8edf9;
-    color:#4b70c9;
+/* LINKS */
+
+.resource-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:20px;
+    margin-bottom:12px;
+    box-shadow:var(--shadow);
 }
 
-.drag-handle{
-    float:right;
-    cursor:grab;
-    color:#9aa49e;
-    font-size:18px;
+.resource-top{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
 }
 
-/* =========================
-   TASKS
-========================= */
+.resource-title{
+    font-family:Georgia,serif;
+    font-size:21px;
+    font-weight:bold;
+    overflow-wrap:anywhere;
+}
+
+.resource-type{
+    background:var(--light-green);
+    color:var(--green);
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    white-space:nowrap;
+    height:max-content;
+}
+
+.resource-url{
+    margin-top:9px;
+    color:var(--muted);
+    word-break:break-all;
+    font-size:13px;
+}
+
+.open-link{
+    display:inline-block;
+    margin-top:13px;
+    text-decoration:none;
+    background:var(--green);
+    color:white;
+    padding:9px 13px;
+    border-radius:9px;
+    font-size:13px;
+}
+
+/* TASKS */
 
 .task{
     display:flex;
     align-items:flex-start;
     gap:13px;
     padding:17px;
-    background:white;
+    background:var(--card);
     border-radius:13px;
     margin-bottom:10px;
     box-shadow:var(--shadow);
+    border:1px solid var(--border);
 }
 
 .task-check{
@@ -388,7 +472,6 @@ body{
 .task-title{
     font-weight:bold;
     overflow-wrap:anywhere;
-    word-break:break-word;
 }
 
 .task-due{
@@ -397,71 +480,30 @@ body{
     margin-top:5px;
 }
 
-.task-description{
-    margin-top:8px;
-    color:#65726b;
-    white-space:pre-wrap;
-    overflow-wrap:anywhere;
-    word-break:break-word;
-    line-height:1.5;
-}
-
 .completed .task-title{
     text-decoration:line-through;
     opacity:.55;
 }
 
-.personal-check-note{
-    color:#89938d;
+.task-description{
+    margin-top:8px;
+    color:#65726b;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+    line-height:1.5;
+}
+
+body.dark .task-description{
+    color:#aebbb4;
+}
+
+.my-check-label{
     font-size:11px;
+    color:var(--muted);
     margin-top:4px;
 }
 
-/* =========================
-   FILES
-========================= */
-
-.file-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:18px;
-}
-
-.file-card{
-    background:white;
-    border-radius:17px;
-    padding:20px;
-    box-shadow:var(--shadow);
-    border:1px solid #e9e6df;
-}
-
-.file-icon{
-    font-size:38px;
-    margin-bottom:10px;
-}
-
-.file-name{
-    font-weight:bold;
-    overflow-wrap:anywhere;
-    word-break:break-word;
-    margin-bottom:7px;
-}
-
-.file-meta{
-    font-size:12px;
-    color:var(--muted);
-    margin-bottom:14px;
-}
-
-.file-buttons{
-    display:flex;
-    flex-wrap:wrap;
-    gap:7px;
-}
-
-/* =========================
-   MODAL
-========================= */
+/* MODAL */
 
 .modal-bg{
     position:fixed;
@@ -479,7 +521,8 @@ body{
 }
 
 .modal{
-    background:white;
+    background:var(--card);
+    color:var(--text);
     width:min(700px,100%);
     max-height:90vh;
     overflow-y:auto;
@@ -498,7 +541,9 @@ body{
 .select{
     width:100%;
     padding:13px;
-    border:1px solid #dcded9;
+    background:var(--input);
+    color:var(--text);
+    border:1px solid var(--border);
     border-radius:10px;
     margin-bottom:14px;
     outline:none;
@@ -518,16 +563,15 @@ body{
     flex-wrap:wrap;
 }
 
-/* =========================
-   CHAT
-========================= */
+/* CHAT */
 
 .chat-box{
-    background:white;
+    background:var(--card);
     border-radius:18px;
     box-shadow:var(--shadow);
     padding:20px;
     max-width:900px;
+    border:1px solid var(--border);
 }
 
 .chat-messages{
@@ -556,23 +600,23 @@ body{
     background:#f1eee6;
 }
 
+body.dark .message.ai{
+    background:#28302c;
+}
+
 .message.admin{
-    background:#e7edf9;
+    background:#dcebe1;
+}
+
+body.dark .message.admin{
+    background:#294337;
 }
 
 .message-name{
     font-size:11px;
+    opacity:.65;
+    margin-bottom:4px;
     font-weight:bold;
-    margin-bottom:5px;
-    opacity:.7;
-}
-
-.chat-image{
-    max-width:280px;
-    max-height:250px;
-    border-radius:10px;
-    margin-top:8px;
-    display:block;
 }
 
 .chat-input{
@@ -584,33 +628,14 @@ body{
 .chat-input input{
     flex:1;
     padding:13px;
+    background:var(--input);
+    color:var(--text);
     border-radius:10px;
-    border:1px solid #ddd;
+    border:1px solid var(--border);
     outline:none;
 }
 
-.chat-tools{
-    display:flex;
-    gap:8px;
-    margin-top:10px;
-    flex-wrap:wrap;
-}
-
-.photo-label{
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    background:#e8efe9;
-    color:var(--green);
-    border-radius:8px;
-    padding:8px 12px;
-    cursor:pointer;
-    font-size:13px;
-}
-
-/* =========================
-   LOGIN
-========================= */
+/* LOGIN */
 
 .login-screen{
     position:fixed;
@@ -623,7 +648,8 @@ body{
 }
 
 .login-box{
-    background:white;
+    background:var(--card);
+    color:var(--text);
     width:min(420px,90%);
     padding:35px;
     border-radius:22px;
@@ -634,7 +660,7 @@ body{
 .login-box h1{
     font-family:Georgia,serif;
     color:var(--green);
-    margin:15px 0 8px;
+    margin:12px 0 8px;
 }
 
 .login-box p{
@@ -645,7 +671,9 @@ body{
 .login-box input{
     width:100%;
     padding:14px;
-    border:1px solid #ddd;
+    background:var(--input);
+    color:var(--text);
+    border:1px solid var(--border);
     border-radius:10px;
     margin-bottom:12px;
     outline:none;
@@ -655,44 +683,33 @@ body{
     width:100%;
 }
 
-/* =========================
-   EMPTY
-========================= */
+/* EMPTY */
 
 .empty{
-    background:white;
+    background:var(--card);
     border-radius:15px;
     padding:35px;
     text-align:center;
     color:var(--muted);
-    grid-column:1/-1;
+    border:1px solid var(--border);
 }
 
-/* =========================
-   OFFLINE
-========================= */
+/* STATUS */
 
-.offline-banner{
-    display:none;
+.connection-status{
     position:fixed;
-    top:0;
-    left:240px;
-    right:0;
-    z-index:80;
-    background:#a96b2b;
-    color:white;
-    text-align:center;
-    padding:7px;
-    font-size:12px;
+    right:15px;
+    bottom:15px;
+    padding:7px 11px;
+    border-radius:20px;
+    background:var(--card);
+    border:1px solid var(--border);
+    font-size:11px;
+    color:var(--muted);
+    z-index:50;
 }
 
-.offline-banner.show{
-    display:block;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
+/* RESPONSIVE */
 
 @media(max-width:800px){
 
@@ -711,7 +728,7 @@ body{
     .logo-symbol{
         width:55px;
         height:55px;
-        font-size:14px;
+        font-size:16px;
     }
 
     .nav button{
@@ -734,8 +751,8 @@ body{
         align-items:stretch;
     }
 
-    .offline-banner{
-        left:75px;
+    .top-actions{
+        flex-wrap:wrap;
     }
 }
 </style>
@@ -743,12 +760,10 @@ body{
 
 <body>
 
-<div class="offline-banner" id="offlineBanner">
-    ⚠️ You're offline. Changes will sync when internet returns.
-</div>
-
 <!-- LOGIN -->
+
 <div class="login-screen" id="loginScreen">
+
     <div class="login-box">
 
         <div class="logo-symbol">
@@ -775,10 +790,12 @@ body{
         </button>
 
     </div>
+
 </div>
 
 
 <!-- SIDEBAR -->
+
 <aside class="sidebar">
 
     <div class="logo">
@@ -812,9 +829,9 @@ body{
         </button>
 
         <button
-            onclick="showSection('files',this)"
+            onclick="showSection('resources',this)"
         >
-            📚 <span>Files</span>
+            🔗 <span>Resources</span>
         </button>
 
         <button
@@ -824,17 +841,17 @@ body{
         </button>
 
         <button
-            onclick="showSection('ai',this)"
-        >
-            🤖 <span>AI Assistant</span>
-        </button>
-
-        <button
             id="adminChatNav"
-            onclick="showAdminChat()"
+            onclick="showSection('adminChat',this)"
             style="display:none"
         >
             🔐 <span>Admin Chat</span>
+        </button>
+
+        <button
+            onclick="showSection('assistant',this)"
+        >
+            🤖 <span>AI Assistant</span>
         </button>
 
         <button
@@ -844,38 +861,39 @@ body{
         </button>
 
         <button onclick="adminLogin()">
-            🔒 <span id="adminButtonText">Admin</span>
+
+            🔒
+            <span id="adminButtonText">
+                Admin
+            </span>
+
         </button>
 
     </nav>
 
 
-    <!-- BOTTOM LEFT ONLINE AREA -->
+    <!-- ONLINE PEOPLE STAYS HERE -->
+
     <div class="user-box">
 
-        👤 <b id="currentUser">Guest</b>
+        👤
+        <b id="currentUser">
+            Guest
+        </b>
 
         <div id="adminStatus">
             Student mode
         </div>
 
-        <div
-            class="connection-status"
-            id="connectionStatus"
-        >
-            🟢 Connected
+        <div class="online-title">
+            🟢 Online
         </div>
 
-        <div class="online-panel">
-
-            <div class="online-title">
-                🟢 Online now
-            </div>
-
-            <div id="onlinePeople">
-                Loading...
-            </div>
-
+        <div
+            class="online-list"
+            id="onlineList"
+        >
+            No one online
         </div>
 
     </div>
@@ -884,6 +902,7 @@ body{
 
 
 <!-- MAIN -->
+
 <main class="main">
 
     <div class="topbar">
@@ -891,11 +910,19 @@ body{
         <input
             class="search"
             id="searchInput"
-            placeholder="Search notes and tasks..."
+            placeholder="Search notes, tasks and resources..."
             oninput="searchEverything()"
         >
 
         <div class="top-actions">
+
+            <button
+                class="theme-btn"
+                onclick="toggleTheme()"
+                id="themeButton"
+            >
+                🌙 Dark
+            </button>
 
             <button
                 class="btn"
@@ -916,12 +943,12 @@ body{
             </button>
 
             <button
-                class="btn blue"
-                id="addFileButton"
-                onclick="openFileModal()"
+                class="btn secondary"
+                id="addResourceButton"
+                onclick="openResourceModal()"
                 style="display:none"
             >
-                + File
+                + Link
             </button>
 
         </div>
@@ -930,6 +957,7 @@ body{
 
 
     <!-- NOTES -->
+
     <section
         class="section active"
         id="notes"
@@ -942,8 +970,9 @@ body{
             </h2>
 
             <p>
-                Keep your notes, tasks, files, schedules and
-                class information organized in one place.
+                Keep your notes, tasks, resources and
+                important class information organized
+                in one place.
             </p>
 
         </div>
@@ -969,6 +998,7 @@ body{
 
 
     <!-- TASKS -->
+
     <section
         class="section"
         id="tasks"
@@ -996,33 +1026,42 @@ body{
     </section>
 
 
-    <!-- FILES -->
+    <!-- RESOURCES -->
+
     <section
         class="section"
-        id="files"
+        id="resources"
     >
 
         <div class="section-title">
 
             <h2>
-                📚 Class Files
+                🔗 Class Resources
             </h2>
 
-            <span id="fileCount">
-                0 files
-            </span>
+            <button
+                class="btn"
+                id="resourceAddButton"
+                onclick="openResourceModal()"
+                style="display:none"
+            >
+                + Add Link
+            </button>
 
         </div>
 
-        <div
-            class="file-grid"
-            id="filesContainer"
-        ></div>
+        <p style="color:var(--muted);margin-bottom:15px">
+            PDFs, PowerPoints, Google Drive files and
+            other class resources can be shared here as links.
+        </p>
+
+        <div id="resourcesContainer"></div>
 
     </section>
 
 
-    <!-- CLASS CHAT -->
+    <!-- NORMAL CHAT -->
+
     <section
         class="section"
         id="chat"
@@ -1040,38 +1079,77 @@ body{
 
             <div
                 class="chat-messages"
-                id="chatMessages"
+                id="classChatMessages"
             ></div>
 
             <div class="chat-input">
 
                 <input
-                    id="chatInput"
-                    placeholder="Send a message..."
-                    onkeydown="if(event.key==='Enter')sendChat()"
+                    id="classChatInput"
+                    placeholder="Type a message..."
+                    onkeydown="
+                    if(event.key==='Enter')
+                    sendClassMessage()
+                    "
                 >
 
                 <button
                     class="btn"
-                    onclick="sendChat()"
+                    onclick="sendClassMessage()"
                 >
                     Send
                 </button>
 
             </div>
 
-            <div class="chat-tools">
+        </div>
 
-                <label class="photo-label">
-                    📷 Add Photo
-                    <input
-                        id="chatPhoto"
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        onchange="sendChatPhoto()"
-                    >
-                </label>
+    </section>
+
+
+    <!-- ADMIN CHAT -->
+
+    <section
+        class="section"
+        id="adminChat"
+    >
+
+        <div class="section-title">
+
+            <h2>
+                🔐 Admin Chat
+            </h2>
+
+        </div>
+
+        <div class="chat-box">
+
+            <p style="color:var(--muted);margin-bottom:15px">
+                Private chat area for administrators.
+            </p>
+
+            <div
+                class="chat-messages"
+                id="adminChatMessages"
+            ></div>
+
+            <div class="chat-input">
+
+                <input
+                    id="adminChatInput"
+                    placeholder="Message other admins..."
+                    onkeydown="
+                    if(event.key==='Enter')
+                    sendAdminMessage()
+                    "
+                >
+
+                <button
+                    class="btn"
+                    onclick="sendAdminMessage()"
+                >
+                    Send
+                </button>
 
             </div>
 
@@ -1081,9 +1159,10 @@ body{
 
 
     <!-- AI -->
+
     <section
         class="section"
-        id="ai"
+        id="assistant"
     >
 
         <div class="section-title">
@@ -1098,14 +1177,10 @@ body{
 
             <div
                 class="chat-messages"
-                id="aiMessages"
+                id="assistantMessages"
             >
 
                 <div class="message ai">
-
-                    <div class="message-name">
-                        BSN 2A Assistant
-                    </div>
 
                     Hey! 👋 I'm your BSN 2A assistant.
 
@@ -1113,9 +1188,8 @@ body{
 
                     • What is due tomorrow?
                     • What tasks do I have?
-                    • What is upcoming?
-                    • Show my notes.
-                    • Show notes about NCM 105.
+                    • Show my notes about NCM 105.
+                    • What's coming up?
 
                 </div>
 
@@ -1124,9 +1198,12 @@ body{
             <div class="chat-input">
 
                 <input
-                    id="aiInput"
+                    id="assistantInput"
                     placeholder="Ask something..."
-                    onkeydown="if(event.key==='Enter')askAssistant()"
+                    onkeydown="
+                    if(event.key==='Enter')
+                    askAssistant()
+                    "
                 >
 
                 <button
@@ -1143,65 +1220,8 @@ body{
     </section>
 
 
-    <!-- ADMIN CHAT -->
-    <section
-        class="section"
-        id="adminChat"
-    >
-
-        <div class="section-title">
-
-            <h2>
-                🔐 Administrator Chat
-            </h2>
-
-        </div>
-
-        <div class="chat-box">
-
-            <div
-                class="chat-messages"
-                id="adminChatMessages"
-            ></div>
-
-            <div class="chat-input">
-
-                <input
-                    id="adminChatInput"
-                    placeholder="Message other administrators..."
-                    onkeydown="if(event.key==='Enter')sendAdminChat()"
-                >
-
-                <button
-                    class="btn"
-                    onclick="sendAdminChat()"
-                >
-                    Send
-                </button>
-
-            </div>
-
-            <div class="chat-tools">
-
-                <label class="photo-label">
-                    📷 Add Photo
-                    <input
-                        id="adminChatPhoto"
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        onchange="sendAdminChatPhoto()"
-                    >
-                </label>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
     <!-- ABOUT -->
+
     <section
         class="section"
         id="about"
@@ -1214,31 +1234,23 @@ body{
             </h2>
 
             <p>
-                A shared class notes and task system for BSN 2A.
-                Students can view information, use the class chat,
-                check their own tasks and access class files.
-                Administrators can manage the shared content.
+                A shared class notes and task system
+                for BSN 2A.
             </p>
 
             <br>
 
             <p>
-                🔄 Data synchronizes through Firebase Realtime Database.
+                🔗 Class resources are shared as links,
+                so the website does not need to store
+                the actual PDF or PowerPoint files.
             </p>
 
             <br>
 
             <p>
-                📱 Offline changes are temporarily stored on the device
-                and can sync when the internet connection returns.
-            </p>
-
-            <br>
-
-            <p>
-                🗑️ Notes, tasks and files older than 30 days can be
-                automatically cleaned from the shared database when
-                cleanup runs.
+                🌙 Dark mode is available for comfortable
+                viewing at night.
             </p>
 
         </div>
@@ -1249,6 +1261,7 @@ body{
 
 
 <!-- NOTE MODAL -->
+
 <div
     class="modal-bg"
     id="noteModal"
@@ -1296,6 +1309,7 @@ body{
 
 
 <!-- TASK MODAL -->
+
 <div
     class="modal-bg"
     id="taskModal"
@@ -1349,57 +1363,73 @@ body{
 </div>
 
 
-<!-- FILE MODAL -->
+<!-- RESOURCE MODAL -->
+
 <div
     class="modal-bg"
-    id="fileModal"
+    id="resourceModal"
 >
 
     <div class="modal">
 
-        <h2>
-            Add Class File
+        <h2 id="resourceModalTitle">
+            Add Resource Link
         </h2>
 
         <input
             class="input"
-            id="fileTitle"
-            placeholder="File title"
+            id="resourceTitle"
+            placeholder="Resource title"
         >
+
+        <select
+            class="select"
+            id="resourceType"
+        >
+
+            <option value="PDF">
+                PDF
+            </option>
+
+            <option value="PowerPoint">
+                PowerPoint
+            </option>
+
+            <option value="Document">
+                Document
+            </option>
+
+            <option value="Google Drive">
+                Google Drive
+            </option>
+
+            <option value="Other">
+                Other
+            </option>
+
+        </select>
 
         <input
             class="input"
-            id="fileInput"
-            type="file"
-            accept=".pdf,.ppt,.pptx"
+            id="resourceURL"
+            placeholder="Paste resource link here..."
+            type="url"
         >
-
-        <p
-            style="
-            color:#718078;
-            font-size:13px;
-            line-height:1.5;
-            margin-bottom:15px;
-            "
-        >
-            Supported files: PDF, PPT and PPTX.
-            The file will be uploaded to Firebase Storage.
-        </p>
 
         <div class="modal-actions">
 
             <button
                 class="btn secondary"
-                onclick="closeFileModal()"
+                onclick="closeResourceModal()"
             >
                 Cancel
             </button>
 
             <button
                 class="btn"
-                onclick="saveFile()"
+                onclick="saveResource()"
             >
-                Upload File
+                Save Link
             </button>
 
         </div>
@@ -1409,43 +1439,38 @@ body{
 </div>
 
 
+<div
+    class="connection-status"
+    id="connectionStatus"
+>
+    Connecting...
+</div>
+
+
 <script type="module">
 
 /* ============================================================
-   FIREBASE IMPORTS
+   FIREBASE
 ============================================================ */
 
 import {
     initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
     getDatabase,
-    ref as dbRef,
+    ref,
     push,
     set,
     update,
     remove,
     onValue,
-    onDisconnect
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    onDisconnect,
+    serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-import {
-    getAuth,
-    signInAnonymously
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import {
-    getStorage,
-    ref as storageRef,
-    uploadBytes,
-    getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
-
-/* ============================================================
-   FIREBASE CONFIG
-============================================================ */
 
 const firebaseConfig = {
 
@@ -1475,17 +1500,11 @@ const firebaseConfig = {
 };
 
 
-/* ============================================================
-   INITIALIZE
-============================================================ */
+const app =
+    initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
-
-const db = getDatabase(app);
-
-const auth = getAuth(app);
-
-const storage = getStorage(app);
+const db =
+    getDatabase(app);
 
 
 /* ============================================================
@@ -1493,22 +1512,22 @@ const storage = getStorage(app);
 ============================================================ */
 
 const notesRef =
-    dbRef(db,"notes");
+    ref(db,"notes");
 
 const tasksRef =
-    dbRef(db,"tasks");
+    ref(db,"tasks");
 
-const filesRef =
-    dbRef(db,"files");
+const resourcesRef =
+    ref(db,"resources");
 
-const chatRef =
-    dbRef(db,"chat");
+const classChatRef =
+    ref(db,"classChat");
 
 const adminChatRef =
-    dbRef(db,"adminChat");
+    ref(db,"adminChat");
 
 const presenceRef =
-    dbRef(db,"presence");
+    ref(db,"presence");
 
 
 /* ============================================================
@@ -1519,11 +1538,11 @@ let notes = {};
 
 let tasks = {};
 
-let files = {};
+let resources = {};
 
-let chats = {};
+let classMessages = {};
 
-let adminChats = {};
+let adminMessages = {};
 
 let onlineUsers = {};
 
@@ -1533,169 +1552,70 @@ let editingNoteId = null;
 
 let editingTaskId = null;
 
-let currentUserId = null;
+let editingResourceId = null;
 
-let currentUserName = "";
-
-let draggedNoteId = null;
-
-
-/* ============================================================
-   ADMIN PASSWORD
-============================================================ */
-
-const ADMIN_PASSWORD =
-    "supperlol123123";
+let username =
+    localStorage.getItem("bsnUsername") || "";
 
 
 /* ============================================================
-   OFFLINE LOCAL CACHE
+   THEME
 ============================================================ */
 
-function cacheData(){
+window.toggleTheme = function(){
 
-    try{
+    document.body.classList.toggle("dark");
 
-        localStorage.setItem(
-            "bsnNotesCache",
-            JSON.stringify(notes)
-        );
+    const dark =
+        document.body.classList.contains("dark");
 
-        localStorage.setItem(
-            "bsnTasksCache",
-            JSON.stringify(tasks)
-        );
+    localStorage.setItem(
+        "bsnDarkMode",
+        dark ? "true" : "false"
+    );
 
-        localStorage.setItem(
-            "bsnFilesCache",
-            JSON.stringify(files)
-        );
+    updateThemeButton();
 
-        localStorage.setItem(
-            "bsnChatCache",
-            JSON.stringify(chats)
-        );
+};
 
-    }catch(error){
 
-        console.warn(
-            "Local cache failed",
-            error
-        );
+function loadTheme(){
+
+    const dark =
+        localStorage.getItem("bsnDarkMode")
+        === "true";
+
+    if(dark){
+
+        document.body.classList.add("dark");
+
     }
+
+    updateThemeButton();
+
 }
 
 
-function loadCachedData(){
+function updateThemeButton(){
 
-    try{
+    const button =
+        document.getElementById("themeButton");
 
-        const cachedNotes =
-            localStorage.getItem("bsnNotesCache");
+    if(!button) return;
 
-        const cachedTasks =
-            localStorage.getItem("bsnTasksCache");
+    if(document.body.classList.contains("dark")){
 
-        const cachedFiles =
-            localStorage.getItem("bsnFilesCache");
-
-        const cachedChat =
-            localStorage.getItem("bsnChatCache");
-
-
-        if(cachedNotes){
-
-            notes =
-                JSON.parse(cachedNotes);
-
-            renderNotes();
-
-        }
-
-        if(cachedTasks){
-
-            tasks =
-                JSON.parse(cachedTasks);
-
-            renderTasks();
-
-        }
-
-        if(cachedFiles){
-
-            files =
-                JSON.parse(cachedFiles);
-
-            renderFiles();
-
-        }
-
-        if(cachedChat){
-
-            chats =
-                JSON.parse(cachedChat);
-
-            renderChat();
-
-        }
-
-    }catch(error){
-
-        console.warn(
-            "Could not load cache",
-            error
-        );
-    }
-}
-
-
-/* ============================================================
-   ONLINE / OFFLINE
-============================================================ */
-
-function updateConnectionUI(){
-
-    const banner =
-        document.getElementById("offlineBanner");
-
-    const status =
-        document.getElementById("connectionStatus");
-
-
-    if(navigator.onLine){
-
-        banner.classList.remove("show");
-
-        status.textContent =
-            "🟢 Connected";
+        button.textContent =
+            "☀️ Light";
 
     }else{
 
-        banner.classList.add("show");
-
-        status.textContent =
-            "🟠 Offline";
+        button.textContent =
+            "🌙 Dark";
 
     }
+
 }
-
-
-window.addEventListener(
-    "online",
-    async () => {
-
-        updateConnectionUI();
-
-        await syncPendingChanges();
-
-    }
-);
-
-
-window.addEventListener(
-    "offline",
-    updateConnectionUI
-);
 
 
 /* ============================================================
@@ -1704,14 +1624,11 @@ window.addEventListener(
 
 window.enterSite = function(){
 
-    const input =
-        document.getElementById(
-            "usernameInput"
-        );
-
     const name =
-        input.value.trim();
-
+        document
+        .getElementById("usernameInput")
+        .value
+        .trim();
 
     if(!name){
 
@@ -1722,226 +1639,42 @@ window.enterSite = function(){
         return;
     }
 
-
-    currentUserName = name;
+    username = name;
 
     localStorage.setItem(
         "bsnUsername",
         name
     );
 
+    document
+        .getElementById("currentUser")
+        .textContent = name;
 
-    document.getElementById(
-        "currentUser"
-    ).textContent = name;
-
-
-    document.getElementById(
-        "loginScreen"
-    ).style.display = "none";
-
+    document
+        .getElementById("loginScreen")
+        .style.display = "none";
 
     setupPresence();
+
 };
 
 
 function loadUsername(){
 
-    const saved =
-        localStorage.getItem(
-            "bsnUsername"
-        );
+    if(username){
 
+        document
+            .getElementById("currentUser")
+            .textContent = username;
 
-    if(saved){
+        document
+            .getElementById("loginScreen")
+            .style.display = "none";
 
-        currentUserName = saved;
-
-        document.getElementById(
-            "currentUser"
-        ).textContent = saved;
-
-        document.getElementById(
-            "loginScreen"
-        ).style.display = "none";
-
-    }else{
-
-        document.getElementById(
-            "loginScreen"
-        ).style.display = "flex";
+        setupPresence();
 
     }
-}
 
-
-/* ============================================================
-   FIREBASE ANONYMOUS AUTH
-============================================================ */
-
-async function startAuthentication(){
-
-    try{
-
-        const result =
-            await signInAnonymously(auth);
-
-        currentUserId =
-            result.user.uid;
-
-        if(currentUserName){
-
-            setupPresence();
-
-        }
-
-    }catch(error){
-
-        console.error(
-            "Anonymous authentication failed:",
-            error
-        );
-
-        /*
-           The website can still show cached data
-           even if Firebase authentication is unavailable.
-        */
-    }
-}
-
-
-/* ============================================================
-   PRESENCE
-============================================================ */
-
-async function setupPresence(){
-
-    if(!currentUserId){
-
-        return;
-    }
-
-    if(!currentUserName){
-
-        return;
-    }
-
-
-    const myPresenceRef =
-        dbRef(
-            db,
-            "presence/" +
-            currentUserId
-        );
-
-
-    try{
-
-        await onDisconnect(
-            myPresenceRef
-        ).remove();
-
-
-        await set(
-            myPresenceRef,
-            {
-                name:
-                    currentUserName,
-
-                online:
-                    true,
-
-                lastSeen:
-                    Date.now()
-            }
-        );
-
-    }catch(error){
-
-        console.error(
-            "Presence error:",
-            error
-        );
-    }
-}
-
-
-function renderOnlinePeople(){
-
-    const container =
-        document.getElementById(
-            "onlinePeople"
-        );
-
-    container.innerHTML = "";
-
-
-    const people =
-        Object.entries(
-            onlineUsers
-        );
-
-
-    if(!people.length){
-
-        container.innerHTML =
-            `<div style="opacity:.6">
-                Nobody else online
-            </div>`;
-
-        return;
-    }
-
-
-    people.forEach(
-        ([id,user]) => {
-
-            if(!user || !user.name){
-
-                return;
-            }
-
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-            div.className =
-                "online-person";
-
-
-            const dot =
-                document.createElement(
-                    "span"
-                );
-
-            dot.className =
-                "online-dot";
-
-
-            const name =
-                document.createElement(
-                    "span"
-                );
-
-            name.textContent =
-                user.name +
-                (
-                    id === currentUserId
-                    ? " (You)"
-                    : ""
-                );
-
-
-            div.appendChild(dot);
-
-            div.appendChild(name);
-
-            container.appendChild(div);
-
-        }
-    );
 }
 
 
@@ -1954,10 +1687,6 @@ window.adminLogin = function(){
     if(admin){
 
         admin = false;
-
-        localStorage.removeItem(
-            "bsnAdmin"
-        );
 
         updateAdminUI();
 
@@ -1975,22 +1704,16 @@ window.adminLogin = function(){
         );
 
 
-    if(password === ADMIN_PASSWORD){
+    if(password === "supperlol123123"){
 
         admin = true;
 
-        localStorage.setItem(
+        sessionStorage.setItem(
             "bsnAdmin",
             "true"
         );
 
         updateAdminUI();
-
-        /*
-           Cleanup is attempted when
-           an administrator enters the site.
-        */
-        cleanupOldData();
 
         alert(
             "Admin mode enabled 🔓"
@@ -2001,30 +1724,10 @@ window.adminLogin = function(){
         alert(
             "Wrong password."
         );
+
     }
+
 };
-
-
-function restoreAdmin(){
-
-    const saved =
-        localStorage.getItem(
-            "bsnAdmin"
-        );
-
-
-    if(saved === "true"){
-
-        admin = true;
-
-    }else{
-
-        admin = false;
-
-    }
-
-    updateAdminUI();
-}
 
 
 function updateAdminUI(){
@@ -2044,9 +1747,14 @@ function updateAdminUI(){
             "taskAddButton"
         );
 
-    const fileButton =
+    const resourceButton =
         document.getElementById(
-            "addFileButton"
+            "addResourceButton"
+        );
+
+    const resourceAddButton =
+        document.getElementById(
+            "resourceAddButton"
         );
 
     const adminText =
@@ -2076,7 +1784,10 @@ function updateAdminUI(){
         taskAddButton.style.display =
             "block";
 
-        fileButton.style.display =
+        resourceButton.style.display =
+            "block";
+
+        resourceAddButton.style.display =
             "block";
 
         adminChatNav.style.display =
@@ -2099,7 +1810,10 @@ function updateAdminUI(){
         taskAddButton.style.display =
             "none";
 
-        fileButton.style.display =
+        resourceButton.style.display =
+            "none";
+
+        resourceAddButton.style.display =
             "none";
 
         adminChatNav.style.display =
@@ -2118,7 +1832,8 @@ function updateAdminUI(){
 
     renderTasks();
 
-    renderFiles();
+    renderResources();
+
 }
 
 
@@ -2129,25 +1844,36 @@ function updateAdminUI(){
 window.showSection =
 function(id,button){
 
-    document
-        .querySelectorAll(
-            ".section"
-        )
-        .forEach(
-            section =>
-                section.classList.remove(
-                    "active"
-                )
+    if(
+        id === "adminChat" &&
+        !admin
+    ){
+
+        alert(
+            "Admin access required."
         );
 
+        return;
+    }
 
-    const target =
+
+    document
+        .querySelectorAll(".section")
+        .forEach(section => {
+
+            section.classList.remove(
+                "active"
+            );
+
+        });
+
+
+    const section =
         document.getElementById(id);
 
+    if(section){
 
-    if(target){
-
-        target.classList.add(
+        section.classList.add(
             "active"
         );
 
@@ -2155,15 +1881,14 @@ function(id,button){
 
 
     document
-        .querySelectorAll(
-            ".nav button"
-        )
-        .forEach(
-            btn =>
-                btn.classList.remove(
-                    "active"
-                )
-        );
+        .querySelectorAll(".nav button")
+        .forEach(btn => {
+
+            btn.classList.remove(
+                "active"
+            );
+
+        });
 
 
     if(button){
@@ -2177,186 +1902,79 @@ function(id,button){
 };
 
 
-window.showAdminChat =
-function(){
-
-    if(!admin){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-    }
-
-
-    showSection(
-        "adminChat",
-        document.getElementById(
-            "adminChatNav"
-        )
-    );
-};
-
-
 /* ============================================================
-   NOTES LISTENER
+   FIREBASE LISTENERS
 ============================================================ */
 
-onValue(
-    notesRef,
-    snapshot => {
+onValue(notesRef,snapshot => {
 
-        notes =
-            snapshot.val() || {};
+    notes =
+        snapshot.val() || {};
 
-        cacheData();
+    renderNotes();
 
-        renderNotes();
+    cleanupOldData();
 
-    },
-    error => {
-
-        console.error(
-            "Notes listener:",
-            error
-        );
-
-    }
-);
+});
 
 
-/* ============================================================
-   TASK LISTENER
-============================================================ */
+onValue(tasksRef,snapshot => {
 
-onValue(
-    tasksRef,
-    snapshot => {
+    tasks =
+        snapshot.val() || {};
 
-        tasks =
-            snapshot.val() || {};
+    renderTasks();
 
-        cacheData();
+    cleanupOldData();
 
-        renderTasks();
-
-    }
-);
+});
 
 
-/* ============================================================
-   FILE LISTENER
-============================================================ */
+onValue(resourcesRef,snapshot => {
 
-onValue(
-    filesRef,
-    snapshot => {
+    resources =
+        snapshot.val() || {};
 
-        files =
-            snapshot.val() || {};
+    renderResources();
 
-        cacheData();
+    cleanupOldData();
 
-        renderFiles();
-
-    }
-);
+});
 
 
-/* ============================================================
-   CHAT LISTENER
-============================================================ */
+onValue(classChatRef,snapshot => {
 
-onValue(
-    chatRef,
-    snapshot => {
+    classMessages =
+        snapshot.val() || {};
 
-        chats =
-            snapshot.val() || {};
+    renderClassChat();
 
-        cacheData();
-
-        renderChat();
-
-    }
-);
+});
 
 
-/* ============================================================
-   ADMIN CHAT LISTENER
-============================================================ */
+onValue(adminChatRef,snapshot => {
 
-onValue(
-    adminChatRef,
-    snapshot => {
+    adminMessages =
+        snapshot.val() || {};
 
-        adminChats =
-            snapshot.val() || {};
+    renderAdminChat();
 
-        renderAdminChat();
-
-    }
-);
+});
 
 
-/* ============================================================
-   PRESENCE LISTENER
-============================================================ */
+onValue(presenceRef,snapshot => {
 
-onValue(
-    presenceRef,
-    snapshot => {
+    onlineUsers =
+        snapshot.val() || {};
 
-        onlineUsers =
-            snapshot.val() || {};
+    renderOnlineUsers();
 
-        renderOnlinePeople();
-
-    }
-);
+});
 
 
 /* ============================================================
    NOTES
 ============================================================ */
-
-function getSortedNotes(){
-
-    return Object.entries(
-        notes
-    ).sort(
-        (a,b) => {
-
-            const orderA =
-                Number(
-                    a[1].order ?? 0
-                );
-
-            const orderB =
-                Number(
-                    b[1].order ?? 0
-                );
-
-
-            if(orderA !== orderB){
-
-                return orderA - orderB;
-
-            }
-
-
-            return Number(
-                b[1].createdAt || 0
-            ) -
-            Number(
-                a[1].createdAt || 0
-            );
-
-        }
-    );
-}
-
 
 function renderNotes(search=""){
 
@@ -2370,196 +1988,165 @@ function renderNotes(search=""){
     let count = 0;
 
 
-    getSortedNotes()
-        .forEach(
-            ([id,note]) => {
-
-                const title =
-                    note.title ||
-                    "Untitled Note";
-
-                const text =
-                    note.text || "";
+    const entries =
+        Object.entries(notes);
 
 
-                const combined =
-                    (
-                        title +
-                        " " +
-                        text
-                    ).toLowerCase();
+    entries.forEach(
+        ([id,note]) => {
+
+            const title =
+                note.title ||
+                "Untitled Note";
+
+            const text =
+                note.text || "";
 
 
-                if(
-                    search &&
-                    !combined.includes(
-                        search.toLowerCase()
-                    )
-                ){
-
-                    return;
-
-                }
+            const combined =
+                (
+                    title +
+                    " " +
+                    text
+                ).toLowerCase();
 
 
-                count++;
+            if(
+                search &&
+                !combined.includes(
+                    search.toLowerCase()
+                )
+            ){
+
+                return;
+
+            }
 
 
-                const card =
+            count++;
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "card";
+
+
+            const titleEl =
+                document.createElement(
+                    "h3"
+                );
+
+            titleEl.textContent =
+                title;
+
+
+            const textEl =
+                document.createElement(
+                    "div"
+                );
+
+            textEl.className =
+                "card-text";
+
+            textEl.textContent =
+                text;
+
+
+            const dateEl =
+                document.createElement(
+                    "div"
+                );
+
+            dateEl.className =
+                "card-date";
+
+            dateEl.textContent =
+                note.author
+                ? "Added by " +
+                  note.author
+                : "";
+
+
+            card.appendChild(
+                titleEl
+            );
+
+            card.appendChild(
+                textEl
+            );
+
+            card.appendChild(
+                dateEl
+            );
+
+
+            if(admin){
+
+                const buttons =
                     document.createElement(
                         "div"
                     );
 
-                card.className =
-                    "card";
+                buttons.className =
+                    "card-buttons";
 
 
-                if(admin){
+                buttons.innerHTML = `
 
-                    card.draggable =
-                        true;
+                    <button
+                        class="small-btn"
+                        onclick="editNote('${id}')"
+                    >
+                        ✏️ Edit
+                    </button>
 
-                    card.addEventListener(
-                        "dragstart",
-                        () => {
+                    <button
+                        class="small-btn delete"
+                        onclick="deleteNote('${id}')"
+                    >
+                        🗑️ Delete
+                    </button>
 
-                            draggedNoteId =
-                                id;
+                    <button
+                        class="small-btn"
+                        onclick="moveNoteUp('${id}')"
+                    >
+                        ⬆️
+                    </button>
 
-                        }
-                    );
-
-                    card.addEventListener(
-                        "dragover",
-                        e => {
-
-                            e.preventDefault();
-
-                        }
-                    );
-
-                    card.addEventListener(
-                        "drop",
-                        async e => {
-
-                            e.preventDefault();
-
-                            await reorderNotes(
-                                draggedNoteId,
-                                id
-                            );
-
-                        }
-                    );
-
-                }
-
-
-                card.innerHTML = `
-
-                    ${
-                        admin
-                        ?
-                        `<span
-                            class="drag-handle"
-                            title="Drag to arrange"
-                        >
-                            ⋮⋮
-                        </span>`
-                        :
-                        ""
-                    }
-
-                    <h3>
-                        ${escapeHTML(title)}
-                    </h3>
-
-                    <div class="card-text">
-                        ${escapeHTML(text)}
-                    </div>
-
-                    <div class="card-date">
-                        ${
-                            note.author
-                            ?
-                            "Added by " +
-                            escapeHTML(
-                                note.author
-                            )
-                            :
-                            ""
-                        }
-                    </div>
-
-                    ${
-                        admin
-                        ?
-                        `
-                        <div class="card-buttons">
-
-                            <button
-                                class="small-btn"
-                                onclick="editNote('${id}')"
-                            >
-                                ✏️ Edit
-                            </button>
-
-                            <button
-                                class="small-btn delete"
-                                onclick="deleteNote('${id}')"
-                            >
-                                🗑️ Delete
-                            </button>
-
-                            <button
-                                class="small-btn move"
-                                onclick="moveNoteUp('${id}')"
-                            >
-                                ↑
-                            </button>
-
-                            <button
-                                class="small-btn move"
-                                onclick="moveNoteDown('${id}')"
-                            >
-                                ↓
-                            </button>
-
-                        </div>
-                        `
-                        :
-                        ""
-                    }
+                    <button
+                        class="small-btn"
+                        onclick="moveNoteDown('${id}')"
+                    >
+                        ⬇️
+                    </button>
 
                 `;
 
 
-                if(!admin){
-
-                    card.addEventListener(
-                        "click",
-                        e => {
-
-                            openReadNote(id);
-
-                        }
-                    );
-
-                }
-
-
-                container.appendChild(
-                    card
+                card.appendChild(
+                    buttons
                 );
 
             }
-        );
 
 
-    document.getElementById(
-        "noteCount"
-    ).textContent =
-        `${count} note${count === 1 ? "" : "s"}`;
+            container.appendChild(
+                card
+            );
+
+        }
+    );
+
+
+    document
+        .getElementById("noteCount")
+        .textContent =
+        `${count} note${count===1?"":"s"}`;
 
 
     if(count === 0){
@@ -2572,10 +2159,8 @@ function renderNotes(search=""){
 
                 ${
                     admin
-                    ?
-                    "<br><br>Click + Add Note to create one."
-                    :
-                    ""
+                    ? "<br><br>Click + Add Note to create one."
+                    : ""
                 }
 
             </div>
@@ -2585,220 +2170,6 @@ function renderNotes(search=""){
     }
 
 }
-
-
-/* ============================================================
-   NOTE ORDERING
-============================================================ */
-
-async function reorderNotes(
-    draggedId,
-    targetId
-){
-
-    if(!admin){
-
-        return;
-    }
-
-    if(
-        !draggedId ||
-        !targetId ||
-        draggedId === targetId
-    ){
-
-        return;
-    }
-
-
-    const sorted =
-        getSortedNotes();
-
-
-    const fromIndex =
-        sorted.findIndex(
-            x => x[0] === draggedId
-        );
-
-    const toIndex =
-        sorted.findIndex(
-            x => x[0] === targetId
-        );
-
-
-    if(
-        fromIndex < 0 ||
-        toIndex < 0
-    ){
-
-        return;
-
-    }
-
-
-    const copy =
-        [...sorted];
-
-
-    const moved =
-        copy.splice(
-            fromIndex,
-            1
-        )[0];
-
-
-    copy.splice(
-        toIndex,
-        0,
-        moved
-    );
-
-
-    const changes = {};
-
-
-    copy.forEach(
-        ([id]) => {
-
-            changes[
-                "notes/" +
-                id +
-                "/order"
-            ] = copy.indexOf(
-                copy.find(
-                    x => x[0] === id
-                )
-            );
-
-        }
-    );
-
-
-    try{
-
-        await update(
-            dbRef(db),
-            changes
-        );
-
-    }catch(error){
-
-        console.error(
-            error
-        );
-
-        alert(
-            "Could not rearrange notes."
-        );
-
-    }
-
-}
-
-
-window.moveNoteUp =
-async function(id){
-
-    if(!admin){
-
-        return;
-    }
-
-
-    const sorted =
-        getSortedNotes();
-
-
-    const index =
-        sorted.findIndex(
-            x => x[0] === id
-        );
-
-
-    if(index <= 0){
-
-        return;
-    }
-
-
-    const current =
-        sorted[index][0];
-
-    const previous =
-        sorted[index-1][0];
-
-
-    await update(
-        dbRef(db),
-        {
-
-            ["notes/" +
-            current +
-            "/order"]:
-                index - 1,
-
-            ["notes/" +
-            previous +
-            "/order"]:
-                index
-
-        }
-    );
-};
-
-
-window.moveNoteDown =
-async function(id){
-
-    if(!admin){
-
-        return;
-    }
-
-
-    const sorted =
-        getSortedNotes();
-
-
-    const index =
-        sorted.findIndex(
-            x => x[0] === id
-        );
-
-
-    if(
-        index < 0 ||
-        index >= sorted.length - 1
-    ){
-
-        return;
-    }
-
-
-    const current =
-        sorted[index][0];
-
-    const next =
-        sorted[index+1][0];
-
-
-    await update(
-        dbRef(db),
-        {
-
-            ["notes/" +
-            current +
-            "/order"]:
-                index + 1,
-
-            ["notes/" +
-            next +
-            "/order"]:
-                index
-
-        }
-    );
-};
 
 
 /* ============================================================
@@ -2815,34 +2186,40 @@ function(){
         );
 
         return;
+
     }
 
 
-    editingNoteId =
-        null;
+    editingNoteId = null;
 
 
-    document.getElementById(
-        "noteModalTitle"
-    ).textContent =
+    document
+        .getElementById(
+            "noteModalTitle"
+        )
+        .textContent =
         "Add Note";
 
 
-    document.getElementById(
-        "noteTitle"
-    ).value = "";
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .value = "";
 
 
-    document.getElementById(
-        "noteText"
-    ).value = "";
+    document
+        .getElementById(
+            "noteText"
+        )
+        .value = "";
 
 
-    document.getElementById(
-        "noteModal"
-    ).classList.add(
-        "show"
-    );
+    document
+        .getElementById(
+            "noteModal"
+        )
+        .classList.add("show");
 
 };
 
@@ -2850,11 +2227,11 @@ function(){
 window.closeNoteModal =
 function(){
 
-    document.getElementById(
-        "noteModal"
-    ).classList.remove(
-        "show"
-    );
+    document
+        .getElementById(
+            "noteModal"
+        )
+        .classList.remove("show");
 
 };
 
@@ -2862,26 +2239,21 @@ function(){
 window.saveNote =
 async function(){
 
-    if(!admin){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-    }
+    if(!admin) return;
 
 
     const title =
-        document.getElementById(
-            "noteTitle"
-        ).value.trim();
+        document
+        .getElementById("noteTitle")
+        .value
+        .trim();
 
 
     const text =
-        document.getElementById(
-            "noteText"
-        ).value.trim();
+        document
+        .getElementById("noteText")
+        .value
+        .trim();
 
 
     if(!title){
@@ -2891,12 +2263,12 @@ async function(){
         );
 
         return;
+
     }
 
 
     const author =
-        currentUserName ||
-        "Admin";
+        username || "Admin";
 
 
     try{
@@ -2904,7 +2276,7 @@ async function(){
         if(editingNoteId){
 
             await update(
-                dbRef(
+                ref(
                     db,
                     "notes/" +
                     editingNoteId
@@ -2912,9 +2284,7 @@ async function(){
                 {
                     title,
                     text,
-                    author,
-                    updatedAt:
-                        Date.now()
+                    author
                 }
             );
 
@@ -2924,22 +2294,14 @@ async function(){
                 push(notesRef);
 
 
-            const currentLength =
-                Object.keys(
-                    notes
-                ).length;
-
-
             await set(
                 newNote,
                 {
                     title,
                     text,
                     author,
-                    order:
-                        currentLength,
-                    createdAt:
-                        Date.now()
+                    createdAt:Date.now(),
+                    order:Date.now()
                 }
             );
 
@@ -2968,166 +2330,47 @@ async function(){
 window.editNote =
 function(id){
 
-    if(!admin){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-    }
+    if(!admin) return;
 
 
     const note =
         notes[id];
 
-
-    if(!note){
-
-        return;
-
-    }
+    if(!note) return;
 
 
-    editingNoteId =
-        id;
+    editingNoteId = id;
 
 
-    document.getElementById(
-        "noteModalTitle"
-    ).textContent =
+    document
+        .getElementById(
+            "noteModalTitle"
+        )
+        .textContent =
         "Edit Note";
 
 
-    document.getElementById(
-        "noteTitle"
-    ).value =
+    document
+        .getElementById(
+            "noteTitle"
+        )
+        .value =
         note.title || "";
 
 
-    document.getElementById(
-        "noteText"
-    ).value =
+    document
+        .getElementById(
+            "noteText"
+        )
+        .value =
         note.text || "";
 
 
-    document.getElementById(
-        "noteModal"
-    ).classList.add(
-        "show"
-    );
-
-};
-
-
-/* ============================================================
-   READ NOTE
-============================================================ */
-
-function openReadNote(id){
-
-    const note =
-        notes[id];
-
-
-    if(!note){
-
-        return;
-
-    }
-
-
-    document.getElementById(
-        "noteModalTitle"
-    ).textContent =
-        note.title ||
-        "Note";
-
-
-    document.getElementById(
-        "noteTitle"
-    ).value =
-        note.title || "";
-
-
-    document.getElementById(
-        "noteText"
-    ).value =
-        note.text || "";
-
-
-    document.getElementById(
-        "noteTitle"
-    ).disabled =
-        true;
-
-
-    document.getElementById(
-        "noteText"
-    ).disabled =
-        true;
-
-
-    document.querySelector(
-        "#noteModal .modal-actions"
-    ).innerHTML = `
-
-        <button
-            class="btn"
-            onclick="closeReadNote()"
-        >
-            Close
-        </button>
-
-    `;
-
-
-    document.getElementById(
-        "noteModal"
-    ).classList.add(
-        "show"
-    );
-
-}
-
-
-window.closeReadNote =
-function(){
-
-    document.getElementById(
-        "noteTitle"
-    ).disabled =
-        false;
-
-
-    document.getElementById(
-        "noteText"
-    ).disabled =
-        false;
-
-
-    document.querySelector(
-        "#noteModal .modal-actions"
-    ).innerHTML = `
-
-        <button
-            class="btn secondary"
-            onclick="closeNoteModal()"
-        >
-            Cancel
-        </button>
-
-        <button
-            class="btn"
-            onclick="saveNote()"
-        >
-            Save Note
-        </button>
-
-    `;
-
-
-    closeNoteModal();
+    document
+        .getElementById(
+            "noteModal"
+        )
+        .classList.add("show");
 
 };
 
@@ -3139,46 +2382,110 @@ function(){
 window.deleteNote =
 async function(id){
 
-    if(!admin){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-    }
+    if(!admin) return;
 
 
     if(
         !confirm(
             "Delete this note?"
         )
-    ){
-
-        return;
-
-    }
+    ) return;
 
 
-    try{
+    await remove(
+        ref(
+            db,
+            "notes/" + id
+        )
+    );
 
-        await remove(
-            dbRef(
-                db,
-                "notes/" +
-                id
-            )
+};
+
+
+/* ============================================================
+   NOTE ARRANGING
+============================================================ */
+
+window.moveNoteUp =
+async function(id){
+
+    if(!admin) return;
+
+    const ordered =
+        getOrderedEntries(notes);
+
+    const index =
+        ordered.findIndex(
+            x => x[0] === id
         );
 
-    }catch(error){
+    if(index <= 0) return;
 
-        console.error(error);
+    const current =
+        ordered[index];
 
-        alert(
-            "Could not delete note."
+    const previous =
+        ordered[index - 1];
+
+
+    const temp =
+        current[1].order;
+
+
+    await update(
+        ref(db,"notes"),
+        {
+            [current[0]+"/order"]:
+                previous[1].order,
+
+            [previous[0]+"/order"]:
+                temp
+        }
+    );
+
+};
+
+
+window.moveNoteDown =
+async function(id){
+
+    if(!admin) return;
+
+    const ordered =
+        getOrderedEntries(notes);
+
+    const index =
+        ordered.findIndex(
+            x => x[0] === id
         );
 
-    }
+    if(
+        index < 0 ||
+        index >= ordered.length-1
+    ) return;
+
+
+    const current =
+        ordered[index];
+
+    const next =
+        ordered[index+1];
+
+
+    const temp =
+        current[1].order;
+
+
+    await update(
+        ref(db,"notes"),
+        {
+            [current[0]+"/order"]:
+                next[1].order,
+
+            [next[0]+"/order"]:
+                temp
+        }
+    );
 
 };
 
@@ -3186,54 +2493,6 @@ async function(id){
 /* ============================================================
    TASKS
 ============================================================ */
-
-function getTaskChecked(taskId){
-
-    if(!currentUserId){
-
-        return false;
-    }
-
-
-    const key =
-        "bsnTask_" +
-        currentUserId +
-        "_" +
-        taskId;
-
-
-    return (
-        localStorage.getItem(
-            key
-        ) === "true"
-    );
-}
-
-
-function setTaskChecked(
-    taskId,
-    value
-){
-
-    if(!currentUserId){
-
-        return;
-    }
-
-
-    const key =
-        "bsnTask_" +
-        currentUserId +
-        "_" +
-        taskId;
-
-
-    localStorage.setItem(
-        key,
-        String(value)
-    );
-}
-
 
 function renderTasks(search=""){
 
@@ -3245,44 +2504,12 @@ function renderTasks(search=""){
     container.innerHTML = "";
 
 
-    const entries =
-        Object.entries(
-            tasks
-        );
+    let entries =
+        getOrderedEntries(tasks);
 
 
-    if(entries.length === 0){
-
-        container.innerHTML = `
-
-            <div class="empty">
-                No tasks yet.
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    entries
-        .sort(
-            (a,b) => {
-
-                const dateA =
-                    a[1].due || "";
-
-                const dateB =
-                    b[1].due || "";
-
-                return dateA.localeCompare(
-                    dateB
-                );
-
-            }
-        )
-        .forEach(
+    entries =
+        entries.filter(
             ([id,task]) => {
 
                 const combined =
@@ -3295,138 +2522,268 @@ function renderTasks(search=""){
                     );
 
 
-                if(
-                    search &&
-                    !combined
-                        .toLowerCase()
-                        .includes(
-                            search.toLowerCase()
-                        )
-                ){
-
-                    return;
-
-                }
-
-
-                const checked =
-                    getTaskChecked(id);
-
-
-                const div =
-                    document.createElement(
-                        "div"
+                return !search ||
+                    combined
+                    .toLowerCase()
+                    .includes(
+                        search.toLowerCase()
                     );
-
-
-                div.className =
-                    "task " +
-                    (
-                        checked
-                        ?
-                        "completed"
-                        :
-                        ""
-                    );
-
-
-                div.innerHTML = `
-
-                    <input
-                        class="task-check"
-                        type="checkbox"
-                        ${
-                            checked
-                            ?
-                            "checked"
-                            :
-                            ""
-                        }
-                        onchange="toggleTask('${id}')"
-                    >
-
-                    <div class="task-info">
-
-                        <div class="task-title">
-                            ${escapeHTML(
-                                task.title ||
-                                "Untitled"
-                            )}
-                        </div>
-
-                        <div class="task-due">
-
-                            ${
-                                task.due
-                                ?
-                                "Due: " +
-                                formatDate(
-                                    task.due
-                                )
-                                :
-                                "No due date"
-                            }
-
-                        </div>
-
-                        ${
-                            task.description
-                            ?
-                            `
-                            <div class="task-description">
-                                ${escapeHTML(
-                                    task.description
-                                )}
-                            </div>
-                            `
-                            :
-                            ""
-                        }
-
-                        <div class="personal-check-note">
-                            ☑️ Your checkbox is private to your device/account.
-                        </div>
-
-                        ${
-                            admin
-                            ?
-                            `
-                            <div class="card-buttons">
-
-                                <button
-                                    class="small-btn"
-                                    onclick="editTask('${id}')"
-                                >
-                                    ✏️ Edit
-                                </button>
-
-                                <button
-                                    class="small-btn delete"
-                                    onclick="deleteTask('${id}')"
-                                >
-                                    🗑️ Delete
-                                </button>
-
-                            </div>
-                            `
-                            :
-                            ""
-                        }
-
-                    </div>
-
-                `;
-
-
-                container.appendChild(
-                    div
-                );
 
             }
         );
 
+
+    if(entries.length === 0){
+
+        container.innerHTML = `
+
+            <div class="empty">
+                No tasks found.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    entries.forEach(
+        ([id,task]) => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className =
+                "task";
+
+
+            const checkRef =
+                ref(
+                    db,
+                    "taskChecks/" +
+                    id +
+                    "/" +
+                    safeKey(username)
+                );
+
+
+            const checkbox =
+                document.createElement(
+                    "input"
+                );
+
+            checkbox.className =
+                "task-check";
+
+            checkbox.type =
+                "checkbox";
+
+
+            /*
+              IMPORTANT:
+              Every username gets their own
+              task checkbox.
+              One person's check does NOT
+              affect another person's.
+            */
+
+            onValue(
+                checkRef,
+                snapshot => {
+
+                    checkbox.checked =
+                        snapshot.val() === true;
+
+                    if(
+                        checkbox.checked
+                    ){
+
+                        div.classList.add(
+                            "completed"
+                        );
+
+                    }else{
+
+                        div.classList.remove(
+                            "completed"
+                        );
+
+                    }
+
+                },
+                {
+                    onlyOnce:false
+                }
+            );
+
+
+            checkbox.onchange =
+            async function(){
+
+                await set(
+                    checkRef,
+                    checkbox.checked
+                );
+
+            };
+
+
+            const info =
+                document.createElement(
+                    "div"
+                );
+
+            info.className =
+                "task-info";
+
+
+            const title =
+                document.createElement(
+                    "div"
+                );
+
+            title.className =
+                "task-title";
+
+            title.textContent =
+                task.title ||
+                "Untitled";
+
+
+            const due =
+                document.createElement(
+                    "div"
+                );
+
+            due.className =
+                "task-due";
+
+            due.textContent =
+                task.due
+                ? "Due: " +
+                  formatDate(task.due)
+                : "No due date";
+
+
+            info.appendChild(
+                title
+            );
+
+            info.appendChild(
+                due
+            );
+
+
+            if(task.description){
+
+                const desc =
+                    document.createElement(
+                        "div"
+                    );
+
+                desc.className =
+                    "task-description";
+
+                desc.textContent =
+                    task.description;
+
+                info.appendChild(
+                    desc
+                );
+
+            }
+
+
+            const mine =
+                document.createElement(
+                    "div"
+                );
+
+            mine.className =
+                "my-check-label";
+
+            mine.textContent =
+                "Your checklist";
+
+            info.appendChild(
+                mine
+            );
+
+
+            if(admin){
+
+                const buttons =
+                    document.createElement(
+                        "div"
+                    );
+
+                buttons.className =
+                    "card-buttons";
+
+                buttons.innerHTML = `
+
+                    <button
+                        class="small-btn"
+                        onclick="editTask('${id}')"
+                    >
+                        ✏️ Edit
+                    </button>
+
+                    <button
+                        class="small-btn delete"
+                        onclick="deleteTask('${id}')"
+                    >
+                        🗑️ Delete
+                    </button>
+
+                    <button
+                        class="small-btn"
+                        onclick="moveTaskUp('${id}')"
+                    >
+                        ⬆️
+                    </button>
+
+                    <button
+                        class="small-btn"
+                        onclick="moveTaskDown('${id}')"
+                    >
+                        ⬇️
+                    </button>
+
+                `;
+
+                info.appendChild(
+                    buttons
+                );
+
+            }
+
+
+            div.appendChild(
+                checkbox
+            );
+
+            div.appendChild(
+                info
+            );
+
+
+            container.appendChild(
+                div
+            );
+
+        }
+    );
+
 }
 
+
+/* ============================================================
+   ADD TASK
+============================================================ */
 
 window.openTaskModal =
 function(){
@@ -3442,36 +2799,43 @@ function(){
     }
 
 
-    editingTaskId =
-        null;
+    editingTaskId = null;
 
 
-    document.getElementById(
-        "taskModalTitle"
-    ).textContent =
+    document
+        .getElementById(
+            "taskModalTitle"
+        )
+        .textContent =
         "Add Task";
 
 
-    document.getElementById(
-        "taskTitle"
-    ).value = "";
+    document
+        .getElementById(
+            "taskTitle"
+        )
+        .value = "";
 
 
-    document.getElementById(
-        "taskDue"
-    ).value = "";
+    document
+        .getElementById(
+            "taskDue"
+        )
+        .value = "";
 
 
-    document.getElementById(
-        "taskDescription"
-    ).value = "";
+    document
+        .getElementById(
+            "taskDescription"
+        )
+        .value = "";
 
 
-    document.getElementById(
-        "taskModal"
-    ).classList.add(
-        "show"
-    );
+    document
+        .getElementById(
+            "taskModal"
+        )
+        .classList.add("show");
 
 };
 
@@ -3479,11 +2843,11 @@ function(){
 window.closeTaskModal =
 function(){
 
-    document.getElementById(
-        "taskModal"
-    ).classList.remove(
-        "show"
-    );
+    document
+        .getElementById(
+            "taskModal"
+        )
+        .classList.remove("show");
 
 };
 
@@ -3491,32 +2855,33 @@ function(){
 window.saveTask =
 async function(){
 
-    if(!admin){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-    }
+    if(!admin) return;
 
 
     const title =
-        document.getElementById(
+        document
+        .getElementById(
             "taskTitle"
-        ).value.trim();
+        )
+        .value
+        .trim();
 
 
     const due =
-        document.getElementById(
+        document
+        .getElementById(
             "taskDue"
-        ).value;
+        )
+        .value;
 
 
     const description =
-        document.getElementById(
+        document
+        .getElementById(
             "taskDescription"
-        ).value.trim();
+        )
+        .value
+        .trim();
 
 
     if(!title){
@@ -3526,146 +2891,106 @@ async function(){
         );
 
         return;
+
     }
 
 
-    try{
+    if(editingTaskId){
 
-        if(editingTaskId){
+        await update(
+            ref(
+                db,
+                "tasks/" +
+                editingTaskId
+            ),
+            {
+                title,
+                due,
+                description
+            }
+        );
 
-            await update(
-                dbRef(
-                    db,
-                    "tasks/" +
-                    editingTaskId
-                ),
-                {
-                    title,
-                    due,
-                    description,
-                    updatedAt:
-                        Date.now()
-                }
-            );
+    }else{
 
-        }else{
-
-            const newTask =
-                push(tasksRef);
+        const newTask =
+            push(tasksRef);
 
 
-            await set(
-                newTask,
-                {
-                    title,
-                    due,
-                    description,
-                    createdAt:
-                        Date.now()
-                }
-            );
-
-        }
-
-
-        closeTaskModal();
-
-    }catch(error){
-
-        console.error(error);
-
-        alert(
-            "Could not save task."
+        await set(
+            newTask,
+            {
+                title,
+                due,
+                description,
+                createdAt:Date.now(),
+                order:Date.now()
+            }
         );
 
     }
 
-};
 
-
-window.editTask =
-function(id){
-
-    if(!admin){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-    }
-
-
-    const task =
-        tasks[id];
-
-
-    if(!task){
-
-        return;
-
-    }
-
-
-    editingTaskId =
-        id;
-
-
-    document.getElementById(
-        "taskModalTitle"
-    ).textContent =
-        "Edit Task";
-
-
-    document.getElementById(
-        "taskTitle"
-    ).value =
-        task.title || "";
-
-
-    document.getElementById(
-        "taskDue"
-    ).value =
-        task.due || "";
-
-
-    document.getElementById(
-        "taskDescription"
-    ).value =
-        task.description || "";
-
-
-    document.getElementById(
-        "taskModal"
-    ).classList.add(
-        "show"
-    );
+    closeTaskModal();
 
 };
 
 
 /* ============================================================
-   PERSONAL TASK CHECKBOX
+   EDIT TASK
 ============================================================ */
 
-window.toggleTask =
+window.editTask =
 function(id){
 
-    const current =
-        getTaskChecked(id);
+    if(!admin) return;
 
 
-    setTaskChecked(
-        id,
-        !current
-    );
+    const task =
+        tasks[id];
+
+    if(!task) return;
 
 
-    renderTasks(
-        document.getElementById(
-            "searchInput"
-        ).value.trim()
-    );
+    editingTaskId = id;
+
+
+    document
+        .getElementById(
+            "taskModalTitle"
+        )
+        .textContent =
+        "Edit Task";
+
+
+    document
+        .getElementById(
+            "taskTitle"
+        )
+        .value =
+        task.title || "";
+
+
+    document
+        .getElementById(
+            "taskDue"
+        )
+        .value =
+        task.due || "";
+
+
+    document
+        .getElementById(
+            "taskDescription"
+        )
+        .value =
+        task.description || "";
+
+
+    document
+        .getElementById(
+            "taskModal"
+        )
+        .classList.add("show");
 
 };
 
@@ -3677,95 +3002,185 @@ function(id){
 window.deleteTask =
 async function(id){
 
-    if(!admin){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-
-    }
+    if(!admin) return;
 
 
     if(
         !confirm(
-            "Delete this task for everyone?"
+            "Delete this task?"
         )
-    ){
-
-        return;
-
-    }
+    ) return;
 
 
-    try{
+    await remove(
+        ref(
+            db,
+            "tasks/" + id
+        )
+    );
 
-        await remove(
-            dbRef(
-                db,
-                "tasks/" +
-                id
-            )
-        );
-
-    }catch(error){
-
-        console.error(error);
-
-        alert(
-            "Could not delete task."
-        );
-
-    }
+    await remove(
+        ref(
+            db,
+            "taskChecks/" + id
+        )
+    );
 
 };
 
 
 /* ============================================================
-   FILES
+   TASK ARRANGING
 ============================================================ */
 
-function renderFiles(){
+window.moveTaskUp =
+async function(id){
+
+    if(!admin) return;
+
+
+    const ordered =
+        getOrderedEntries(tasks);
+
+    const index =
+        ordered.findIndex(
+            x => x[0] === id
+        );
+
+
+    if(index <= 0) return;
+
+
+    const current =
+        ordered[index];
+
+    const previous =
+        ordered[index-1];
+
+
+    const temp =
+        current[1].order;
+
+
+    await update(
+        ref(db,"tasks"),
+        {
+            [current[0]+"/order"]:
+                previous[1].order,
+
+            [previous[0]+"/order"]:
+                temp
+        }
+    );
+
+};
+
+
+window.moveTaskDown =
+async function(id){
+
+    if(!admin) return;
+
+
+    const ordered =
+        getOrderedEntries(tasks);
+
+    const index =
+        ordered.findIndex(
+            x => x[0] === id
+        );
+
+
+    if(
+        index < 0 ||
+        index >= ordered.length-1
+    ) return;
+
+
+    const current =
+        ordered[index];
+
+    const next =
+        ordered[index+1];
+
+
+    const temp =
+        current[1].order;
+
+
+    await update(
+        ref(db,"tasks"),
+        {
+            [current[0]+"/order"]:
+                next[1].order,
+
+            [next[0]+"/order"]:
+                temp
+        }
+    );
+
+};
+
+
+/* ============================================================
+   RESOURCES / LINKS
+============================================================ */
+
+function renderResources(search=""){
 
     const container =
         document.getElementById(
-            "filesContainer"
+            "resourcesContainer"
         );
 
     container.innerHTML = "";
 
 
-    const entries =
-        Object.entries(
-            files
+    let entries =
+        getOrderedEntries(resources);
+
+
+    entries =
+        entries.filter(
+            ([id,item]) => {
+
+                const combined =
+                    (
+                        item.title || ""
+                    ) +
+                    " " +
+                    (
+                        item.url || ""
+                    ) +
+                    " " +
+                    (
+                        item.type || ""
+                    );
+
+
+                return !search ||
+                    combined
+                    .toLowerCase()
+                    .includes(
+                        search.toLowerCase()
+                    );
+
+            }
         );
 
 
-    document.getElementById(
-        "fileCount"
-    ).textContent =
-        `${entries.length} file${
-            entries.length === 1
-            ? ""
-            : "s"
-        }`;
-
-
-    if(!entries.length){
+    if(entries.length === 0){
 
         container.innerHTML = `
 
             <div class="empty">
 
-                No class files yet.
+                No resources yet.
 
                 ${
                     admin
-                    ?
-                    "<br><br>Click + File to upload a PDF or PowerPoint."
-                    :
-                    ""
+                    ? "<br><br>Click + Add Link to add one."
+                    : ""
                 }
 
             </div>
@@ -3777,153 +3192,131 @@ function renderFiles(){
     }
 
 
-    entries
-        .sort(
-            (a,b) =>
-                Number(
-                    b[1].createdAt || 0
-                ) -
-                Number(
-                    a[1].createdAt || 0
-                )
-        )
-        .forEach(
-            ([id,file]) => {
+    entries.forEach(
+        ([id,item]) => {
 
-                const div =
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "resource-card";
+
+
+            card.innerHTML = `
+
+                <div class="resource-top">
+
+                    <div class="resource-title">
+                        ${escapeHTML(
+                            item.title ||
+                            "Untitled Resource"
+                        )}
+                    </div>
+
+                    <div class="resource-type">
+                        ${escapeHTML(
+                            item.type ||
+                            "Other"
+                        )}
+                    </div>
+
+                </div>
+
+                <div class="resource-url">
+                    ${escapeHTML(
+                        item.url || ""
+                    )}
+                </div>
+
+                <a
+                    class="open-link"
+                    href="${safeURL(item.url)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    🔗 Open Resource
+                </a>
+
+                <div class="card-date">
+                    ${
+                        item.author
+                        ? "Added by " +
+                          escapeHTML(item.author)
+                        : ""
+                    }
+                </div>
+
+            `;
+
+
+            if(admin){
+
+                const buttons =
                     document.createElement(
                         "div"
                     );
 
-                div.className =
-                    "file-card";
+                buttons.className =
+                    "card-buttons";
 
 
-                const extension =
-                    getFileExtension(
-                        file.name || ""
-                    );
+                buttons.innerHTML = `
 
+                    <button
+                        class="small-btn"
+                        onclick="editResource('${id}')"
+                    >
+                        ✏️ Edit
+                    </button>
 
-                const icon =
-                    extension === "pdf"
-                    ?
-                    "📕"
-                    :
-                    "📊";
+                    <button
+                        class="small-btn delete"
+                        onclick="deleteResource('${id}')"
+                    >
+                        🗑️ Delete
+                    </button>
 
+                    <button
+                        class="small-btn"
+                        onclick="moveResourceUp('${id}')"
+                    >
+                        ⬆️
+                    </button>
 
-                div.innerHTML = `
-
-                    <div class="file-icon">
-                        ${icon}
-                    </div>
-
-                    <div class="file-name">
-                        ${escapeHTML(
-                            file.title ||
-                            file.name ||
-                            "Class File"
-                        )}
-                    </div>
-
-                    <div class="file-meta">
-
-                        ${escapeHTML(
-                            file.name || ""
-                        )}
-
-                        <br>
-
-                        ${
-                            file.author
-                            ?
-                            "Added by " +
-                            escapeHTML(
-                                file.author
-                            )
-                            :
-                            ""
-                        }
-
-                    </div>
-
-                    <div class="file-buttons">
-
-                        <button
-                            class="small-btn"
-                            onclick="openFile('${id}')"
-                        >
-                            👁️ Open
-                        </button>
-
-                        ${
-                            admin
-                            ?
-                            `
-                            <button
-                                class="small-btn delete"
-                                onclick="deleteFile('${id}')"
-                            >
-                                🗑️ Delete
-                            </button>
-                            `
-                            :
-                            ""
-                        }
-
-                    </div>
+                    <button
+                        class="small-btn"
+                        onclick="moveResourceDown('${id}')"
+                    >
+                        ⬇️
+                    </button>
 
                 `;
 
 
-                container.appendChild(
-                    div
+                card.appendChild(
+                    buttons
                 );
 
             }
-        );
-
-}
 
 
-function getFileExtension(name){
+            container.appendChild(
+                card
+            );
 
-    return name
-        .split(".")
-        .pop()
-        .toLowerCase();
-
-}
-
-
-window.openFile =
-function(id){
-
-    const file =
-        files[id];
-
-
-    if(!file || !file.url){
-
-        alert(
-            "File is not available."
-        );
-
-        return;
-
-    }
-
-
-    window.open(
-        file.url,
-        "_blank"
+        }
     );
 
-};
+}
 
 
-window.openFileModal =
+/* ============================================================
+   RESOURCE MODAL
+============================================================ */
+
+window.openResourceModal =
 function(){
 
     if(!admin){
@@ -3933,98 +3326,100 @@ function(){
         );
 
         return;
+
     }
 
 
-    document.getElementById(
-        "fileTitle"
-    ).value = "";
+    editingResourceId = null;
 
 
-    document.getElementById(
-        "fileInput"
-    ).value = "";
+    document
+        .getElementById(
+            "resourceModalTitle"
+        )
+        .textContent =
+        "Add Resource Link";
 
 
-    document.getElementById(
-        "fileModal"
-    ).classList.add(
-        "show"
-    );
+    document
+        .getElementById(
+            "resourceTitle"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "resourceType"
+        )
+        .value =
+        "PDF";
+
+
+    document
+        .getElementById(
+            "resourceURL"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "resourceModal"
+        )
+        .classList.add("show");
 
 };
 
 
-window.closeFileModal =
+window.closeResourceModal =
 function(){
 
-    document.getElementById(
-        "fileModal"
-    ).classList.remove(
-        "show"
-    );
+    document
+        .getElementById(
+            "resourceModal"
+        )
+        .classList.remove("show");
 
 };
 
 
-window.saveFile =
+window.saveResource =
 async function(){
 
-    if(!admin){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-    }
+    if(!admin) return;
 
 
     const title =
-        document.getElementById(
-            "fileTitle"
-        ).value.trim();
-
-
-    const input =
-        document.getElementById(
-            "fileInput"
-        );
-
-
-    const file =
-        input.files[0];
-
-
-    if(!file){
-
-        alert(
-            "Please select a PDF or PowerPoint file."
-        );
-
-        return;
-
-    }
-
-
-    const extension =
-        getFileExtension(
-            file.name
-        );
-
-
-    if(
-        ![
-            "pdf",
-            "ppt",
-            "pptx"
-        ].includes(
-            extension
+        document
+        .getElementById(
+            "resourceTitle"
         )
-    ){
+        .value
+        .trim();
+
+
+    const type =
+        document
+        .getElementById(
+            "resourceType"
+        )
+        .value;
+
+
+    const url =
+        document
+        .getElementById(
+            "resourceURL"
+        )
+        .value
+        .trim();
+
+
+    if(!title){
 
         alert(
-            "Only PDF, PPT and PPTX files are allowed."
+            "Please enter a resource title."
         );
 
         return;
@@ -4032,20 +3427,10 @@ async function(){
     }
 
 
-    /*
-       Basic size protection.
-       Firebase Storage is much better than
-       storing files directly inside Realtime Database.
-    */
-
-    const maxSize =
-        50 * 1024 * 1024;
-
-
-    if(file.size > maxSize){
+    if(!isValidURL(url)){
 
         alert(
-            "For this version, files must be 50 MB or smaller."
+            "Please enter a valid link."
         );
 
         return;
@@ -4053,162 +3438,228 @@ async function(){
     }
 
 
-    try{
+    if(editingResourceId){
 
-        const safeName =
-            file.name.replace(
-                /[^a-zA-Z0-9._-]/g,
-                "_"
-            );
-
-
-        const path =
-            "class-files/" +
-            Date.now() +
-            "_" +
-            safeName;
-
-
-        const fileStorageRef =
-            storageRef(
-                storage,
-                path
-            );
-
-
-        alert(
-            "Uploading file..."
-        );
-
-
-        await uploadBytes(
-            fileStorageRef,
-            file
-        );
-
-
-        const url =
-            await getDownloadURL(
-                fileStorageRef
-            );
-
-
-        const newFile =
-            push(filesRef);
-
-
-        await set(
-            newFile,
+        await update(
+            ref(
+                db,
+                "resources/" +
+                editingResourceId
+            ),
             {
-
-                title:
-                    title ||
-                    file.name,
-
-                name:
-                    file.name,
-
+                title,
+                type,
                 url,
-
-                storagePath:
-                    path,
-
                 author:
-                    currentUserName ||
-                    "Admin",
-
-                size:
-                    file.size,
-
-                createdAt:
-                    Date.now()
-
+                    username || "Admin"
             }
         );
 
+    }else{
 
-        closeFileModal();
+        const newResource =
+            push(resourcesRef);
 
 
-        alert(
-            "File uploaded successfully 📚"
-        );
-
-    }catch(error){
-
-        console.error(
-            error
-        );
-
-        alert(
-            "Could not upload the file.\n\nCheck that Firebase Storage is enabled."
+        await set(
+            newResource,
+            {
+                title,
+                type,
+                url,
+                author:
+                    username || "Admin",
+                createdAt:
+                    Date.now(),
+                order:
+                    Date.now()
+            }
         );
 
     }
+
+
+    closeResourceModal();
 
 };
 
 
 /* ============================================================
-   DELETE FILE
+   EDIT RESOURCE
 ============================================================ */
 
-window.deleteFile =
+window.editResource =
+function(id){
+
+    if(!admin) return;
+
+
+    const item =
+        resources[id];
+
+    if(!item) return;
+
+
+    editingResourceId = id;
+
+
+    document
+        .getElementById(
+            "resourceModalTitle"
+        )
+        .textContent =
+        "Edit Resource Link";
+
+
+    document
+        .getElementById(
+            "resourceTitle"
+        )
+        .value =
+        item.title || "";
+
+
+    document
+        .getElementById(
+            "resourceType"
+        )
+        .value =
+        item.type || "Other";
+
+
+    document
+        .getElementById(
+            "resourceURL"
+        )
+        .value =
+        item.url || "";
+
+
+    document
+        .getElementById(
+            "resourceModal"
+        )
+        .classList.add("show");
+
+};
+
+
+/* ============================================================
+   DELETE RESOURCE
+============================================================ */
+
+window.deleteResource =
 async function(id){
 
-    if(!admin){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-    }
-
-
-    const file =
-        files[id];
+    if(!admin) return;
 
 
     if(
         !confirm(
-            "Delete this file from the class files?"
+            "Delete this resource?"
         )
-    ){
-
-        return;
-
-    }
+    ) return;
 
 
-    try{
+    await remove(
+        ref(
+            db,
+            "resources/" + id
+        )
+    );
 
-        await remove(
-            dbRef(
-                db,
-                "files/" +
-                id
-            )
+};
+
+
+/* ============================================================
+   RESOURCE ARRANGING
+============================================================ */
+
+window.moveResourceUp =
+async function(id){
+
+    if(!admin) return;
+
+
+    const ordered =
+        getOrderedEntries(resources);
+
+    const index =
+        ordered.findIndex(
+            x => x[0] === id
         );
 
-        /*
-           The database record is removed.
-           Firebase Storage cleanup is intentionally
-           not attempted here because doing it securely
-           requires server-side Storage permissions.
-        */
 
-    }catch(error){
+    if(index <= 0) return;
 
-        console.error(
-            error
+
+    const current =
+        ordered[index];
+
+    const previous =
+        ordered[index-1];
+
+
+    const temp =
+        current[1].order;
+
+
+    await update(
+        ref(db,"resources"),
+        {
+            [current[0]+"/order"]:
+                previous[1].order,
+
+            [previous[0]+"/order"]:
+                temp
+        }
+    );
+
+};
+
+
+window.moveResourceDown =
+async function(id){
+
+    if(!admin) return;
+
+
+    const ordered =
+        getOrderedEntries(resources);
+
+    const index =
+        ordered.findIndex(
+            x => x[0] === id
         );
 
-        alert(
-            "Could not delete file."
-        );
 
-    }
+    if(
+        index < 0 ||
+        index >= ordered.length-1
+    ) return;
+
+
+    const current =
+        ordered[index];
+
+    const next =
+        ordered[index+1];
+
+
+    const temp =
+        current[1].order;
+
+
+    await update(
+        ref(db,"resources"),
+        {
+            [current[0]+"/order"]:
+                next[1].order,
+
+            [next[0]+"/order"]:
+                temp
+        }
+    );
 
 };
 
@@ -4217,70 +3668,81 @@ async function(id){
    CLASS CHAT
 ============================================================ */
 
-function renderChat(){
+window.sendClassMessage =
+async function(){
+
+    const input =
+        document.getElementById(
+            "classChatInput"
+        );
+
+
+    const text =
+        input.value.trim();
+
+
+    if(!text) return;
+
+
+    const message =
+        push(classChatRef);
+
+
+    await set(
+        message,
+        {
+            name:
+                username || "Anonymous",
+
+            text,
+
+            createdAt:
+                Date.now()
+        }
+    );
+
+
+    input.value = "";
+
+};
+
+
+function renderClassChat(){
 
     const container =
         document.getElementById(
-            "chatMessages"
+            "classChatMessages"
         );
 
     container.innerHTML = "";
 
 
-    const entries =
-        Object.entries(
-            chats
+    const messages =
+        Object.values(
+            classMessages
         )
         .sort(
             (a,b) =>
-                Number(
-                    a[1].createdAt || 0
-                ) -
-                Number(
-                    b[1].createdAt || 0
-                )
-        );
+                (a.createdAt || 0) -
+                (b.createdAt || 0)
+        )
+        .slice(-100);
 
 
-    if(!entries.length){
-
-        container.innerHTML = `
-
-            <div class="message ai">
-
-                <div class="message-name">
-                    BSN 2A
-                </div>
-
-                Welcome to the class chat! 👋
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    entries.forEach(
-        ([id,message]) => {
+    messages.forEach(
+        message => {
 
             const div =
                 document.createElement(
                     "div"
                 );
 
-
             div.className =
                 "message " +
                 (
-                    message.uid ===
-                    currentUserId
-                    ?
-                    "user"
-                    :
-                    "ai"
+                    message.name === username
+                    ? "user"
+                    : "ai"
                 );
 
 
@@ -4294,52 +3756,25 @@ function renderChat(){
 
             name.textContent =
                 message.name ||
-                "Student";
+                "Unknown";
+
+
+            const text =
+                document.createElement(
+                    "div"
+                );
+
+            text.textContent =
+                message.text || "";
 
 
             div.appendChild(
                 name
             );
 
-
-            if(message.text){
-
-                const text =
-                    document.createElement(
-                        "div"
-                    );
-
-                text.textContent =
-                    message.text;
-
-                div.appendChild(
-                    text
-                );
-
-            }
-
-
-            if(message.imageUrl){
-
-                const img =
-                    document.createElement(
-                        "img"
-                    );
-
-                img.className =
-                    "chat-image";
-
-                img.src =
-                    message.imageUrl;
-
-                img.alt =
-                    "Chat photo";
-
-                div.appendChild(
-                    img
-                );
-
-            }
+            div.appendChild(
+                text
+            );
 
 
             container.appendChild(
@@ -4356,12 +3791,27 @@ function renderChat(){
 }
 
 
-window.sendChat =
+/* ============================================================
+   ADMIN CHAT
+============================================================ */
+
+window.sendAdminMessage =
 async function(){
+
+    if(!admin){
+
+        alert(
+            "Admin access required."
+        );
+
+        return;
+
+    }
+
 
     const input =
         document.getElementById(
-            "chatInput"
+            "adminChatInput"
         );
 
 
@@ -4369,190 +3819,31 @@ async function(){
         input.value.trim();
 
 
-    if(!text){
-
-        return;
-
-    }
+    if(!text) return;
 
 
-    try{
-
-        const newMessage =
-            push(chatRef);
+    const message =
+        push(adminChatRef);
 
 
-        await set(
-            newMessage,
-            {
+    await set(
+        message,
+        {
+            name:
+                username || "Admin",
 
-                uid:
-                    currentUserId ||
-                    "unknown",
+            text,
 
-                name:
-                    currentUserName ||
-                    "Student",
-
-                text,
-
-                createdAt:
-                    Date.now()
-
-            }
-        );
+            createdAt:
+                Date.now()
+        }
+    );
 
 
-        input.value = "";
-
-    }catch(error){
-
-        console.error(
-            error
-        );
-
-        alert(
-            "Could not send message."
-        );
-
-    }
+    input.value = "";
 
 };
 
-
-/* ============================================================
-   CHAT PHOTOS
-============================================================ */
-
-window.sendChatPhoto =
-async function(){
-
-    const input =
-        document.getElementById(
-            "chatPhoto"
-        );
-
-
-    const file =
-        input.files[0];
-
-
-    if(!file){
-
-        return;
-
-    }
-
-
-    if(
-        !file.type.startsWith(
-            "image/"
-        )
-    ){
-
-        alert(
-            "Please choose an image."
-        );
-
-        return;
-
-    }
-
-
-    if(
-        file.size >
-        10 * 1024 * 1024
-    ){
-
-        alert(
-            "Please keep chat photos under 10 MB."
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        const safeName =
-            file.name.replace(
-                /[^a-zA-Z0-9._-]/g,
-                "_"
-            );
-
-
-        const path =
-            "chat-images/" +
-            Date.now() +
-            "_" +
-            safeName;
-
-
-        const imageRef =
-            storageRef(
-                storage,
-                path
-            );
-
-
-        await uploadBytes(
-            imageRef,
-            file
-        );
-
-
-        const imageUrl =
-            await getDownloadURL(
-                imageRef
-            );
-
-
-        const newMessage =
-            push(chatRef);
-
-
-        await set(
-            newMessage,
-            {
-
-                uid:
-                    currentUserId ||
-                    "unknown",
-
-                name:
-                    currentUserName ||
-                    "Student",
-
-                imageUrl,
-
-                createdAt:
-                    Date.now()
-
-            }
-        );
-
-
-        input.value = "";
-
-    }catch(error){
-
-        console.error(
-            error
-        );
-
-        alert(
-            "Could not upload photo."
-        );
-
-    }
-
-};
-
-
-/* ============================================================
-   ADMIN CHAT
-============================================================ */
 
 function renderAdminChat(){
 
@@ -4560,7 +3851,6 @@ function renderAdminChat(){
         document.getElementById(
             "adminChatMessages"
         );
-
 
     container.innerHTML = "";
 
@@ -4572,50 +3862,25 @@ function renderAdminChat(){
     }
 
 
-    const entries =
-        Object.entries(
-            adminChats
+    const messages =
+        Object.values(
+            adminMessages
         )
         .sort(
             (a,b) =>
-                Number(
-                    a[1].createdAt || 0
-                ) -
-                Number(
-                    b[1].createdAt || 0
-                )
-        );
+                (a.createdAt || 0) -
+                (b.createdAt || 0)
+        )
+        .slice(-100);
 
 
-    if(!entries.length){
-
-        container.innerHTML = `
-
-            <div class="message admin">
-
-                <div class="message-name">
-                    Administrator Chat
-                </div>
-
-                No admin messages yet.
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    entries.forEach(
-        ([id,message]) => {
+    messages.forEach(
+        message => {
 
             const div =
                 document.createElement(
                     "div"
                 );
-
 
             div.className =
                 "message admin";
@@ -4631,52 +3896,25 @@ function renderAdminChat(){
 
             name.textContent =
                 message.name ||
-                "Administrator";
+                "Admin";
+
+
+            const text =
+                document.createElement(
+                    "div"
+                );
+
+            text.textContent =
+                message.text || "";
 
 
             div.appendChild(
                 name
             );
 
-
-            if(message.text){
-
-                const text =
-                    document.createElement(
-                        "div"
-                    );
-
-                text.textContent =
-                    message.text;
-
-                div.appendChild(
-                    text
-                );
-
-            }
-
-
-            if(message.imageUrl){
-
-                const img =
-                    document.createElement(
-                        "img"
-                    );
-
-                img.className =
-                    "chat-image";
-
-                img.src =
-                    message.imageUrl;
-
-                img.alt =
-                    "Admin chat photo";
-
-                div.appendChild(
-                    img
-                );
-
-            }
+            div.appendChild(
+                text
+            );
 
 
             container.appendChild(
@@ -4693,205 +3931,119 @@ function renderAdminChat(){
 }
 
 
-window.sendAdminChat =
-async function(){
+/* ============================================================
+   ONLINE PRESENCE
+============================================================ */
 
-    if(!admin){
+function setupPresence(){
 
-        alert(
-            "Admin access required."
+    if(!username) return;
+
+
+    const key =
+        safeKey(
+            username
         );
 
-        return;
-    }
+
+    const myPresence =
+        ref(
+            db,
+            "presence/" + key
+        );
 
 
-    const input =
+    set(
+        myPresence,
+        {
+            name:username,
+            online:true,
+            lastSeen:
+                Date.now()
+        }
+    );
+
+
+    onDisconnect(
+        myPresence
+    ).remove();
+
+
+    window.addEventListener(
+        "beforeunload",
+        () => {
+
+            remove(
+                myPresence
+            );
+
+        }
+    );
+
+}
+
+
+function renderOnlineUsers(){
+
+    const container =
         document.getElementById(
-            "adminChatInput"
+            "onlineList"
         );
 
 
-    const text =
-        input.value.trim();
+    container.innerHTML = "";
 
 
-    if(!text){
+    const users =
+        Object.values(
+            onlineUsers
+        );
+
+
+    if(users.length === 0){
+
+        container.textContent =
+            "No one online";
 
         return;
 
     }
 
 
-    try{
+    users.forEach(
+        user => {
 
-        const message =
-            push(adminChatRef);
+            const row =
+                document.createElement(
+                    "div"
+                );
 
-
-        await set(
-            message,
-            {
-
-                uid:
-                    currentUserId,
-
-                name:
-                    currentUserName ||
-                    "Administrator",
-
-                text,
-
-                createdAt:
-                    Date.now()
-
-            }
-        );
+            row.className =
+                "online-user";
 
 
-        input.value = "";
+            row.innerHTML = `
 
-    }catch(error){
+                <span class="online-dot"></span>
 
-        console.error(
-            error
-        );
+                <span>
+                    ${escapeHTML(
+                        user.name ||
+                        "Unknown"
+                    )}
+                </span>
 
-        alert(
-            "Could not send admin message."
-        );
-
-    }
-
-};
+            `;
 
 
-window.sendAdminChatPhoto =
-async function(){
-
-    if(!admin){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-    }
-
-
-    const input =
-        document.getElementById(
-            "adminChatPhoto"
-        );
-
-
-    const file =
-        input.files[0];
-
-
-    if(!file){
-
-        return;
-
-    }
-
-
-    if(!file.type.startsWith("image/")){
-
-        alert(
-            "Please choose an image."
-        );
-
-        return;
-
-    }
-
-
-    if(file.size > 10 * 1024 * 1024){
-
-        alert(
-            "Please keep photos under 10 MB."
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        const safeName =
-            file.name.replace(
-                /[^a-zA-Z0-9._-]/g,
-                "_"
+            container.appendChild(
+                row
             );
 
+        }
+    );
 
-        const path =
-            "admin-chat-images/" +
-            Date.now() +
-            "_" +
-            safeName;
-
-
-        const imageRef =
-            storageRef(
-                storage,
-                path
-            );
-
-
-        await uploadBytes(
-            imageRef,
-            file
-        );
-
-
-        const imageUrl =
-            await getDownloadURL(
-                imageRef
-            );
-
-
-        const message =
-            push(adminChatRef);
-
-
-        await set(
-            message,
-            {
-
-                uid:
-                    currentUserId,
-
-                name:
-                    currentUserName ||
-                    "Administrator",
-
-                imageUrl,
-
-                createdAt:
-                    Date.now()
-
-            }
-        );
-
-
-        input.value = "";
-
-    }catch(error){
-
-        console.error(
-            error
-        );
-
-        alert(
-            "Could not upload admin photo."
-        );
-
-    }
-
-};
+}
 
 
 /* ============================================================
@@ -4903,7 +4055,7 @@ function(){
 
     const input =
         document.getElementById(
-            "aiInput"
+            "assistantInput"
         );
 
 
@@ -4911,14 +4063,10 @@ function(){
         input.value.trim();
 
 
-    if(!question){
-
-        return;
-
-    }
+    if(!question) return;
 
 
-    addAIMessage(
+    addAssistantMessage(
         question,
         "user"
     );
@@ -4936,7 +4084,7 @@ function(){
     setTimeout(
         () => {
 
-            addAIMessage(
+            addAssistantMessage(
                 answer,
                 "ai"
             );
@@ -4948,14 +4096,14 @@ function(){
 };
 
 
-function addAIMessage(
+function addAssistantMessage(
     text,
     type
 ){
 
     const container =
         document.getElementById(
-            "aiMessages"
+            "assistantMessages"
         );
 
 
@@ -4964,11 +4112,8 @@ function addAIMessage(
             "div"
         );
 
-
     message.className =
-        "message " +
-        type;
-
+        "message " + type;
 
     message.textContent =
         text;
@@ -5001,22 +4146,19 @@ function generateAssistantAnswer(
         const tomorrow =
             new Date();
 
-
         tomorrow.setDate(
-            tomorrow.getDate() + 1
+            tomorrow.getDate()+1
         );
 
 
         const date =
             tomorrow
-                .toISOString()
-                .split("T")[0];
+            .toISOString()
+            .split("T")[0];
 
 
         const due =
-            Object.values(
-                tasks
-            )
+            Object.values(tasks)
             .filter(
                 task =>
                     task.due === date
@@ -5026,7 +4168,8 @@ function generateAssistantAnswer(
         if(!due.length){
 
             return (
-                "🎉 You have no tasks due tomorrow."
+                "🎉 You have no tasks " +
+                "due tomorrow."
             );
 
         }
@@ -5034,11 +4177,13 @@ function generateAssistantAnswer(
 
         return (
             "📚 Due tomorrow:\n\n" +
-            due.map(
+            due
+            .map(
                 task =>
                     "• " +
                     task.title
-            ).join("\n")
+            )
+            .join("\n")
         );
 
     }
@@ -5052,65 +4197,53 @@ function generateAssistantAnswer(
     ){
 
         const list =
-            Object.values(
-                tasks
-            )
-            .sort(
-                (a,b) =>
-                    (a.due || "")
-                    .localeCompare(
-                        b.due || ""
-                    )
-            );
+            Object.values(tasks);
 
 
         if(!list.length){
 
             return (
-                "🎉 There are currently no tasks."
+                "🎉 There are currently " +
+                "no tasks."
             );
 
         }
 
 
         return (
-            "📋 Class tasks:\n\n" +
-            list.map(
+            "📋 Tasks:\n\n" +
+            list
+            .map(
                 task =>
                     "• " +
                     task.title +
                     (
                         task.due
-                        ?
-                        " — " +
-                        formatDate(
-                            task.due
-                        )
-                        :
-                        ""
+                        ? " — " +
+                          formatDate(
+                              task.due
+                          )
+                        : ""
                     )
-            ).join("\n")
+            )
+            .join("\n")
         );
 
     }
 
 
     const matchingNotes =
-        Object.values(
-            notes
-        )
+        Object.values(notes)
         .filter(
             note => {
 
                 const combined =
                     (
-                        note.title ||
-                        ""
+                        note.title || ""
                     ) +
                     " " +
                     (
-                        note.text ||
-                        ""
+                        note.text || ""
                     );
 
 
@@ -5120,10 +4253,10 @@ function generateAssistantAnswer(
                         word =>
                             word.length > 2 &&
                             combined
-                                .toLowerCase()
-                                .includes(
-                                    word
-                                )
+                            .toLowerCase()
+                            .includes(
+                                word
+                            )
                     );
 
             }
@@ -5136,25 +4269,28 @@ function generateAssistantAnswer(
         matchingNotes.length
     ){
 
-        if(!matchingNotes.length){
+        if(
+            !matchingNotes.length
+        ){
 
             return (
-                "🔎 I couldn't find a matching note."
+                "🔎 I couldn't find " +
+                "a matching note."
             );
 
         }
 
 
         return (
-            "📝 I found these notes:\n\n" +
+            "📝 Matching notes:\n\n" +
             matchingNotes
-                .slice(0,5)
-                .map(
-                    note =>
-                        "• " +
-                        note.title
-                )
-                .join("\n")
+            .slice(0,5)
+            .map(
+                note =>
+                    "• " +
+                    note.title
+            )
+            .join("\n")
         );
 
     }
@@ -5167,9 +4303,7 @@ function generateAssistantAnswer(
     ){
 
         const upcoming =
-            Object.values(
-                tasks
-            )
+            Object.values(tasks)
             .filter(
                 task =>
                     task.due
@@ -5186,7 +4320,8 @@ function generateAssistantAnswer(
         if(!upcoming.length){
 
             return (
-                "You don't have any upcoming dated tasks."
+                "You don't have " +
+                "any upcoming tasks."
             );
 
         }
@@ -5194,7 +4329,8 @@ function generateAssistantAnswer(
 
         return (
             "📅 Upcoming:\n\n" +
-            upcoming.map(
+            upcoming
+            .map(
                 task =>
                     "• " +
                     task.title +
@@ -5202,41 +4338,17 @@ function generateAssistantAnswer(
                     formatDate(
                         task.due
                     )
-            ).join("\n")
+            )
+            .join("\n")
         );
 
     }
 
 
-    if(
-        q.includes("how many") &&
-        q.includes("note")
-    ){
+    return `
 
-        return (
-            "📝 There are " +
-            Object.keys(notes).length +
-            " notes."
-        );
-
-    }
-
-
-    if(
-        q.includes("how many") &&
-        q.includes("task")
-    ){
-
-        return (
-            "✅ There are " +
-            Object.keys(tasks).length +
-            " tasks."
-        );
-
-    }
-
-
-    return `🤖 I can help you check BSN 2A information.
+🤖 I can help you check your
+BSN 2A information.
 
 Try asking:
 
@@ -5245,7 +4357,8 @@ Try asking:
 • What is upcoming?
 • Show my notes.
 • Show notes about NCM 105.
-• How many notes are there?`;
+
+    `.trim();
 
 }
 
@@ -5258,339 +4371,69 @@ window.searchEverything =
 function(){
 
     const query =
-        document.getElementById(
+        document
+        .getElementById(
             "searchInput"
-        ).value.trim();
+        )
+        .value
+        .trim();
 
-
-    /*
-       Search ONLY notes and tasks.
-       Chat is intentionally not searched.
-    */
 
     renderNotes(query);
 
     renderTasks(query);
 
+    renderResources(query);
+
 };
 
 
 /* ============================================================
-   AUTO DELETE AFTER 30 DAYS
+   ONE-MONTH AUTO DELETE
 ============================================================ */
-
-const AUTO_DELETE_DAYS =
-    30;
-
-
-const AUTO_DELETE_MS =
-    AUTO_DELETE_DAYS *
-    24 *
-    60 *
-    60 *
-    1000;
-
 
 async function cleanupOldData(){
 
-    if(!admin){
+    /*
+      30 days.
+    */
 
-        return;
-
-    }
+    const month =
+        30 *
+        24 *
+        60 *
+        60 *
+        1000;
 
 
     const cutoff =
-        Date.now() -
-        AUTO_DELETE_MS;
+        Date.now() - month;
 
 
-    try{
+    /*
+      Only admin performs cleanup.
+      This prevents every student from
+      attempting deletion.
+    */
 
-        /*
-           NOTES
-        */
-
-        for(
-            const [id,note]
-            of Object.entries(notes)
-        ){
-
-            if(
-                Number(
-                    note.createdAt || 0
-                ) < cutoff
-            ){
-
-                await remove(
-                    dbRef(
-                        db,
-                        "notes/" +
-                        id
-                    )
-                );
-
-            }
-
-        }
-
-
-        /*
-           TASKS
-        */
-
-        for(
-            const [id,task]
-            of Object.entries(tasks)
-        ){
-
-            if(
-                Number(
-                    task.createdAt || 0
-                ) < cutoff
-            ){
-
-                await remove(
-                    dbRef(
-                        db,
-                        "tasks/" +
-                        id
-                    )
-                );
-
-            }
-
-        }
-
-
-        /*
-           FILE DATABASE RECORDS
-        */
-
-        for(
-            const [id,file]
-            of Object.entries(files)
-        ){
-
-            if(
-                Number(
-                    file.createdAt || 0
-                ) < cutoff
-            ){
-
-                await remove(
-                    dbRef(
-                        db,
-                        "files/" +
-                        id
-                    )
-                );
-
-            }
-
-        }
-
-
-        /*
-           CLASS CHAT
-        */
-
-        for(
-            const [id,message]
-            of Object.entries(chats)
-        ){
-
-            if(
-                Number(
-                    message.createdAt || 0
-                ) < cutoff
-            ){
-
-                await remove(
-                    dbRef(
-                        db,
-                        "chat/" +
-                        id
-                    )
-                );
-
-            }
-
-        }
-
-
-        /*
-           ADMIN CHAT
-        */
-
-        for(
-            const [id,message]
-            of Object.entries(adminChats)
-        ){
-
-            if(
-                Number(
-                    message.createdAt || 0
-                ) < cutoff
-            ){
-
-                await remove(
-                    dbRef(
-                        db,
-                        "adminChat/" +
-                        id
-                    )
-                );
-
-            }
-
-        }
-
-    }catch(error){
-
-        console.error(
-            "Automatic cleanup failed:",
-            error
-        );
-
-    }
-
-}
-
-
-/* ============================================================
-   OFFLINE PENDING ACTIONS
-============================================================ */
-
-function getPendingChanges(){
-
-    try{
-
-        return JSON.parse(
-            localStorage.getItem(
-                "bsnPendingChanges"
-            ) || "[]"
-        );
-
-    }catch{
-
-        return [];
-
-    }
-
-}
-
-
-function savePendingChanges(
-    changes
-){
-
-    localStorage.setItem(
-        "bsnPendingChanges",
-        JSON.stringify(
-            changes
-        )
-    );
-
-}
-
-
-async function queueChange(
-    action
-){
-
-    const changes =
-        getPendingChanges();
-
-
-    changes.push(
-        action
-    );
-
-
-    savePendingChanges(
-        changes
-    );
-
-}
-
-
-async function syncPendingChanges(){
-
-    if(!navigator.onLine){
-
-        return;
-
-    }
-
-
-    const changes =
-        getPendingChanges();
-
-
-    if(!changes.length){
-
-        return;
-
-    }
-
-
-    const remaining = [];
+    if(!admin) return;
 
 
     for(
-        const action
-        of changes
+        const [id,item]
+        of Object.entries(notes)
     ){
 
-        try{
+        if(
+            item.createdAt &&
+            item.createdAt < cutoff
+        ){
 
-            if(action.type === "set"){
-
-                await set(
-                    dbRef(
-                        db,
-                        action.path
-                    ),
-                    action.value
-                );
-
-            }
-
-
-            if(action.type === "update"){
-
-                await update(
-                    dbRef(
-                        db,
-                        action.path
-                    ),
-                    action.value
-                );
-
-            }
-
-
-            if(action.type === "remove"){
-
-                await remove(
-                    dbRef(
-                        db,
-                        action.path
-                    )
-                );
-
-            }
-
-        }catch(error){
-
-            console.error(
-                "Sync failed:",
-                error
-            );
-
-            remaining.push(
-                action
+            await remove(
+                ref(
+                    db,
+                    "notes/" + id
+                )
             );
 
         }
@@ -5598,9 +4441,55 @@ async function syncPendingChanges(){
     }
 
 
-    savePendingChanges(
-        remaining
-    );
+    for(
+        const [id,item]
+        of Object.entries(tasks)
+    ){
+
+        if(
+            item.createdAt &&
+            item.createdAt < cutoff
+        ){
+
+            await remove(
+                ref(
+                    db,
+                    "tasks/" + id
+                )
+            );
+
+            await remove(
+                ref(
+                    db,
+                    "taskChecks/" + id
+                )
+            );
+
+        }
+
+    }
+
+
+    for(
+        const [id,item]
+        of Object.entries(resources)
+    ){
+
+        if(
+            item.createdAt &&
+            item.createdAt < cutoff
+        ){
+
+            await remove(
+                ref(
+                    db,
+                    "resources/" + id
+                )
+            );
+
+        }
+
+    }
 
 }
 
@@ -5609,15 +4498,35 @@ async function syncPendingChanges(){
    HELPERS
 ============================================================ */
 
+function getOrderedEntries(
+    object
+){
+
+    return Object
+        .entries(object)
+        .sort(
+            (a,b) =>
+                (
+                    a[1].order ??
+                    a[1].createdAt ??
+                    0
+                ) -
+                (
+                    b[1].order ??
+                    b[1].createdAt ??
+                    0
+                )
+        );
+
+}
+
+
 function formatDate(
     dateString
 ){
 
-    if(!dateString){
-
+    if(!dateString)
         return "";
-
-    }
 
 
     const date =
@@ -5643,29 +4552,129 @@ function escapeHTML(
     value
 ){
 
-    return String(
-        value
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+function safeKey(
+    value
+){
+
+    return String(value || "guest")
+        .replace(
+            /[.#$[\]/]/g,
+            "_"
+        );
+
+}
+
+
+function isValidURL(
+    value
+){
+
+    try{
+
+        const url =
+            new URL(value);
+
+        return (
+            url.protocol === "http:" ||
+            url.protocol === "https:"
+        );
+
+    }catch{
+
+        return false;
+
+    }
+
+}
+
+
+function safeURL(
+    value
+){
+
+    if(
+        !isValidURL(value)
+    ){
+
+        return "#";
+
+    }
+
+    return escapeHTML(value);
+
+}
+
+
+/* ============================================================
+   CONNECTION STATUS
+============================================================ */
+
+window.addEventListener(
+    "online",
+    () => {
+
+        document
+            .getElementById(
+                "connectionStatus"
+            )
+            .textContent =
+            "🟢 Online";
+
+    }
+);
+
+
+window.addEventListener(
+    "offline",
+    () => {
+
+        document
+            .getElementById(
+                "connectionStatus"
+            )
+            .textContent =
+            "🟠 Offline";
+
+    }
+);
+
+
+/* ============================================================
+   SESSION ADMIN
+============================================================ */
+
+if(
+    sessionStorage.getItem(
+        "bsnAdmin"
+    ) === "true"
+){
+
+    admin = true;
 
 }
 
@@ -5674,46 +4683,32 @@ function escapeHTML(
    START
 ============================================================ */
 
-loadCachedData();
+loadTheme();
 
 loadUsername();
 
-restoreAdmin();
-
-updateConnectionUI();
-
-startAuthentication();
+updateAdminUI();
 
 
-/*
-   Run cleanup once after a short delay
-   if admin mode is already enabled.
-*/
+if(
+    navigator.onLine
+){
 
-setTimeout(
-    () => {
+    document
+        .getElementById(
+            "connectionStatus"
+        )
+        .textContent =
+        "🟢 Online";
 
-        if(admin){
+}else{
 
-            cleanupOldData();
-
-        }
-
-    },
-    3000
-);
-
-
-/*
-   Try pending offline changes.
-*/
-
-if(navigator.onLine){
-
-    setTimeout(
-        syncPendingChanges,
-        2500
-    );
+    document
+        .getElementById(
+            "connectionStatus"
+        )
+        .textContent =
+        "🟠 Offline";
 
 }
 
