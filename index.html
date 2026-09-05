@@ -1,4716 +1,1356 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#245c43">
 <title>BSN 2A Notes</title>
 
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f6f2e9;color:#1e2b25}
+button,input,textarea,select{font:inherit}
+
+.side{
+ position:fixed;inset:0 auto 0 0;width:240px;padding:22px 16px;
+ background:linear-gradient(#173f2d,#285c43);color:#fff
 }
-
-:root{
-    --green:#245c43;
-    --green2:#3d7a5b;
-    --darkgreen:#173f2d;
-    --light-green:#e7f0e8;
-    --cream:#f6f2e9;
-    --white:#ffffff;
-    --text:#1e2b25;
-    --muted:#718078;
-    --danger:#c94b4b;
-    --border:#e3e0d8;
-    --card:#ffffff;
-    --input:#ffffff;
-    --shadow:0 5px 20px rgba(30,50,40,.10);
+.logo{text-align:center}
+.logo b{
+ display:flex;width:75px;height:75px;margin:auto;border:4px solid #dcebd7;
+ border-radius:20px;align-items:center;justify-content:center
 }
-
-body.dark{
-    --cream:#111715;
-    --white:#1a211e;
-    --text:#edf4ef;
-    --muted:#9baaa2;
-    --border:#303a35;
-    --card:#1b2420;
-    --input:#202a26;
-    --light-green:#263b31;
-    --shadow:0 5px 20px rgba(0,0,0,.35);
-    background:#111715;
-    color:#edf4ef;
-}
-
-body{
-    font-family:Arial,sans-serif;
-    background:var(--cream);
-    color:var(--text);
-    min-height:100vh;
-    transition:.2s;
-}
-
-/* SIDEBAR */
-
-.sidebar{
-    position:fixed;
-    left:0;
-    top:0;
-    width:240px;
-    height:100vh;
-    background:linear-gradient(180deg,#173f2d,#285c43);
-    color:white;
-    padding:25px 18px;
-    z-index:20;
-}
-
-.logo{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.logo-symbol{
-    width:80px;
-    height:80px;
-    border:4px solid #dcebd7;
-    border-radius:20px;
-    margin:auto;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    font-size:22px;
-    line-height:1.05;
-    font-weight:bold;
-    background:rgba(255,255,255,.08);
-}
-
-.logo h1{
-    margin-top:12px;
-    font-family:Georgia,serif;
-    font-size:28px;
-}
-
-.logo p{
-    margin-top:5px;
-    opacity:.8;
-    font-size:13px;
-}
-
-.nav{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-}
-
 .nav button{
-    border:none;
-    background:transparent;
-    color:white;
-    text-align:left;
-    padding:13px 15px;
-    border-radius:12px;
-    cursor:pointer;
-    font-size:15px;
-    transition:.2s;
+ display:block;width:100%;margin:7px 0;padding:12px;border:0;
+ border-radius:10px;background:transparent;color:white;text-align:left;cursor:pointer
+}
+.nav button:hover,.nav .on{background:#ffffff25}
+
+.user{
+ position:absolute;bottom:18px;left:16px;right:16px;padding:12px;
+ background:#ffffff18;border-radius:12px
+}
+.online{margin-top:9px;font-size:12px;max-height:115px;overflow:auto}
+.dot{
+ display:inline-block;width:7px;height:7px;border-radius:50%;
+ background:#7ee08d;margin-right:5px
 }
 
-.nav button:hover,
-.nav button.active{
-    background:rgba(255,255,255,.17);
-}
-
-/* ONLINE PEOPLE */
-
-.user-box{
-    position:absolute;
-    bottom:20px;
-    left:18px;
-    right:18px;
-    padding:13px;
-    background:rgba(255,255,255,.12);
-    border-radius:14px;
-    font-size:13px;
-}
-
-#adminStatus{
-    color:#b8e5bd;
-    margin-top:4px;
-}
-
-.online-title{
-    margin-top:12px;
-    margin-bottom:7px;
-    font-weight:bold;
-}
-
-.online-list{
-    max-height:150px;
-    overflow-y:auto;
-}
-
-.online-user{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    margin:5px 0;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.online-dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#69d58b;
-    flex-shrink:0;
-}
-
-/* MAIN */
-
-.main{
-    margin-left:240px;
-    min-height:100vh;
-    padding:25px 35px;
-}
-
-.topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
-    gap:20px;
-}
-
-.search{
-    background:var(--input);
-    color:var(--text);
-    border-radius:14px;
-    padding:13px 18px;
-    width:min(600px,100%);
-    border:1px solid var(--border);
-    outline:none;
-    font-size:15px;
-}
-
-.search::placeholder,
-input::placeholder,
-textarea::placeholder{
-    color:var(--muted);
-}
-
-.top-actions{
-    display:flex;
-    gap:10px;
-}
-
+.main{margin-left:240px;padding:25px}
+.top{display:flex;gap:10px;margin-bottom:20px}
+.search{flex:1;padding:12px;border:1px solid #ddd;border-radius:12px}
 .btn{
-    border:none;
-    background:var(--green);
-    color:white;
-    border-radius:10px;
-    padding:11px 16px;
-    cursor:pointer;
-    font-weight:bold;
+ border:0;border-radius:10px;padding:11px 15px;
+ background:#245c43;color:#fff;cursor:pointer
 }
 
-.btn:hover{
-    opacity:.9;
+.sec{display:none}
+.sec.on{display:block}
+
+.hero,.card,.task,.chat{
+ background:#fff;border-radius:18px;padding:22px;margin-bottom:18px;
+ box-shadow:0 5px 20px #1e322015
 }
-
-.btn.secondary{
-    background:#e4ebe4;
-    color:var(--green);
-}
-
-body.dark .btn.secondary{
-    background:#293731;
-    color:#cde4d4;
-}
-
-.btn.danger{
-    background:var(--danger);
-}
-
-.theme-btn{
-    border:none;
-    background:var(--card);
-    color:var(--text);
-    border:1px solid var(--border);
-    border-radius:10px;
-    padding:10px 13px;
-    cursor:pointer;
-}
-
-/* HERO */
-
-.hero{
-    background:linear-gradient(110deg,#e4efdc,#f4f2df);
-    border-radius:22px;
-    padding:35px;
-    margin-bottom:25px;
-    box-shadow:var(--shadow);
-}
-
-body.dark .hero{
-    background:linear-gradient(110deg,#1d3027,#252c24);
-}
-
-.hero h2{
-    font-family:Georgia,serif;
-    font-size:clamp(30px,4vw,48px);
-    color:#173f2d;
-}
-
-body.dark .hero h2{
-    color:#dceee2;
-}
-
-.hero p{
-    margin-top:10px;
-    max-width:800px;
-    line-height:1.6;
-    color:#526158;
-}
-
-body.dark .hero p{
-    color:#aab8b1;
-}
-
-/* SECTIONS */
-
-.section{
-    display:none;
-}
-
-.section.active{
-    display:block;
-}
-
-.section-title{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin:25px 0 15px;
-    gap:10px;
-}
-
-.section-title h2{
-    font-family:Georgia,serif;
-}
-
-/* CARDS */
+.hero{background:linear-gradient(110deg,#e4efdc,#f4f2df)}
+h1,h2,h3{font-family:Georgia,serif}
 
 .cards{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:18px;
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+ gap:16px
 }
 
 .card{
-    background:var(--card);
-    border-radius:17px;
-    padding:22px;
-    box-shadow:var(--shadow);
-    border:1px solid var(--border);
-    transition:.2s;
-    min-width:0;
+ display:block;
+ cursor:default;
+ transition:.15s
 }
 
-.card:hover{
-    transform:translateY(-2px);
+.card[draggable="true"]{
+ cursor:grab
+}
+
+.card[draggable="true"]:active{
+ cursor:grabbing
+}
+
+.card.dragging{
+ opacity:.45;
+ transform:scale(.98)
+}
+
+.card.drag-over{
+ outline:3px dashed #3d7a5b;
+ outline-offset:4px
 }
 
 .card h3{
-    font-family:Georgia,serif;
-    font-size:22px;
-    margin:0 0 10px 0;
-    color:#173f2d;
-    overflow-wrap:anywhere;
-    word-break:break-word;
+ margin:0 0 12px 0
 }
 
-body.dark .card h3{
-    color:#d8eee0;
+.text{
+ display:block;
+ width:100%;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ line-height:1.65;
+ color:#526158
 }
-
-/*
- IMPORTANT:
- The note title and text are separate normal block elements.
- This prevents the text from appearing shifted to the right.
-*/
-
-.card-text{
-    display:block;
-    width:100%;
-    margin:0;
-    padding:0;
-    text-align:left;
-    white-space:pre-wrap;
-    word-break:break-word;
-    overflow-wrap:anywhere;
-    line-height:1.65;
-    color:#526158;
-}
-
-body.dark .card-text{
-    color:#b8c5be;
-}
-
-.card-date{
-    color:var(--muted);
-    font-size:12px;
-    margin-top:15px;
-}
-
-.card-buttons{
-    display:flex;
-    flex-wrap:wrap;
-    gap:7px;
-    margin-top:16px;
-}
-
-.small-btn{
-    border:none;
-    padding:8px 12px;
-    border-radius:8px;
-    cursor:pointer;
-    background:#e8efe9;
-    color:var(--green);
-}
-
-body.dark .small-btn{
-    background:#293731;
-    color:#cde4d4;
-}
-
-.small-btn.delete{
-    background:#f9e1e1;
-    color:var(--danger);
-}
-
-/* LINKS */
-
-.resource-card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:17px;
-    padding:20px;
-    margin-bottom:12px;
-    box-shadow:var(--shadow);
-}
-
-.resource-top{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-}
-
-.resource-title{
-    font-family:Georgia,serif;
-    font-size:21px;
-    font-weight:bold;
-    overflow-wrap:anywhere;
-}
-
-.resource-type{
-    background:var(--light-green);
-    color:var(--green);
-    padding:5px 9px;
-    border-radius:20px;
-    font-size:11px;
-    white-space:nowrap;
-    height:max-content;
-}
-
-.resource-url{
-    margin-top:9px;
-    color:var(--muted);
-    word-break:break-all;
-    font-size:13px;
-}
-
-.open-link{
-    display:inline-block;
-    margin-top:13px;
-    text-decoration:none;
-    background:var(--green);
-    color:white;
-    padding:9px 13px;
-    border-radius:9px;
-    font-size:13px;
-}
-
-/* TASKS */
 
 .task{
-    display:flex;
-    align-items:flex-start;
-    gap:13px;
-    padding:17px;
-    background:var(--card);
-    border-radius:13px;
-    margin-bottom:10px;
-    box-shadow:var(--shadow);
-    border:1px solid var(--border);
+ display:flex;
+ gap:12px;
+ align-items:flex-start
 }
 
-.task-check{
-    width:22px;
-    height:22px;
-    margin-top:2px;
-    cursor:pointer;
+.task input{
+ width:22px;
+ height:22px;
+ cursor:pointer
 }
 
-.task-info{
-    flex:1;
-    min-width:0;
+.done{
+ text-decoration:line-through;
+ opacity:.55
 }
 
-.task-title{
-    font-weight:bold;
-    overflow-wrap:anywhere;
+.actions{
+ margin-top:12px;
+ display:flex;
+ gap:7px;
+ flex-wrap:wrap
 }
 
-.task-due{
-    color:var(--muted);
-    font-size:13px;
-    margin-top:5px;
+.small{
+ border:0;
+ padding:7px 10px;
+ border-radius:8px;
+ background:#e8efe9;
+ color:#245c43;
+ cursor:pointer
 }
 
-.completed .task-title{
-    text-decoration:line-through;
-    opacity:.55;
+.del{
+ background:#f9e1e1;
+ color:#c94b4b
 }
 
-.task-description{
-    margin-top:8px;
-    color:#65726b;
-    white-space:pre-wrap;
-    overflow-wrap:anywhere;
-    line-height:1.5;
+.msg{
+ padding:10px 13px;
+ margin:8px 0;
+ border-radius:12px;
+ white-space:pre-wrap;
+ max-width:85%;
+ background:#f1eee6
 }
 
-body.dark .task-description{
-    color:#aebbb4;
+.me{
+ margin-left:auto;
+ background:#e7f0e8
 }
 
-.my-check-label{
-    font-size:11px;
-    color:var(--muted);
-    margin-top:4px;
+.chatlog{
+ height:380px;
+ overflow:auto
 }
 
-/* MODAL */
-
-.modal-bg{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    z-index:100;
+.chatrow{
+ display:flex;
+ gap:8px;
+ margin-top:10px
 }
 
-.modal-bg.show{
-    display:flex;
+.chatrow input{
+ flex:1;
+ padding:12px;
+ border:1px solid #ddd;
+ border-radius:10px
 }
 
 .modal{
-    background:var(--card);
-    color:var(--text);
-    width:min(700px,100%);
-    max-height:90vh;
-    overflow-y:auto;
-    border-radius:20px;
-    padding:25px;
-    box-shadow:0 20px 60px rgba(0,0,0,.25);
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#0008;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ z-index:50
 }
 
-.modal h2{
-    font-family:Georgia,serif;
-    margin-bottom:20px;
+.modal.on{display:flex}
+
+.box{
+ background:#fff;
+ padding:24px;
+ border-radius:18px;
+ width:min(650px,100%)
 }
 
-.input,
-.textarea,
-.select{
-    width:100%;
-    padding:13px;
-    background:var(--input);
-    color:var(--text);
-    border:1px solid var(--border);
-    border-radius:10px;
-    margin-bottom:14px;
-    outline:none;
-    font-family:inherit;
+.box input,.box textarea,.box select{
+ width:100%;
+ padding:12px;
+ margin:7px 0;
+ border:1px solid #ddd;
+ border-radius:10px
 }
 
-.textarea{
-    min-height:250px;
-    resize:vertical;
-    line-height:1.6;
+.box textarea{min-height:190px}
+
+.login{
+ position:fixed;
+ inset:0;
+ background:linear-gradient(135deg,#173f2d,#3d7a5b);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ z-index:100
 }
 
-.modal-actions{
-    display:flex;
-    justify-content:flex-end;
-    gap:10px;
-    flex-wrap:wrap;
+.loginbox{
+ background:#fff;
+ padding:30px;
+ border-radius:20px;
+ width:min(400px,90%);
+ text-align:center
 }
 
-/* CHAT */
-
-.chat-box{
-    background:var(--card);
-    border-radius:18px;
-    box-shadow:var(--shadow);
-    padding:20px;
-    max-width:900px;
-    border:1px solid var(--border);
+.loginbox input{
+ width:100%;
+ padding:13px;
+ margin:10px 0;
+ border:1px solid #ddd;
+ border-radius:10px
 }
 
-.chat-messages{
-    min-height:350px;
-    max-height:500px;
-    overflow-y:auto;
-    padding:10px;
+.hide{display:none!important}
+
+body.dark{
+ background:#101714;
+ color:#edf4ef
 }
 
-.message{
-    margin-bottom:15px;
-    padding:12px 15px;
-    border-radius:12px;
-    max-width:85%;
-    line-height:1.5;
-    white-space:pre-wrap;
-    overflow-wrap:anywhere;
+body.dark .card,
+body.dark .task,
+body.dark .chat,
+body.dark .box,
+body.dark .loginbox{
+ background:#18211d;
+ color:#edf4ef
 }
 
-.message.user{
-    background:var(--light-green);
-    margin-left:auto;
+body.dark .hero{background:#203329}
+body.dark .text{color:#bdc9c2}
+
+body.dark input,
+body.dark textarea,
+body.dark select{
+ background:#18211d;
+ color:#fff;
+ border-color:#3b4942
 }
 
-.message.ai{
-    background:#f1eee6;
-}
-
-body.dark .message.ai{
-    background:#28302c;
-}
-
-.message.admin{
-    background:#dcebe1;
-}
-
-body.dark .message.admin{
-    background:#294337;
-}
-
-.message-name{
-    font-size:11px;
-    opacity:.65;
-    margin-bottom:4px;
-    font-weight:bold;
-}
-
-.chat-input{
-    display:flex;
-    gap:10px;
-    margin-top:15px;
-}
-
-.chat-input input{
-    flex:1;
-    padding:13px;
-    background:var(--input);
-    color:var(--text);
-    border-radius:10px;
-    border:1px solid var(--border);
-    outline:none;
-}
-
-/* LOGIN */
-
-.login-screen{
-    position:fixed;
-    inset:0;
-    background:linear-gradient(135deg,#173f2d,#3d7a5b);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:999;
-}
-
-.login-box{
-    background:var(--card);
-    color:var(--text);
-    width:min(420px,90%);
-    padding:35px;
-    border-radius:22px;
-    text-align:center;
-    box-shadow:0 20px 70px rgba(0,0,0,.25);
-}
-
-.login-box h1{
-    font-family:Georgia,serif;
-    color:var(--green);
-    margin:12px 0 8px;
-}
-
-.login-box p{
-    color:var(--muted);
-    margin-bottom:25px;
-}
-
-.login-box input{
-    width:100%;
-    padding:14px;
-    background:var(--input);
-    color:var(--text);
-    border:1px solid var(--border);
-    border-radius:10px;
-    margin-bottom:12px;
-    outline:none;
-}
-
-.full{
-    width:100%;
-}
-
-/* EMPTY */
-
-.empty{
-    background:var(--card);
-    border-radius:15px;
-    padding:35px;
-    text-align:center;
-    color:var(--muted);
-    border:1px solid var(--border);
-}
-
-/* STATUS */
-
-.connection-status{
-    position:fixed;
-    right:15px;
-    bottom:15px;
-    padding:7px 11px;
-    border-radius:20px;
-    background:var(--card);
-    border:1px solid var(--border);
-    font-size:11px;
-    color:var(--muted);
-    z-index:50;
-}
-
-/* RESPONSIVE */
+body.dark .msg{background:#27302b}
+body.dark .me{background:#23352c}
 
 @media(max-width:800px){
-
-    .sidebar{
-        width:75px;
-        padding:15px 8px;
-    }
-
-    .logo h1,
-    .logo p,
-    .nav span,
-    .user-box{
-        display:none;
-    }
-
-    .logo-symbol{
-        width:55px;
-        height:55px;
-        font-size:16px;
-    }
-
-    .nav button{
-        text-align:center;
-        padding:14px 5px;
-        font-size:20px;
-    }
-
-    .main{
-        margin-left:75px;
-        padding:18px;
-    }
-
-    .hero{
-        padding:25px;
-    }
-
-    .topbar{
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    .top-actions{
-        flex-wrap:wrap;
-    }
+ .side{width:72px;padding:12px 7px}
+ .side h2,.side small,.nav span,.user{display:none}
+ .logo b{width:52px;height:52px;font-size:12px}
+ .nav button{text-align:center;font-size:19px}
+ .main{margin-left:72px;padding:15px}
+ .top{flex-wrap:wrap}
+ .search{min-width:100%}
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-
-<div class="login-screen" id="loginScreen">
-
-    <div class="login-box">
-
-        <div class="logo-symbol">
-            BSN<br>2A
-        </div>
-
-        <h1>BSN 2A Notes</h1>
-
-        <p>
-            Welcome! Enter your name to continue.
-        </p>
-
-        <input
-            id="usernameInput"
-            placeholder="Enter your username"
-            autocomplete="off"
-        >
-
-        <button
-            class="btn full"
-            onclick="enterSite()"
-        >
-            Enter Website
-        </button>
-
-    </div>
-
+<div class="login" id="login">
+ <div class="loginbox">
+  <h1>BSN 2A</h1>
+  <p>Enter your name to continue</p>
+  <input id="name" placeholder="Your name">
+  <button class="btn" onclick="enter()">Enter Website</button>
+ </div>
 </div>
 
+<aside class="side">
+ <div class="logo">
+  <b>BSN<br>2A</b>
+  <h2>BSN 2A</h2>
+  <small>Small Steps. Big Dreams.</small>
+ </div>
 
-<!-- SIDEBAR -->
+ <nav class="nav">
+  <button class="on" onclick="show('notes',this)">📝 <span>Notes</span></button>
+  <button onclick="show('tasks',this)">✅ <span>Tasks</span></button>
+  <button onclick="show('chat',this)">💬 <span>Chat</span></button>
+  <button onclick="show('files',this)">📚 <span>Files</span></button>
+  <button onclick="show('about',this)">ℹ️ <span>About</span></button>
+  <button onclick="adminLogin()">🔒 <span id="admBtn">Admin</span></button>
+ </nav>
 
-<aside class="sidebar">
+ <div class="user">
+  👤 <b id="who">Guest</b>
+  <div id="mode">Student mode</div>
 
-    <div class="logo">
-
-        <div class="logo-symbol">
-            BSN<br>2A
-        </div>
-
-        <h1>BSN 2A</h1>
-
-        <p>
-            Small Steps. Big Dreams.
-        </p>
-
-    </div>
-
-
-    <nav class="nav">
-
-        <button
-            class="active"
-            onclick="showSection('notes',this)"
-        >
-            📝 <span>Notes</span>
-        </button>
-
-        <button
-            onclick="showSection('tasks',this)"
-        >
-            ✅ <span>Tasks</span>
-        </button>
-
-        <button
-            onclick="showSection('resources',this)"
-        >
-            🔗 <span>Resources</span>
-        </button>
-
-        <button
-            onclick="showSection('chat',this)"
-        >
-            💬 <span>Class Chat</span>
-        </button>
-
-        <button
-            id="adminChatNav"
-            onclick="showSection('adminChat',this)"
-            style="display:none"
-        >
-            🔐 <span>Admin Chat</span>
-        </button>
-
-        <button
-            onclick="showSection('assistant',this)"
-        >
-            🤖 <span>AI Assistant</span>
-        </button>
-
-        <button
-            onclick="showSection('about',this)"
-        >
-            ℹ️ <span>About</span>
-        </button>
-
-        <button onclick="adminLogin()">
-
-            🔒
-            <span id="adminButtonText">
-                Admin
-            </span>
-
-        </button>
-
-    </nav>
-
-
-    <!-- ONLINE PEOPLE STAYS HERE -->
-
-    <div class="user-box">
-
-        👤
-        <b id="currentUser">
-            Guest
-        </b>
-
-        <div id="adminStatus">
-            Student mode
-        </div>
-
-        <div class="online-title">
-            🟢 Online
-        </div>
-
-        <div
-            class="online-list"
-            id="onlineList"
-        >
-            No one online
-        </div>
-
-    </div>
-
+  <div class="online">
+   <b>🟢 Online</b>
+   <div id="people">Nobody online</div>
+  </div>
+ </div>
 </aside>
-
-
-<!-- MAIN -->
 
 <main class="main">
 
-    <div class="topbar">
+ <div class="top">
+  <input
+   class="search"
+   id="search"
+   placeholder="Search notes and tasks..."
+   oninput="render()"
+  >
 
-        <input
-            class="search"
-            id="searchInput"
-            placeholder="Search notes, tasks and resources..."
-            oninput="searchEverything()"
-        >
+  <button class="btn" id="addN" onclick="noteModal()" style="display:none">
+   + Note
+  </button>
 
-        <div class="top-actions">
+  <button class="btn" id="addT" onclick="taskModal()" style="display:none">
+   + Task
+  </button>
 
-            <button
-                class="theme-btn"
-                onclick="toggleTheme()"
-                id="themeButton"
-            >
-                🌙 Dark
-            </button>
+  <button class="btn" onclick="dark()">🌙</button>
+ </div>
 
-            <button
-                class="btn"
-                id="addNoteButton"
-                onclick="openNoteModal()"
-                style="display:none"
-            >
-                + Add Note
-            </button>
+ <section id="notes" class="sec on">
+  <div class="hero">
+   <h1>Welcome to BSN 2A 🌱</h1>
+   <p>Shared class notes, tasks, chat and useful files.</p>
+   <p id="status"></p>
+  </div>
 
-            <button
-                class="btn secondary"
-                id="addTaskButton"
-                onclick="openTaskModal()"
-                style="display:none"
-            >
-                + Task
-            </button>
+  <h2>Class Notes</h2>
+  <div id="notesList" class="cards"></div>
+ </section>
 
-            <button
-                class="btn secondary"
-                id="addResourceButton"
-                onclick="openResourceModal()"
-                style="display:none"
-            >
-                + Link
-            </button>
+ <section id="tasks" class="sec">
+  <h2>Tasks & Deadlines</h2>
 
-        </div>
+  <button class="btn" id="addT2" onclick="taskModal()" style="display:none">
+   + Add Task
+  </button>
 
+  <div id="taskList"></div>
+ </section>
+
+ <section id="chat" class="sec">
+  <h2>💬 BSN 2A Chat</h2>
+
+  <div class="chat">
+   <div id="chatLog" class="chatlog"></div>
+
+   <div class="chatrow">
+    <input
+     id="chatInput"
+     placeholder="Send a message..."
+     onkeydown="if(event.key==='Enter')sendChat()"
+    >
+    <button class="btn" onclick="sendChat()">Send</button>
+   </div>
+  </div>
+
+  <div id="adminChatWrap" class="hide">
+   <h2>🔐 Admin Chat</h2>
+
+   <div class="chat">
+    <div id="adminLog" class="chatlog"></div>
+
+    <div class="chatrow">
+     <input
+      id="adminInput"
+      placeholder="Admin message..."
+      onkeydown="if(event.key==='Enter')sendAdmin()"
+     >
+     <button class="btn" onclick="sendAdmin()">Send</button>
     </div>
-
-
-    <!-- NOTES -->
-
-    <section
-        class="section active"
-        id="notes"
-    >
-
-        <div class="hero">
-
-            <h2>
-                Welcome to BSN 2A 🌱
-            </h2>
-
-            <p>
-                Keep your notes, tasks, resources and
-                important class information organized
-                in one place.
-            </p>
-
-        </div>
-
-        <div class="section-title">
-
-            <h2>
-                Class Notes
-            </h2>
-
-            <span id="noteCount">
-                0 notes
-            </span>
-
-        </div>
-
-        <div
-            class="cards"
-            id="notesContainer"
-        ></div>
-
-    </section>
-
-
-    <!-- TASKS -->
-
-    <section
-        class="section"
-        id="tasks"
-    >
-
-        <div class="section-title">
-
-            <h2>
-                Tasks & Deadlines
-            </h2>
-
-            <button
-                class="btn"
-                id="taskAddButton"
-                onclick="openTaskModal()"
-                style="display:none"
-            >
-                + Add Task
-            </button>
-
-        </div>
-
-        <div id="tasksContainer"></div>
-
-    </section>
-
-
-    <!-- RESOURCES -->
-
-    <section
-        class="section"
-        id="resources"
-    >
-
-        <div class="section-title">
-
-            <h2>
-                🔗 Class Resources
-            </h2>
-
-            <button
-                class="btn"
-                id="resourceAddButton"
-                onclick="openResourceModal()"
-                style="display:none"
-            >
-                + Add Link
-            </button>
-
-        </div>
-
-        <p style="color:var(--muted);margin-bottom:15px">
-            PDFs, PowerPoints, Google Drive files and
-            other class resources can be shared here as links.
-        </p>
-
-        <div id="resourcesContainer"></div>
-
-    </section>
-
-
-    <!-- NORMAL CHAT -->
-
-    <section
-        class="section"
-        id="chat"
-    >
-
-        <div class="section-title">
-
-            <h2>
-                💬 BSN 2A Class Chat
-            </h2>
-
-        </div>
-
-        <div class="chat-box">
-
-            <div
-                class="chat-messages"
-                id="classChatMessages"
-            ></div>
-
-            <div class="chat-input">
-
-                <input
-                    id="classChatInput"
-                    placeholder="Type a message..."
-                    onkeydown="
-                    if(event.key==='Enter')
-                    sendClassMessage()
-                    "
-                >
-
-                <button
-                    class="btn"
-                    onclick="sendClassMessage()"
-                >
-                    Send
-                </button>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ADMIN CHAT -->
-
-    <section
-        class="section"
-        id="adminChat"
-    >
-
-        <div class="section-title">
-
-            <h2>
-                🔐 Admin Chat
-            </h2>
-
-        </div>
-
-        <div class="chat-box">
-
-            <p style="color:var(--muted);margin-bottom:15px">
-                Private chat area for administrators.
-            </p>
-
-            <div
-                class="chat-messages"
-                id="adminChatMessages"
-            ></div>
-
-            <div class="chat-input">
-
-                <input
-                    id="adminChatInput"
-                    placeholder="Message other admins..."
-                    onkeydown="
-                    if(event.key==='Enter')
-                    sendAdminMessage()
-                    "
-                >
-
-                <button
-                    class="btn"
-                    onclick="sendAdminMessage()"
-                >
-                    Send
-                </button>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- AI -->
-
-    <section
-        class="section"
-        id="assistant"
-    >
-
-        <div class="section-title">
-
-            <h2>
-                🤖 BSN 2A Assistant
-            </h2>
-
-        </div>
-
-        <div class="chat-box">
-
-            <div
-                class="chat-messages"
-                id="assistantMessages"
-            >
-
-                <div class="message ai">
-
-                    Hey! 👋 I'm your BSN 2A assistant.
-
-                    Try asking:
-
-                    • What is due tomorrow?
-                    • What tasks do I have?
-                    • Show my notes about NCM 105.
-                    • What's coming up?
-
-                </div>
-
-            </div>
-
-            <div class="chat-input">
-
-                <input
-                    id="assistantInput"
-                    placeholder="Ask something..."
-                    onkeydown="
-                    if(event.key==='Enter')
-                    askAssistant()
-                    "
-                >
-
-                <button
-                    class="btn"
-                    onclick="askAssistant()"
-                >
-                    Ask
-                </button>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- ABOUT -->
-
-    <section
-        class="section"
-        id="about"
-    >
-
-        <div class="hero">
-
-            <h2>
-                BSN 2A 🌱
-            </h2>
-
-            <p>
-                A shared class notes and task system
-                for BSN 2A.
-            </p>
-
-            <br>
-
-            <p>
-                🔗 Class resources are shared as links,
-                so the website does not need to store
-                the actual PDF or PowerPoint files.
-            </p>
-
-            <br>
-
-            <p>
-                🌙 Dark mode is available for comfortable
-                viewing at night.
-            </p>
-
-        </div>
-
-    </section>
+   </div>
+  </div>
+ </section>
+
+ <section id="files" class="sec">
+  <h2>📚 Class Files</h2>
+
+  <button class="btn" id="addF" onclick="fileModal()" style="display:none">
+   + Add Link
+  </button>
+
+  <div id="fileList"></div>
+ </section>
+
+ <section id="about" class="sec">
+  <div class="hero">
+   <h1>BSN 2A 🌱</h1>
+   <p>
+    Students can view shared content and keep their own task checklists.
+    Admins manage shared notes, tasks and file links.
+   </p>
+   <p>
+    Offline mode caches previously loaded data.
+    Firebase writes synchronize when connectivity returns.
+   </p>
+  </div>
+ </section>
 
 </main>
 
+<div id="modal" class="modal">
+ <div class="box">
 
-<!-- NOTE MODAL -->
+  <h2 id="mt">Add Note</h2>
 
-<div
-    class="modal-bg"
-    id="noteModal"
->
+  <div id="noteFields">
+   <input id="nt" placeholder="Note title">
+   <textarea id="nx" placeholder="Note text"></textarea>
+  </div>
 
-    <div class="modal">
+  <div id="taskFields" class="hide">
+   <input id="tt" placeholder="Task title">
+   <input id="td" type="date">
+   <textarea id="tx" placeholder="Task details"></textarea>
+  </div>
 
-        <h2 id="noteModalTitle">
-            Add Note
-        </h2>
+  <div id="fileFields" class="hide">
+   <input id="ft" placeholder="File title">
+   <input id="fu" placeholder="https://...">
 
-        <input
-            class="input"
-            id="noteTitle"
-            placeholder="Note title"
-        >
+   <select id="fy">
+    <option>PDF</option>
+    <option>PPT</option>
+    <option>Document</option>
+    <option>Other</option>
+   </select>
+  </div>
 
-        <textarea
-            class="textarea"
-            id="noteText"
-            placeholder="Write your note here..."
-        ></textarea>
+  <div style="text-align:right">
+   <button class="btn" onclick="closeModal()">Cancel</button>
+   <button class="btn" onclick="saveModal()">Save</button>
+  </div>
 
-        <div class="modal-actions">
-
-            <button
-                class="btn secondary"
-                onclick="closeNoteModal()"
-            >
-                Cancel
-            </button>
-
-            <button
-                class="btn"
-                onclick="saveNote()"
-            >
-                Save Note
-            </button>
-
-        </div>
-
-    </div>
-
+ </div>
 </div>
-
-
-<!-- TASK MODAL -->
-
-<div
-    class="modal-bg"
-    id="taskModal"
->
-
-    <div class="modal">
-
-        <h2 id="taskModalTitle">
-            Add Task
-        </h2>
-
-        <input
-            class="input"
-            id="taskTitle"
-            placeholder="Task title"
-        >
-
-        <input
-            class="input"
-            id="taskDue"
-            type="date"
-        >
-
-        <textarea
-            class="textarea"
-            id="taskDescription"
-            placeholder="Task details..."
-            style="min-height:150px"
-        ></textarea>
-
-        <div class="modal-actions">
-
-            <button
-                class="btn secondary"
-                onclick="closeTaskModal()"
-            >
-                Cancel
-            </button>
-
-            <button
-                class="btn"
-                onclick="saveTask()"
-            >
-                Save Task
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- RESOURCE MODAL -->
-
-<div
-    class="modal-bg"
-    id="resourceModal"
->
-
-    <div class="modal">
-
-        <h2 id="resourceModalTitle">
-            Add Resource Link
-        </h2>
-
-        <input
-            class="input"
-            id="resourceTitle"
-            placeholder="Resource title"
-        >
-
-        <select
-            class="select"
-            id="resourceType"
-        >
-
-            <option value="PDF">
-                PDF
-            </option>
-
-            <option value="PowerPoint">
-                PowerPoint
-            </option>
-
-            <option value="Document">
-                Document
-            </option>
-
-            <option value="Google Drive">
-                Google Drive
-            </option>
-
-            <option value="Other">
-                Other
-            </option>
-
-        </select>
-
-        <input
-            class="input"
-            id="resourceURL"
-            placeholder="Paste resource link here..."
-            type="url"
-        >
-
-        <div class="modal-actions">
-
-            <button
-                class="btn secondary"
-                onclick="closeResourceModal()"
-            >
-                Cancel
-            </button>
-
-            <button
-                class="btn"
-                onclick="saveResource()"
-            >
-                Save Link
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<div
-    class="connection-status"
-    id="connectionStatus"
->
-    Connecting...
-</div>
-
 
 <script type="module">
 
-/* ============================================================
-   FIREBASE
-============================================================ */
+import {
+ initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-    initializeApp
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-    getDatabase,
-    ref,
-    push,
-    set,
-    update,
-    remove,
-    onValue,
-    onDisconnect,
-    serverTimestamp
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-
-const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
-
-    authDomain:
-        "bsn-2a-notes.firebaseapp.com",
-
-    databaseURL:
-        "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-    projectId:
-        "bsn-2a-notes",
-
-    storageBucket:
-        "bsn-2a-notes.firebasestorage.app",
-
-    messagingSenderId:
-        "991210260962",
-
-    appId:
-        "1:991210260962:web:8f6a886c7478be096991bb",
-
-    measurementId:
-        "G-WNTP9GZJ4B"
-};
-
-
-const app =
-    initializeApp(firebaseConfig);
-
-const db =
-    getDatabase(app);
-
-
-/* ============================================================
-   DATABASE REFERENCES
-============================================================ */
-
-const notesRef =
-    ref(db,"notes");
-
-const tasksRef =
-    ref(db,"tasks");
-
-const resourcesRef =
-    ref(db,"resources");
-
-const classChatRef =
-    ref(db,"classChat");
-
-const adminChatRef =
-    ref(db,"adminChat");
-
-const presenceRef =
-    ref(db,"presence");
-
-
-/* ============================================================
-   GLOBAL VARIABLES
-============================================================ */
-
-let notes = {};
-
-let tasks = {};
-
-let resources = {};
-
-let classMessages = {};
-
-let adminMessages = {};
-
-let onlineUsers = {};
-
-let admin = false;
-
-let editingNoteId = null;
-
-let editingTaskId = null;
-
-let editingResourceId = null;
-
-let username =
-    localStorage.getItem("bsnUsername") || "";
-
-
-/* ============================================================
-   THEME
-============================================================ */
-
-window.toggleTheme = function(){
-
-    document.body.classList.toggle("dark");
-
-    const dark =
-        document.body.classList.contains("dark");
-
-    localStorage.setItem(
-        "bsnDarkMode",
-        dark ? "true" : "false"
-    );
-
-    updateThemeButton();
-
-};
-
-
-function loadTheme(){
-
-    const dark =
-        localStorage.getItem("bsnDarkMode")
-        === "true";
-
-    if(dark){
-
-        document.body.classList.add("dark");
-
-    }
-
-    updateThemeButton();
-
-}
-
-
-function updateThemeButton(){
-
-    const button =
-        document.getElementById("themeButton");
-
-    if(!button) return;
-
-    if(document.body.classList.contains("dark")){
-
-        button.textContent =
-            "☀️ Light";
-
-    }else{
-
-        button.textContent =
-            "🌙 Dark";
-
-    }
-
-}
-
-
-/* ============================================================
-   USERNAME
-============================================================ */
-
-window.enterSite = function(){
-
-    const name =
-        document
-        .getElementById("usernameInput")
-        .value
-        .trim();
-
-    if(!name){
-
-        alert(
-            "Please enter your username."
-        );
-
-        return;
-    }
-
-    username = name;
-
-    localStorage.setItem(
-        "bsnUsername",
-        name
-    );
-
-    document
-        .getElementById("currentUser")
-        .textContent = name;
-
-    document
-        .getElementById("loginScreen")
-        .style.display = "none";
-
-    setupPresence();
-
-};
-
-
-function loadUsername(){
-
-    if(username){
-
-        document
-            .getElementById("currentUser")
-            .textContent = username;
-
-        document
-            .getElementById("loginScreen")
-            .style.display = "none";
-
-        setupPresence();
-
-    }
-
-}
-
-
-/* ============================================================
-   ADMIN
-============================================================ */
-
-window.adminLogin = function(){
-
-    if(admin){
-
-        admin = false;
-
-        updateAdminUI();
-
-        alert(
-            "Admin mode disabled."
-        );
-
-        return;
-    }
-
-
-    const password =
-        prompt(
-            "Enter admin password:"
-        );
-
-
-    if(password === "supperlol123123"){
-
-        admin = true;
-
-        sessionStorage.setItem(
-            "bsnAdmin",
-            "true"
-        );
-
-        updateAdminUI();
-
-        alert(
-            "Admin mode enabled 🔓"
-        );
-
-    }else{
-
-        alert(
-            "Wrong password."
-        );
-
-    }
-
-};
-
-
-function updateAdminUI(){
-
-    const noteButton =
-        document.getElementById(
-            "addNoteButton"
-        );
-
-    const taskButton =
-        document.getElementById(
-            "addTaskButton"
-        );
-
-    const taskAddButton =
-        document.getElementById(
-            "taskAddButton"
-        );
-
-    const resourceButton =
-        document.getElementById(
-            "addResourceButton"
-        );
-
-    const resourceAddButton =
-        document.getElementById(
-            "resourceAddButton"
-        );
-
-    const adminText =
-        document.getElementById(
-            "adminButtonText"
-        );
-
-    const status =
-        document.getElementById(
-            "adminStatus"
-        );
-
-    const adminChatNav =
-        document.getElementById(
-            "adminChatNav"
-        );
-
-
-    if(admin){
-
-        noteButton.style.display =
-            "block";
-
-        taskButton.style.display =
-            "block";
-
-        taskAddButton.style.display =
-            "block";
-
-        resourceButton.style.display =
-            "block";
-
-        resourceAddButton.style.display =
-            "block";
-
-        adminChatNav.style.display =
-            "block";
-
-        adminText.textContent =
-            "Admin 🔓";
-
-        status.textContent =
-            "Administrator mode";
-
-    }else{
-
-        noteButton.style.display =
-            "none";
-
-        taskButton.style.display =
-            "none";
-
-        taskAddButton.style.display =
-            "none";
-
-        resourceButton.style.display =
-            "none";
-
-        resourceAddButton.style.display =
-            "none";
-
-        adminChatNav.style.display =
-            "none";
-
-        adminText.textContent =
-            "Admin 🔒";
-
-        status.textContent =
-            "Student mode";
-
-    }
-
-
-    renderNotes();
-
-    renderTasks();
-
-    renderResources();
-
-}
-
-
-/* ============================================================
-   NAVIGATION
-============================================================ */
-
-window.showSection =
-function(id,button){
-
-    if(
-        id === "adminChat" &&
-        !admin
-    ){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-    }
-
-
-    document
-        .querySelectorAll(".section")
-        .forEach(section => {
-
-            section.classList.remove(
-                "active"
-            );
-
-        });
-
-
-    const section =
-        document.getElementById(id);
-
-    if(section){
-
-        section.classList.add(
-            "active"
-        );
-
-    }
-
-
-    document
-        .querySelectorAll(".nav button")
-        .forEach(btn => {
-
-            btn.classList.remove(
-                "active"
-            );
-
-        });
-
-
-    if(button){
-
-        button.classList.add(
-            "active"
-        );
-
-    }
-
-};
-
-
-/* ============================================================
-   FIREBASE LISTENERS
-============================================================ */
-
-onValue(notesRef,snapshot => {
-
-    notes =
-        snapshot.val() || {};
-
-    renderNotes();
-
-    cleanupOldData();
-
+ getDatabase,
+ ref,
+ push,
+ set,
+ update,
+ remove,
+ onValue,
+ onDisconnect,
+ serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const app = initializeApp({
+ apiKey:"AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
+ authDomain:"bsn-2a-notes.firebaseapp.com",
+ databaseURL:"https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
+ projectId:"bsn-2a-notes",
+ storageBucket:"bsn-2a-notes.firebasestorage.app",
+ messagingSenderId:"991210260962",
+ appId:"1:991210260962:web:8f6a886c7478be096991bb"
 });
 
+const db=getDatabase(app);
 
-onValue(tasksRef,snapshot => {
+const R={
+ notes:ref(db,"notes"),
+ tasks:ref(db,"tasks"),
+ chat:ref(db,"chat"),
+ admin:ref(db,"adminChat"),
+ files:ref(db,"files"),
+ presence:ref(db,"presence")
+};
 
-    tasks =
-        snapshot.val() || {};
+let notes={};
+let tasks={};
+let chat={};
+let adminChat={};
+let files={};
 
-    renderTasks();
+let isAdmin=false;
+let editId=null;
+let type="note";
+let user=localStorage.getItem("bsnUser")||"";
 
-    cleanupOldData();
+const PASS="supperlol123123";
+const K=x=>"bsn2a_"+x;
 
+const esc=x=>String(x??"")
+ .replace(/&/g,"&amp;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;")
+ .replace(/"/g,"&quot;")
+ .replace(/'/g,"&#039;");
+
+const fmt=x=>x
+ ?new Date(x+"T00:00").toLocaleDateString(undefined,{
+   month:"long",
+   day:"numeric",
+   year:"numeric"
+  })
+ :"";
+
+const save=(k,v)=>{
+ localStorage.setItem(K(k),JSON.stringify(v));
+};
+
+const load=k=>{
+ try{
+  return JSON.parse(localStorage.getItem(K(k)))||{};
+ }catch{
+  return {};
+ }
+};
+
+function enter(){
+ let n=document.getElementById("name").value.trim();
+
+ if(!n){
+  alert("Enter your name.");
+  return;
+ }
+
+ user=n;
+ localStorage.setItem("bsnUser",n);
+
+ document.getElementById("who").textContent=n;
+ document.getElementById("login").classList.add("hide");
+
+ presence();
+}
+
+window.enter=enter;
+
+if(user){
+ document.getElementById("who").textContent=user;
+ document.getElementById("login").classList.add("hide");
+}
+
+function dark(){
+ document.body.classList.toggle("dark");
+
+ localStorage.setItem(
+  "dark",
+  document.body.classList.contains("dark")
+ );
+}
+
+window.dark=dark;
+
+if(localStorage.getItem("dark")==="true"){
+ dark();
+}
+
+function show(id,b){
+ document.querySelectorAll(".sec")
+  .forEach(x=>x.classList.remove("on"));
+
+ document.getElementById(id).classList.add("on");
+
+ document.querySelectorAll(".nav button")
+  .forEach(x=>x.classList.remove("on"));
+
+ b.classList.add("on");
+}
+
+window.show=show;
+
+function adminLogin(){
+
+ if(isAdmin){
+  isAdmin=false;
+  ui();
+  return;
+ }
+
+ if(prompt("Admin password:")===PASS){
+  isAdmin=true;
+  ui();
+  alert("Admin mode enabled 🔓");
+ }else{
+  alert("Wrong password.");
+ }
+}
+
+window.adminLogin=adminLogin;
+
+function ui(){
+
+ ["addN","addT","addT2","addF"].forEach(id=>{
+  document.getElementById(id).style.display=
+   isAdmin?"inline-block":"none";
+ });
+
+ document.getElementById("admBtn").textContent=
+  isAdmin?"Admin 🔓":"Admin";
+
+ document.getElementById("mode").textContent=
+  isAdmin?"Administrator mode":"Student mode";
+
+ document.getElementById("adminChatWrap")
+  .classList.toggle("hide",!isAdmin);
+
+ render();
+}
+
+function render(){
+
+ let q=document.getElementById("search")
+  .value.toLowerCase();
+
+ let nc=document.getElementById("notesList");
+ nc.innerHTML="";
+
+ getOrderedNotes().forEach(([id,n])=>{
+
+  if(
+   q &&
+   !((n.title+" "+n.text).toLowerCase().includes(q))
+  )return;
+
+  let d=document.createElement("div");
+
+  d.className="card";
+  d.draggable=isAdmin;
+  d.dataset.noteId=id;
+
+  d.innerHTML=`
+   <h3>${esc(n.title||"Untitled")}</h3>
+
+   <div class="text">${esc(n.text)}</div>
+
+   <small>Added by ${esc(n.author||"Admin")}</small>
+
+   ${
+    isAdmin
+    ?`
+     <div class="actions">
+      <button class="small" onclick="editNote('${id}')">
+       ✏️ Edit
+      </button>
+
+      <button class="small del" onclick="delNote('${id}')">
+       🗑️ Delete
+      </button>
+     </div>
+    `
+    :""
+   }
+  `;
+
+  nc.appendChild(d);
+
+  if(isAdmin){
+   d.addEventListener("dragstart",noteDragStart);
+   d.addEventListener("dragover",noteDragOver);
+   d.addEventListener("dragleave",noteDragLeave);
+   d.addEventListener("drop",noteDrop);
+   d.addEventListener("dragend",noteDragEnd);
+  }
+
+ });
+
+ if(!nc.children.length){
+  nc.innerHTML='<div class="card">No notes found.</div>';
+ }
+
+ let tc=document.getElementById("taskList");
+ tc.innerHTML="";
+
+ Object.entries(tasks)
+ .sort((a,b)=>(a[1].due||"").localeCompare(b[1].due||""))
+ .forEach(([id,t])=>{
+
+  if(
+   q &&
+   !((t.title+" "+t.description).toLowerCase().includes(q))
+  )return;
+
+  let checked=load("check_"+id)===true;
+
+  let d=document.createElement("div");
+  d.className="task";
+
+  d.innerHTML=`
+   <input
+    type="checkbox"
+    ${checked?"checked":""}
+    onchange="checkTask('${id}',this.checked)"
+   >
+
+   <div style="flex:1">
+    <b class="${checked?"done":""}">
+     ${esc(t.title)}
+    </b>
+
+    <div style="color:#718078">
+     ${t.due?"Due: "+fmt(t.due):"No due date"}
+    </div>
+
+    <div class="text">${esc(t.description)}</div>
+
+    ${
+     isAdmin
+     ?`
+      <div class="actions">
+       <button class="small" onclick="editTask('${id}')">
+        ✏️ Edit
+       </button>
+
+       <button class="small del" onclick="delTask('${id}')">
+        🗑️ Delete
+       </button>
+      </div>
+     `
+     :""
+    }
+   </div>
+  `;
+
+  tc.appendChild(d);
+ });
+
+ let fc=document.getElementById("fileList");
+ fc.innerHTML="";
+
+ Object.entries(files)
+ .reverse()
+ .forEach(([id,f])=>{
+
+  let d=document.createElement("div");
+  d.className="card";
+
+  d.innerHTML=`
+   <h3>📄 ${esc(f.title)}</h3>
+   <small>${esc(f.type)}</small>
+
+   <p>
+    <a
+     href="${esc(f.url)}"
+     target="_blank"
+     rel="noopener"
+    >
+     ${esc(f.url)}
+    </a>
+   </p>
+
+   ${
+    isAdmin
+    ?`
+     <button class="small del" onclick="delFile('${id}')">
+      Delete
+     </button>
+    `
+    :""
+   }
+  `;
+
+  fc.appendChild(d);
+ });
+
+ if(!fc.children.length){
+  fc.innerHTML='<div class="card">No file links yet.</div>';
+ }
+}
+
+notes=load("notes");
+tasks=load("tasks");
+files=load("files");
+
+render();
+
+onValue(R.notes,s=>{
+ notes=s.val()||{};
+ save("notes",notes);
+ render();
 });
 
-
-onValue(resourcesRef,snapshot => {
-
-    resources =
-        snapshot.val() || {};
-
-    renderResources();
-
-    cleanupOldData();
-
+onValue(R.tasks,s=>{
+ tasks=s.val()||{};
+ save("tasks",tasks);
+ render();
 });
 
-
-onValue(classChatRef,snapshot => {
-
-    classMessages =
-        snapshot.val() || {};
-
-    renderClassChat();
-
+onValue(R.files,s=>{
+ files=s.val()||{};
+ save("files",files);
+ render();
 });
 
+function noteModal(){
 
-onValue(adminChatRef,snapshot => {
+ if(!isAdmin){
+  alert("Admin access required.");
+  return;
+ }
 
-    adminMessages =
-        snapshot.val() || {};
+ type="note";
+ editId=null;
 
-    renderAdminChat();
+ document.getElementById("mt").textContent="Add Note";
 
-});
+ document.getElementById("noteFields")
+  .classList.remove("hide");
 
+ document.getElementById("taskFields")
+  .classList.add("hide");
 
-onValue(presenceRef,snapshot => {
+ document.getElementById("fileFields")
+  .classList.add("hide");
 
-    onlineUsers =
-        snapshot.val() || {};
+ document.getElementById("nt").value="";
+ document.getElementById("nx").value="";
 
-    renderOnlineUsers();
-
-});
-
-
-/* ============================================================
-   NOTES
-============================================================ */
-
-function renderNotes(search=""){
-
-    const container =
-        document.getElementById(
-            "notesContainer"
-        );
-
-    container.innerHTML = "";
-
-    let count = 0;
-
-
-    const entries =
-        Object.entries(notes);
-
-
-    entries.forEach(
-        ([id,note]) => {
-
-            const title =
-                note.title ||
-                "Untitled Note";
-
-            const text =
-                note.text || "";
-
-
-            const combined =
-                (
-                    title +
-                    " " +
-                    text
-                ).toLowerCase();
-
-
-            if(
-                search &&
-                !combined.includes(
-                    search.toLowerCase()
-                )
-            ){
-
-                return;
-
-            }
-
-
-            count++;
-
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-            card.className =
-                "card";
-
-
-            const titleEl =
-                document.createElement(
-                    "h3"
-                );
-
-            titleEl.textContent =
-                title;
-
-
-            const textEl =
-                document.createElement(
-                    "div"
-                );
-
-            textEl.className =
-                "card-text";
-
-            textEl.textContent =
-                text;
-
-
-            const dateEl =
-                document.createElement(
-                    "div"
-                );
-
-            dateEl.className =
-                "card-date";
-
-            dateEl.textContent =
-                note.author
-                ? "Added by " +
-                  note.author
-                : "";
-
-
-            card.appendChild(
-                titleEl
-            );
-
-            card.appendChild(
-                textEl
-            );
-
-            card.appendChild(
-                dateEl
-            );
-
-
-            if(admin){
-
-                const buttons =
-                    document.createElement(
-                        "div"
-                    );
-
-                buttons.className =
-                    "card-buttons";
-
-
-                buttons.innerHTML = `
-
-                    <button
-                        class="small-btn"
-                        onclick="editNote('${id}')"
-                    >
-                        ✏️ Edit
-                    </button>
-
-                    <button
-                        class="small-btn delete"
-                        onclick="deleteNote('${id}')"
-                    >
-                        🗑️ Delete
-                    </button>
-
-                    <button
-                        class="small-btn"
-                        onclick="moveNoteUp('${id}')"
-                    >
-                        ⬆️
-                    </button>
-
-                    <button
-                        class="small-btn"
-                        onclick="moveNoteDown('${id}')"
-                    >
-                        ⬇️
-                    </button>
-
-                `;
-
-
-                card.appendChild(
-                    buttons
-                );
-
-            }
-
-
-            container.appendChild(
-                card
-            );
-
-        }
-    );
-
-
-    document
-        .getElementById("noteCount")
-        .textContent =
-        `${count} note${count===1?"":"s"}`;
-
-
-    if(count === 0){
-
-        container.innerHTML = `
-
-            <div class="empty">
-
-                No notes found.
-
-                ${
-                    admin
-                    ? "<br><br>Click + Add Note to create one."
-                    : ""
-                }
-
-            </div>
-
-        `;
-
-    }
-
+ document.getElementById("modal")
+  .classList.add("on");
 }
 
+window.noteModal=noteModal;
 
-/* ============================================================
-   ADD NOTE
-============================================================ */
+function taskModal(){
 
-window.openNoteModal =
-function(){
+ if(!isAdmin){
+  alert("Admin access required.");
+  return;
+ }
 
-    if(!admin){
+ type="task";
+ editId=null;
 
-        alert(
-            "Admin access required."
-        );
+ document.getElementById("mt").textContent="Add Task";
 
-        return;
+ document.getElementById("noteFields")
+  .classList.add("hide");
 
-    }
+ document.getElementById("taskFields")
+  .classList.remove("hide");
 
+ document.getElementById("fileFields")
+  .classList.add("hide");
 
-    editingNoteId = null;
+ ["tt","td","tx"].forEach(x=>{
+  document.getElementById(x).value="";
+ });
 
-
-    document
-        .getElementById(
-            "noteModalTitle"
-        )
-        .textContent =
-        "Add Note";
-
-
-    document
-        .getElementById(
-            "noteTitle"
-        )
-        .value = "";
-
-
-    document
-        .getElementById(
-            "noteText"
-        )
-        .value = "";
-
-
-    document
-        .getElementById(
-            "noteModal"
-        )
-        .classList.add("show");
-
-};
-
-
-window.closeNoteModal =
-function(){
-
-    document
-        .getElementById(
-            "noteModal"
-        )
-        .classList.remove("show");
-
-};
-
-
-window.saveNote =
-async function(){
-
-    if(!admin) return;
-
-
-    const title =
-        document
-        .getElementById("noteTitle")
-        .value
-        .trim();
-
-
-    const text =
-        document
-        .getElementById("noteText")
-        .value
-        .trim();
-
-
-    if(!title){
-
-        alert(
-            "Please enter a title."
-        );
-
-        return;
-
-    }
-
-
-    const author =
-        username || "Admin";
-
-
-    try{
-
-        if(editingNoteId){
-
-            await update(
-                ref(
-                    db,
-                    "notes/" +
-                    editingNoteId
-                ),
-                {
-                    title,
-                    text,
-                    author
-                }
-            );
-
-        }else{
-
-            const newNote =
-                push(notesRef);
-
-
-            await set(
-                newNote,
-                {
-                    title,
-                    text,
-                    author,
-                    createdAt:Date.now(),
-                    order:Date.now()
-                }
-            );
-
-        }
-
-
-        closeNoteModal();
-
-    }catch(error){
-
-        console.error(error);
-
-        alert(
-            "Could not save the note."
-        );
-
-    }
-
-};
-
-
-/* ============================================================
-   EDIT NOTE
-============================================================ */
-
-window.editNote =
-function(id){
-
-    if(!admin) return;
-
-
-    const note =
-        notes[id];
-
-    if(!note) return;
-
-
-    editingNoteId = id;
-
-
-    document
-        .getElementById(
-            "noteModalTitle"
-        )
-        .textContent =
-        "Edit Note";
-
-
-    document
-        .getElementById(
-            "noteTitle"
-        )
-        .value =
-        note.title || "";
-
-
-    document
-        .getElementById(
-            "noteText"
-        )
-        .value =
-        note.text || "";
-
-
-    document
-        .getElementById(
-            "noteModal"
-        )
-        .classList.add("show");
-
-};
-
-
-/* ============================================================
-   DELETE NOTE
-============================================================ */
-
-window.deleteNote =
-async function(id){
-
-    if(!admin) return;
-
-
-    if(
-        !confirm(
-            "Delete this note?"
-        )
-    ) return;
-
-
-    await remove(
-        ref(
-            db,
-            "notes/" + id
-        )
-    );
-
-};
-
-
-/* ============================================================
-   NOTE ARRANGING
-============================================================ */
-
-window.moveNoteUp =
-async function(id){
-
-    if(!admin) return;
-
-    const ordered =
-        getOrderedEntries(notes);
-
-    const index =
-        ordered.findIndex(
-            x => x[0] === id
-        );
-
-    if(index <= 0) return;
-
-    const current =
-        ordered[index];
-
-    const previous =
-        ordered[index - 1];
-
-
-    const temp =
-        current[1].order;
-
-
-    await update(
-        ref(db,"notes"),
-        {
-            [current[0]+"/order"]:
-                previous[1].order,
-
-            [previous[0]+"/order"]:
-                temp
-        }
-    );
-
-};
-
-
-window.moveNoteDown =
-async function(id){
-
-    if(!admin) return;
-
-    const ordered =
-        getOrderedEntries(notes);
-
-    const index =
-        ordered.findIndex(
-            x => x[0] === id
-        );
-
-    if(
-        index < 0 ||
-        index >= ordered.length-1
-    ) return;
-
-
-    const current =
-        ordered[index];
-
-    const next =
-        ordered[index+1];
-
-
-    const temp =
-        current[1].order;
-
-
-    await update(
-        ref(db,"notes"),
-        {
-            [current[0]+"/order"]:
-                next[1].order,
-
-            [next[0]+"/order"]:
-                temp
-        }
-    );
-
-};
-
-
-/* ============================================================
-   TASKS
-============================================================ */
-
-function renderTasks(search=""){
-
-    const container =
-        document.getElementById(
-            "tasksContainer"
-        );
-
-    container.innerHTML = "";
-
-
-    let entries =
-        getOrderedEntries(tasks);
-
-
-    entries =
-        entries.filter(
-            ([id,task]) => {
-
-                const combined =
-                    (
-                        task.title || ""
-                    ) +
-                    " " +
-                    (
-                        task.description || ""
-                    );
-
-
-                return !search ||
-                    combined
-                    .toLowerCase()
-                    .includes(
-                        search.toLowerCase()
-                    );
-
-            }
-        );
-
-
-    if(entries.length === 0){
-
-        container.innerHTML = `
-
-            <div class="empty">
-                No tasks found.
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    entries.forEach(
-        ([id,task]) => {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-            div.className =
-                "task";
-
-
-            const checkRef =
-                ref(
-                    db,
-                    "taskChecks/" +
-                    id +
-                    "/" +
-                    safeKey(username)
-                );
-
-
-            const checkbox =
-                document.createElement(
-                    "input"
-                );
-
-            checkbox.className =
-                "task-check";
-
-            checkbox.type =
-                "checkbox";
-
-
-            /*
-              IMPORTANT:
-              Every username gets their own
-              task checkbox.
-              One person's check does NOT
-              affect another person's.
-            */
-
-            onValue(
-                checkRef,
-                snapshot => {
-
-                    checkbox.checked =
-                        snapshot.val() === true;
-
-                    if(
-                        checkbox.checked
-                    ){
-
-                        div.classList.add(
-                            "completed"
-                        );
-
-                    }else{
-
-                        div.classList.remove(
-                            "completed"
-                        );
-
-                    }
-
-                },
-                {
-                    onlyOnce:false
-                }
-            );
-
-
-            checkbox.onchange =
-            async function(){
-
-                await set(
-                    checkRef,
-                    checkbox.checked
-                );
-
-            };
-
-
-            const info =
-                document.createElement(
-                    "div"
-                );
-
-            info.className =
-                "task-info";
-
-
-            const title =
-                document.createElement(
-                    "div"
-                );
-
-            title.className =
-                "task-title";
-
-            title.textContent =
-                task.title ||
-                "Untitled";
-
-
-            const due =
-                document.createElement(
-                    "div"
-                );
-
-            due.className =
-                "task-due";
-
-            due.textContent =
-                task.due
-                ? "Due: " +
-                  formatDate(task.due)
-                : "No due date";
-
-
-            info.appendChild(
-                title
-            );
-
-            info.appendChild(
-                due
-            );
-
-
-            if(task.description){
-
-                const desc =
-                    document.createElement(
-                        "div"
-                    );
-
-                desc.className =
-                    "task-description";
-
-                desc.textContent =
-                    task.description;
-
-                info.appendChild(
-                    desc
-                );
-
-            }
-
-
-            const mine =
-                document.createElement(
-                    "div"
-                );
-
-            mine.className =
-                "my-check-label";
-
-            mine.textContent =
-                "Your checklist";
-
-            info.appendChild(
-                mine
-            );
-
-
-            if(admin){
-
-                const buttons =
-                    document.createElement(
-                        "div"
-                    );
-
-                buttons.className =
-                    "card-buttons";
-
-                buttons.innerHTML = `
-
-                    <button
-                        class="small-btn"
-                        onclick="editTask('${id}')"
-                    >
-                        ✏️ Edit
-                    </button>
-
-                    <button
-                        class="small-btn delete"
-                        onclick="deleteTask('${id}')"
-                    >
-                        🗑️ Delete
-                    </button>
-
-                    <button
-                        class="small-btn"
-                        onclick="moveTaskUp('${id}')"
-                    >
-                        ⬆️
-                    </button>
-
-                    <button
-                        class="small-btn"
-                        onclick="moveTaskDown('${id}')"
-                    >
-                        ⬇️
-                    </button>
-
-                `;
-
-                info.appendChild(
-                    buttons
-                );
-
-            }
-
-
-            div.appendChild(
-                checkbox
-            );
-
-            div.appendChild(
-                info
-            );
-
-
-            container.appendChild(
-                div
-            );
-
-        }
-    );
-
+ document.getElementById("modal")
+  .classList.add("on");
 }
 
+window.taskModal=taskModal;
 
-/* ============================================================
-   ADD TASK
-============================================================ */
+function fileModal(){
 
-window.openTaskModal =
-function(){
+ if(!isAdmin){
+  alert("Admin access required.");
+  return;
+ }
 
-    if(!admin){
+ type="file";
 
-        alert(
-            "Admin access required."
-        );
+ document.getElementById("mt").textContent="Add File Link";
 
-        return;
+ document.getElementById("noteFields")
+  .classList.add("hide");
 
-    }
+ document.getElementById("taskFields")
+  .classList.add("hide");
 
+ document.getElementById("fileFields")
+  .classList.remove("hide");
 
-    editingTaskId = null;
+ ["ft","fu"].forEach(x=>{
+  document.getElementById(x).value="";
+ });
 
-
-    document
-        .getElementById(
-            "taskModalTitle"
-        )
-        .textContent =
-        "Add Task";
-
-
-    document
-        .getElementById(
-            "taskTitle"
-        )
-        .value = "";
-
-
-    document
-        .getElementById(
-            "taskDue"
-        )
-        .value = "";
-
-
-    document
-        .getElementById(
-            "taskDescription"
-        )
-        .value = "";
-
-
-    document
-        .getElementById(
-            "taskModal"
-        )
-        .classList.add("show");
-
-};
-
-
-window.closeTaskModal =
-function(){
-
-    document
-        .getElementById(
-            "taskModal"
-        )
-        .classList.remove("show");
-
-};
-
-
-window.saveTask =
-async function(){
-
-    if(!admin) return;
-
-
-    const title =
-        document
-        .getElementById(
-            "taskTitle"
-        )
-        .value
-        .trim();
-
-
-    const due =
-        document
-        .getElementById(
-            "taskDue"
-        )
-        .value;
-
-
-    const description =
-        document
-        .getElementById(
-            "taskDescription"
-        )
-        .value
-        .trim();
-
-
-    if(!title){
-
-        alert(
-            "Please enter a task title."
-        );
-
-        return;
-
-    }
-
-
-    if(editingTaskId){
-
-        await update(
-            ref(
-                db,
-                "tasks/" +
-                editingTaskId
-            ),
-            {
-                title,
-                due,
-                description
-            }
-        );
-
-    }else{
-
-        const newTask =
-            push(tasksRef);
-
-
-        await set(
-            newTask,
-            {
-                title,
-                due,
-                description,
-                createdAt:Date.now(),
-                order:Date.now()
-            }
-        );
-
-    }
-
-
-    closeTaskModal();
-
-};
-
-
-/* ============================================================
-   EDIT TASK
-============================================================ */
-
-window.editTask =
-function(id){
-
-    if(!admin) return;
-
-
-    const task =
-        tasks[id];
-
-    if(!task) return;
-
-
-    editingTaskId = id;
-
-
-    document
-        .getElementById(
-            "taskModalTitle"
-        )
-        .textContent =
-        "Edit Task";
-
-
-    document
-        .getElementById(
-            "taskTitle"
-        )
-        .value =
-        task.title || "";
-
-
-    document
-        .getElementById(
-            "taskDue"
-        )
-        .value =
-        task.due || "";
-
-
-    document
-        .getElementById(
-            "taskDescription"
-        )
-        .value =
-        task.description || "";
-
-
-    document
-        .getElementById(
-            "taskModal"
-        )
-        .classList.add("show");
-
-};
-
-
-/* ============================================================
-   DELETE TASK
-============================================================ */
-
-window.deleteTask =
-async function(id){
-
-    if(!admin) return;
-
-
-    if(
-        !confirm(
-            "Delete this task?"
-        )
-    ) return;
-
-
-    await remove(
-        ref(
-            db,
-            "tasks/" + id
-        )
-    );
-
-    await remove(
-        ref(
-            db,
-            "taskChecks/" + id
-        )
-    );
-
-};
-
-
-/* ============================================================
-   TASK ARRANGING
-============================================================ */
-
-window.moveTaskUp =
-async function(id){
-
-    if(!admin) return;
-
-
-    const ordered =
-        getOrderedEntries(tasks);
-
-    const index =
-        ordered.findIndex(
-            x => x[0] === id
-        );
-
-
-    if(index <= 0) return;
-
-
-    const current =
-        ordered[index];
-
-    const previous =
-        ordered[index-1];
-
-
-    const temp =
-        current[1].order;
-
-
-    await update(
-        ref(db,"tasks"),
-        {
-            [current[0]+"/order"]:
-                previous[1].order,
-
-            [previous[0]+"/order"]:
-                temp
-        }
-    );
-
-};
-
-
-window.moveTaskDown =
-async function(id){
-
-    if(!admin) return;
-
-
-    const ordered =
-        getOrderedEntries(tasks);
-
-    const index =
-        ordered.findIndex(
-            x => x[0] === id
-        );
-
-
-    if(
-        index < 0 ||
-        index >= ordered.length-1
-    ) return;
-
-
-    const current =
-        ordered[index];
-
-    const next =
-        ordered[index+1];
-
-
-    const temp =
-        current[1].order;
-
-
-    await update(
-        ref(db,"tasks"),
-        {
-            [current[0]+"/order"]:
-                next[1].order,
-
-            [next[0]+"/order"]:
-                temp
-        }
-    );
-
-};
-
-
-/* ============================================================
-   RESOURCES / LINKS
-============================================================ */
-
-function renderResources(search=""){
-
-    const container =
-        document.getElementById(
-            "resourcesContainer"
-        );
-
-    container.innerHTML = "";
-
-
-    let entries =
-        getOrderedEntries(resources);
-
-
-    entries =
-        entries.filter(
-            ([id,item]) => {
-
-                const combined =
-                    (
-                        item.title || ""
-                    ) +
-                    " " +
-                    (
-                        item.url || ""
-                    ) +
-                    " " +
-                    (
-                        item.type || ""
-                    );
-
-
-                return !search ||
-                    combined
-                    .toLowerCase()
-                    .includes(
-                        search.toLowerCase()
-                    );
-
-            }
-        );
-
-
-    if(entries.length === 0){
-
-        container.innerHTML = `
-
-            <div class="empty">
-
-                No resources yet.
-
-                ${
-                    admin
-                    ? "<br><br>Click + Add Link to add one."
-                    : ""
-                }
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    entries.forEach(
-        ([id,item]) => {
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-            card.className =
-                "resource-card";
-
-
-            card.innerHTML = `
-
-                <div class="resource-top">
-
-                    <div class="resource-title">
-                        ${escapeHTML(
-                            item.title ||
-                            "Untitled Resource"
-                        )}
-                    </div>
-
-                    <div class="resource-type">
-                        ${escapeHTML(
-                            item.type ||
-                            "Other"
-                        )}
-                    </div>
-
-                </div>
-
-                <div class="resource-url">
-                    ${escapeHTML(
-                        item.url || ""
-                    )}
-                </div>
-
-                <a
-                    class="open-link"
-                    href="${safeURL(item.url)}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    🔗 Open Resource
-                </a>
-
-                <div class="card-date">
-                    ${
-                        item.author
-                        ? "Added by " +
-                          escapeHTML(item.author)
-                        : ""
-                    }
-                </div>
-
-            `;
-
-
-            if(admin){
-
-                const buttons =
-                    document.createElement(
-                        "div"
-                    );
-
-                buttons.className =
-                    "card-buttons";
-
-
-                buttons.innerHTML = `
-
-                    <button
-                        class="small-btn"
-                        onclick="editResource('${id}')"
-                    >
-                        ✏️ Edit
-                    </button>
-
-                    <button
-                        class="small-btn delete"
-                        onclick="deleteResource('${id}')"
-                    >
-                        🗑️ Delete
-                    </button>
-
-                    <button
-                        class="small-btn"
-                        onclick="moveResourceUp('${id}')"
-                    >
-                        ⬆️
-                    </button>
-
-                    <button
-                        class="small-btn"
-                        onclick="moveResourceDown('${id}')"
-                    >
-                        ⬇️
-                    </button>
-
-                `;
-
-
-                card.appendChild(
-                    buttons
-                );
-
-            }
-
-
-            container.appendChild(
-                card
-            );
-
-        }
-    );
-
+ document.getElementById("modal")
+  .classList.add("on");
 }
 
-
-/* ============================================================
-   RESOURCE MODAL
-============================================================ */
-
-window.openResourceModal =
-function(){
-
-    if(!admin){
-
-        alert(
-            "Admin access required."
-        );
-
-        return;
-
-    }
-
-
-    editingResourceId = null;
-
-
-    document
-        .getElementById(
-            "resourceModalTitle"
-        )
-        .textContent =
-        "Add Resource Link";
-
-
-    document
-        .getElementById(
-            "resourceTitle"
-        )
-        .value = "";
-
-
-    document
-        .getElementById(
-            "resourceType"
-        )
-        .value =
-        "PDF";
-
-
-    document
-        .getElementById(
-            "resourceURL"
-        )
-        .value = "";
-
-
-    document
-        .getElementById(
-            "resourceModal"
-        )
-        .classList.add("show");
-
-};
-
-
-window.closeResourceModal =
-function(){
-
-    document
-        .getElementById(
-            "resourceModal"
-        )
-        .classList.remove("show");
-
-};
-
-
-window.saveResource =
-async function(){
-
-    if(!admin) return;
-
-
-    const title =
-        document
-        .getElementById(
-            "resourceTitle"
-        )
-        .value
-        .trim();
-
-
-    const type =
-        document
-        .getElementById(
-            "resourceType"
-        )
-        .value;
-
-
-    const url =
-        document
-        .getElementById(
-            "resourceURL"
-        )
-        .value
-        .trim();
-
-
-    if(!title){
-
-        alert(
-            "Please enter a resource title."
-        );
-
-        return;
-
-    }
-
-
-    if(!isValidURL(url)){
-
-        alert(
-            "Please enter a valid link."
-        );
-
-        return;
-
-    }
-
-
-    if(editingResourceId){
-
-        await update(
-            ref(
-                db,
-                "resources/" +
-                editingResourceId
-            ),
-            {
-                title,
-                type,
-                url,
-                author:
-                    username || "Admin"
-            }
-        );
-
-    }else{
-
-        const newResource =
-            push(resourcesRef);
-
-
-        await set(
-            newResource,
-            {
-                title,
-                type,
-                url,
-                author:
-                    username || "Admin",
-                createdAt:
-                    Date.now(),
-                order:
-                    Date.now()
-            }
-        );
-
-    }
-
-
-    closeResourceModal();
-
-};
-
-
-/* ============================================================
-   EDIT RESOURCE
-============================================================ */
-
-window.editResource =
-function(id){
-
-    if(!admin) return;
-
-
-    const item =
-        resources[id];
-
-    if(!item) return;
-
-
-    editingResourceId = id;
-
-
-    document
-        .getElementById(
-            "resourceModalTitle"
-        )
-        .textContent =
-        "Edit Resource Link";
-
-
-    document
-        .getElementById(
-            "resourceTitle"
-        )
-        .value =
-        item.title || "";
-
-
-    document
-        .getElementById(
-            "resourceType"
-        )
-        .value =
-        item.type || "Other";
-
-
-    document
-        .getElementById(
-            "resourceURL"
-        )
-        .value =
-        item.url || "";
-
-
-    document
-        .getElementById(
-            "resourceModal"
-        )
-        .classList.add("show");
-
-};
-
-
-/* ============================================================
-   DELETE RESOURCE
-============================================================ */
-
-window.deleteResource =
-async function(id){
-
-    if(!admin) return;
-
-
-    if(
-        !confirm(
-            "Delete this resource?"
-        )
-    ) return;
-
-
-    await remove(
-        ref(
-            db,
-            "resources/" + id
-        )
-    );
-
-};
-
-
-/* ============================================================
-   RESOURCE ARRANGING
-============================================================ */
-
-window.moveResourceUp =
-async function(id){
-
-    if(!admin) return;
-
-
-    const ordered =
-        getOrderedEntries(resources);
-
-    const index =
-        ordered.findIndex(
-            x => x[0] === id
-        );
-
-
-    if(index <= 0) return;
-
-
-    const current =
-        ordered[index];
-
-    const previous =
-        ordered[index-1];
-
-
-    const temp =
-        current[1].order;
-
-
-    await update(
-        ref(db,"resources"),
-        {
-            [current[0]+"/order"]:
-                previous[1].order,
-
-            [previous[0]+"/order"]:
-                temp
-        }
-    );
-
-};
-
-
-window.moveResourceDown =
-async function(id){
-
-    if(!admin) return;
-
-
-    const ordered =
-        getOrderedEntries(resources);
-
-    const index =
-        ordered.findIndex(
-            x => x[0] === id
-        );
-
-
-    if(
-        index < 0 ||
-        index >= ordered.length-1
-    ) return;
-
-
-    const current =
-        ordered[index];
-
-    const next =
-        ordered[index+1];
-
-
-    const temp =
-        current[1].order;
-
-
-    await update(
-        ref(db,"resources"),
-        {
-            [current[0]+"/order"]:
-                next[1].order,
-
-            [next[0]+"/order"]:
-                temp
-        }
-    );
-
-};
-
-
-/* ============================================================
-   CLASS CHAT
-============================================================ */
-
-window.sendClassMessage =
-async function(){
-
-    const input =
-        document.getElementById(
-            "classChatInput"
-        );
-
-
-    const text =
-        input.value.trim();
-
-
-    if(!text) return;
-
-
-    const message =
-        push(classChatRef);
-
-
-    await set(
-        message,
-        {
-            name:
-                username || "Anonymous",
-
-            text,
-
-            createdAt:
-                Date.now()
-        }
-    );
-
-
-    input.value = "";
-
-};
-
-
-function renderClassChat(){
-
-    const container =
-        document.getElementById(
-            "classChatMessages"
-        );
-
-    container.innerHTML = "";
-
-
-    const messages =
-        Object.values(
-            classMessages
-        )
-        .sort(
-            (a,b) =>
-                (a.createdAt || 0) -
-                (b.createdAt || 0)
-        )
-        .slice(-100);
-
-
-    messages.forEach(
-        message => {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-            div.className =
-                "message " +
-                (
-                    message.name === username
-                    ? "user"
-                    : "ai"
-                );
-
-
-            const name =
-                document.createElement(
-                    "div"
-                );
-
-            name.className =
-                "message-name";
-
-            name.textContent =
-                message.name ||
-                "Unknown";
-
-
-            const text =
-                document.createElement(
-                    "div"
-                );
-
-            text.textContent =
-                message.text || "";
-
-
-            div.appendChild(
-                name
-            );
-
-            div.appendChild(
-                text
-            );
-
-
-            container.appendChild(
-                div
-            );
-
-        }
-    );
-
-
-    container.scrollTop =
-        container.scrollHeight;
-
+window.fileModal=fileModal;
+
+function closeModal(){
+ document.getElementById("modal")
+  .classList.remove("on");
 }
 
+window.closeModal=closeModal;
 
-/* ============================================================
-   ADMIN CHAT
-============================================================ */
+async function saveModal(){
 
-window.sendAdminMessage =
-async function(){
+ if(!isAdmin)return;
 
-    if(!admin){
+ if(type==="note"){
 
-        alert(
-            "Admin access required."
-        );
+  let title=nt.value.trim();
+  let text=nx.value.trim();
 
-        return;
+  if(!title){
+   alert("Title required.");
+   return;
+  }
 
-    }
+  if(editId){
 
-
-    const input =
-        document.getElementById(
-            "adminChatInput"
-        );
-
-
-    const text =
-        input.value.trim();
-
-
-    if(!text) return;
-
-
-    const message =
-        push(adminChatRef);
-
-
-    await set(
-        message,
-        {
-            name:
-                username || "Admin",
-
-            text,
-
-            createdAt:
-                Date.now()
-        }
-    );
-
-
-    input.value = "";
-
-};
-
-
-function renderAdminChat(){
-
-    const container =
-        document.getElementById(
-            "adminChatMessages"
-        );
-
-    container.innerHTML = "";
-
-
-    if(!admin){
-
-        return;
-
-    }
-
-
-    const messages =
-        Object.values(
-            adminMessages
-        )
-        .sort(
-            (a,b) =>
-                (a.createdAt || 0) -
-                (b.createdAt || 0)
-        )
-        .slice(-100);
-
-
-    messages.forEach(
-        message => {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-            div.className =
-                "message admin";
-
-
-            const name =
-                document.createElement(
-                    "div"
-                );
-
-            name.className =
-                "message-name";
-
-            name.textContent =
-                message.name ||
-                "Admin";
-
-
-            const text =
-                document.createElement(
-                    "div"
-                );
-
-            text.textContent =
-                message.text || "";
-
-
-            div.appendChild(
-                name
-            );
-
-            div.appendChild(
-                text
-            );
-
-
-            container.appendChild(
-                div
-            );
-
-        }
-    );
-
-
-    container.scrollTop =
-        container.scrollHeight;
-
-}
-
-
-/* ============================================================
-   ONLINE PRESENCE
-============================================================ */
-
-function setupPresence(){
-
-    if(!username) return;
-
-
-    const key =
-        safeKey(
-            username
-        );
-
-
-    const myPresence =
-        ref(
-            db,
-            "presence/" + key
-        );
-
-
-    set(
-        myPresence,
-        {
-            name:username,
-            online:true,
-            lastSeen:
-                Date.now()
-        }
-    );
-
-
-    onDisconnect(
-        myPresence
-    ).remove();
-
-
-    window.addEventListener(
-        "beforeunload",
-        () => {
-
-            remove(
-                myPresence
-            );
-
-        }
-    );
-
-}
-
-
-function renderOnlineUsers(){
-
-    const container =
-        document.getElementById(
-            "onlineList"
-        );
-
-
-    container.innerHTML = "";
-
-
-    const users =
-        Object.values(
-            onlineUsers
-        );
-
-
-    if(users.length === 0){
-
-        container.textContent =
-            "No one online";
-
-        return;
-
-    }
-
-
-    users.forEach(
-        user => {
-
-            const row =
-                document.createElement(
-                    "div"
-                );
-
-            row.className =
-                "online-user";
-
-
-            row.innerHTML = `
-
-                <span class="online-dot"></span>
-
-                <span>
-                    ${escapeHTML(
-                        user.name ||
-                        "Unknown"
-                    )}
-                </span>
-
-            `;
-
-
-            container.appendChild(
-                row
-            );
-
-        }
-    );
-
-}
-
-
-/* ============================================================
-   AI ASSISTANT
-============================================================ */
-
-window.askAssistant =
-function(){
-
-    const input =
-        document.getElementById(
-            "assistantInput"
-        );
-
-
-    const question =
-        input.value.trim();
-
-
-    if(!question) return;
-
-
-    addAssistantMessage(
-        question,
-        "user"
-    );
-
-
-    input.value = "";
-
-
-    const answer =
-        generateAssistantAnswer(
-            question
-        );
-
-
-    setTimeout(
-        () => {
-
-            addAssistantMessage(
-                answer,
-                "ai"
-            );
-
-        },
-        250
-    );
-
-};
-
-
-function addAssistantMessage(
+   await update(ref(db,"notes/"+editId),{
+    title,
     text,
-    type
-){
+    author:user
+   });
 
-    const container =
-        document.getElementById(
-            "assistantMessages"
-        );
+  }else{
+
+   await set(push(R.notes),{
+    title,
+    text,
+    author:user,
+    createdAt:Date.now()
+   });
+
+  }
+
+ }else if(type==="task"){
+
+  let title=tt.value.trim();
+
+  if(!title){
+   alert("Title required.");
+   return;
+  }
+
+  let data={
+   title,
+   due:td.value,
+   description:tx.value.trim()
+  };
+
+  if(editId){
+
+   await update(ref(db,"tasks/"+editId),data);
+
+  }else{
+
+   await set(push(R.tasks),{
+    ...data,
+    createdAt:Date.now()
+   });
+
+  }
+
+ }else{
+
+  let title=ft.value.trim();
+  let url=fu.value.trim();
+
+  if(
+   !title ||
+   !/^https?:\/\//i.test(url)
+  ){
+   alert("Enter a title and full http/https link.");
+   return;
+  }
+
+  await set(push(R.files),{
+   title,
+   url,
+   type:fy.value,
+   createdAt:Date.now(),
+   author:user
+  });
+
+ }
+
+ closeModal();
+}
+
+window.saveModal=saveModal;
 
 
-    const message =
-        document.createElement(
-            "div"
-        );
+/* =========================
+   GRAB AND DROP NOTES
+========================= */
 
-    message.className =
-        "message " + type;
+let draggedNoteId=null;
 
-    message.textContent =
-        text;
+function getOrderedNotes(){
 
+ const entries=Object.entries(notes)
+  .filter(([id])=>id!=="_order");
 
-    container.appendChild(
-        message
-    );
+ const order=Array.isArray(notes._order)
+  ?notes._order
+  :[];
 
+ const map=new Map(entries);
+ const result=[];
 
-    container.scrollTop =
-        container.scrollHeight;
+ order.forEach(id=>{
 
+  if(map.has(id)){
+   result.push([id,map.get(id)]);
+   map.delete(id);
+  }
+
+ });
+
+ return result.concat(
+  [...map.entries()]
+  .sort((a,b)=>
+   (b[1].createdAt||0)-(a[1].createdAt||0)
+  )
+ );
+}
+
+function noteDragStart(e){
+
+ if(!isAdmin)return;
+
+ draggedNoteId=e.currentTarget.dataset.noteId;
+
+ e.currentTarget.classList.add("dragging");
+
+ e.dataTransfer.effectAllowed="move";
+ e.dataTransfer.setData(
+  "text/plain",
+  draggedNoteId
+ );
+}
+
+function noteDragOver(e){
+
+ if(!isAdmin)return;
+
+ e.preventDefault();
+
+ if(
+  e.currentTarget.dataset.noteId!==draggedNoteId
+ ){
+  e.currentTarget.classList.add("drag-over");
+ }
+}
+
+function noteDragLeave(e){
+ e.currentTarget.classList.remove("drag-over");
+}
+
+function noteDragEnd(e){
+
+ e.currentTarget.classList.remove("dragging");
+
+ document.querySelectorAll(".drag-over")
+  .forEach(x=>x.classList.remove("drag-over"));
+
+ draggedNoteId=null;
+}
+
+async function noteDrop(e){
+
+ if(!isAdmin)return;
+
+ e.preventDefault();
+
+ const target=e.currentTarget.dataset.noteId;
+
+ e.currentTarget.classList.remove("drag-over");
+
+ if(
+  !draggedNoteId ||
+  !target ||
+  draggedNoteId===target
+ ){
+  return;
+ }
+
+ const ids=getOrderedNotes().map(([id])=>id);
+
+ const from=ids.indexOf(draggedNoteId);
+ const to=ids.indexOf(target);
+
+ if(from===-1 || to===-1)return;
+
+ ids.splice(from,1);
+ ids.splice(to,0,draggedNoteId);
+
+ /*
+  IMPORTANT:
+  Only the order is updated.
+  The actual notes and their contents
+  are not deleted or overwritten.
+ */
+
+ await update(ref(db,"notes"),{
+  _order:ids
+ });
+
+ draggedNoteId=null;
 }
 
 
-function generateAssistantAnswer(
-    question
-){
+/* =========================
+   NOTE, TASK AND FILE ACTIONS
+========================= */
 
-    const q =
-        question.toLowerCase();
+function editNote(id){
 
+ if(!isAdmin)return;
 
-    if(
-        q.includes("tomorrow") ||
-        q.includes("due tomorrow")
-    ){
+ type="note";
+ editId=id;
 
-        const tomorrow =
-            new Date();
+ nt.value=notes[id].title||"";
+ nx.value=notes[id].text||"";
 
-        tomorrow.setDate(
-            tomorrow.getDate()+1
-        );
+ document.getElementById("noteFields")
+  .classList.remove("hide");
 
+ document.getElementById("taskFields")
+  .classList.add("hide");
 
-        const date =
-            tomorrow
-            .toISOString()
-            .split("T")[0];
+ document.getElementById("fileFields")
+  .classList.add("hide");
 
+ document.getElementById("mt").textContent="Edit Note";
 
-        const due =
-            Object.values(tasks)
-            .filter(
-                task =>
-                    task.due === date
-            );
-
-
-        if(!due.length){
-
-            return (
-                "🎉 You have no tasks " +
-                "due tomorrow."
-            );
-
-        }
-
-
-        return (
-            "📚 Due tomorrow:\n\n" +
-            due
-            .map(
-                task =>
-                    "• " +
-                    task.title
-            )
-            .join("\n")
-        );
-
-    }
-
-
-    if(
-        q.includes("task") ||
-        q.includes("assignment") ||
-        q.includes("deadline") ||
-        q.includes("due")
-    ){
-
-        const list =
-            Object.values(tasks);
-
-
-        if(!list.length){
-
-            return (
-                "🎉 There are currently " +
-                "no tasks."
-            );
-
-        }
-
-
-        return (
-            "📋 Tasks:\n\n" +
-            list
-            .map(
-                task =>
-                    "• " +
-                    task.title +
-                    (
-                        task.due
-                        ? " — " +
-                          formatDate(
-                              task.due
-                          )
-                        : ""
-                    )
-            )
-            .join("\n")
-        );
-
-    }
-
-
-    const matchingNotes =
-        Object.values(notes)
-        .filter(
-            note => {
-
-                const combined =
-                    (
-                        note.title || ""
-                    ) +
-                    " " +
-                    (
-                        note.text || ""
-                    );
-
-
-                return q
-                    .split(" ")
-                    .some(
-                        word =>
-                            word.length > 2 &&
-                            combined
-                            .toLowerCase()
-                            .includes(
-                                word
-                            )
-                    );
-
-            }
-        );
-
-
-    if(
-        q.includes("note") ||
-        q.includes("notes") ||
-        matchingNotes.length
-    ){
-
-        if(
-            !matchingNotes.length
-        ){
-
-            return (
-                "🔎 I couldn't find " +
-                "a matching note."
-            );
-
-        }
-
-
-        return (
-            "📝 Matching notes:\n\n" +
-            matchingNotes
-            .slice(0,5)
-            .map(
-                note =>
-                    "• " +
-                    note.title
-            )
-            .join("\n")
-        );
-
-    }
-
-
-    if(
-        q.includes("upcoming") ||
-        q.includes("next") ||
-        q.includes("coming")
-    ){
-
-        const upcoming =
-            Object.values(tasks)
-            .filter(
-                task =>
-                    task.due
-            )
-            .sort(
-                (a,b) =>
-                    a.due.localeCompare(
-                        b.due
-                    )
-            )
-            .slice(0,5);
-
-
-        if(!upcoming.length){
-
-            return (
-                "You don't have " +
-                "any upcoming tasks."
-            );
-
-        }
-
-
-        return (
-            "📅 Upcoming:\n\n" +
-            upcoming
-            .map(
-                task =>
-                    "• " +
-                    task.title +
-                    " — " +
-                    formatDate(
-                        task.due
-                    )
-            )
-            .join("\n")
-        );
-
-    }
-
-
-    return `
-
-🤖 I can help you check your
-BSN 2A information.
-
-Try asking:
-
-• What is due tomorrow?
-• What tasks do I have?
-• What is upcoming?
-• Show my notes.
-• Show notes about NCM 105.
-
-    `.trim();
-
+ document.getElementById("modal")
+  .classList.add("on");
 }
 
+window.editNote=editNote;
 
-/* ============================================================
-   SEARCH
-============================================================ */
+function editTask(id){
 
-window.searchEverything =
-function(){
+ if(!isAdmin)return;
 
-    const query =
-        document
-        .getElementById(
-            "searchInput"
-        )
-        .value
-        .trim();
+ type="task";
+ editId=id;
 
+ tt.value=tasks[id].title||"";
+ td.value=tasks[id].due||"";
+ tx.value=tasks[id].description||"";
 
-    renderNotes(query);
+ document.getElementById("noteFields")
+  .classList.add("hide");
 
-    renderTasks(query);
+ document.getElementById("taskFields")
+  .classList.remove("hide");
 
-    renderResources(query);
+ document.getElementById("fileFields")
+  .classList.add("hide");
 
-};
+ document.getElementById("mt").textContent="Edit Task";
 
-
-/* ============================================================
-   ONE-MONTH AUTO DELETE
-============================================================ */
-
-async function cleanupOldData(){
-
-    /*
-      30 days.
-    */
-
-    const month =
-        30 *
-        24 *
-        60 *
-        60 *
-        1000;
-
-
-    const cutoff =
-        Date.now() - month;
-
-
-    /*
-      Only admin performs cleanup.
-      This prevents every student from
-      attempting deletion.
-    */
-
-    if(!admin) return;
-
-
-    for(
-        const [id,item]
-        of Object.entries(notes)
-    ){
-
-        if(
-            item.createdAt &&
-            item.createdAt < cutoff
-        ){
-
-            await remove(
-                ref(
-                    db,
-                    "notes/" + id
-                )
-            );
-
-        }
-
-    }
-
-
-    for(
-        const [id,item]
-        of Object.entries(tasks)
-    ){
-
-        if(
-            item.createdAt &&
-            item.createdAt < cutoff
-        ){
-
-            await remove(
-                ref(
-                    db,
-                    "tasks/" + id
-                )
-            );
-
-            await remove(
-                ref(
-                    db,
-                    "taskChecks/" + id
-                )
-            );
-
-        }
-
-    }
-
-
-    for(
-        const [id,item]
-        of Object.entries(resources)
-    ){
-
-        if(
-            item.createdAt &&
-            item.createdAt < cutoff
-        ){
-
-            await remove(
-                ref(
-                    db,
-                    "resources/" + id
-                )
-            );
-
-        }
-
-    }
-
+ document.getElementById("modal")
+  .classList.add("on");
 }
 
+window.editTask=editTask;
 
-/* ============================================================
-   HELPERS
-============================================================ */
+async function delNote(id){
 
-function getOrderedEntries(
-    object
-){
-
-    return Object
-        .entries(object)
-        .sort(
-            (a,b) =>
-                (
-                    a[1].order ??
-                    a[1].createdAt ??
-                    0
-                ) -
-                (
-                    b[1].order ??
-                    b[1].createdAt ??
-                    0
-                )
-        );
-
+ if(
+  isAdmin &&
+  confirm("Delete note?")
+ ){
+  await remove(ref(db,"notes/"+id));
+ }
 }
 
+window.delNote=delNote;
 
-function formatDate(
-    dateString
-){
+async function delTask(id){
 
-    if(!dateString)
-        return "";
-
-
-    const date =
-        new Date(
-            dateString +
-            "T00:00:00"
-        );
-
-
-    return date.toLocaleDateString(
-        undefined,
-        {
-            month:"long",
-            day:"numeric",
-            year:"numeric"
-        }
-    );
-
+ if(
+  isAdmin &&
+  confirm("Delete task?")
+ ){
+  await remove(ref(db,"tasks/"+id));
+ }
 }
 
+window.delTask=delTask;
 
-function escapeHTML(
-    value
-){
+async function delFile(id){
 
-    return String(value)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
+ if(
+  isAdmin &&
+  confirm("Delete link?")
+ ){
+  await remove(ref(db,"files/"+id));
+ }
 }
 
+window.delFile=delFile;
 
-function safeKey(
-    value
-){
 
-    return String(value || "guest")
-        .replace(
-            /[.#$[\]/]/g,
-            "_"
-        );
+/* =========================
+   PERSONAL TASK CHECKBOXES
+========================= */
 
+function checkTask(id,v){
+
+ save("check_"+id,v);
+ render();
 }
 
+window.checkTask=checkTask;
 
-function isValidURL(
-    value
-){
 
-    try{
+/* =========================
+   CHAT
+========================= */
 
-        const url =
-            new URL(value);
+function draw(id,data){
 
-        return (
-            url.protocol === "http:" ||
-            url.protocol === "https:"
-        );
+ let c=document.getElementById(id);
+ c.innerHTML="";
 
-    }catch{
+ Object.values(data)
+ .sort((a,b)=>
+  (a.createdAt||0)-(b.createdAt||0)
+ )
+ .slice(-100)
+ .forEach(m=>{
 
-        return false;
+  let d=document.createElement("div");
 
-    }
+  d.className="msg "+
+   (m.author===user?"me":"");
 
+  d.textContent=
+   (m.author||"User")+": "+m.text;
+
+  c.appendChild(d);
+ });
+
+ c.scrollTop=c.scrollHeight;
 }
 
+let chatData={};
 
-function safeURL(
-    value
-){
+onValue(R.chat,s=>{
+ chatData=s.val()||{};
+ draw("chatLog",chatData);
+});
 
-    if(
-        !isValidURL(value)
-    ){
+onValue(R.admin,s=>{
+ adminChat=s.val()||{};
 
-        return "#";
+ if(isAdmin){
+  draw("adminLog",adminChat);
+ }
+});
 
-    }
+async function sendChat(){
 
-    return escapeHTML(value);
+ let i=chatInput;
+ let v=i.value.trim();
 
+ if(!v)return;
+
+ await set(push(R.chat),{
+  author:user||"Guest",
+  text:v,
+  createdAt:Date.now()
+ });
+
+ i.value="";
 }
 
+window.sendChat=sendChat;
 
-/* ============================================================
+async function sendAdmin(){
+
+ if(!isAdmin)return;
+
+ let i=adminInput;
+ let v=i.value.trim();
+
+ if(!v)return;
+
+ await set(push(R.admin),{
+  author:user||"Admin",
+  text:v,
+  createdAt:Date.now()
+ });
+
+ i.value="";
+}
+
+window.sendAdmin=sendAdmin;
+
+
+/* =========================
+   ONLINE PRESENCE
+========================= */
+
+function presence(){
+
+ let id=Math.random()
+  .toString(36)
+  .slice(2);
+
+ let r=ref(db,"presence/"+id);
+
+ set(r,{
+  name:user,
+  lastSeen:serverTimestamp()
+ });
+
+ onDisconnect(r).remove();
+
+ onValue(R.presence,s=>{
+
+  let p=s.val()||{};
+
+  let names=Object.values(p)
+   .map(x=>x.name)
+   .filter(Boolean);
+
+  people.innerHTML=names.length
+   ?names.map(n=>
+    `<div><span class="dot"></span>${esc(n)}</div>`
+   ).join("")
+   :"Nobody online";
+ });
+}
+
+if(user)presence();
+
+
+/* =========================
    CONNECTION STATUS
-============================================================ */
+========================= */
 
-window.addEventListener(
-    "online",
-    () => {
+function conn(){
 
-        document
-            .getElementById(
-                "connectionStatus"
-            )
-            .textContent =
-            "🟢 Online";
-
-    }
-);
-
-
-window.addEventListener(
-    "offline",
-    () => {
-
-        document
-            .getElementById(
-                "connectionStatus"
-            )
-            .textContent =
-            "🟠 Offline";
-
-    }
-);
-
-
-/* ============================================================
-   SESSION ADMIN
-============================================================ */
-
-if(
-    sessionStorage.getItem(
-        "bsnAdmin"
-    ) === "true"
-){
-
-    admin = true;
-
+ status.textContent=navigator.onLine
+  ?"🟢 Online — syncing with Firebase"
+  :"🔴 Offline — cached data available; Firebase will sync when connection returns";
 }
 
+addEventListener("online",conn);
+addEventListener("offline",conn);
 
-/* ============================================================
-   START
-============================================================ */
-
-loadTheme();
-
-loadUsername();
-
-updateAdminUI();
-
-
-if(
-    navigator.onLine
-){
-
-    document
-        .getElementById(
-            "connectionStatus"
-        )
-        .textContent =
-        "🟢 Online";
-
-}else{
-
-    document
-        .getElementById(
-            "connectionStatus"
-        )
-        .textContent =
-        "🟠 Offline";
-
-}
+conn();
+ui();
 
 </script>
 
