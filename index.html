@@ -1,28 +1,89 @@
 <!doctype html>
 <html lang="en">
 <head>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#245c43">
+
 <title>BSN 2A Notes</title>
 
 <style>
+
 *{
- box-sizing:border-box;
+  box-sizing:border-box;
+}
+
+:root{
+  color-scheme:light;
+
+  --bg:#f6f2e9;
+  --surface:#ffffff;
+  --surface2:#f1eee6;
+  --surface3:#e8efe9;
+
+  --text:#1e2b25;
+  --muted:#526158;
+  --muted2:#718078;
+
+  --border:#d9e0db;
+
+  --primary:#245c43;
+  --primary-dark:#173f2d;
+  --primary-soft:#e7f0e8;
+
+  --hero1:#e4efdc;
+  --hero2:#f4f2df;
+
+  --shadow:#1e322015;
+  --input:#ffffff;
+}
+
+body.dark{
+
+  color-scheme:dark;
+
+  --bg:#101714;
+  --surface:#18211d;
+  --surface2:#27302b;
+  --surface3:#273a30;
+
+  --text:#edf4ef;
+  --muted:#bdc9c2;
+  --muted2:#9eada4;
+
+  --border:#3b4942;
+
+  --primary:#69a785;
+  --primary-dark:#173f2d;
+  --primary-soft:#23352c;
+
+  --hero1:#203329;
+  --hero2:#1b2b23;
+
+  --shadow:#00000035;
+  --input:#18211d;
 }
 
 body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#f6f2e9;
- color:#1e2b25;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:background-color .2s ease,color .2s ease;
 }
 
 button,
 input,
 textarea,
 select{
- font:inherit;
+  font:inherit;
+}
+
+h1,
+h2,
+h3{
+  font-family:Georgia,serif;
 }
 
 /* =========================
@@ -30,105 +91,106 @@ select{
 ========================= */
 
 .side{
- position:fixed;
- inset:0 auto 0 0;
- width:240px;
- padding:22px 16px;
- background:linear-gradient(#173f2d,#285c43);
- color:#fff;
- z-index:20;
+  position:fixed;
+  inset:0 auto 0 0;
+  width:240px;
+  padding:22px 16px;
+  background:linear-gradient(#173f2d,#285c43);
+  color:#fff;
+  z-index:20;
 }
 
 .logo{
- text-align:center;
+  text-align:center;
 }
 
 .nursing-logo{
- width:75px;
- height:75px;
- margin:auto;
- display:flex;
- align-items:center;
- justify-content:center;
- border:4px solid #dcebd7;
- border-radius:20px;
- background:#ffffff12;
+  width:75px;
+  height:75px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:4px solid #dcebd7;
+  border-radius:20px;
+  background:#ffffff12;
 }
 
 .nursing-logo svg{
- width:52px;
- height:52px;
+  width:52px;
+  height:52px;
 }
 
 .nursing-logo circle{
- fill:none;
- stroke:#dcebd7;
- stroke-width:5;
+  fill:none;
+  stroke:#dcebd7;
+  stroke-width:5;
 }
 
 .nursing-logo path:first-of-type{
- fill:#dcebd7;
- stroke:none;
+  fill:#dcebd7;
+  stroke:none;
 }
 
 .nursing-logo path:last-of-type{
- fill:none;
- stroke:#dcebd7;
- stroke-width:4;
- stroke-linecap:round;
+  fill:none;
+  stroke:#dcebd7;
+  stroke-width:4;
+  stroke-linecap:round;
 }
 
 .logo h2{
- margin-bottom:8px;
+  margin-bottom:8px;
 }
 
 .nav{
- margin-top:8px;
+  margin-top:8px;
 }
 
 .nav button{
- display:block;
- width:100%;
- margin:7px 0;
- padding:12px;
- border:0;
- border-radius:10px;
- background:transparent;
- color:white;
- text-align:left;
- cursor:pointer;
- transition:.15s;
+  display:block;
+  width:100%;
+  margin:7px 0;
+  padding:12px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:white;
+  text-align:left;
+  cursor:pointer;
+  transition:.15s;
 }
 
 .nav button:hover,
-.nav .on{
- background:#ffffff25;
+.nav .on,
+.theme-toggle-active{
+  background:#ffffff25;
 }
 
 .user{
- position:absolute;
- bottom:18px;
- left:16px;
- right:16px;
- padding:12px;
- background:#ffffff18;
- border-radius:12px;
+  position:absolute;
+  bottom:18px;
+  left:16px;
+  right:16px;
+  padding:12px;
+  background:#ffffff18;
+  border-radius:12px;
 }
 
 .online{
- margin-top:9px;
- font-size:12px;
- max-height:115px;
- overflow:auto;
+  margin-top:9px;
+  font-size:12px;
+  max-height:115px;
+  overflow:auto;
 }
 
 .dot{
- display:inline-block;
- width:7px;
- height:7px;
- border-radius:50%;
- background:#7ee08d;
- margin-right:5px;
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#7ee08d;
+  margin-right:5px;
 }
 
 /* =========================
@@ -136,8 +198,8 @@ select{
 ========================= */
 
 .main{
- margin-left:240px;
- padding:25px;
+  margin-left:240px;
+  padding:25px;
 }
 
 /* =========================
@@ -145,11 +207,11 @@ select{
 ========================= */
 
 .sec{
- display:none;
+  display:none;
 }
 
 .sec.on{
- display:block;
+  display:block;
 }
 
 /* =========================
@@ -157,83 +219,81 @@ select{
 ========================= */
 
 .announcement{
- display:flex;
- align-items:center;
- gap:12px;
- width:100%;
- min-height:54px;
- margin-bottom:18px;
- padding:10px 16px;
- background:#173f2d;
- color:#fff;
- border-radius:14px;
- box-shadow:0 5px 20px #1e322015;
- overflow:hidden;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  min-height:54px;
+  margin-bottom:18px;
+  padding:10px 16px;
+  background:#173f2d;
+  color:#fff;
+  border-radius:14px;
+  box-shadow:0 5px 20px var(--shadow);
+  overflow:hidden;
 }
 
 .announcement-icon{
- flex:0 0 38px;
- width:38px;
- height:38px;
- display:flex;
- align-items:center;
- justify-content:center;
- border-radius:10px;
- background:#ffffff18;
+  flex:0 0 38px;
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:#ffffff18;
 }
 
 .announcement-icon svg{
- width:22px;
- height:22px;
- stroke:#dcebd7;
+  width:22px;
+  height:22px;
+  stroke:#dcebd7;
 }
 
 .announcement-window{
- flex:1;
- overflow:hidden;
- white-space:nowrap;
+  flex:1;
+  overflow:hidden;
+  white-space:nowrap;
 }
 
 .announcement-track{
- display:inline-block;
- min-width:100%;
- animation:announcementScroll 18s linear infinite;
+  display:inline-block;
+  min-width:100%;
+  animation:announcementScroll 18s linear infinite;
 }
 
 .announcement:hover .announcement-track{
- animation-play-state:paused;
+  animation-play-state:paused;
 }
 
 .announcement-text{
- font-weight:bold;
- letter-spacing:.2px;
+  font-weight:bold;
+  letter-spacing:.2px;
 }
 
 @keyframes announcementScroll{
- 0%{
-  transform:translateX(100%);
- }
 
- 100%{
-  transform:translateX(-100%);
- }
+  0%{
+    transform:translateX(100%);
+  }
+
+  100%{
+    transform:translateX(-100%);
+  }
+
 }
 
 .announcement-admin{
- flex:0 0 auto;
+  flex:0 0 auto;
 }
 
 .announcement-admin button{
- border:0;
- border-radius:8px;
- padding:7px 10px;
- background:#ffffff18;
- color:#fff;
- cursor:pointer;
-}
-
-.announcement-admin button:hover{
- background:#ffffff2c;
+  border:0;
+  border-radius:8px;
+  padding:7px 10px;
+  background:#ffffff18;
+  color:#fff;
+  cursor:pointer;
 }
 
 /* =========================
@@ -241,164 +301,241 @@ select{
 ========================= */
 
 .hero{
- background:linear-gradient(110deg,#e4efdc,#f4f2df);
- border-radius:18px;
- padding:24px;
- margin-bottom:20px;
- box-shadow:0 5px 20px #1e322015;
+  background:linear-gradient(110deg,var(--hero1),var(--hero2));
+  border-radius:18px;
+  padding:24px;
+  margin-bottom:20px;
+  box-shadow:0 5px 20px var(--shadow);
 }
 
 .hero h1{
- margin:0 0 10px;
+  margin:0 0 10px;
 }
 
 .hero p{
- margin:0;
- line-height:1.6;
-}
-
-h1,
-h2,
-h3{
- font-family:Georgia,serif;
+  margin:0;
+  line-height:1.6;
 }
 
 /* =========================
-   MASONRY NOTES
+   NOTES
 ========================= */
 
 .notes-masonry{
- column-width:280px;
- column-count:3;
- column-gap:16px;
+  column-width:280px;
+  column-count:3;
+  column-gap:16px;
 }
 
 .card{
- background:#fff;
- border-radius:18px;
- padding:20px;
- margin:0 0 16px;
- box-shadow:0 5px 20px #1e322015;
- break-inside:avoid;
- -webkit-column-break-inside:avoid;
- display:block;
- width:100%;
- height:max-content;
- min-height:0;
- transition:
-  transform .15s,
-  box-shadow .15s;
+  background:var(--surface);
+  border-radius:18px;
+  padding:20px;
+  margin:0 0 16px;
+  box-shadow:0 5px 20px var(--shadow);
+  break-inside:avoid;
+  -webkit-column-break-inside:avoid;
+  display:block;
+  width:100%;
+  height:max-content;
+  min-height:0;
+  transition:.15s;
 }
 
 .card:hover{
- transform:translateY(-2px);
- box-shadow:0 8px 24px #1e322020;
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px var(--shadow);
 }
 
 .card[draggable="true"]{
- cursor:grab;
+  cursor:grab;
 }
 
 .card[draggable="true"]:active{
- cursor:grabbing;
+  cursor:grabbing;
 }
 
 .card.dragging{
- opacity:.45;
- transform:scale(.98);
+  opacity:.45;
+  transform:scale(.98);
 }
 
 .card.drag-over{
- outline:3px dashed #3d7a5b;
- outline-offset:4px;
+  outline:3px dashed #3d7a5b;
+  outline-offset:4px;
 }
 
 .card h3{
- margin:0 0 12px;
- line-height:1.3;
+  margin:0 0 12px;
+  line-height:1.3;
 }
 
 .card small{
- display:block;
- margin-top:10px;
+  display:block;
+  margin-top:10px;
 }
 
 .text{
- display:block;
- width:100%;
- white-space:pre-wrap;
- overflow-wrap:anywhere;
- line-height:1.65;
- color:#526158;
+  display:block;
+  width:100%;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.65;
+  color:var(--muted);
 }
 
 .empty-card{
- text-align:center;
- color:#718078;
+  text-align:center;
+  color:var(--muted2);
 }
 
 /* =========================
    TASKS
 ========================= */
 
+.task-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+}
+
 .task{
- display:flex;
- gap:12px;
- align-items:flex-start;
- background:#fff;
- border-radius:18px;
- padding:20px;
- margin-bottom:16px;
- box-shadow:0 5px 20px #1e322015;
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  background:var(--surface);
+  border-radius:18px;
+  padding:18px 20px;
+  margin-bottom:12px;
+  box-shadow:0 5px 20px var(--shadow);
+  transition:.15s;
+  position:relative;
 }
 
-.task input{
- width:22px;
- height:22px;
- cursor:pointer;
+.task:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 24px var(--shadow);
 }
 
-.done{
- text-decoration:line-through;
- opacity:.55;
+.task-check{
+  width:24px !important;
+  height:24px !important;
+  min-width:24px;
+  margin-top:2px;
+  cursor:pointer;
+  accent-color:#245c43;
 }
 
-.actions{
- margin-top:12px;
- display:flex;
- gap:7px;
- flex-wrap:wrap;
+.task-content{
+  flex:1;
+  min-width:0;
 }
 
-.small{
- border:0;
- padding:7px 10px;
- border-radius:8px;
- background:#e8efe9;
- color:#245c43;
- cursor:pointer;
+.task-title{
+  display:block;
+  font-size:17px;
+  line-height:1.4;
+  margin-bottom:4px;
 }
 
-.del{
- background:#f9e1e1;
- color:#c94b4b;
+.task-due{
+  font-size:13px;
+  color:var(--muted2);
+  margin-bottom:7px;
+}
+
+.task-description{
+  color:var(--muted);
+  line-height:1.55;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+.task-title.done{
+  text-decoration:line-through;
+  opacity:.5;
+}
+
+.task.completed{
+  opacity:.72;
+}
+
+.task-actions{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.task-admin-btn{
+  border:0;
+  padding:7px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  background:var(--surface3);
+  color:var(--primary);
+  font-size:13px;
+}
+
+.task-admin-btn:hover{
+  filter:brightness(1.08);
+}
+
+.task-admin-delete{
+  background:#f9e1e1;
+  color:#c94b4b;
+}
+
+.task[draggable="true"]{
+  cursor:grab;
+}
+
+.task[draggable="true"]:active{
+  cursor:grabbing;
+}
+
+.task.dragging{
+  opacity:.4;
+  transform:scale(.98);
+}
+
+.task.drag-over{
+  outline:3px dashed #3d7a5b;
+  outline-offset:4px;
 }
 
 /* =========================
-   BUTTON
+   BUTTONS
 ========================= */
 
 .btn{
- border:0;
- border-radius:10px;
- padding:11px 15px;
- background:#245c43;
- color:#fff;
- cursor:pointer;
+  border:0;
+  border-radius:10px;
+  padding:11px 15px;
+  background:#245c43;
+  color:#fff;
+  cursor:pointer;
 }
 
 .btn:hover{
- filter:brightness(1.08);
+  filter:brightness(1.08);
+}
+
+.small{
+  border:0;
+  padding:7px 10px;
+  border-radius:8px;
+  background:var(--surface3);
+  color:var(--primary);
+  cursor:pointer;
+}
+
+.del{
+  background:#f9e1e1;
+  color:#c94b4b;
 }
 
 /* =========================
@@ -406,46 +543,46 @@ h3{
 ========================= */
 
 .file-icon{
- display:inline-flex;
- width:32px;
- height:32px;
- margin-right:9px;
- vertical-align:middle;
- align-items:center;
- justify-content:center;
- border-radius:9px;
- background:#e8efe9;
- color:#245c43;
+  display:inline-flex;
+  width:32px;
+  height:32px;
+  margin-right:9px;
+  vertical-align:middle;
+  align-items:center;
+  justify-content:center;
+  border-radius:9px;
+  background:var(--surface3);
+  color:var(--primary);
 }
 
 .file-icon svg{
- width:19px;
- height:19px;
- display:block;
+  width:19px;
+  height:19px;
+  display:block;
 }
 
 .file-btn{
- display:inline-flex;
- align-items:center;
- gap:8px;
- padding:10px 14px;
- border-radius:10px;
- background:#e8efe9;
- color:#245c43;
- text-decoration:none;
- font-weight:bold;
- transition:.15s;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:10px;
+  background:var(--surface3);
+  color:var(--primary);
+  text-decoration:none;
+  font-weight:bold;
+  transition:.15s;
 }
 
 .file-btn:hover{
- background:#d8e6dc;
- transform:translateY(-1px);
+  filter:brightness(1.08);
+  transform:translateY(-1px);
 }
 
 .file-btn svg{
- width:18px;
- height:18px;
- flex:none;
+  width:18px;
+  height:18px;
+  flex:none;
 }
 
 /* =========================
@@ -453,43 +590,45 @@ h3{
 ========================= */
 
 .chat{
- background:#fff;
- border-radius:18px;
- padding:22px;
- margin-bottom:18px;
- box-shadow:0 5px 20px #1e322015;
+  background:var(--surface);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:18px;
+  box-shadow:0 5px 20px var(--shadow);
 }
 
 .msg{
- padding:10px 13px;
- margin:8px 0;
- border-radius:12px;
- white-space:pre-wrap;
- max-width:85%;
- background:#f1eee6;
+  padding:10px 13px;
+  margin:8px 0;
+  border-radius:12px;
+  white-space:pre-wrap;
+  max-width:85%;
+  background:var(--surface2);
 }
 
 .me{
- margin-left:auto;
- background:#e7f0e8;
+  margin-left:auto;
+  background:var(--primary-soft);
 }
 
 .chatlog{
- height:380px;
- overflow:auto;
+  height:380px;
+  overflow:auto;
 }
 
 .chatrow{
- display:flex;
- gap:8px;
- margin-top:10px;
+  display:flex;
+  gap:8px;
+  margin-top:10px;
 }
 
 .chatrow input{
- flex:1;
- padding:12px;
- border:1px solid #ddd;
- border-radius:10px;
+  flex:1;
+  padding:12px;
+  border:1px solid var(--border);
+  background:var(--input);
+  color:var(--text);
+  border-radius:10px;
 }
 
 /* =========================
@@ -497,48 +636,51 @@ h3{
 ========================= */
 
 .modal{
- display:none;
- position:fixed;
- inset:0;
- background:#0008;
- align-items:center;
- justify-content:center;
- padding:20px;
- z-index:100;
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100;
 }
 
 .modal.on{
- display:flex;
+  display:flex;
 }
 
 .box{
- background:#fff;
- padding:24px;
- border-radius:18px;
- width:min(650px,100%);
- max-height:90vh;
- overflow:auto;
+  background:var(--surface);
+  color:var(--text);
+  padding:24px;
+  border-radius:18px;
+  width:min(650px,100%);
+  max-height:90vh;
+  overflow:auto;
 }
 
 .box input,
 .box textarea,
 .box select{
- width:100%;
- padding:12px;
- margin:7px 0;
- border:1px solid #ddd;
- border-radius:10px;
+  width:100%;
+  padding:12px;
+  margin:7px 0;
+  border:1px solid var(--border);
+  background:var(--input);
+  color:var(--text);
+  border-radius:10px;
 }
 
 .box textarea{
- min-height:190px;
+  min-height:190px;
 }
 
 .modal-buttons{
- display:flex;
- justify-content:flex-end;
- gap:8px;
- margin-top:10px;
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:10px;
 }
 
 /* =========================
@@ -546,85 +688,36 @@ h3{
 ========================= */
 
 .login{
- position:fixed;
- inset:0;
- background:linear-gradient(135deg,#173f2d,#3d7a5b);
- display:flex;
- align-items:center;
- justify-content:center;
- z-index:200;
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#173f2d,#3d7a5b);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:200;
 }
 
 .loginbox{
- background:#fff;
- padding:30px;
- border-radius:20px;
- width:min(400px,90%);
- text-align:center;
+  background:var(--surface);
+  color:var(--text);
+  padding:30px;
+  border-radius:20px;
+  width:min(400px,90%);
+  text-align:center;
 }
 
 .loginbox input{
- width:100%;
- padding:13px;
- margin:10px 0;
- border:1px solid #ddd;
- border-radius:10px;
+  width:100%;
+  padding:13px;
+  margin:10px 0;
+  border:1px solid var(--border);
+  background:var(--input);
+  color:var(--text);
+  border-radius:10px;
 }
 
 .hide{
- display:none!important;
-}
-
-/* =========================
-   DARK MODE
-========================= */
-
-body.dark{
- background:#101714;
- color:#edf4ef;
-}
-
-body.dark .card,
-body.dark .task,
-body.dark .chat,
-body.dark .box,
-body.dark .loginbox{
- background:#18211d;
- color:#edf4ef;
-}
-
-body.dark .hero{
- background:#203329;
-}
-
-body.dark .text{
- color:#bdc9c2;
-}
-
-body.dark input,
-body.dark textarea,
-body.dark select{
- background:#18211d;
- color:#fff;
- border-color:#3b4942;
-}
-
-body.dark .msg{
- background:#27302b;
-}
-
-body.dark .me{
- background:#23352c;
-}
-
-body.dark .file-icon,
-body.dark .file-btn{
- background:#273a30;
- color:#b9e0c5;
-}
-
-body.dark .file-btn:hover{
- background:#30483b;
+  display:none!important;
 }
 
 /* =========================
@@ -633,77 +726,78 @@ body.dark .file-btn:hover{
 
 @media(max-width:1100px){
 
- .notes-masonry{
-  column-count:2;
- }
+  .notes-masonry{
+    column-count:2;
+  }
 
 }
 
 @media(max-width:800px){
 
- .side{
-  width:72px;
-  padding:12px 7px;
- }
+  .side{
+    width:72px;
+    padding:12px 7px;
+  }
 
- .side h2,
- .side small,
- .nav span,
- .user{
-  display:none;
- }
+  .side h2,
+  .side small,
+  .nav span,
+  .user{
+    display:none;
+  }
 
- .nursing-logo{
-  width:52px;
-  height:52px;
-  border-width:3px;
- }
+  .nursing-logo{
+    width:52px;
+    height:52px;
+    border-width:3px;
+  }
 
- .nursing-logo svg{
-  width:36px;
-  height:36px;
- }
+  .nursing-logo svg{
+    width:36px;
+    height:36px;
+  }
 
- .nav button{
-  text-align:center;
-  font-size:19px;
- }
+  .nav button{
+    text-align:center;
+    font-size:19px;
+  }
 
- .main{
-  margin-left:72px;
-  padding:15px;
- }
+  .main{
+    margin-left:72px;
+    padding:15px;
+  }
 
- .notes-masonry{
-  column-count:1;
- }
+  .notes-masonry{
+    column-count:1;
+  }
 
- .announcement{
-  min-height:50px;
-  padding:8px 10px;
- }
+  .announcement{
+    min-height:50px;
+    padding:8px 10px;
+  }
 
- .announcement-icon{
-  flex-basis:34px;
-  width:34px;
-  height:34px;
- }
+  .announcement-icon{
+    flex-basis:34px;
+    width:34px;
+    height:34px;
+  }
 
- .announcement-admin button{
-  font-size:12px;
-  padding:6px 8px;
- }
+  .announcement-admin button{
+    font-size:12px;
+    padding:6px 8px;
+  }
 
 }
 
 @media(prefers-reduced-motion:reduce){
 
- .announcement-track{
-  animation:none;
-  transform:none;
- }
+  .announcement-track{
+    animation:none;
+    transform:none;
+  }
 
 }
+
 </style>
 </head>
 
@@ -714,29 +808,29 @@ body.dark .file-btn:hover{
 ========================= -->
 
 <div
- class="login"
- id="login"
+  class="login"
+  id="login"
 >
 
- <div class="loginbox">
+  <div class="loginbox">
 
-  <h1>BSN 2A</h1>
+    <h1>BSN 2A</h1>
 
-  <p>Enter your name to continue</p>
+    <p>Enter your name to continue</p>
 
-  <input
-   id="name"
-   placeholder="Your name"
-  >
+    <input
+      id="name"
+      placeholder="Your name"
+    >
 
-  <button
-   class="btn"
-   onclick="enter()"
-  >
-   Enter Website
-  </button>
+    <button
+      class="btn"
+      onclick="enter()"
+    >
+      Enter Website
+    </button>
 
- </div>
+  </div>
 
 </div>
 
@@ -747,103 +841,114 @@ body.dark .file-btn:hover{
 
 <aside class="side">
 
- <div class="logo">
+  <div class="logo">
 
-  <div class="nursing-logo">
+    <div class="nursing-logo">
 
-   <svg
-    viewBox="0 0 100 100"
-    aria-label="Nursing logo"
-   >
+      <svg
+        viewBox="0 0 100 100"
+        aria-label="Nursing logo"
+      >
 
-    <circle
-     cx="50"
-     cy="50"
-     r="46"
-    ></circle>
+        <circle
+          cx="50"
+          cy="50"
+          r="46"
+        ></circle>
 
-    <path
-     d="M42 24h16v18h18v16H58v18H42V58H24V42h18z"
-    ></path>
+        <path
+          d="M42 24h16v18h18v16H58v18H42V58H24V42h18z"
+        ></path>
 
-    <path
-     d="M31 70c7 7 13 10 19 10s12-3 19-10"
-    ></path>
+        <path
+          d="M31 70c7 7 13 10 19 10s12-3 19-10"
+        ></path>
 
-   </svg>
+      </svg>
 
-  </div>
+    </div>
 
-  <h2>BSN 2A</h2>
+    <h2>BSN 2A</h2>
 
-  <small>
-   Small Steps. Big Dreams.
-  </small>
-
- </div>
-
-
- <nav class="nav">
-
-  <button
-   class="on"
-   onclick="show('notes',this)"
-  >
-   📝 <span>Notes</span>
-  </button>
-
-  <button
-   onclick="show('tasks',this)"
-  >
-   ✅ <span>Tasks</span>
-  </button>
-
-  <button
-   onclick="show('chat',this)"
-  >
-   💬 <span>Chat</span>
-  </button>
-
-  <button
-   onclick="show('files',this)"
-  >
-   📚 <span>Files</span>
-  </button>
-
-  <button
-   onclick="show('about',this)"
-  >
-   ℹ️ <span>About</span>
-  </button>
-
-  <button
-   onclick="adminLogin()"
-  >
-   🔒 <span id="admBtn">Admin</span>
-  </button>
-
- </nav>
-
-
- <div class="user">
-
-  👤 <b id="who">Guest</b>
-
-  <div id="mode">
-   Student mode
-  </div>
-
-  <div class="online">
-
-   <b>🟢 Online</b>
-
-   <div id="people">
-    Nobody online
-   </div>
+    <small>
+      Small Steps. Big Dreams.
+    </small>
 
   </div>
 
- </div>
+
+  <nav class="nav">
+
+    <button
+      class="on"
+      onclick="show('notes',this)"
+    >
+      📝 <span>Notes</span>
+    </button>
+
+    <button
+      onclick="show('tasks',this)"
+    >
+      ✅ <span>Tasks</span>
+    </button>
+
+    <button
+      onclick="show('chat',this)"
+    >
+      💬 <span>Chat</span>
+    </button>
+
+    <button
+      onclick="show('files',this)"
+    >
+      📚 <span>Files</span>
+    </button>
+
+    <button
+      onclick="show('about',this)"
+    >
+      ℹ️ <span>About</span>
+    </button>
+
+    <!-- LIGHT / DARK MODE -->
+
+    <button
+      id="themeToggle"
+      onclick="toggleTheme()"
+      title="Toggle light/dark mode"
+      aria-label="Switch to dark mode"
+    >
+      🌙 <span id="themeLabel">Dark Mode</span>
+    </button>
+
+    <button
+      onclick="adminLogin()"
+    >
+      🔒 <span id="admBtn">Admin</span>
+    </button>
+
+  </nav>
+
+
+  <div class="user">
+
+    👤 <b id="who">Guest</b>
+
+    <div id="mode">
+      Student mode
+    </div>
+
+    <div class="online">
+
+      <b>🟢 Online</b>
+
+      <div id="people">
+        Nobody online
+      </div>
+
+    </div>
+
+  </div>
 
 </aside>
 
@@ -854,274 +959,283 @@ body.dark .file-btn:hover{
 
 <main class="main">
 
- <!-- =========================
-      ANNOUNCEMENT
- ========================= -->
+  <!-- =========================
+       ANNOUNCEMENT
+  ========================= -->
 
- <div class="announcement">
-
-  <div
-   class="announcement-icon"
-   title="Class announcement"
-  >
-
-   <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="1.8"
-   >
-
-    <path
-     d="M4 10v4h3l7 4V6l-7 4H4Z"
-    />
-
-    <path
-     d="M17 9.5a4 4 0 0 1 0 5"
-    />
-
-    <path
-     d="M19 7a7 7 0 0 1 0 10"
-    />
-
-   </svg>
-
-  </div>
-
-
-  <div class="announcement-window">
-
-   <div
-    id="announcementTrack"
-    class="announcement-track"
-   >
-
-    <span
-     id="announcementText"
-     class="announcement-text"
-    >
-     No important announcement yet.
-    </span>
-
-   </div>
-
-  </div>
-
-
-  <div
-   id="announcementAdmin"
-   class="announcement-admin hide"
-  >
-
-   <button
-    onclick="announcementModal()"
-    title="Edit announcement"
-   >
-    ✏️
-   </button>
-
-  </div>
-
- </div>
-
-
- <!-- =========================
-      NOTES
- ========================= -->
-
- <section
-  id="notes"
-  class="sec on"
- >
-
-  <div class="hero">
-
-   <h1>
-    Welcome to BSN 2A Notes
-   </h1>
-
-   <p>
-    My biggest update yet
-   </p>
-
-  </div>
-
-
-  <h2>
-   Class Notes
-  </h2>
-
-
-  <div
-   id="notesList"
-   class="notes-masonry"
-  ></div>
-
- </section>
-
-
- <!-- =========================
-      TASKS
- ========================= -->
-
- <section
-  id="tasks"
-  class="sec"
- >
-
-  <h2>
-   Tasks & Deadlines
-  </h2>
-
-  <button
-   class="btn"
-   id="addT2"
-   onclick="taskModal()"
-   style="display:none"
-  >
-   + Add Task
-  </button>
-
-  <div id="taskList"></div>
-
- </section>
-
-
- <!-- =========================
-      CHAT
- ========================= -->
-
- <section
-  id="chat"
-  class="sec"
- >
-
-  <h2>
-   💬 BSN 2A Chat
-  </h2>
-
-  <div class="chat">
-
-   <div
-    id="chatLog"
-    class="chatlog"
-   ></div>
-
-   <div class="chatrow">
-
-    <input
-     id="chatInput"
-     placeholder="Send a message..."
-     onkeydown="if(event.key==='Enter')sendChat()"
-    >
-
-    <button
-     class="btn"
-     onclick="sendChat()"
-    >
-     Send
-    </button>
-
-   </div>
-
-  </div>
-
-
-  <div
-   id="adminChatWrap"
-   class="hide"
-  >
-
-   <h2>
-    🔐 Admin Chat
-   </h2>
-
-   <div class="chat">
+  <div class="announcement">
 
     <div
-     id="adminLog"
-     class="chatlog"
-    ></div>
+      class="announcement-icon"
+      title="Class announcement"
+    >
 
-    <div class="chatrow">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+      >
 
-     <input
-      id="adminInput"
-      placeholder="Admin message..."
-      onkeydown="if(event.key==='Enter')sendAdmin()"
-     >
+        <path d="M4 10v4h3l7 4V6l-7 4H4Z"></path>
 
-     <button
-      class="btn"
-      onclick="sendAdmin()"
-     >
-      Send
-     </button>
+        <path d="M17 9.5a4 4 0 0 1 0 5"></path>
+
+        <path d="M19 7a7 7 0 0 1 0 10"></path>
+
+      </svg>
 
     </div>
 
-   </div>
+
+    <div class="announcement-window">
+
+      <div
+        id="announcementTrack"
+        class="announcement-track"
+      >
+
+        <span
+          id="announcementText"
+          class="announcement-text"
+        >
+          No important announcement yet.
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="announcementAdmin"
+      class="announcement-admin hide"
+    >
+
+      <button
+        onclick="announcementModal()"
+        title="Edit announcement"
+      >
+        ✏️
+      </button>
+
+    </div>
 
   </div>
 
- </section>
 
+  <!-- =========================
+       NOTES
+  ========================= -->
 
- <!-- =========================
-      FILES
- ========================= -->
-
- <section
-  id="files"
-  class="sec"
- >
-
-  <h2>
-   📚 Class Files
-  </h2>
-
-  <button
-   class="btn"
-   id="addF"
-   onclick="fileModal()"
-   style="display:none"
+  <section
+    id="notes"
+    class="sec on"
   >
-   + Add Link
-  </button>
 
-  <div id="fileList"></div>
+    <div class="hero">
 
- </section>
+      <h1>
+        Welcome to BSN 2A Notes
+      </h1>
+
+      <p>
+        My biggest update yet
+      </p>
+
+    </div>
 
 
- <!-- =========================
-      ABOUT
- ========================= -->
+    <h2>
+      Class Notes
+    </h2>
 
- <section
-  id="about"
-  class="sec"
- >
 
-  <div class="hero">
+    <div
+      id="notesList"
+      class="notes-masonry"
+    ></div>
 
-   <h1>
-    BSN 2A 🌱
-   </h1>
+  </section>
 
-   <p>
-    Students can view shared content and keep their own task checklists.
-    Admins manage shared notes, tasks, files and announcements.
-   </p>
 
-   <p>
-    Offline mode caches previously loaded data.
-    Firebase writes synchronize when connectivity returns.
-   </p>
+  <!-- =========================
+       TASKS
+  ========================= -->
 
-  </div>
+  <section
+    id="tasks"
+    class="sec"
+  >
 
- </section>
+    <div class="task-header">
+
+      <h2>
+        Tasks & Deadlines
+      </h2>
+
+      <button
+        class="btn"
+        id="addT2"
+        onclick="taskModal()"
+        style="display:none"
+      >
+        ☑️ Add Task
+      </button>
+
+    </div>
+
+    <p
+      id="taskHint"
+      style="
+        color:var(--muted);
+        margin-top:-5px;
+        margin-bottom:18px;
+      "
+    >
+      Check the box when you finish a task.
+    </p>
+
+    <div id="taskList"></div>
+
+  </section>
+
+
+  <!-- =========================
+       CHAT
+  ========================= -->
+
+  <section
+    id="chat"
+    class="sec"
+  >
+
+    <h2>
+      💬 BSN 2A Chat
+    </h2>
+
+    <div class="chat">
+
+      <div
+        id="chatLog"
+        class="chatlog"
+      ></div>
+
+      <div class="chatrow">
+
+        <input
+          id="chatInput"
+          placeholder="Send a message..."
+          onkeydown="if(event.key==='Enter')sendChat()"
+        >
+
+        <button
+          class="btn"
+          onclick="sendChat()"
+        >
+          Send
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="adminChatWrap"
+      class="hide"
+    >
+
+      <h2>
+        🔐 Admin Chat
+      </h2>
+
+      <div class="chat">
+
+        <div
+          id="adminLog"
+          class="chatlog"
+        ></div>
+
+        <div class="chatrow">
+
+          <input
+            id="adminInput"
+            placeholder="Admin message..."
+            onkeydown="if(event.key==='Enter')sendAdmin()"
+          >
+
+          <button
+            class="btn"
+            onclick="sendAdmin()"
+          >
+            Send
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       FILES
+  ========================= -->
+
+  <section
+    id="files"
+    class="sec"
+  >
+
+    <h2>
+      📚 Class Files
+    </h2>
+
+    <button
+      class="btn"
+      id="addF"
+      onclick="fileModal()"
+      style="display:none"
+    >
+      + Add Link
+    </button>
+
+    <div id="fileList"></div>
+
+  </section>
+
+
+  <!-- =========================
+       ABOUT
+  ========================= -->
+
+  <section
+    id="about"
+    class="sec"
+  >
+
+    <div class="hero">
+
+      <h1>
+        BSN 2A 🌱
+      </h1>
+
+      <p>
+        Students can view shared content and keep their own task checklists.
+        Admins manage shared notes, tasks, files and announcements.
+      </p>
+
+      <p>
+        Offline mode caches previously loaded data.
+        Firebase writes synchronize when connectivity returns.
+      </p>
+
+    </div>
+
+  </section>
 
 </main>
 
@@ -1131,101 +1245,101 @@ body.dark .file-btn:hover{
 ========================= -->
 
 <div
- id="modal"
- class="modal"
+  id="modal"
+  class="modal"
 >
 
- <div class="box">
+  <div class="box">
 
-  <h2 id="mt">
-   Add Note
-  </h2>
+    <h2 id="mt">
+      Add Note
+    </h2>
 
 
-  <div id="noteFields">
+    <div id="noteFields">
 
-   <input
-    id="nt"
-    placeholder="Note title"
-   >
+      <input
+        id="nt"
+        placeholder="Note title"
+      >
 
-   <textarea
-    id="nx"
-    placeholder="Note text"
-   ></textarea>
+      <textarea
+        id="nx"
+        placeholder="Note text"
+      ></textarea>
+
+    </div>
+
+
+    <div
+      id="taskFields"
+      class="hide"
+    >
+
+      <input
+        id="tt"
+        placeholder="Task title"
+      >
+
+      <input
+        id="td"
+        type="date"
+      >
+
+      <textarea
+        id="tx"
+        placeholder="Task details"
+      ></textarea>
+
+    </div>
+
+
+    <div
+      id="fileFields"
+      class="hide"
+    >
+
+      <input
+        id="ft"
+        placeholder="File title"
+      >
+
+      <input
+        id="fu"
+        placeholder="https://..."
+      >
+
+      <select id="fy">
+
+        <option>PDF</option>
+        <option>PPT</option>
+        <option>Document</option>
+        <option>Other</option>
+
+      </select>
+
+    </div>
+
+
+    <div class="modal-buttons">
+
+      <button
+        class="btn"
+        onclick="closeModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="btn"
+        onclick="saveModal()"
+      >
+        Save
+      </button>
+
+    </div>
 
   </div>
-
-
-  <div
-   id="taskFields"
-   class="hide"
-  >
-
-   <input
-    id="tt"
-    placeholder="Task title"
-   >
-
-   <input
-    id="td"
-    type="date"
-   >
-
-   <textarea
-    id="tx"
-    placeholder="Task details"
-   ></textarea>
-
-  </div>
-
-
-  <div
-   id="fileFields"
-   class="hide"
-  >
-
-   <input
-    id="ft"
-    placeholder="File title"
-   >
-
-   <input
-    id="fu"
-    placeholder="https://..."
-   >
-
-   <select id="fy">
-
-    <option>PDF</option>
-    <option>PPT</option>
-    <option>Document</option>
-    <option>Other</option>
-
-   </select>
-
-  </div>
-
-
-  <div class="modal-buttons">
-
-   <button
-    class="btn"
-    onclick="closeModal()"
-   >
-    Cancel
-   </button>
-
-   <button
-    class="btn"
-    onclick="saveModal()"
-   >
-    Save
-   </button>
-
-  </div>
-
- </div>
 
 </div>
 
@@ -1235,46 +1349,46 @@ body.dark .file-btn:hover{
 ========================= -->
 
 <div
- id="announcementModal"
- class="modal"
+  id="announcementModal"
+  class="modal"
 >
 
- <div class="box">
+  <div class="box">
 
-  <h2>
-   📢 Class Announcement
-  </h2>
+    <h2>
+      📢 Class Announcement
+    </h2>
 
-  <p>
-   This message will slide across the top of the website.
-   Only administrators can change it.
-  </p>
+    <p>
+      This message will slide across the top of the website.
+      Only administrators can change it.
+    </p>
 
-  <textarea
-   id="announcementInput"
-   placeholder="Example: Officers of the Day — Monday: Juan, Tuesday: Maria..."
-   style="min-height:130px"
-  ></textarea>
+    <textarea
+      id="announcementInput"
+      placeholder="Example: Officers of the Day — Monday: Juan, Tuesday: Maria..."
+      style="min-height:130px"
+    ></textarea>
 
-  <div class="modal-buttons">
+    <div class="modal-buttons">
 
-   <button
-    class="btn"
-    onclick="closeAnnouncementModal()"
-   >
-    Cancel
-   </button>
+      <button
+        class="btn"
+        onclick="closeAnnouncementModal()"
+      >
+        Cancel
+      </button>
 
-   <button
-    class="btn"
-    onclick="saveAnnouncement()"
-   >
-    Save Announcement
-   </button>
+      <button
+        class="btn"
+        onclick="saveAnnouncement()"
+      >
+        Save Announcement
+      </button>
+
+    </div>
 
   </div>
-
- </div>
 
 </div>
 
@@ -1286,44 +1400,46 @@ body.dark .file-btn:hover{
 ========================= */
 
 import {
- initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  initializeApp
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
- getDatabase,
- ref,
- push,
- set,
- update,
- remove,
- onValue,
- onDisconnect,
- serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  getDatabase,
+  ref,
+  push,
+  set,
+  update,
+  remove,
+  onValue,
+  onDisconnect,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
 const app=initializeApp({
 
- apiKey:
-  "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
+  apiKey:
+    "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
 
- authDomain:
-  "bsn-2a-notes.firebaseapp.com",
+  authDomain:
+    "bsn-2a-notes.firebaseapp.com",
 
- databaseURL:
-  "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL:
+    "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
 
- projectId:
-  "bsn-2a-notes",
+  projectId:
+    "bsn-2a-notes",
 
- storageBucket:
-  "bsn-2a-notes.firebasestorage.app",
+  storageBucket:
+    "bsn-2a-notes.firebasestorage.app",
 
- messagingSenderId:
-  "991210260962",
+  messagingSenderId:
+    "991210260962",
 
- appId:
-  "1:991210260962:web:8f6a886c7478be096991bb"
+  appId:
+    "1:991210260962:web:8f6a886c7478be096991bb"
 
 });
 
@@ -1333,43 +1449,36 @@ const db=getDatabase(app);
 
 const R={
 
- notes:ref(db,"notes"),
+  notes:ref(db,"notes"),
 
- tasks:ref(db,"tasks"),
+  tasks:ref(db,"tasks"),
 
- chat:ref(db,"chat"),
+  chat:ref(db,"chat"),
 
- admin:ref(db,"adminChat"),
+  admin:ref(db,"adminChat"),
 
- files:ref(db,"files"),
+  files:ref(db,"files"),
 
- presence:ref(db,"presence"),
+  presence:ref(db,"presence"),
 
- announcement:ref(db,"announcement")
+  announcement:ref(db,"announcement")
 
 };
 
 
 let notes={};
-
 let tasks={};
-
 let chat={};
-
 let adminChat={};
-
 let files={};
-
 let announcement={};
 
 let isAdmin=false;
-
 let editId=null;
-
 let type="note";
 
 let user=
- localStorage.getItem("bsnUser")||"";
+  localStorage.getItem("bsnUser")||"";
 
 
 const PASS="supperlol123123";
@@ -1379,51 +1488,51 @@ const K=x=>"bsn2a_"+x;
 
 
 const esc=x=>
- String(x??"")
- .replace(/&/g,"&amp;")
- .replace(/</g,"&lt;")
- .replace(/>/g,"&gt;")
- .replace(/"/g,"&quot;")
- .replace(/'/g,"&#039;");
+  String(x??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 
 const fmt=x=>
- x
- ?new Date(x+"T00:00")
-  .toLocaleDateString(
-   undefined,
-   {
-    month:"long",
-    day:"numeric",
-    year:"numeric"
-   }
-  )
- :"";
+  x
+  ?new Date(x+"T00:00")
+    .toLocaleDateString(
+      undefined,
+      {
+        month:"long",
+        day:"numeric",
+        year:"numeric"
+      }
+    )
+  :"";
 
 
 const save=(k,v)=>{
 
- localStorage.setItem(
-  K(k),
-  JSON.stringify(v)
- );
+  localStorage.setItem(
+    K(k),
+    JSON.stringify(v)
+  );
 
 };
 
 
 const load=k=>{
 
- try{
+  try{
 
-  return JSON.parse(
-   localStorage.getItem(K(k))
-  )||{};
+    return JSON.parse(
+      localStorage.getItem(K(k))
+    )||{};
 
- }catch{
+  }catch{
 
-  return {};
+    return {};
 
- }
+  }
 
 };
 
@@ -1434,42 +1543,37 @@ const load=k=>{
 
 function enter(){
 
- const n=
+  const n=
+    document
+      .getElementById("name")
+      .value
+      .trim();
+
+  if(!n){
+
+    alert("Enter your name.");
+
+    return;
+
+  }
+
+  user=n;
+
+  localStorage.setItem(
+    "bsnUser",
+    n
+  );
+
   document
-   .getElementById("name")
-   .value
-   .trim();
+    .getElementById("who")
+    .textContent=n;
 
+  document
+    .getElementById("login")
+    .classList
+    .add("hide");
 
- if(!n){
-
-  alert("Enter your name.");
-
-  return;
-
- }
-
-
- user=n;
-
- localStorage.setItem(
-  "bsnUser",
-  n
- );
-
-
- document
-  .getElementById("who")
-  .textContent=n;
-
-
- document
-  .getElementById("login")
-  .classList
-  .add("hide");
-
-
- presence();
+  presence();
 
 }
 
@@ -1478,46 +1582,123 @@ window.enter=enter;
 
 if(user){
 
- document
-  .getElementById("who")
-  .textContent=user;
+  document
+    .getElementById("who")
+    .textContent=user;
 
- document
-  .getElementById("login")
-  .classList
-  .add("hide");
+  document
+    .getElementById("login")
+    .classList
+    .add("hide");
 
 }
 
 
 /* =========================
-   DARK MODE
+   LIGHT / DARK MODE
 ========================= */
+
+function applyTheme(isDark){
+
+  document.body
+    .classList
+    .toggle("dark",isDark);
+
+  localStorage.setItem(
+    "dark",
+    isDark ? "true" : "false"
+  );
+
+  const btn=
+    document.getElementById(
+      "themeToggle"
+    );
+
+  const label=
+    document.getElementById(
+      "themeLabel"
+    );
+
+  if(btn){
+
+    btn.classList
+      .toggle(
+        "theme-toggle-active",
+        isDark
+      );
+
+    btn.setAttribute(
+      "aria-label",
+      isDark
+        ? "Switch to light mode"
+        : "Switch to dark mode"
+    );
+
+    btn.title=
+      isDark
+        ? "Switch to light mode"
+        : "Switch to dark mode";
+
+    btn.firstChild.textContent=
+      isDark
+        ? "☀️ "
+        : "🌙 ";
+
+  }
+
+  if(label){
+
+    label.textContent=
+      isDark
+        ? "Light Mode"
+        : "Dark Mode";
+
+  }
+
+  const meta=
+    document.querySelector(
+      'meta[name="theme-color"]'
+    );
+
+  if(meta){
+
+    meta.setAttribute(
+      "content",
+      isDark
+        ? "#101714"
+        : "#245c43"
+    );
+
+  }
+
+}
+
+
+function toggleTheme(){
+
+  applyTheme(
+    !document.body
+      .classList
+      .contains("dark")
+  );
+
+}
+
 
 function dark(){
 
- document.body
-  .classList
-  .toggle("dark");
-
-
- localStorage.setItem(
-  "dark",
-  document.body.classList.contains("dark")
- );
+  toggleTheme();
 
 }
 
+
+window.toggleTheme=toggleTheme;
 window.dark=dark;
 
 
-if(
- localStorage.getItem("dark")==="true"
-){
-
- dark();
-
-}
+applyTheme(
+  localStorage.getItem("dark")==="true"
+);
 
 
 /* =========================
@@ -1526,49 +1707,41 @@ if(
 
 function show(id,b){
 
- document
-  .querySelectorAll(".sec")
-  .forEach(
-   x=>x.classList.remove("on")
-  );
+  document
+    .querySelectorAll(".sec")
+    .forEach(
+      x=>
+        x.classList.remove("on")
+    );
 
+  const target=
+    document.getElementById(id);
 
- const target=
-  document.getElementById(id);
+  if(target){
 
+    target
+      .classList
+      .add("on");
 
- if(target){
+  }
 
-  target.classList.add("on");
+  document
+    .querySelectorAll(".nav button")
+    .forEach(
+      x=>
+        x.classList.remove("on")
+    );
 
- }
+  if(b){
 
+    b.classList.add("on");
 
- document
-  .querySelectorAll(".nav button")
-  .forEach(
-   x=>x.classList.remove("on")
-  );
+  }
 
-
- if(b){
-
-  b.classList.add("on");
-
- }
-
-
- /*
-  Bring the selected page to the top.
-  This means Tasks, Chat, Files, etc.
-  open as their own page instead of
-  requiring the user to scroll down.
- */
-
- window.scrollTo({
-  top:0,
-  behavior:"smooth"
- });
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 
 }
 
@@ -1581,34 +1754,35 @@ window.show=show;
 
 function adminLogin(){
 
- if(isAdmin){
+  if(isAdmin){
 
-  isAdmin=false;
+    isAdmin=false;
 
-  ui();
+    ui();
 
-  return;
+    return;
 
- }
+  }
 
+  if(
+    prompt("Admin password:")===PASS
+  ){
 
- if(
-  prompt("Admin password:")===PASS
- ){
+    isAdmin=true;
 
-  isAdmin=true;
+    ui();
 
-  ui();
+    alert(
+      "Admin mode enabled 🔓"
+    );
 
-  alert(
-   "Admin mode enabled 🔓"
-  );
+  }else{
 
- }else{
+    alert(
+      "Wrong password."
+    );
 
-  alert("Wrong password.");
-
- }
+  }
 
 }
 
@@ -1617,59 +1791,59 @@ window.adminLogin=adminLogin;
 
 function ui(){
 
- document
-  .getElementById("addT2")
-  .style
-  .display=
-  isAdmin
-  ?"inline-block"
-  :"none";
+  document
+    .getElementById("addT2")
+    .style
+    .display=
+      isAdmin
+      ?"inline-block"
+      :"none";
 
 
- document
-  .getElementById("addF")
-  .style
-  .display=
-  isAdmin
-  ?"inline-block"
-  :"none";
+  document
+    .getElementById("addF")
+    .style
+    .display=
+      isAdmin
+      ?"inline-block"
+      :"none";
 
 
- document
-  .getElementById("admBtn")
-  .textContent=
-  isAdmin
-  ?"Admin 🔓"
-  :"Admin";
+  document
+    .getElementById("admBtn")
+    .textContent=
+      isAdmin
+      ?"Admin 🔓"
+      :"Admin";
 
 
- document
-  .getElementById("mode")
-  .textContent=
-  isAdmin
-  ?"Administrator mode"
-  :"Student mode";
+  document
+    .getElementById("mode")
+    .textContent=
+      isAdmin
+      ?"Administrator mode"
+      :"Student mode";
 
 
- document
-  .getElementById("adminChatWrap")
-  .classList
-  .toggle(
-   "hide",
-   !isAdmin
-  );
+  document
+    .getElementById("adminChatWrap")
+    .classList
+    .toggle(
+      "hide",
+      !isAdmin
+    );
 
 
- document
-  .getElementById("announcementAdmin")
-  .classList
-  .toggle(
-   "hide",
-   !isAdmin
-  );
+  document
+    .getElementById("announcementAdmin")
+    .classList
+    .toggle(
+      "hide",
+      !isAdmin
+    );
 
 
- render();
+  render();
 
 }
 
@@ -1680,141 +1854,130 @@ function ui(){
 
 function renderAnnouncement(data){
 
- announcement=data||{};
+  announcement=data||{};
 
+  const text=
+    announcement.text||
+    "No important announcement yet.";
 
- const text=
-  announcement.text||
-  "No important announcement yet.";
+  const el=
+    document.getElementById(
+      "announcementText"
+    );
 
+  el.textContent=text;
 
- const el=
-  document.getElementById(
-   "announcementText"
-  );
+  const track=
+    document.getElementById(
+      "announcementTrack"
+    );
 
+  track.style.animation="none";
 
- el.textContent=text;
+  void track.offsetWidth;
 
-
- const track=
-  document.getElementById(
-   "announcementTrack"
-  );
-
-
- track.style.animation="none";
-
- void track.offsetWidth;
-
- track.style.animation=
-  "announcementScroll 18s linear infinite";
+  track.style.animation=
+    "announcementScroll 18s linear infinite";
 
 }
 
 
 onValue(
- R.announcement,
- snapshot=>{
+  R.announcement,
+  snapshot=>{
 
-  renderAnnouncement(
-   snapshot.val()
-  );
+    renderAnnouncement(
+      snapshot.val()
+    );
 
- }
+  }
 );
 
 
 function announcementModal(){
 
- if(!isAdmin){
+  if(!isAdmin){
 
-  alert(
-   "Admin access required."
-  );
+    alert(
+      "Admin access required."
+    );
 
-  return;
+    return;
 
- }
+  }
 
+  document
+    .getElementById(
+      "announcementInput"
+    )
+    .value=
+      announcement.text||"";
 
- document
-  .getElementById(
-   "announcementInput"
-  )
-  .value=
-  announcement.text||"";
-
-
- document
-  .getElementById(
-   "announcementModal"
-  )
-  .classList
-  .add("on");
+  document
+    .getElementById(
+      "announcementModal"
+    )
+    .classList
+    .add("on");
 
 }
 
 window.announcementModal=
- announcementModal;
+  announcementModal;
 
 
 function closeAnnouncementModal(){
 
- document
-  .getElementById(
-   "announcementModal"
-  )
-  .classList
-  .remove("on");
+  document
+    .getElementById(
+      "announcementModal"
+    )
+    .classList
+    .remove("on");
 
 }
 
 window.closeAnnouncementModal=
- closeAnnouncementModal;
+  closeAnnouncementModal;
 
 
 async function saveAnnouncement(){
 
- if(!isAdmin)return;
+  if(!isAdmin)return;
 
+  const text=
+    document
+      .getElementById(
+        "announcementInput"
+      )
+      .value
+      .trim();
 
- const text=
-  document
-   .getElementById(
-    "announcementInput"
-   )
-   .value
-   .trim();
+  if(!text){
 
+    alert(
+      "Enter an announcement."
+    );
 
- if(!text){
+    return;
 
-  alert(
-   "Enter an announcement."
+  }
+
+  await set(
+    R.announcement,
+    {
+      text,
+      author:user,
+      updatedAt:Date.now()
+    }
   );
 
-  return;
-
- }
-
-
- await set(
-  R.announcement,
-  {
-   text,
-   author:user,
-   updatedAt:Date.now()
-  }
- );
-
-
- closeAnnouncementModal();
+  closeAnnouncementModal();
 
 }
 
 window.saveAnnouncement=
- saveAnnouncement;
+  saveAnnouncement;
 
 
 /* =========================
@@ -1823,11 +1986,11 @@ window.saveAnnouncement=
 
 function render(){
 
- renderNotes();
+  renderNotes();
 
- renderTasks();
+  renderTasks();
 
- renderFiles();
+  renderFiles();
 
 }
 
@@ -1838,118 +2001,119 @@ function render(){
 
 function renderNotes(){
 
- const nc=
-  document.getElementById(
-   "notesList"
-  );
+  const nc=
+    document.getElementById(
+      "notesList"
+    );
+
+  nc.innerHTML="";
 
 
- nc.innerHTML="";
+  getOrderedNotes()
+    .forEach(([id,n])=>{
+
+      const d=
+        document.createElement("div");
+
+      d.className="card";
+
+      d.draggable=isAdmin;
+
+      d.dataset.noteId=id;
+
+      d.innerHTML=`
+
+        <h3>
+          ${esc(n.title||"Untitled")}
+        </h3>
+
+        <div class="text">
+          ${esc(n.text)}
+        </div>
+
+        <small>
+          Added by ${esc(n.author||"Admin")}
+        </small>
+
+        ${
+          isAdmin
+          ?`
+            <div
+              style="
+                margin-top:12px;
+                display:flex;
+                gap:7px;
+                flex-wrap:wrap;
+              "
+            >
+
+              <button
+                class="small"
+                onclick="editNote('${id}')"
+              >
+                ✏️ Edit
+              </button>
+
+              <button
+                class="small del"
+                onclick="delNote('${id}')"
+              >
+                🗑️ Delete
+              </button>
+
+            </div>
+          `
+          :""
+        }
+
+      `;
+
+      nc.appendChild(d);
 
 
- getOrderedNotes()
- .forEach(([id,n])=>{
+      if(isAdmin){
 
-  const d=
-   document.createElement("div");
+        d.addEventListener(
+          "dragstart",
+          noteDragStart
+        );
 
+        d.addEventListener(
+          "dragover",
+          noteDragOver
+        );
 
-  d.className="card";
+        d.addEventListener(
+          "dragleave",
+          noteDragLeave
+        );
 
-  d.draggable=isAdmin;
+        d.addEventListener(
+          "drop",
+          noteDrop
+        );
 
-  d.dataset.noteId=id;
+        d.addEventListener(
+          "dragend",
+          noteDragEnd
+        );
 
+      }
 
-  d.innerHTML=`
-
-   <h3>
-    ${esc(n.title||"Untitled")}
-   </h3>
-
-   <div class="text">
-    ${esc(n.text)}
-   </div>
-
-   <small>
-    Added by ${esc(n.author||"Admin")}
-   </small>
-
-   ${
-    isAdmin
-    ?`
-     <div class="actions">
-
-      <button
-       class="small"
-       onclick="editNote('${id}')"
-      >
-       ✏️ Edit
-      </button>
-
-      <button
-       class="small del"
-       onclick="delNote('${id}')"
-      >
-       🗑️ Delete
-      </button>
-
-     </div>
-    `
-    :""
-   }
-
-  `;
+    });
 
 
-  nc.appendChild(d);
+  if(!nc.children.length){
 
+    nc.innerHTML=`
 
-  if(isAdmin){
+      <div class="card empty-card">
+        No notes found.
+      </div>
 
-   d.addEventListener(
-    "dragstart",
-    noteDragStart
-   );
-
-   d.addEventListener(
-    "dragover",
-    noteDragOver
-   );
-
-   d.addEventListener(
-    "dragleave",
-    noteDragLeave
-   );
-
-   d.addEventListener(
-    "drop",
-    noteDrop
-   );
-
-   d.addEventListener(
-    "dragend",
-    noteDragEnd
-   );
+    `;
 
   }
-
- });
-
-
- if(!nc.children.length){
-
-  nc.innerHTML=`
-
-   <div class="card empty-card">
-
-    No notes found.
-
-   </div>
-
-  `;
-
- }
 
 }
 
@@ -1960,99 +2124,369 @@ function renderNotes(){
 
 function renderTasks(){
 
- const tc=
-  document.getElementById(
-   "taskList"
+  const tc=
+    document.getElementById(
+      "taskList"
+    );
+
+  tc.innerHTML="";
+
+
+  getOrderedTasks()
+    .forEach(([id,t])=>{
+
+      const checked=
+        load("check_"+id)===true;
+
+      const d=
+        document.createElement("div");
+
+      d.className=
+        "task"+
+        (
+          checked
+          ?" completed"
+          :""
+        );
+
+      d.draggable=isAdmin;
+
+      d.dataset.taskId=id;
+
+
+      d.innerHTML=`
+
+        <input
+          class="task-check"
+          type="checkbox"
+          ${checked?"checked":""}
+          onchange="checkTask('${id}',this.checked)"
+        >
+
+        <div class="task-content">
+
+          <span
+            class="task-title ${checked?"done":""}"
+          >
+            ${esc(t.title||"Untitled Task")}
+          </span>
+
+          <div class="task-due">
+
+            ${
+              t.due
+              ?"📅 Due: "+fmt(t.due)
+              :"📅 No due date"
+            }
+
+          </div>
+
+          ${
+            t.description
+            ?`
+              <div class="task-description">
+                ${esc(t.description)}
+              </div>
+            `
+            :""
+          }
+
+          ${
+            isAdmin
+            ?`
+              <div class="task-actions">
+
+                <button
+                  class="task-admin-btn"
+                  onclick="editTask('${id}')"
+                >
+                  ✏️ Edit
+                </button>
+
+                <button
+                  class="task-admin-btn task-admin-delete"
+                  onclick="delTask('${id}')"
+                >
+                  🗑️ Delete
+                </button>
+
+              </div>
+            `
+            :""
+          }
+
+        </div>
+
+      `;
+
+
+      tc.appendChild(d);
+
+
+      if(isAdmin){
+
+        d.addEventListener(
+          "dragstart",
+          taskDragStart
+        );
+
+        d.addEventListener(
+          "dragover",
+          taskDragOver
+        );
+
+        d.addEventListener(
+          "dragleave",
+          taskDragLeave
+        );
+
+        d.addEventListener(
+          "drop",
+          taskDrop
+        );
+
+        d.addEventListener(
+          "dragend",
+          taskDragEnd
+        );
+
+      }
+
+    });
+
+
+  if(!tc.children.length){
+
+    tc.innerHTML=`
+
+      <div class="task">
+
+        <div
+          style="
+            flex:1;
+            text-align:center;
+            color:var(--muted);
+          "
+        >
+          📋 No tasks yet.
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =========================
+   TASK ORDER
+========================= */
+
+let draggedTaskId=null;
+
+
+function getOrderedTasks(){
+
+  const entries=
+    Object.entries(tasks);
+
+  const order=
+    Array.isArray(tasks._order)
+    ?tasks._order
+    :[];
+
+  const map=
+    new Map(entries);
+
+  map.delete("_order");
+
+  const result=[];
+
+
+  order.forEach(id=>{
+
+    if(map.has(id)){
+
+      result.push([
+        id,
+        map.get(id)
+      ]);
+
+      map.delete(id);
+
+    }
+
+  });
+
+
+  return result.concat(
+
+    [...map.entries()]
+      .sort(
+        (a,b)=>
+          (a[1].createdAt||0)-
+          (b[1].createdAt||0)
+      )
+
+  );
+
+}
+
+
+/* =========================
+   TASK DRAG & DROP
+========================= */
+
+function taskDragStart(e){
+
+  if(!isAdmin)return;
+
+  draggedTaskId=
+    e.currentTarget
+      .dataset
+      .taskId;
+
+  e.currentTarget
+    .classList
+    .add("dragging");
+
+  e.dataTransfer.effectAllowed=
+    "move";
+
+  e.dataTransfer.setData(
+    "text/plain",
+    draggedTaskId
+  );
+
+}
+
+
+function taskDragOver(e){
+
+  if(!isAdmin)return;
+
+  e.preventDefault();
+
+  const target=
+    e.currentTarget
+      .dataset
+      .taskId;
+
+  if(target!==draggedTaskId){
+
+    e.currentTarget
+      .classList
+      .add("drag-over");
+
+  }
+
+}
+
+
+function taskDragLeave(e){
+
+  e.currentTarget
+    .classList
+    .remove("drag-over");
+
+}
+
+
+function taskDragEnd(e){
+
+  e.currentTarget
+    .classList
+    .remove("dragging");
+
+  document
+    .querySelectorAll(
+      ".task.drag-over"
+    )
+    .forEach(
+      x=>
+        x.classList
+          .remove("drag-over")
+    );
+
+  draggedTaskId=null;
+
+}
+
+
+async function taskDrop(e){
+
+  if(!isAdmin)return;
+
+  e.preventDefault();
+
+  const target=
+    e.currentTarget
+      .dataset
+      .taskId;
+
+  e.currentTarget
+    .classList
+    .remove("drag-over");
+
+
+  if(
+    !draggedTaskId||
+    !target||
+    draggedTaskId===target
+  ){
+
+    return;
+
+  }
+
+
+  const ids=
+    getOrderedTasks()
+      .map(([id])=>id);
+
+
+  const from=
+    ids.indexOf(
+      draggedTaskId
+    );
+
+  const to=
+    ids.indexOf(target);
+
+
+  if(
+    from===-1||
+    to===-1
+  ){
+
+    return;
+
+  }
+
+
+  ids.splice(
+    from,
+    1
+  );
+
+  ids.splice(
+    to,
+    0,
+    draggedTaskId
   );
 
 
- tc.innerHTML="";
-
-
- Object.entries(tasks)
-
- .sort(
-  (a,b)=>
-   (a[1].due||"")
-   .localeCompare(
-    b[1].due||""
-   )
- )
-
- .forEach(([id,t])=>{
-
-  const checked=
-   load("check_"+id)===true;
-
-
-  const d=
-   document.createElement("div");
-
-
-  d.className="task";
-
-
-  d.innerHTML=`
-
-   <input
-    type="checkbox"
-    ${checked?"checked":""}
-    onchange="checkTask('${id}',this.checked)"
-   >
-
-   <div style="flex:1">
-
-    <b class="${checked?"done":""}">
-     ${esc(t.title)}
-    </b>
-
-    <div style="color:#718078">
-
-     ${
-      t.due
-      ?"Due: "+fmt(t.due)
-      :"No due date"
-     }
-
-    </div>
-
-    <div class="text">
-     ${esc(t.description)}
-    </div>
-
-
-    ${
-     isAdmin
-     ?`
-      <div class="actions">
-
-       <button
-        class="small"
-        onclick="editTask('${id}')"
-       >
-        ✏️ Edit
-       </button>
-
-       <button
-        class="small del"
-        onclick="delTask('${id}')"
-       >
-        🗑️ Delete
-       </button>
-
-      </div>
-     `
-     :""
+  await update(
+    ref(db,"tasks"),
+    {
+      _order:ids
     }
-
-   </div>
-
-  `;
+  );
 
 
-  tc.appendChild(d);
-
- });
+  draggedTaskId=null;
 
 }
 
@@ -2063,139 +2497,98 @@ function renderTasks(){
 
 function renderFiles(){
 
- const fc=
-  document.getElementById(
-   "fileList"
-  );
+  const fc=
+    document.getElementById(
+      "fileList"
+    );
+
+  fc.innerHTML="";
 
 
- fc.innerHTML="";
+  Object.entries(files)
+    .filter(
+      ([id])=>id!=="_order"
+    )
+    .reverse()
+    .forEach(([id,f])=>{
+
+      const d=
+        document.createElement("div");
+
+      d.className="card";
 
 
- Object.entries(files)
- .reverse()
- .forEach(([id,f])=>{
+      d.innerHTML=`
 
-  const d=
-   document.createElement("div");
+        <h3>
 
+          <span
+            class="file-icon"
+            aria-hidden="true"
+          >
 
-  d.className="card";
+            📄
 
+          </span>
 
-  d.innerHTML=`
+          ${esc(f.title)}
 
-   <h3>
-
-    <span
-     class="file-icon"
-     aria-hidden="true"
-    >
-
-     <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.8"
-     >
-
-      <path
-       d="M6 3.5h8l4 4V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"
-      />
-
-      <path
-       d="M14 3.5V8h4"
-      />
-
-      <path
-       d="M8 12h8M8 15.5h8"
-      />
-
-     </svg>
-
-    </span>
-
-    ${esc(f.title)}
-
-   </h3>
+        </h3>
 
 
-   <small>
-    ${esc(f.type)}
-   </small>
+        <small>
+          ${esc(f.type)}
+        </small>
 
 
-   <p>
+        <p>
 
-    <a
-     class="file-btn"
-     href="${esc(f.url)}"
-     target="_blank"
-     rel="noopener noreferrer"
-    >
+          <a
+            class="file-btn"
+            href="${esc(f.url)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
 
-     <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-     >
+            🔗 Open ${esc(f.type||"File")}
 
-      <path
-       d="M14 3h7v7"
-      />
+          </a>
 
-      <path
-       d="M10 14 21 3"
-      />
-
-      <path
-       d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"
-      />
-
-     </svg>
-
-     Open ${esc(f.type||"File")}
-
-    </a>
-
-   </p>
+        </p>
 
 
-   ${
-    isAdmin
-    ?`
-     <button
-      class="small del"
-      onclick="delFile('${id}')"
-     >
-      Delete
-     </button>
-    `
-    :""
-   }
+        ${
+          isAdmin
+          ?`
+            <button
+              class="small del"
+              onclick="delFile('${id}')"
+            >
+              🗑️ Delete
+            </button>
+          `
+          :""
+        }
 
-  `;
-
-
-  fc.appendChild(d);
-
- });
+      `;
 
 
- if(!fc.children.length){
+      fc.appendChild(d);
 
-  fc.innerHTML=`
+    });
 
-   <div class="card empty-card">
 
-    No file links yet.
+  if(!fc.children.length){
 
-   </div>
+    fc.innerHTML=`
 
-  `;
+      <div class="card empty-card">
+        No file links yet.
+      </div>
 
- }
+    `;
+
+  }
 
 }
 
@@ -2218,56 +2611,56 @@ render();
 ========================= */
 
 onValue(
- R.notes,
- snapshot=>{
+  R.notes,
+  snapshot=>{
 
-  notes=
-   snapshot.val()||{};
+    notes=
+      snapshot.val()||{};
 
-  save(
-   "notes",
-   notes
-  );
+    save(
+      "notes",
+      notes
+    );
 
-  renderNotes();
+    renderNotes();
 
- }
+  }
 );
 
 
 onValue(
- R.tasks,
- snapshot=>{
+  R.tasks,
+  snapshot=>{
 
-  tasks=
-   snapshot.val()||{};
+    tasks=
+      snapshot.val()||{};
 
-  save(
-   "tasks",
-   tasks
-  );
+    save(
+      "tasks",
+      tasks
+    );
 
-  renderTasks();
+    renderTasks();
 
- }
+  }
 );
 
 
 onValue(
- R.files,
- snapshot=>{
+  R.files,
+  snapshot=>{
 
-  files=
-   snapshot.val()||{};
+    files=
+      snapshot.val()||{};
 
-  save(
-   "files",
-   files
-  );
+    save(
+      "files",
+      files
+    );
 
-  renderFiles();
+    renderFiles();
 
- }
+  }
 );
 
 
@@ -2280,209 +2673,199 @@ let draggedNoteId=null;
 
 function getOrderedNotes(){
 
- const entries=
-  Object.entries(notes)
-  .filter(
-   ([id])=>id!=="_order"
+  const entries=
+    Object.entries(notes)
+      .filter(
+        ([id])=>id!=="_order"
+      );
+
+  const order=
+    Array.isArray(notes._order)
+    ?notes._order
+    :[];
+
+  const map=
+    new Map(entries);
+
+  const result=[];
+
+
+  order.forEach(id=>{
+
+    if(map.has(id)){
+
+      result.push([
+        id,
+        map.get(id)
+      ]);
+
+      map.delete(id);
+
+    }
+
+  });
+
+
+  return result.concat(
+
+    [...map.entries()]
+      .sort(
+        (a,b)=>
+          (b[1].createdAt||0)-
+          (a[1].createdAt||0)
+      )
+
   );
-
-
- const order=
-  Array.isArray(notes._order)
-  ?notes._order
-  :[];
-
-
- const map=
-  new Map(entries);
-
-
- const result=[];
-
-
- order.forEach(id=>{
-
-  if(map.has(id)){
-
-   result.push([
-    id,
-    map.get(id)
-   ]);
-
-   map.delete(id);
-
-  }
-
- });
-
-
- return result.concat(
-
-  [...map.entries()]
-  .sort(
-   (a,b)=>
-    (b[1].createdAt||0)-
-    (a[1].createdAt||0)
-  )
-
- );
 
 }
 
 
 function noteDragStart(e){
 
- if(!isAdmin)return;
+  if(!isAdmin)return;
 
+  draggedNoteId=
+    e.currentTarget
+      .dataset
+      .noteId;
 
- draggedNoteId=
-  e.currentTarget.dataset.noteId;
+  e.currentTarget
+    .classList
+    .add("dragging");
 
+  e.dataTransfer.effectAllowed=
+    "move";
 
- e.currentTarget
-  .classList
-  .add("dragging");
-
-
- e.dataTransfer.effectAllowed=
-  "move";
-
-
- e.dataTransfer.setData(
-  "text/plain",
-  draggedNoteId
- );
+  e.dataTransfer.setData(
+    "text/plain",
+    draggedNoteId
+  );
 
 }
 
 
 function noteDragOver(e){
 
- if(!isAdmin)return;
+  if(!isAdmin)return;
 
+  e.preventDefault();
 
- e.preventDefault();
+  if(
+    e.currentTarget
+      .dataset
+      .noteId
+    !==draggedNoteId
+  ){
 
+    e.currentTarget
+      .classList
+      .add("drag-over");
 
- if(
-  e.currentTarget.dataset.noteId
-  !==draggedNoteId
- ){
-
-  e.currentTarget
-   .classList
-   .add("drag-over");
-
- }
+  }
 
 }
 
 
 function noteDragLeave(e){
 
- e.currentTarget
-  .classList
-  .remove("drag-over");
+  e.currentTarget
+    .classList
+    .remove("drag-over");
 
 }
 
 
 function noteDragEnd(e){
 
- e.currentTarget
-  .classList
-  .remove("dragging");
+  e.currentTarget
+    .classList
+    .remove("dragging");
 
+  document
+    .querySelectorAll(".drag-over")
+    .forEach(
+      x=>
+        x.classList
+          .remove("drag-over")
+    );
 
- document
-  .querySelectorAll(".drag-over")
-  .forEach(
-   x=>
-    x.classList
-     .remove("drag-over")
-  );
-
-
- draggedNoteId=null;
+  draggedNoteId=null;
 
 }
 
 
 async function noteDrop(e){
 
- if(!isAdmin)return;
+  if(!isAdmin)return;
+
+  e.preventDefault();
+
+  const target=
+    e.currentTarget
+      .dataset
+      .noteId;
+
+  e.currentTarget
+    .classList
+    .remove("drag-over");
 
 
- e.preventDefault();
+  if(
+    !draggedNoteId||
+    !target||
+    draggedNoteId===target
+  ){
+
+    return;
+
+  }
 
 
- const target=
-  e.currentTarget.dataset.noteId;
+  const ids=
+    getOrderedNotes()
+      .map(([id])=>id);
 
 
- e.currentTarget
-  .classList
-  .remove("drag-over");
+  const from=
+    ids.indexOf(
+      draggedNoteId
+    );
+
+  const to=
+    ids.indexOf(target);
 
 
- if(
-  !draggedNoteId ||
-  !target ||
-  draggedNoteId===target
- ){
+  if(
+    from===-1||
+    to===-1
+  ){
 
-  return;
+    return;
 
- }
-
-
- const ids=
-  getOrderedNotes()
-  .map(([id])=>id);
+  }
 
 
- const from=
-  ids.indexOf(
-   draggedNoteId
+  ids.splice(
+    from,
+    1
+  );
+
+  ids.splice(
+    to,
+    0,
+    draggedNoteId
   );
 
 
- const to=
-  ids.indexOf(target);
+  await update(
+    ref(db,"notes"),
+    {
+      _order:ids
+    }
+  );
 
 
- if(
-  from===-1 ||
-  to===-1
- ){
-
-  return;
-
- }
-
-
- ids.splice(
-  from,
-  1
- );
-
-
- ids.splice(
-  to,
-  0,
-  draggedNoteId
- );
-
-
- await update(
-  ref(db,"notes"),
-  {
-   _order:ids
-  }
- );
-
-
- draggedNoteId=null;
+  draggedNoteId=null;
 
 }
 
@@ -2493,60 +2876,52 @@ async function noteDrop(e){
 
 function noteModal(){
 
- if(!isAdmin){
+  if(!isAdmin){
 
-  alert(
-   "Admin access required."
-  );
+    alert(
+      "Admin access required."
+    );
 
-  return;
+    return;
 
- }
+  }
 
+  type="note";
 
- type="note";
+  editId=null;
 
- editId=null;
+  document
+    .getElementById("mt")
+    .textContent=
+      "Add Note";
 
+  document
+    .getElementById("noteFields")
+    .classList
+    .remove("hide");
 
- document
-  .getElementById("mt")
-  .textContent=
-  "Add Note";
+  document
+    .getElementById("taskFields")
+    .classList
+    .add("hide");
 
+  document
+    .getElementById("fileFields")
+    .classList
+    .add("hide");
 
- document
-  .getElementById("noteFields")
-  .classList
-  .remove("hide");
+  document
+    .getElementById("nt")
+    .value="";
 
+  document
+    .getElementById("nx")
+    .value="";
 
- document
-  .getElementById("taskFields")
-  .classList
-  .add("hide");
-
-
- document
-  .getElementById("fileFields")
-  .classList
-  .add("hide");
-
-
- document
-  .getElementById("nt")
-  .value="";
-
-
- document
-  .getElementById("nx")
-  .value="";
-
-
- document
-  .getElementById("modal")
-  .classList
-  .add("on");
+  document
+    .getElementById("modal")
+    .classList
+    .add("on");
 
 }
 
@@ -2559,63 +2934,59 @@ window.noteModal=noteModal;
 
 function taskModal(){
 
- if(!isAdmin){
+  if(!isAdmin){
 
-  alert(
-   "Admin access required."
-  );
+    alert(
+      "Admin access required."
+    );
 
-  return;
+    return;
 
- }
+  }
 
+  type="task";
 
- type="task";
-
- editId=null;
-
-
- document
-  .getElementById("mt")
-  .textContent=
-  "Add Task";
-
-
- document
-  .getElementById("noteFields")
-  .classList
-  .add("hide");
-
-
- document
-  .getElementById("taskFields")
-  .classList
-  .remove("hide");
-
-
- document
-  .getElementById("fileFields")
-  .classList
-  .add("hide");
-
-
- [
-  "tt",
-  "td",
-  "tx"
- ].forEach(id=>{
+  editId=null;
 
   document
-   .getElementById(id)
-   .value="";
+    .getElementById("mt")
+    .textContent=
+      "Add Task";
 
- });
+  document
+    .getElementById("noteFields")
+    .classList
+    .add("hide");
+
+  document
+    .getElementById("taskFields")
+    .classList
+    .remove("hide");
+
+  document
+    .getElementById("fileFields")
+    .classList
+    .add("hide");
 
 
- document
-  .getElementById("modal")
-  .classList
-  .add("on");
+  [
+    "tt",
+    "td",
+    "tx"
+  ]
+  .forEach(id=>{
+
+    document
+      .getElementById(id)
+      .value="";
+
+  });
+
+
+  document
+    .getElementById("modal")
+    .classList
+    .add("on");
 
 }
 
@@ -2628,63 +2999,58 @@ window.taskModal=taskModal;
 
 function fileModal(){
 
- if(!isAdmin){
+  if(!isAdmin){
 
-  alert(
-   "Admin access required."
-  );
+    alert(
+      "Admin access required."
+    );
 
-  return;
+    return;
 
- }
+  }
 
+  type="file";
 
- type="file";
-
-
- editId=null;
-
-
- document
-  .getElementById("mt")
-  .textContent=
-  "Add File Link";
-
-
- document
-  .getElementById("noteFields")
-  .classList
-  .add("hide");
-
-
- document
-  .getElementById("taskFields")
-  .classList
-  .add("hide");
-
-
- document
-  .getElementById("fileFields")
-  .classList
-  .remove("hide");
-
-
- [
-  "ft",
-  "fu"
- ].forEach(id=>{
+  editId=null;
 
   document
-   .getElementById(id)
-   .value="";
+    .getElementById("mt")
+    .textContent=
+      "Add File Link";
 
- });
+  document
+    .getElementById("noteFields")
+    .classList
+    .add("hide");
+
+  document
+    .getElementById("taskFields")
+    .classList
+    .add("hide");
+
+  document
+    .getElementById("fileFields")
+    .classList
+    .remove("hide");
 
 
- document
-  .getElementById("modal")
-  .classList
-  .add("on");
+  [
+    "ft",
+    "fu"
+  ]
+  .forEach(id=>{
+
+    document
+      .getElementById(id)
+      .value="";
+
+  });
+
+
+  document
+    .getElementById("modal")
+    .classList
+    .add("on");
 
 }
 
@@ -2697,10 +3063,10 @@ window.fileModal=fileModal;
 
 function closeModal(){
 
- document
-  .getElementById("modal")
-  .classList
-  .remove("on");
+  document
+    .getElementById("modal")
+    .classList
+    .remove("on");
 
 }
 
@@ -2713,174 +3079,172 @@ window.closeModal=closeModal;
 
 async function saveModal(){
 
- if(!isAdmin)return;
+  if(!isAdmin)return;
 
 
- if(type==="note"){
+  if(type==="note"){
 
-  const title=
-   document
-    .getElementById("nt")
-    .value
-    .trim();
+    const title=
+      document
+        .getElementById("nt")
+        .value
+        .trim();
 
-
-  const text=
-   document
-    .getElementById("nx")
-    .value
-    .trim();
-
-
-  if(!title){
-
-   alert(
-    "Title required."
-   );
-
-   return;
-
-  }
+    const text=
+      document
+        .getElementById("nx")
+        .value
+        .trim();
 
 
-  if(editId){
+    if(!title){
 
-   await update(
-    ref(
-     db,
-     "notes/"+editId
-    ),
-    {
-     title,
-     text,
-     author:user
+      alert(
+        "Title required."
+      );
+
+      return;
+
     }
-   );
+
+
+    if(editId){
+
+      await update(
+        ref(
+          db,
+          "notes/"+editId
+        ),
+        {
+          title,
+          text,
+          author:user
+        }
+      );
+
+    }else{
+
+      await set(
+        push(R.notes),
+        {
+          title,
+          text,
+          author:user,
+          createdAt:Date.now()
+        }
+      );
+
+    }
+
+
+  }else if(type==="task"){
+
+    const title=
+      document
+        .getElementById("tt")
+        .value
+        .trim();
+
+
+    if(!title){
+
+      alert(
+        "Title required."
+      );
+
+      return;
+
+    }
+
+
+    const data={
+
+      title,
+
+      due:
+        document
+          .getElementById("td")
+          .value,
+
+      description:
+        document
+          .getElementById("tx")
+          .value
+          .trim()
+
+    };
+
+
+    if(editId){
+
+      await update(
+        ref(
+          db,
+          "tasks/"+editId
+        ),
+        data
+      );
+
+    }else{
+
+      await set(
+        push(R.tasks),
+        {
+          ...data,
+          createdAt:Date.now()
+        }
+      );
+
+    }
+
 
   }else{
 
-   await set(
-    push(R.notes),
-    {
-     title,
-     text,
-     author:user,
-     createdAt:Date.now()
+    const title=
+      document
+        .getElementById("ft")
+        .value
+        .trim();
+
+    const url=
+      document
+        .getElementById("fu")
+        .value
+        .trim();
+
+
+    if(
+      !title||
+      !/^https?:\/\//i.test(url)
+    ){
+
+      alert(
+        "Enter a title and full http/https link."
+      );
+
+      return;
+
     }
-   );
+
+
+    await set(
+      push(R.files),
+      {
+        title,
+        url,
+        type:
+          document
+            .getElementById("fy")
+            .value,
+        createdAt:Date.now(),
+        author:user
+      }
+    );
 
   }
 
 
- }else if(type==="task"){
-
-  const title=
-   document
-    .getElementById("tt")
-    .value
-    .trim();
-
-
-  if(!title){
-
-   alert(
-    "Title required."
-   );
-
-   return;
-
-  }
-
-
-  const data={
-
-   title,
-
-   due:
-    document
-     .getElementById("td")
-     .value,
-
-   description:
-    document
-     .getElementById("tx")
-     .value
-     .trim()
-
-  };
-
-
-  if(editId){
-
-   await update(
-    ref(
-     db,
-     "tasks/"+editId
-    ),
-    data
-   );
-
-  }else{
-
-   await set(
-    push(R.tasks),
-    {
-     ...data,
-     createdAt:Date.now()
-    }
-   );
-
-  }
-
-
- }else{
-
-  const title=
-   document
-    .getElementById("ft")
-    .value
-    .trim();
-
-
-  const url=
-   document
-    .getElementById("fu")
-    .value
-    .trim();
-
-
-  if(
-   !title ||
-   !/^https?:\/\//i.test(url)
-  ){
-
-   alert(
-    "Enter a title and full http/https link."
-   );
-
-   return;
-
-  }
-
-
-  await set(
-   push(R.files),
-   {
-    title,
-    url,
-    type:
-     document
-      .getElementById("fy")
-      .value,
-    createdAt:Date.now(),
-    author:user
-   }
-  );
-
- }
-
-
- closeModal();
+  closeModal();
 
 }
 
@@ -2893,54 +3257,46 @@ window.saveModal=saveModal;
 
 function editNote(id){
 
- if(!isAdmin)return;
+  if(!isAdmin)return;
 
+  type="note";
 
- type="note";
+  editId=id;
 
- editId=id;
+  document
+    .getElementById("nt")
+    .value=
+      notes[id].title||"";
 
+  document
+    .getElementById("nx")
+    .value=
+      notes[id].text||"";
 
- document
-  .getElementById("nt")
-  .value=
-  notes[id].title||"";
+  document
+    .getElementById("noteFields")
+    .classList
+    .remove("hide");
 
+  document
+    .getElementById("taskFields")
+    .classList
+    .add("hide");
 
- document
-  .getElementById("nx")
-  .value=
-  notes[id].text||"";
+  document
+    .getElementById("fileFields")
+    .classList
+    .add("hide");
 
+  document
+    .getElementById("mt")
+    .textContent=
+      "Edit Note";
 
- document
-  .getElementById("noteFields")
-  .classList
-  .remove("hide");
-
-
- document
-  .getElementById("taskFields")
-  .classList
-  .add("hide");
-
-
- document
-  .getElementById("fileFields")
-  .classList
-  .add("hide");
-
-
- document
-  .getElementById("mt")
-  .textContent=
-  "Edit Note";
-
-
- document
-  .getElementById("modal")
-  .classList
-  .add("on");
+  document
+    .getElementById("modal")
+    .classList
+    .add("on");
 
 }
 
@@ -2953,60 +3309,51 @@ window.editNote=editNote;
 
 function editTask(id){
 
- if(!isAdmin)return;
+  if(!isAdmin)return;
 
+  type="task";
 
- type="task";
+  editId=id;
 
- editId=id;
+  document
+    .getElementById("tt")
+    .value=
+      tasks[id].title||"";
 
+  document
+    .getElementById("td")
+    .value=
+      tasks[id].due||"";
 
- document
-  .getElementById("tt")
-  .value=
-  tasks[id].title||"";
+  document
+    .getElementById("tx")
+    .value=
+      tasks[id].description||"";
 
+  document
+    .getElementById("noteFields")
+    .classList
+    .add("hide");
 
- document
-  .getElementById("td")
-  .value=
-  tasks[id].due||"";
+  document
+    .getElementById("taskFields")
+    .classList
+    .remove("hide");
 
+  document
+    .getElementById("fileFields")
+    .classList
+    .add("hide");
 
- document
-  .getElementById("tx")
-  .value=
-  tasks[id].description||"";
+  document
+    .getElementById("mt")
+    .textContent=
+      "Edit Task";
 
-
- document
-  .getElementById("noteFields")
-  .classList
-  .add("hide");
-
-
- document
-  .getElementById("taskFields")
-  .classList
-  .remove("hide");
-
-
- document
-  .getElementById("fileFields")
-  .classList
-  .add("hide");
-
-
- document
-  .getElementById("mt")
-  .textContent=
-  "Edit Task";
-
-
- document
-  .getElementById("modal")
-  .classList
-  .add("on");
+  document
+    .getElementById("modal")
+    .classList
+    .add("on");
 
 }
 
@@ -3019,19 +3366,19 @@ window.editTask=editTask;
 
 async function delNote(id){
 
- if(
-  isAdmin &&
-  confirm("Delete note?")
- ){
+  if(
+    isAdmin&&
+    confirm("Delete note?")
+  ){
 
-  await remove(
-   ref(
-    db,
-    "notes/"+id
-   )
-  );
+    await remove(
+      ref(
+        db,
+        "notes/"+id
+      )
+    );
 
- }
+  }
 
 }
 
@@ -3044,19 +3391,40 @@ window.delNote=delNote;
 
 async function delTask(id){
 
- if(
-  isAdmin &&
-  confirm("Delete task?")
- ){
+  if(
+    !isAdmin||
+    !confirm("Delete this task?")
+  ){
+
+    return;
+
+  }
+
 
   await remove(
-   ref(
-    db,
-    "tasks/"+id
-   )
+    ref(
+      db,
+      "tasks/"+id
+    )
   );
 
- }
+
+  const ids=
+    getOrderedTasks()
+      .map(
+        ([taskId])=>taskId
+      )
+      .filter(
+        taskId=>taskId!==id
+      );
+
+
+  await update(
+    ref(db,"tasks"),
+    {
+      _order:ids
+    }
+  );
 
 }
 
@@ -3069,19 +3437,19 @@ window.delTask=delTask;
 
 async function delFile(id){
 
- if(
-  isAdmin &&
-  confirm("Delete link?")
- ){
+  if(
+    isAdmin&&
+    confirm("Delete link?")
+  ){
 
-  await remove(
-   ref(
-    db,
-    "files/"+id
-   )
-  );
+    await remove(
+      ref(
+        db,
+        "files/"+id
+      )
+    );
 
- }
+  }
 
 }
 
@@ -3094,12 +3462,12 @@ window.delFile=delFile;
 
 function checkTask(id,v){
 
- save(
-  "check_"+id,
-  v
- );
+  save(
+    "check_"+id,
+    v
+  );
 
- renderTasks();
+  renderTasks();
 
 }
 
@@ -3112,51 +3480,47 @@ window.checkTask=checkTask;
 
 function draw(id,data){
 
- const c=
-  document.getElementById(id);
+  const c=
+    document.getElementById(id);
+
+  c.innerHTML="";
 
 
- c.innerHTML="";
+  Object.values(data||{})
+
+    .sort(
+      (a,b)=>
+        (a.createdAt||0)-
+        (b.createdAt||0)
+    )
+
+    .slice(-100)
+
+    .forEach(m=>{
+
+      const d=
+        document.createElement("div");
+
+      d.className=
+        "msg "+
+        (
+          m.author===user
+          ?"me"
+          :""
+        );
+
+      d.textContent=
+        (m.author||"User")+
+        ": "+
+        m.text;
+
+      c.appendChild(d);
+
+    });
 
 
- Object.values(data)
-
- .sort(
-  (a,b)=>
-   (a.createdAt||0)-
-   (b.createdAt||0)
- )
-
- .slice(-100)
-
- .forEach(m=>{
-
-  const d=
-   document.createElement("div");
-
-
-  d.className=
-   "msg "+
-   (
-    m.author===user
-    ?"me"
-    :""
-   );
-
-
-  d.textContent=
-   (m.author||"User")+
-   ": "+
-   m.text;
-
-
-  c.appendChild(d);
-
- });
-
-
- c.scrollTop=
-  c.scrollHeight;
+  c.scrollTop=
+    c.scrollHeight;
 
 }
 
@@ -3165,68 +3529,63 @@ let chatData={};
 
 
 onValue(
- R.chat,
- snapshot=>{
+  R.chat,
+  snapshot=>{
 
-  chatData=
-   snapshot.val()||{};
+    chatData=
+      snapshot.val()||{};
 
-  draw(
-   "chatLog",
-   chatData
-  );
+    draw(
+      "chatLog",
+      chatData
+    );
 
- }
+  }
 );
 
 
 onValue(
- R.admin,
- snapshot=>{
+  R.admin,
+  snapshot=>{
 
-  adminChat=
-   snapshot.val()||{};
+    adminChat=
+      snapshot.val()||{};
 
+    if(isAdmin){
 
-  if(isAdmin){
+      draw(
+        "adminLog",
+        adminChat
+      );
 
-   draw(
-    "adminLog",
-    adminChat
-   );
+    }
 
   }
-
- }
 );
 
 
 async function sendChat(){
 
- const i=
-  document.getElementById(
-   "chatInput"
+  const i=
+    document.getElementById(
+      "chatInput"
+    );
+
+  const v=
+    i.value.trim();
+
+  if(!v)return;
+
+  await set(
+    push(R.chat),
+    {
+      author:user||"Guest",
+      text:v,
+      createdAt:Date.now()
+    }
   );
 
-
- const v=
-  i.value.trim();
-
-
- if(!v)return;
-
-
- await set(
-  push(R.chat),
-  {
-   author:user||"Guest",
-   text:v,
-   createdAt:Date.now()
-  }
- );
-
-
- i.value="";
+  i.value="";
 
 }
 
@@ -3235,33 +3594,28 @@ window.sendChat=sendChat;
 
 async function sendAdmin(){
 
- if(!isAdmin)return;
+  if(!isAdmin)return;
 
+  const i=
+    document.getElementById(
+      "adminInput"
+    );
 
- const i=
-  document.getElementById(
-   "adminInput"
+  const v=
+    i.value.trim();
+
+  if(!v)return;
+
+  await set(
+    push(R.admin),
+    {
+      author:user||"Admin",
+      text:v,
+      createdAt:Date.now()
+    }
   );
 
-
- const v=
-  i.value.trim();
-
-
- if(!v)return;
-
-
- await set(
-  push(R.admin),
-  {
-   author:user||"Admin",
-   text:v,
-   createdAt:Date.now()
-  }
- );
-
-
- i.value="";
+  i.value="";
 
 }
 
@@ -3273,329 +3627,330 @@ window.sendAdmin=sendAdmin;
 ========================= */
 
 const ACTIVE_FOR=
- 2*60*1000;
+  2*60*1000;
 
 const HEARTBEAT_EVERY=
- 25*1000;
+  25*1000;
 
 
 let presenceRef=null;
-
 let presenceState=null;
 
 let lastActivity=
- Date.now();
+  Date.now();
 
 let awayTimer=null;
-
 let heartbeatTimer=null;
 
 let firebaseConnected=false;
-
 let presenceStarted=false;
 
 
 function getPresenceState(){
 
- return (
-  document.visibilityState==="visible" &&
-  Date.now()-lastActivity<ACTIVE_FOR
- )
- ?"active"
- :"away";
+  return(
+    document.visibilityState==="visible"&&
+    Date.now()-lastActivity<ACTIVE_FOR
+  )
+  ?"active"
+  :"away";
 
 }
 
 
 function scheduleAwayCheck(){
 
- clearTimeout(
-  awayTimer
- );
-
-
- if(
-  document.visibilityState!=="visible"
- )return;
-
-
- const remaining=
-  Math.max(
-   0,
-   ACTIVE_FOR-
-   (
-    Date.now()-
-    lastActivity
-   )
+  clearTimeout(
+    awayTimer
   );
 
 
- awayTimer=
-  setTimeout(
-   ()=>{
-    syncPresence();
-    scheduleAwayCheck();
-   },
-   remaining+50
-  );
+  if(
+    document.visibilityState!=="visible"
+  ){
+
+    return;
+
+  }
+
+
+  const remaining=
+    Math.max(
+      0,
+      ACTIVE_FOR-
+      (
+        Date.now()-
+        lastActivity
+      )
+    );
+
+
+  awayTimer=
+    setTimeout(
+      ()=>{
+        syncPresence();
+        scheduleAwayCheck();
+      },
+      remaining+50
+    );
 
 }
 
 
 async function syncPresence(
- forceHeartbeat=false
+  forceHeartbeat=false
 ){
 
- if(
-  !presenceRef ||
-  !firebaseConnected
- )return;
+  if(
+    !presenceRef||
+    !firebaseConnected
+  ){
 
+    return;
 
- const nextState=
-  getPresenceState();
-
-
- if(
-  nextState===presenceState &&
-  !(
-   forceHeartbeat &&
-   nextState==="active"
-  )
- ){
-
-  return;
-
- }
-
-
- presenceState=
-  nextState;
-
-
- await set(
-  presenceRef,
-  {
-   name:user,
-   status:nextState,
-   lastActive:lastActivity,
-   lastSeen:serverTimestamp()
   }
- );
+
+
+  const nextState=
+    getPresenceState();
+
+
+  if(
+    nextState===presenceState&&
+    !(
+      forceHeartbeat&&
+      nextState==="active"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  presenceState=
+    nextState;
+
+
+  await set(
+    presenceRef,
+    {
+      name:user,
+      status:nextState,
+      lastActive:lastActivity,
+      lastSeen:serverTimestamp()
+    }
+  );
 
 }
 
 
 function recordActivity(){
 
- lastActivity=
-  Date.now();
+  lastActivity=
+    Date.now();
 
+  syncPresence();
 
- syncPresence();
-
- scheduleAwayCheck();
+  scheduleAwayCheck();
 
 }
 
 
 function renderPresence(data){
 
- const peopleList=
-  Object.values(data||{})
-  .filter(
-   x=>x&&x.name
-  )
-  .sort(
-   (a,b)=>{
+  const peopleList=
+    Object.values(data||{})
+      .filter(
+        x=>x&&x.name
+      )
+      .sort(
+        (a,b)=>{
 
-    if(
-     a.status==="away" &&
-     b.status!=="away"
-    ){
+          if(
+            a.status==="away"&&
+            b.status!=="away"
+          ){
 
-     return 1;
+            return 1;
 
-    }
+          }
 
+          if(
+            a.status!=="away"&&
+            b.status==="away"
+          ){
 
-    if(
-     a.status!=="away" &&
-     b.status==="away"
-    ){
+            return -1;
 
-     return -1;
+          }
 
-    }
+          return String(a.name)
+            .localeCompare(
+              String(b.name)
+            );
 
-
-    return String(a.name)
-     .localeCompare(
-      String(b.name)
-     );
-
-   }
-  );
+        }
+      );
 
 
- document.getElementById(
-  "people"
- ).innerHTML=
+  document
+    .getElementById("people")
+    .innerHTML=
 
-  peopleList.length
+      peopleList.length
 
-  ?peopleList
-   .map(person=>{
+      ?peopleList
+        .map(person=>{
 
-    const active=
-     person.status!=="away";
+          const active=
+            person.status!=="away";
 
+          return `
 
-    return `
+            <div>
 
-     <div>
+              <span
+                class="dot"
+                style="background:${
+                  active
+                  ?"#7ee08d"
+                  :"#f3b941"
+                }"
+              ></span>
 
-      <span
-       class="dot"
-       style="background:${
-        active
-        ?"#7ee08d"
-        :"#f3b941"
-       }"
-      ></span>
+              ${esc(person.name)}
 
-      ${esc(person.name)}
+              <small
+                style="opacity:.8"
+              >
+                —
+                ${
+                  active
+                  ?"Active now"
+                  :"Away"
+                }
+              </small>
 
-      <small
-       style="opacity:.8"
-      >
-       —
-       ${
-        active
-        ?"Active now"
-        :"Away"
-       }
-      </small>
+            </div>
 
-     </div>
+          `;
 
-    `;
+        })
+        .join("")
 
-   })
-   .join("")
-
-  :"Nobody online";
+      :"Nobody online";
 
 }
 
 
 function presence(){
 
- if(presenceStarted)return;
+  if(presenceStarted)return;
 
- presenceStarted=true;
-
-
- const id=
-  Math.random()
-  .toString(36)
-  .slice(2);
+  presenceStarted=true;
 
 
- presenceRef=
-  ref(
-   db,
-   "presence/"+id
+  const id=
+    Math.random()
+      .toString(36)
+      .slice(2);
+
+
+  presenceRef=
+    ref(
+      db,
+      "presence/"+id
+    );
+
+
+  onValue(
+    ref(
+      db,
+      ".info/connected"
+    ),
+    async snapshot=>{
+
+      firebaseConnected=
+        snapshot.val()===true;
+
+
+      if(!firebaseConnected)
+        return;
+
+
+      await onDisconnect(
+        presenceRef
+      ).remove();
+
+
+      await syncPresence(true);
+
+    }
   );
 
 
- onValue(
-  ref(
-   db,
-   ".info/connected"
-  ),
-  async snapshot=>{
+  onValue(
+    R.presence,
+    snapshot=>{
 
-   firebaseConnected=
-    snapshot.val()===true;
+      renderPresence(
+        snapshot.val()
+      );
 
-
-   if(!firebaseConnected)
-    return;
+    }
+  );
 
 
-   await onDisconnect(
-    presenceRef
-   ).remove();
+  [
+    "mousemove",
+    "keydown",
+    "touchstart",
+    "scroll",
+    "click"
+  ]
+  .forEach(eventName=>{
 
+    addEventListener(
+      eventName,
+      recordActivity,
+      {
+        passive:true
+      }
+    );
 
-   await syncPresence(true);
+  });
 
-  }
- );
-
-
- onValue(
-  R.presence,
-  snapshot=>{
-
-   renderPresence(
-    snapshot.val()
-   );
-
-  }
- );
-
-
- [
-  "mousemove",
-  "keydown",
-  "touchstart",
-  "scroll",
-  "click"
- ]
- .forEach(eventName=>{
 
   addEventListener(
-   eventName,
-   recordActivity,
-   {
-    passive:true
-   }
+    "visibilitychange",
+    ()=>{
+
+      syncPresence();
+
+      scheduleAwayCheck();
+
+    }
   );
 
- });
+
+  scheduleAwayCheck();
 
 
- addEventListener(
-  "visibilitychange",
-  ()=>{
-
-   syncPresence();
-
-   scheduleAwayCheck();
-
-  }
- );
-
-
- scheduleAwayCheck();
-
-
- heartbeatTimer=
-  setInterval(
-   ()=>{
-    syncPresence(true);
-   },
-   HEARTBEAT_EVERY
-  );
+  heartbeatTimer=
+    setInterval(
+      ()=>{
+        syncPresence(true);
+      },
+      HEARTBEAT_EVERY
+    );
 
 }
 
 
 if(user){
 
- presence();
+  presence();
 
 }
 
