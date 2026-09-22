@@ -176,8 +176,13 @@ h3{
 
 /* =========================
    NOTES
-   EXACTLY 3 COLUMNS
 ========================= */
+
+/*
+ IMPORTANT:
+ Notes are EXACTLY 3 columns
+ on desktop.
+*/
 
 .cards{
  display:grid;
@@ -233,44 +238,13 @@ h3{
 .task{
  display:flex;
  gap:12px;
- align-items:flex-start;
- transition:.15s;
- min-width:0
-}
-
-.task.admin-draggable{
- cursor:grab
-}
-
-.task.admin-draggable:active{
- cursor:grabbing
-}
-
-.task.dragging{
- opacity:.45;
- transform:scale(.99)
-}
-
-.task.drag-over{
- outline:3px dashed #3d7a5b;
- outline-offset:4px
+ align-items:flex-start
 }
 
 .task input{
  width:22px;
  height:22px;
- cursor:pointer;
- flex-shrink:0
-}
-
-.task-content{
- flex:1;
- min-width:0
-}
-
-.task-title{
- display:block;
- margin-bottom:5px
+ cursor:pointer
 }
 
 .done{
@@ -278,17 +252,9 @@ h3{
  opacity:.55
 }
 
-.task-drag-handle{
- display:none;
- font-size:18px;
- color:#6d7c73;
- cursor:grab;
- padding-top:1px
-}
-
-.admin-task .task-drag-handle{
- display:block
-}
+/* =========================
+   BUTTONS
+========================= */
 
 .actions{
  margin-top:12px;
@@ -493,6 +459,19 @@ h3{
  }
 }
 
+.announcement-admin{
+ display:flex;
+ gap:8px;
+ margin-top:10px
+}
+
+.announcement-admin input{
+ flex:1;
+ padding:10px;
+ border:0;
+ border-radius:8px
+}
+
 /* =========================
    DARK MODE
 ========================= */
@@ -568,8 +547,8 @@ body.dark .file-info a{
  color:#9ed0b0
 }
 
-body.dark .task-drag-handle{
- color:#a9b8af
+body.dark .announcement{
+ background:#183d2c
 }
 
 /* =========================
@@ -781,6 +760,8 @@ body.dark .task-drag-handle{
 <main class="main">
 
 
+ <!-- TOP BAR -->
+
  <div class="top">
 
   <input
@@ -807,6 +788,8 @@ body.dark .task-drag-handle{
   >
    + Task
   </button>
+
+  <!-- DARK / LIGHT MODE -->
 
   <button
    class="btn"
@@ -1094,13 +1077,21 @@ body.dark .task-drag-handle{
 
    <select id="fy">
 
-    <option>PDF</option>
+    <option>
+     PDF
+    </option>
 
-    <option>PPT</option>
+    <option>
+     PPT
+    </option>
 
-    <option>Document</option>
+    <option>
+     Document
+    </option>
 
-    <option>Other</option>
+    <option>
+     Other
+    </option>
 
    </select>
 
@@ -1129,6 +1120,10 @@ body.dark .task-drag-handle{
 
 </div>
 
+
+<!-- =========================
+     FIREBASE
+========================= -->
 
 <script type="module">
 
@@ -1206,6 +1201,7 @@ let chat={};
 let adminChat={};
 let files={};
 
+
 let isAdmin=false;
 let editId=null;
 let type="note";
@@ -1215,6 +1211,7 @@ let user=
 
 
 const PASS="supperlol123123";
+
 
 const K=x=>"bsn2a_"+x;
 
@@ -1380,6 +1377,8 @@ function dark(){
 window.dark=dark;
 
 
+/* Restore saved theme */
+
 if(
  localStorage.getItem("dark")==="true"
 ){
@@ -1390,6 +1389,32 @@ if(
   .add("dark");
 
 }
+
+
+/* Set correct icon */
+
+setTimeout(()=>{
+
+ const isDark=
+  document
+  .body
+  .classList
+  .contains("dark");
+
+ const btn=
+  document
+  .getElementById("themeBtn");
+
+ if(btn){
+
+  btn.textContent=
+   isDark
+   ? "☀️"
+   : "🌙";
+
+ }
+
+},0);
 
 
 /* =========================
@@ -1419,7 +1444,6 @@ function show(id,b){
 
 
  b.classList.add("on");
-
 
  window.scrollTo({
   top:0,
@@ -1579,69 +1603,6 @@ function getOrderedNotes(){
 
 
 /* =========================
-   TASK ORDER
-========================= */
-
-function getOrderedTasks(){
-
- const entries=
-  Object
-  .entries(tasks)
-  .filter(
-   ([id])=>id!=="_order"
-  );
-
-
- const order=
-  Array.isArray(tasks._order)
-  ?tasks._order
-  :[];
-
-
- const map=
-  new Map(entries);
-
-
- const result=[];
-
-
- /* First use the saved
-    admin arrangement. */
-
- order.forEach(id=>{
-
-  if(map.has(id)){
-
-   result.push([
-    id,
-    map.get(id)
-   ]);
-
-   map.delete(id);
-
-  }
-
- });
-
-
- /* Any new/old tasks not yet
-    in _order are added after it. */
-
- return result.concat(
-
-  [...map.entries()]
-  .sort(
-   (a,b)=>
-    (b[1].createdAt||0)-
-    (a[1].createdAt||0)
-  )
-
- );
-
-}
-
-
-/* =========================
    RENDER
 ========================= */
 
@@ -1654,9 +1615,7 @@ function render(){
   .toLowerCase();
 
 
- /* =========================
-    NOTES
- ========================= */
+ /* NOTES */
 
  let nc=
   document
@@ -1698,6 +1657,12 @@ function render(){
 
   d.dataset.noteId=id;
 
+
+  /*
+   IMPORTANT:
+   Remove accidental indentation
+   from the beginning/end of note text.
+  */
 
   let cleanText=
    String(n.text||"")
@@ -1793,9 +1758,7 @@ function render(){
  }
 
 
- /* =========================
-    TASKS
- ========================= */
+ /* TASKS */
 
  let tc=
   document
@@ -1805,7 +1768,15 @@ function render(){
  tc.innerHTML="";
 
 
- getOrderedTasks()
+ Object
+ .entries(tasks)
+ .sort(
+  (a,b)=>
+   (a[1].due||"")
+   .localeCompare(
+    b[1].due||""
+   )
+ )
  .forEach(([id,t])=>{
 
   if(
@@ -1835,40 +1806,10 @@ function render(){
    .createElement("div");
 
 
-  d.className=
-   "task"+
-   (isAdmin
-    ?" admin-task admin-draggable"
-    :"");
-
-
-  d.dataset.taskId=id;
-
-
-  /*
-   Admins can drag tasks.
-   Students only see the checkbox.
-  */
-
-  d.draggable=isAdmin;
+  d.className="task";
 
 
   d.innerHTML=`
-
-   ${
-    isAdmin
-    ?
-    `
-     <div
-      class="task-drag-handle"
-      title="Drag to rearrange"
-     >
-      ⋮⋮
-     </div>
-    `
-    :
-    ""
-   }
 
    <input
     type="checkbox"
@@ -1876,12 +1817,10 @@ function render(){
     onchange="checkTask('${id}',this.checked)"
    >
 
-   <div class="task-content">
+   <div style="flex:1">
 
-    <b
-     class="task-title ${checked?"done":""}"
-    >
-     ${esc(t.title||"Untitled")}
+    <b class="${checked?"done":""}">
+     ${esc(t.title)}
     </b>
 
     <div style="color:#718078">
@@ -1892,17 +1831,9 @@ function render(){
      }
     </div>
 
-    ${
-     t.description
-     ?
-     `
-      <div class="text">
-       ${esc(t.description)}
-      </div>
-     `
-     :
-     ""
-    }
+    <div class="text">
+     ${esc(t.description)}
+    </div>
 
     ${
      isAdmin
@@ -1939,50 +1870,10 @@ function render(){
 
   tc.appendChild(d);
 
-
-  if(isAdmin){
-
-   d.addEventListener(
-    "dragstart",
-    taskDragStart
-   );
-
-   d.addEventListener(
-    "dragover",
-    taskDragOver
-   );
-
-   d.addEventListener(
-    "dragleave",
-    taskDragLeave
-   );
-
-   d.addEventListener(
-    "drop",
-    taskDrop
-   );
-
-   d.addEventListener(
-    "dragend",
-    taskDragEnd
-   );
-
-  }
-
  });
 
 
- if(!tc.children.length){
-
-  tc.innerHTML=
-   '<div class="card">No tasks yet.</div>';
-
- }
-
-
- /* =========================
-    FILES
- ========================= */
+ /* FILES */
 
  let fc=
   document
@@ -2006,7 +1897,6 @@ function render(){
 
 
   let icon="📄";
-
 
   if(
    String(f.type)
@@ -2105,9 +1995,7 @@ function render(){
 ========================= */
 
 notes=load("notes");
-
 tasks=load("tasks");
-
 files=load("files");
 
 render();
@@ -2121,8 +2009,7 @@ onValue(
  R.notes,
  s=>{
 
-  notes=
-   s.val()||{};
+  notes=s.val()||{};
 
   save(
    "notes",
@@ -2143,8 +2030,7 @@ onValue(
  R.tasks,
  s=>{
 
-  tasks=
-   s.val()||{};
+  tasks=s.val()||{};
 
   save(
    "tasks",
@@ -2165,8 +2051,7 @@ onValue(
  R.files,
  s=>{
 
-  files=
-   s.val()||{};
+  files=s.val()||{};
 
   save(
    "files",
@@ -2410,15 +2295,10 @@ async function saveModal(){
  if(!isAdmin)return;
 
 
- /* =========================
-    NOTE
- ========================= */
-
  if(type==="note"){
 
   let title=
    nt.value.trim();
-
 
   let text=
    nx.value
@@ -2466,14 +2346,7 @@ async function saveModal(){
   }
 
 
- }
-
-
- /* =========================
-    TASK
- ========================= */
-
- else if(type==="task"){
+ }else if(type==="task"){
 
   let title=
    tt.value.trim();
@@ -2515,54 +2388,18 @@ async function saveModal(){
 
   }else{
 
-   const newTaskRef=
-    push(R.tasks);
-
-
    await set(
-    newTaskRef,
+    push(R.tasks),
     {
      ...data,
      createdAt:Date.now()
     }
    );
 
-
-   /*
-    Add newly created task to
-    the end of the shared order.
-   */
-
-   const currentOrder=
-    Array.isArray(tasks._order)
-    ?[...tasks._order]
-    :getOrderedTasks()
-     .map(([id])=>id);
-
-
-   currentOrder.push(
-    newTaskRef.key
-   );
-
-
-   await update(
-    R.tasks,
-    {
-     _order:currentOrder
-    }
-   );
-
   }
 
 
- }
-
-
- /* =========================
-    FILE
- ========================= */
-
- else{
+ }else{
 
   let title=
    ft.value.trim();
@@ -2608,7 +2445,7 @@ window.saveModal=saveModal;
 
 
 /* =========================
-   NOTE DRAG & DROP
+   DRAG AND DROP NOTES
 ========================= */
 
 let draggedNoteId=null;
@@ -2761,7 +2598,7 @@ async function noteDrop(e){
 
 
  await update(
-  R.notes,
+  ref(db,"notes"),
   {
    _order:ids
   }
@@ -2769,179 +2606,6 @@ async function noteDrop(e){
 
 
  draggedNoteId=null;
-
-}
-
-
-/* =========================
-   TASK DRAG & DROP
-   ADMIN ONLY
-========================= */
-
-let draggedTaskId=null;
-
-
-function taskDragStart(e){
-
- if(!isAdmin)return;
-
-
- draggedTaskId=
-  e.currentTarget
-  .dataset
-  .taskId;
-
-
- e.currentTarget
-  .classList
-  .add("dragging");
-
-
- e.dataTransfer.effectAllowed=
-  "move";
-
-
- e.dataTransfer.setData(
-  "text/plain",
-  draggedTaskId
- );
-
-}
-
-
-function taskDragOver(e){
-
- if(!isAdmin)return;
-
- e.preventDefault();
-
-
- if(
-  e.currentTarget.dataset.taskId
-  !==
-  draggedTaskId
- ){
-
-  e.currentTarget
-   .classList
-   .add("drag-over");
-
- }
-
-}
-
-
-function taskDragLeave(e){
-
- e.currentTarget
-  .classList
-  .remove("drag-over");
-
-}
-
-
-function taskDragEnd(e){
-
- e.currentTarget
-  .classList
-  .remove("dragging");
-
-
- document
-  .querySelectorAll(".drag-over")
-  .forEach(x=>
-   x.classList
-    .remove("drag-over")
-  );
-
-
- draggedTaskId=null;
-
-}
-
-
-async function taskDrop(e){
-
- if(!isAdmin)return;
-
- e.preventDefault();
-
-
- const target=
-  e.currentTarget
-  .dataset
-  .taskId;
-
-
- e.currentTarget
-  .classList
-  .remove("drag-over");
-
-
- if(
-  !draggedTaskId ||
-  !target ||
-  draggedTaskId===target
- ){
-
-  return;
-
- }
-
-
- const ids=
-  getOrderedTasks()
-  .map(([id])=>id);
-
-
- const from=
-  ids.indexOf(
-   draggedTaskId
-  );
-
-
- const to=
-  ids.indexOf(target);
-
-
- if(
-  from===-1 ||
-  to===-1
- ){
-
-  return;
-
- }
-
-
- ids.splice(
-  from,
-  1
- );
-
-
- ids.splice(
-  to,
-  0,
-  draggedTaskId
- );
-
-
- /*
-  Only update the order.
-  The actual task information
-  remains untouched.
- */
-
- await update(
-  R.tasks,
-  {
-   _order:ids
-  }
- );
-
-
- draggedTaskId=null;
 
 }
 
@@ -3104,27 +2768,6 @@ async function delTask(id){
    )
   );
 
-
-  /*
-   Also remove the deleted task
-   from the shared arrangement.
-  */
-
-  const order=
-   getOrderedTasks()
-   .map(([taskId])=>taskId)
-   .filter(
-    taskId=>taskId!==id
-   );
-
-
-  await update(
-   R.tasks,
-   {
-    _order:order
-   }
-  );
-
  }
 
 }
@@ -3162,18 +2805,6 @@ window.delFile=delFile;
 /* =========================
    PERSONAL TASK CHECKBOXES
 ========================= */
-
-/*
- IMPORTANT:
-
- This is saved locally per student.
-
- If Mark checks a task,
- other students do NOT see
- their checkbox checked.
-
- The task itself remains shared.
-*/
 
 function checkTask(id,v){
 
