@@ -11,14 +11,12 @@
 
 body{
  margin:0;
- font-family:Arial;
+ font-family:Arial,sans-serif;
  background:#f6f2e9;
- color:#1e2b25
+ color:#1e2b25;
 }
 
-button,input,textarea,select{
- font:inherit
-}
+button,input,textarea,select{font:inherit}
 
 /* =========================
    SIDEBAR
@@ -30,12 +28,11 @@ button,input,textarea,select{
  width:240px;
  padding:22px 16px;
  background:linear-gradient(#173f2d,#285c43);
- color:#fff
+ color:#fff;
+ z-index:20;
 }
 
-.logo{
- text-align:center
-}
+.logo{text-align:center}
 
 .nursing-logo{
  width:75px;
@@ -46,34 +43,34 @@ button,input,textarea,select{
  justify-content:center;
  border:4px solid #dcebd7;
  border-radius:20px;
- background:#ffffff12
+ background:#ffffff12;
 }
 
 .nursing-logo svg{
  width:52px;
- height:52px
+ height:52px;
 }
 
 .nursing-logo circle{
  fill:none;
  stroke:#dcebd7;
- stroke-width:5
+ stroke-width:5;
 }
 
 .nursing-logo path:first-of-type{
  fill:#dcebd7;
- stroke:none
+ stroke:none;
 }
 
 .nursing-logo path:last-of-type{
  fill:none;
  stroke:#dcebd7;
  stroke-width:4;
- stroke-linecap:round
+ stroke-linecap:round;
 }
 
 .logo h2{
- margin-bottom:8px
+ margin-bottom:8px;
 }
 
 .nav button{
@@ -86,12 +83,12 @@ button,input,textarea,select{
  background:transparent;
  color:white;
  text-align:left;
- cursor:pointer
+ cursor:pointer;
 }
 
 .nav button:hover,
 .nav .on{
- background:#ffffff25
+ background:#ffffff25;
 }
 
 .user{
@@ -101,14 +98,14 @@ button,input,textarea,select{
  right:16px;
  padding:12px;
  background:#ffffff18;
- border-radius:12px
+ border-radius:12px;
 }
 
 .online{
  margin-top:9px;
  font-size:12px;
  max-height:115px;
- overflow:auto
+ overflow:auto;
 }
 
 .dot{
@@ -117,7 +114,7 @@ button,input,textarea,select{
  height:7px;
  border-radius:50%;
  background:#7ee08d;
- margin-right:5px
+ margin-right:5px;
 }
 
 /* =========================
@@ -126,114 +123,182 @@ button,input,textarea,select{
 
 .main{
  margin-left:240px;
- padding:25px
-}
-
-.top{
- display:flex;
- gap:10px;
- margin-bottom:20px
-}
-
-.search{
- flex:1;
- padding:12px;
- border:1px solid #ddd;
- border-radius:12px
-}
-
-.btn{
- border:0;
- border-radius:10px;
- padding:11px 15px;
- background:#245c43;
- color:#fff;
- cursor:pointer
-}
-
-.sec{
- display:none
-}
-
-.sec.on{
- display:block
+ padding:25px;
 }
 
 /* =========================
-   HERO / CARDS
+   ANNOUNCEMENT
 ========================= */
 
-.hero,
-.card,
-.task,
-.chat{
- background:#fff;
- border-radius:18px;
- padding:22px;
+.announcement{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ width:100%;
+ min-height:54px;
  margin-bottom:18px;
- box-shadow:0 5px 20px #1e322015
+ padding:10px 16px;
+ background:#173f2d;
+ color:#fff;
+ border-radius:14px;
+ box-shadow:0 5px 20px #1e322015;
+ overflow:hidden;
 }
+
+.announcement-icon{
+ flex:0 0 38px;
+ width:38px;
+ height:38px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ border-radius:10px;
+ background:#ffffff18;
+}
+
+.announcement-icon svg{
+ width:22px;
+ height:22px;
+ stroke:#dcebd7;
+}
+
+.announcement-window{
+ flex:1;
+ overflow:hidden;
+ white-space:nowrap;
+}
+
+.announcement-track{
+ display:inline-block;
+ min-width:100%;
+ animation:announcementScroll 18s linear infinite;
+}
+
+.announcement:hover .announcement-track{
+ animation-play-state:paused;
+}
+
+.announcement-text{
+ font-weight:bold;
+ letter-spacing:.2px;
+}
+
+@keyframes announcementScroll{
+ 0%{
+  transform:translateX(100%);
+ }
+ 100%{
+  transform:translateX(-100%);
+ }
+}
+
+.announcement-admin{
+ flex:0 0 auto;
+}
+
+.announcement-admin button{
+ border:0;
+ border-radius:8px;
+ padding:7px 10px;
+ background:#ffffff18;
+ color:#fff;
+ cursor:pointer;
+}
+
+.announcement-admin button:hover{
+ background:#ffffff2c;
+}
+
+/* =========================
+   HERO
+========================= */
 
 .hero{
- background:linear-gradient(110deg,#e4efdc,#f4f2df)
+ background:linear-gradient(110deg,#e4efdc,#f4f2df);
+ border-radius:18px;
+ padding:24px;
+ margin-bottom:20px;
+ box-shadow:0 5px 20px #1e322015;
 }
 
-h1,
-h2,
-h3{
- font-family:Georgia,serif
+h1,h2,h3{
+ font-family:Georgia,serif;
 }
 
-.cards{
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
- gap:16px;
- align-items:start
+.hero h1{
+ margin:0 0 10px;
+}
+
+.hero p{
+ margin:0;
+ line-height:1.6;
+}
+
+/* =========================
+   MASONRY NOTES
+========================= */
+
+/*
+   CSS columns are used instead of equal-height grid rows.
+   This allows each note to keep its natural height and
+   lets shorter cards move upward instead of leaving
+   large empty spaces underneath them.
+*/
+
+.notes-masonry{
+ column-width:280px;
+ column-count:3;
+ column-gap:16px;
 }
 
 .card{
+ background:#fff;
+ border-radius:18px;
+ padding:20px;
+ margin:0 0 16px;
+ box-shadow:0 5px 20px #1e322015;
+ break-inside:avoid;
+ -webkit-column-break-inside:avoid;
  display:block;
- cursor:default;
- transition:transform .15s,box-shadow .15s;
+ width:100%;
  height:max-content;
- min-height:0
+ min-height:0;
+ transition:
+  transform .15s,
+  box-shadow .15s;
 }
 
 .card:hover{
  transform:translateY(-2px);
- box-shadow:0 8px 24px #1e322020
+ box-shadow:0 8px 24px #1e322020;
 }
 
 .card[draggable="true"]{
- cursor:grab
+ cursor:grab;
 }
 
 .card[draggable="true"]:active{
- cursor:grabbing
+ cursor:grabbing;
 }
 
 .card.dragging{
  opacity:.45;
- transform:scale(.98)
+ transform:scale(.98);
 }
 
 .card.drag-over{
  outline:3px dashed #3d7a5b;
- outline-offset:4px
+ outline-offset:4px;
 }
 
 .card h3{
- margin:0 0 10px 0;
- line-height:1.25
-}
-
-.card .text{
- margin-bottom:8px
+ margin:0 0 12px;
+ line-height:1.3;
 }
 
 .card small{
  display:block;
- margin-top:8px
+ margin-top:10px;
 }
 
 .text{
@@ -242,7 +307,12 @@ h3{
  white-space:pre-wrap;
  overflow-wrap:anywhere;
  line-height:1.65;
- color:#526158
+ color:#526158;
+}
+
+.empty-card{
+ text-align:center;
+ color:#718078;
 }
 
 /* =========================
@@ -252,25 +322,30 @@ h3{
 .task{
  display:flex;
  gap:12px;
- align-items:flex-start
+ align-items:flex-start;
+ background:#fff;
+ border-radius:18px;
+ padding:20px;
+ margin-bottom:16px;
+ box-shadow:0 5px 20px #1e322015;
 }
 
 .task input{
  width:22px;
  height:22px;
- cursor:pointer
+ cursor:pointer;
 }
 
 .done{
  text-decoration:line-through;
- opacity:.55
+ opacity:.55;
 }
 
 .actions{
  margin-top:12px;
  display:flex;
  gap:7px;
- flex-wrap:wrap
+ flex-wrap:wrap;
 }
 
 .small{
@@ -279,12 +354,29 @@ h3{
  border-radius:8px;
  background:#e8efe9;
  color:#245c43;
- cursor:pointer
+ cursor:pointer;
 }
 
 .del{
  background:#f9e1e1;
- color:#c94b4b
+ color:#c94b4b;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.btn{
+ border:0;
+ border-radius:10px;
+ padding:11px 15px;
+ background:#245c43;
+ color:#fff;
+ cursor:pointer;
+}
+
+.btn:hover{
+ filter:brightness(1.08);
 }
 
 /* =========================
@@ -301,13 +393,13 @@ h3{
  justify-content:center;
  border-radius:9px;
  background:#e8efe9;
- color:#245c43
+ color:#245c43;
 }
 
 .file-icon svg{
  width:19px;
  height:19px;
- display:block
+ display:block;
 }
 
 .file-btn{
@@ -320,23 +412,31 @@ h3{
  color:#245c43;
  text-decoration:none;
  font-weight:bold;
- transition:.15s
+ transition:.15s;
 }
 
 .file-btn:hover{
  background:#d8e6dc;
- transform:translateY(-1px)
+ transform:translateY(-1px);
 }
 
 .file-btn svg{
  width:18px;
  height:18px;
- flex:none
+ flex:none;
 }
 
 /* =========================
    CHAT
 ========================= */
+
+.chat{
+ background:#fff;
+ border-radius:18px;
+ padding:22px;
+ margin-bottom:18px;
+ box-shadow:0 5px 20px #1e322015;
+}
 
 .msg{
  padding:10px 13px;
@@ -344,30 +444,30 @@ h3{
  border-radius:12px;
  white-space:pre-wrap;
  max-width:85%;
- background:#f1eee6
+ background:#f1eee6;
 }
 
 .me{
  margin-left:auto;
- background:#e7f0e8
+ background:#e7f0e8;
 }
 
 .chatlog{
  height:380px;
- overflow:auto
+ overflow:auto;
 }
 
 .chatrow{
  display:flex;
  gap:8px;
- margin-top:10px
+ margin-top:10px;
 }
 
 .chatrow input{
  flex:1;
  padding:12px;
  border:1px solid #ddd;
- border-radius:10px
+ border-radius:10px;
 }
 
 /* =========================
@@ -382,18 +482,20 @@ h3{
  align-items:center;
  justify-content:center;
  padding:20px;
- z-index:50
+ z-index:100;
 }
 
 .modal.on{
- display:flex
+ display:flex;
 }
 
 .box{
  background:#fff;
  padding:24px;
  border-radius:18px;
- width:min(650px,100%)
+ width:min(650px,100%);
+ max-height:90vh;
+ overflow:auto;
 }
 
 .box input,
@@ -403,11 +505,18 @@ h3{
  padding:12px;
  margin:7px 0;
  border:1px solid #ddd;
- border-radius:10px
+ border-radius:10px;
 }
 
 .box textarea{
- min-height:190px
+ min-height:190px;
+}
+
+.modal-buttons{
+ display:flex;
+ justify-content:flex-end;
+ gap:8px;
+ margin-top:10px;
 }
 
 /* =========================
@@ -421,7 +530,7 @@ h3{
  display:flex;
  align-items:center;
  justify-content:center;
- z-index:100
+ z-index:200;
 }
 
 .loginbox{
@@ -429,7 +538,7 @@ h3{
  padding:30px;
  border-radius:20px;
  width:min(400px,90%);
- text-align:center
+ text-align:center;
 }
 
 .loginbox input{
@@ -437,11 +546,11 @@ h3{
  padding:13px;
  margin:10px 0;
  border:1px solid #ddd;
- border-radius:10px
+ border-radius:10px;
 }
 
 .hide{
- display:none!important
+ display:none!important;
 }
 
 /* =========================
@@ -450,7 +559,7 @@ h3{
 
 body.dark{
  background:#101714;
- color:#edf4ef
+ color:#edf4ef;
 }
 
 body.dark .card,
@@ -459,15 +568,15 @@ body.dark .chat,
 body.dark .box,
 body.dark .loginbox{
  background:#18211d;
- color:#edf4ef
+ color:#edf4ef;
 }
 
 body.dark .hero{
- background:#203329
+ background:#203329;
 }
 
 body.dark .text{
- color:#bdc9c2
+ color:#bdc9c2;
 }
 
 body.dark input,
@@ -475,73 +584,103 @@ body.dark textarea,
 body.dark select{
  background:#18211d;
  color:#fff;
- border-color:#3b4942
+ border-color:#3b4942;
 }
 
 body.dark .msg{
- background:#27302b
+ background:#27302b;
 }
 
 body.dark .me{
- background:#23352c
+ background:#23352c;
 }
 
 body.dark .file-icon,
 body.dark .file-btn{
  background:#273a30;
- color:#b9e0c5
+ color:#b9e0c5;
 }
 
 body.dark .file-btn:hover{
- background:#30483b
+ background:#30483b;
 }
 
 /* =========================
-   MOBILE
+   RESPONSIVE
 ========================= */
+
+@media(max-width:1100px){
+
+ .notes-masonry{
+  column-count:2;
+ }
+
+}
 
 @media(max-width:800px){
 
  .side{
   width:72px;
-  padding:12px 7px
+  padding:12px 7px;
  }
 
  .side h2,
  .side small,
  .nav span,
  .user{
-  display:none
+  display:none;
  }
 
  .nursing-logo{
   width:52px;
   height:52px;
-  border-width:3px
+  border-width:3px;
  }
 
  .nursing-logo svg{
   width:36px;
-  height:36px
+  height:36px;
  }
 
  .nav button{
   text-align:center;
-  font-size:19px
+  font-size:19px;
  }
 
  .main{
   margin-left:72px;
-  padding:15px
+  padding:15px;
  }
 
- .top{
-  flex-wrap:wrap
+ .notes-masonry{
+  column-count:1;
  }
 
- .search{
-  min-width:100%
+ .announcement{
+  min-height:50px;
+  padding:8px 10px;
  }
+
+ .announcement-icon{
+  flex-basis:34px;
+  width:34px;
+  height:34px;
+ }
+
+ .announcement-admin button{
+  font-size:12px;
+  padding:6px 8px;
+ }
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+ .announcement-track{
+  animation:none;
+  transform:none;
+ }
+
 }
 </style>
 </head>
@@ -688,45 +827,79 @@ body.dark .file-btn:hover{
 
 <main class="main">
 
- <div class="top">
+ <!-- =========================
+      ADMIN-EDITABLE ANNOUNCEMENT
+ ========================= -->
 
-  <input
-   class="search"
-   id="search"
-   placeholder="Search notes and tasks..."
-   oninput="render()"
+ <div class="announcement">
+
+  <div
+   class="announcement-icon"
+   title="Class announcement"
   >
 
-  <button
-   class="btn"
-   id="addN"
-   onclick="noteModal()"
-   style="display:none"
-  >
-   + Note
-  </button>
+   <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+   >
 
-  <button
-   class="btn"
-   id="addT"
-   onclick="taskModal()"
-   style="display:none"
-  >
-   + Task
-  </button>
+    <path
+     d="M4 10v4h3l7 4V6l-7 4H4Z"
+    />
 
-  <button
-   class="btn"
-   onclick="dark()"
+    <path
+     d="M17 9.5a4 4 0 0 1 0 5"
+    />
+
+    <path
+     d="M19 7a7 7 0 0 1 0 10"
+    />
+
+   </svg>
+
+  </div>
+
+
+  <div class="announcement-window">
+
+   <div
+    id="announcementTrack"
+    class="announcement-track"
+   >
+
+    <span
+     id="announcementText"
+     class="announcement-text"
+    >
+     No important announcement yet.
+    </span>
+
+   </div>
+
+  </div>
+
+
+  <div
+   id="announcementAdmin"
+   class="announcement-admin hide"
   >
-   🌙
-  </button>
+
+   <button
+    onclick="announcementModal()"
+    title="Edit announcement"
+   >
+    ✏️
+   </button>
+
+  </div>
 
  </div>
 
 
  <!-- =========================
-      NOTES
+      HERO
  ========================= -->
 
  <section
@@ -737,11 +910,11 @@ body.dark .file-btn:hover{
   <div class="hero">
 
    <h1>
-    Welcome to BSN 2A 🌱
+    Welcome to BSN 2A nNtes
    </h1>
 
    <p>
-    Shared class notes, tasks, chat and useful files.
+    My biggest update yet
    </p>
 
    <p id="status"></p>
@@ -753,9 +926,17 @@ body.dark .file-btn:hover{
    Class Notes
   </h2>
 
+
+  <!--
+     Masonry-style layout:
+     cards automatically occupy their
+     natural height and reflow when
+     notes are added, edited or deleted.
+  -->
+
   <div
    id="notesList"
-   class="cards"
+   class="notes-masonry"
   ></div>
 
  </section>
@@ -912,7 +1093,7 @@ body.dark .file-btn:hover{
 
    <p>
     Students can view shared content and keep their own task checklists.
-    Admins manage shared notes, tasks and file links.
+    Admins manage shared notes, tasks, files and announcements.
    </p>
 
    <p>
@@ -928,7 +1109,7 @@ body.dark .file-btn:hover{
 
 
 <!-- =========================
-     MODAL
+     GENERAL MODAL
 ========================= -->
 
 <div
@@ -1008,7 +1189,7 @@ body.dark .file-btn:hover{
   </div>
 
 
-  <div style="text-align:right">
+  <div class="modal-buttons">
 
    <button
     class="btn"
@@ -1022,6 +1203,55 @@ body.dark .file-btn:hover{
     onclick="saveModal()"
    >
     Save
+   </button>
+
+  </div>
+
+ </div>
+
+</div>
+
+
+<!-- =========================
+     ANNOUNCEMENT MODAL
+========================= -->
+
+<div
+ id="announcementModal"
+ class="modal"
+>
+
+ <div class="box">
+
+  <h2>
+   📢 Class Announcement
+  </h2>
+
+  <p>
+   This message will slide across the top of the website.
+   Only administrators can change it.
+  </p>
+
+  <textarea
+   id="announcementInput"
+   placeholder="Example: Officers of the Day — Monday: Juan, Tuesday: Maria..."
+   style="min-height:130px"
+  ></textarea>
+
+  <div class="modal-buttons">
+
+   <button
+    class="btn"
+    onclick="closeAnnouncementModal()"
+   >
+    Cancel
+   </button>
+
+   <button
+    class="btn"
+    onclick="saveAnnouncement()"
+   >
+    Save Announcement
    </button>
 
   </div>
@@ -1058,20 +1288,23 @@ const app=initializeApp({
 
  apiKey:"AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
 
- authDomain:"bsn-2a-notes.firebaseapp.com",
+ authDomain:
+  "bsn-2a-notes.firebaseapp.com",
 
  databaseURL:
- "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
+  "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
 
- projectId:"bsn-2a-notes",
+ projectId:
+  "bsn-2a-notes",
 
  storageBucket:
- "bsn-2a-notes.firebasestorage.app",
+  "bsn-2a-notes.firebasestorage.app",
 
- messagingSenderId:"991210260962",
+ messagingSenderId:
+  "991210260962",
 
  appId:
- "1:991210260962:web:8f6a886c7478be096991bb"
+  "1:991210260962:web:8f6a886c7478be096991bb"
 
 });
 
@@ -1091,7 +1324,9 @@ const R={
 
  files:ref(db,"files"),
 
- presence:ref(db,"presence")
+ presence:ref(db,"presence"),
+
+ announcement:ref(db,"announcement")
 
 };
 
@@ -1101,6 +1336,7 @@ let tasks={};
 let chat={};
 let adminChat={};
 let files={};
+let announcement={};
 
 let isAdmin=false;
 let editId=null;
@@ -1177,6 +1413,7 @@ function enter(){
    .value
    .trim();
 
+
  if(!n){
 
   alert("Enter your name.");
@@ -1185,6 +1422,7 @@ function enter(){
 
  }
 
+
  user=n;
 
  localStorage.setItem(
@@ -1192,14 +1430,17 @@ function enter(){
   n
  );
 
+
  document
   .getElementById("who")
   .textContent=n;
+
 
  document
   .getElementById("login")
   .classList
   .add("hide");
+
 
  presence();
 
@@ -1232,6 +1473,7 @@ function dark(){
   .classList
   .toggle("dark");
 
+
  localStorage.setItem(
   "dark",
   document.body.classList.contains("dark")
@@ -1259,20 +1501,23 @@ function show(id,b){
 
  document
   .querySelectorAll(".sec")
-  .forEach(x=>
-   x.classList.remove("on")
+  .forEach(
+   x=>x.classList.remove("on")
   );
+
 
  document
   .getElementById(id)
   .classList
   .add("on");
 
+
  document
   .querySelectorAll(".nav button")
-  .forEach(x=>
-   x.classList.remove("on")
+  .forEach(
+   x=>x.classList.remove("on")
   );
+
 
  b.classList.add("on");
 
@@ -1324,8 +1569,6 @@ window.adminLogin=adminLogin;
 function ui(){
 
  [
-  "addN",
-  "addT",
   "addT2",
   "addF"
  ].forEach(id=>{
@@ -1363,29 +1606,195 @@ function ui(){
   .toggle("hide",!isAdmin);
 
 
+ document
+  .getElementById("announcementAdmin")
+  .classList
+  .toggle("hide",!isAdmin);
+
+
  render();
 
 }
 
 
 /* =========================
-   RENDER
+   ANNOUNCEMENT
+========================= */
+
+function renderAnnouncement(data){
+
+ announcement=data||{};
+
+
+ const text=
+  announcement.text||
+  "No important announcement yet.";
+
+
+ const el=
+  document.getElementById(
+   "announcementText"
+  );
+
+
+ el.textContent=text;
+
+
+ /*
+  Restart the animation whenever
+  Firebase sends a new announcement.
+ */
+
+ const track=
+  document.getElementById(
+   "announcementTrack"
+  );
+
+
+ track.style.animation="none";
+
+ void track.offsetWidth;
+
+ track.style.animation=
+  "announcementScroll 18s linear infinite";
+
+}
+
+
+onValue(
+ R.announcement,
+ snapshot=>{
+
+  renderAnnouncement(
+   snapshot.val()
+  );
+
+ }
+);
+
+
+function announcementModal(){
+
+ if(!isAdmin){
+
+  alert(
+   "Admin access required."
+  );
+
+  return;
+
+ }
+
+
+ document
+  .getElementById(
+   "announcementInput"
+  )
+  .value=
+  announcement.text||"";
+
+
+ document
+  .getElementById(
+   "announcementModal"
+  )
+  .classList
+  .add("on");
+
+}
+
+
+window.announcementModal=
+ announcementModal;
+
+
+function closeAnnouncementModal(){
+
+ document
+  .getElementById(
+   "announcementModal"
+  )
+  .classList
+  .remove("on");
+
+}
+
+
+window.closeAnnouncementModal=
+ closeAnnouncementModal;
+
+
+async function saveAnnouncement(){
+
+ if(!isAdmin)return;
+
+
+ const text=
+  document
+   .getElementById(
+    "announcementInput"
+   )
+   .value
+   .trim();
+
+
+ if(!text){
+
+  alert(
+   "Enter an announcement."
+  );
+
+  return;
+
+ }
+
+
+ await set(
+  R.announcement,
+  {
+   text,
+   author:user,
+   updatedAt:Date.now()
+  }
+ );
+
+
+ closeAnnouncementModal();
+
+}
+
+
+window.saveAnnouncement=
+ saveAnnouncement;
+
+
+/* =========================
+   RENDER EVERYTHING
 ========================= */
 
 function render(){
 
- let q=
-  document
-   .getElementById("search")
-   .value
-   .toLowerCase();
+ renderNotes();
+
+ renderTasks();
+
+ renderFiles();
+
+}
 
 
- /* NOTES */
+/* =========================
+   NOTES
+========================= */
+
+function renderNotes(){
+
+ let q="";
 
  let nc=
   document
    .getElementById("notesList");
+
 
  nc.innerHTML="";
 
@@ -1393,15 +1802,10 @@ function render(){
  getOrderedNotes()
  .forEach(([id,n])=>{
 
-  if(
-   q &&
-   !(
-    (n.title+" "+n.text)
-    .toLowerCase()
-    .includes(q)
-   )
-  )return;
-
+  /*
+   Search was removed from the UI.
+   Notes therefore always display.
+  */
 
   let d=
    document.createElement("div");
@@ -1492,17 +1896,27 @@ function render(){
 
  if(!nc.children.length){
 
-  nc.innerHTML=
-   '<div class="card">No notes found.</div>';
+  nc.innerHTML=`
+   <div class="card empty-card">
+    No notes found.
+   </div>
+  `;
 
  }
 
+}
 
- /* TASKS */
+
+/* =========================
+   TASKS
+========================= */
+
+function renderTasks(){
 
  let tc=
   document
    .getElementById("taskList");
+
 
  tc.innerHTML="";
 
@@ -1511,19 +1925,11 @@ function render(){
  .sort(
   (a,b)=>
    (a[1].due||"")
-   .localeCompare(b[1].due||"")
+   .localeCompare(
+    b[1].due||""
+   )
  )
  .forEach(([id,t])=>{
-
-  if(
-   q &&
-   !(
-    (t.title+" "+t.description)
-    .toLowerCase()
-    .includes(q)
-   )
-  )return;
-
 
   let checked=
    load("check_"+id)===true;
@@ -1531,6 +1937,7 @@ function render(){
 
   let d=
    document.createElement("div");
+
 
   d.className="task";
 
@@ -1597,12 +2004,19 @@ function render(){
 
  });
 
+}
 
- /* FILES */
+
+/* =========================
+   FILES
+========================= */
+
+function renderFiles(){
 
  let fc=
   document
    .getElementById("fileList");
+
 
  fc.innerHTML="";
 
@@ -1613,6 +2027,7 @@ function render(){
 
   let d=
    document.createElement("div");
+
 
   d.className="card";
 
@@ -1719,8 +2134,11 @@ function render(){
 
  if(!fc.children.length){
 
-  fc.innerHTML=
-   '<div class="card">No file links yet.</div>';
+  fc.innerHTML=`
+   <div class="card empty-card">
+    No file links yet.
+   </div>
+  `;
 
  }
 
@@ -1728,11 +2146,13 @@ function render(){
 
 
 /* =========================
-   LOAD CACHED DATA
+   CACHE
 ========================= */
 
 notes=load("notes");
+
 tasks=load("tasks");
+
 files=load("files");
 
 render();
@@ -1744,13 +2164,17 @@ render();
 
 onValue(
  R.notes,
- s=>{
+ snapshot=>{
 
-  notes=s.val()||{};
+  notes=
+   snapshot.val()||{};
 
-  save("notes",notes);
+  save(
+   "notes",
+   notes
+  );
 
-  render();
+  renderNotes();
 
  }
 );
@@ -1758,13 +2182,17 @@ onValue(
 
 onValue(
  R.tasks,
- s=>{
+ snapshot=>{
 
-  tasks=s.val()||{};
+  tasks=
+   snapshot.val()||{};
 
-  save("tasks",tasks);
+  save(
+   "tasks",
+   tasks
+  );
 
-  render();
+  renderTasks();
 
  }
 );
@@ -1772,16 +2200,232 @@ onValue(
 
 onValue(
  R.files,
- s=>{
+ snapshot=>{
 
-  files=s.val()||{};
+  files=
+   snapshot.val()||{};
 
-  save("files",files);
+  save(
+   "files",
+   files
+  );
 
-  render();
+  renderFiles();
 
  }
 );
+
+
+/* =========================
+   NOTE ORDER
+========================= */
+
+let draggedNoteId=null;
+
+
+function getOrderedNotes(){
+
+ const entries=
+  Object.entries(notes)
+  .filter(
+   ([id])=>id!=="_order"
+  );
+
+
+ const order=
+  Array.isArray(notes._order)
+  ?notes._order
+  :[];
+
+
+ const map=
+  new Map(entries);
+
+
+ const result=[];
+
+
+ order.forEach(id=>{
+
+  if(map.has(id)){
+
+   result.push([
+    id,
+    map.get(id)
+   ]);
+
+   map.delete(id);
+
+  }
+
+ });
+
+
+ return result.concat(
+
+  [...map.entries()]
+  .sort(
+   (a,b)=>
+    (b[1].createdAt||0)-
+    (a[1].createdAt||0)
+  )
+
+ );
+
+}
+
+
+function noteDragStart(e){
+
+ if(!isAdmin)return;
+
+
+ draggedNoteId=
+  e.currentTarget.dataset.noteId;
+
+
+ e.currentTarget
+  .classList
+  .add("dragging");
+
+
+ e.dataTransfer.effectAllowed=
+  "move";
+
+
+ e.dataTransfer.setData(
+  "text/plain",
+  draggedNoteId
+ );
+
+}
+
+
+function noteDragOver(e){
+
+ if(!isAdmin)return;
+
+
+ e.preventDefault();
+
+
+ if(
+  e.currentTarget.dataset.noteId
+  !==draggedNoteId
+ ){
+
+  e.currentTarget
+   .classList
+   .add("drag-over");
+
+ }
+
+}
+
+
+function noteDragLeave(e){
+
+ e.currentTarget
+  .classList
+  .remove("drag-over");
+
+}
+
+
+function noteDragEnd(e){
+
+ e.currentTarget
+  .classList
+  .remove("dragging");
+
+
+ document
+  .querySelectorAll(".drag-over")
+  .forEach(
+   x=>
+    x.classList
+     .remove("drag-over")
+  );
+
+
+ draggedNoteId=null;
+
+}
+
+
+async function noteDrop(e){
+
+ if(!isAdmin)return;
+
+
+ e.preventDefault();
+
+
+ const target=
+  e.currentTarget.dataset.noteId;
+
+
+ e.currentTarget
+  .classList
+  .remove("drag-over");
+
+
+ if(
+  !draggedNoteId ||
+  !target ||
+  draggedNoteId===target
+ ){
+
+  return;
+
+ }
+
+
+ const ids=
+  getOrderedNotes()
+  .map(([id])=>id);
+
+
+ const from=
+  ids.indexOf(
+   draggedNoteId
+  );
+
+
+ const to=
+  ids.indexOf(target);
+
+
+ if(
+  from===-1 ||
+  to===-1
+ )return;
+
+
+ ids.splice(
+  from,
+  1
+ );
+
+
+ ids.splice(
+  to,
+  0,
+  draggedNoteId
+ );
+
+
+ await update(
+  ref(db,"notes"),
+  {
+   _order:ids
+  }
+ );
+
+
+ draggedNoteId=null;
+
+}
 
 
 /* =========================
@@ -1800,6 +2444,7 @@ function noteModal(){
 
  }
 
+
  type="note";
 
  editId=null;
@@ -1807,7 +2452,8 @@ function noteModal(){
 
  document
   .getElementById("mt")
-  .textContent="Add Note";
+  .textContent=
+  "Add Note";
 
 
  document
@@ -1845,6 +2491,7 @@ function noteModal(){
 
 }
 
+
 window.noteModal=noteModal;
 
 
@@ -1864,6 +2511,7 @@ function taskModal(){
 
  }
 
+
  type="task";
 
  editId=null;
@@ -1871,7 +2519,8 @@ function taskModal(){
 
  document
   .getElementById("mt")
-  .textContent="Add Task";
+  .textContent=
+  "Add Task";
 
 
  document
@@ -1896,10 +2545,10 @@ function taskModal(){
   "tt",
   "td",
   "tx"
- ].forEach(x=>{
+ ].forEach(id=>{
 
   document
-   .getElementById(x)
+   .getElementById(id)
    .value="";
 
  });
@@ -1911,6 +2560,7 @@ function taskModal(){
   .add("on");
 
 }
+
 
 window.taskModal=taskModal;
 
@@ -1931,12 +2581,14 @@ function fileModal(){
 
  }
 
+
  type="file";
 
 
  document
   .getElementById("mt")
-  .textContent="Add File Link";
+  .textContent=
+  "Add File Link";
 
 
  document
@@ -1960,10 +2612,10 @@ function fileModal(){
  [
   "ft",
   "fu"
- ].forEach(x=>{
+ ].forEach(id=>{
 
   document
-   .getElementById(x)
+   .getElementById(id)
    .value="";
 
  });
@@ -1975,6 +2627,7 @@ function fileModal(){
   .add("on");
 
 }
+
 
 window.fileModal=fileModal;
 
@@ -1992,11 +2645,12 @@ function closeModal(){
 
 }
 
+
 window.closeModal=closeModal;
 
 
 /* =========================
-   SAVE MODAL
+   SAVE NOTE / TASK / FILE
 ========================= */
 
 async function saveModal(){
@@ -2015,7 +2669,9 @@ async function saveModal(){
 
   if(!title){
 
-   alert("Title required.");
+   alert(
+    "Title required."
+   );
 
    return;
 
@@ -2025,7 +2681,10 @@ async function saveModal(){
   if(editId){
 
    await update(
-    ref(db,"notes/"+editId),
+    ref(
+     db,
+     "notes/"+editId
+    ),
     {
      title,
      text,
@@ -2056,7 +2715,9 @@ async function saveModal(){
 
   if(!title){
 
-   alert("Title required.");
+   alert(
+    "Title required."
+   );
 
    return;
 
@@ -2067,7 +2728,8 @@ async function saveModal(){
 
    title,
 
-   due:td.value,
+   due:
+    td.value,
 
    description:
     tx.value.trim()
@@ -2078,7 +2740,10 @@ async function saveModal(){
   if(editId){
 
    await update(
-    ref(db,"tasks/"+editId),
+    ref(
+     db,
+     "tasks/"+editId
+    ),
     data
    );
 
@@ -2136,204 +2801,8 @@ async function saveModal(){
 
 }
 
+
 window.saveModal=saveModal;
-
-
-/* =========================
-   DRAG AND DROP NOTES
-========================= */
-
-let draggedNoteId=null;
-
-
-function getOrderedNotes(){
-
- const entries=
-  Object.entries(notes)
-  .filter(
-   ([id])=>id!=="_order"
-  );
-
-
- const order=
-  Array.isArray(notes._order)
-  ?notes._order
-  :[];
-
-
- const map=
-  new Map(entries);
-
- const result=[];
-
-
- order.forEach(id=>{
-
-  if(map.has(id)){
-
-   result.push([
-    id,
-    map.get(id)
-   ]);
-
-   map.delete(id);
-
-  }
-
- });
-
-
- return result.concat(
-
-  [...map.entries()]
-  .sort(
-   (a,b)=>
-    (b[1].createdAt||0)-
-    (a[1].createdAt||0)
-  )
-
- );
-
-}
-
-
-function noteDragStart(e){
-
- if(!isAdmin)return;
-
- draggedNoteId=
-  e.currentTarget.dataset.noteId;
-
- e.currentTarget
-  .classList
-  .add("dragging");
-
- e.dataTransfer.effectAllowed="move";
-
- e.dataTransfer.setData(
-  "text/plain",
-  draggedNoteId
- );
-
-}
-
-
-function noteDragOver(e){
-
- if(!isAdmin)return;
-
- e.preventDefault();
-
-
- if(
-  e.currentTarget.dataset.noteId
-  !==draggedNoteId
- ){
-
-  e.currentTarget
-   .classList
-   .add("drag-over");
-
- }
-
-}
-
-
-function noteDragLeave(e){
-
- e.currentTarget
-  .classList
-  .remove("drag-over");
-
-}
-
-
-function noteDragEnd(e){
-
- e.currentTarget
-  .classList
-  .remove("dragging");
-
-
- document
-  .querySelectorAll(".drag-over")
-  .forEach(
-   x=>
-    x.classList
-     .remove("drag-over")
-  );
-
-
- draggedNoteId=null;
-
-}
-
-
-async function noteDrop(e){
-
- if(!isAdmin)return;
-
- e.preventDefault();
-
-
- const target=
-  e.currentTarget.dataset.noteId;
-
-
- e.currentTarget
-  .classList
-  .remove("drag-over");
-
-
- if(
-  !draggedNoteId ||
-  !target ||
-  draggedNoteId===target
- ){
-
-  return;
-
- }
-
-
- const ids=
-  getOrderedNotes()
-  .map(([id])=>id);
-
-
- const from=
-  ids.indexOf(draggedNoteId);
-
- const to=
-  ids.indexOf(target);
-
-
- if(
-  from===-1 ||
-  to===-1
- )return;
-
-
- ids.splice(from,1);
-
- ids.splice(
-  to,
-  0,
-  draggedNoteId
- );
-
-
- await update(
-  ref(db,"notes"),
-  {
-   _order:ids
-  }
- );
-
-
- draggedNoteId=null;
-
-}
 
 
 /* =========================
@@ -2344,6 +2813,7 @@ function editNote(id){
 
  if(!isAdmin)return;
 
+
  type="note";
 
  editId=id;
@@ -2351,6 +2821,7 @@ function editNote(id){
 
  nt.value=
   notes[id].title||"";
+
 
  nx.value=
   notes[id].text||"";
@@ -2376,7 +2847,8 @@ function editNote(id){
 
  document
   .getElementById("mt")
-  .textContent="Edit Note";
+  .textContent=
+  "Edit Note";
 
 
  document
@@ -2385,6 +2857,7 @@ function editNote(id){
   .add("on");
 
 }
+
 
 window.editNote=editNote;
 
@@ -2397,6 +2870,7 @@ function editTask(id){
 
  if(!isAdmin)return;
 
+
  type="task";
 
  editId=id;
@@ -2405,8 +2879,10 @@ function editTask(id){
  tt.value=
   tasks[id].title||"";
 
+
  td.value=
   tasks[id].due||"";
+
 
  tx.value=
   tasks[id].description||"";
@@ -2432,7 +2908,8 @@ function editTask(id){
 
  document
   .getElementById("mt")
-  .textContent="Edit Task";
+  .textContent=
+  "Edit Task";
 
 
  document
@@ -2441,6 +2918,7 @@ function editTask(id){
   .add("on");
 
 }
+
 
 window.editTask=editTask;
 
@@ -2457,12 +2935,16 @@ async function delNote(id){
  ){
 
   await remove(
-   ref(db,"notes/"+id)
+   ref(
+    db,
+    "notes/"+id
+   )
   );
 
  }
 
 }
+
 
 window.delNote=delNote;
 
@@ -2479,12 +2961,16 @@ async function delTask(id){
  ){
 
   await remove(
-   ref(db,"tasks/"+id)
+   ref(
+    db,
+    "tasks/"+id
+   )
   );
 
  }
 
 }
+
 
 window.delTask=delTask;
 
@@ -2501,12 +2987,16 @@ async function delFile(id){
  ){
 
   await remove(
-   ref(db,"files/"+id)
+   ref(
+    db,
+    "files/"+id
+   )
   );
 
  }
 
 }
+
 
 window.delFile=delFile;
 
@@ -2522,9 +3012,10 @@ function checkTask(id,v){
   v
  );
 
- render();
+ renderTasks();
 
 }
+
 
 window.checkTask=checkTask;
 
@@ -2538,6 +3029,7 @@ function draw(id,data){
  let c=
   document
    .getElementById(id);
+
 
  c.innerHTML="";
 
@@ -2560,9 +3052,11 @@ function draw(id,data){
 
   d.className=
    "msg "+
-   (m.author===user
+   (
+    m.author===user
     ?"me"
-    :"");
+    :""
+   );
 
 
   d.textContent=
@@ -2587,10 +3081,10 @@ let chatData={};
 
 onValue(
  R.chat,
- s=>{
+ snapshot=>{
 
   chatData=
-   s.val()||{};
+   snapshot.val()||{};
 
   draw(
    "chatLog",
@@ -2603,10 +3097,10 @@ onValue(
 
 onValue(
  R.admin,
- s=>{
+ snapshot=>{
 
   adminChat=
-   s.val()||{};
+   snapshot.val()||{};
 
 
   if(isAdmin){
@@ -2625,7 +3119,10 @@ onValue(
 async function sendChat(){
 
  let i=
-  chatInput;
+  document.getElementById(
+   "chatInput"
+  );
+
 
  let v=
   i.value.trim();
@@ -2648,6 +3145,7 @@ async function sendChat(){
 
 }
 
+
 window.sendChat=sendChat;
 
 
@@ -2655,8 +3153,12 @@ async function sendAdmin(){
 
  if(!isAdmin)return;
 
+
  let i=
-  adminInput;
+  document.getElementById(
+   "adminInput"
+  );
+
 
  let v=
   i.value.trim();
@@ -2678,6 +3180,7 @@ async function sendAdmin(){
  i.value="";
 
 }
+
 
 window.sendAdmin=sendAdmin;
 
@@ -2711,8 +3214,10 @@ let presenceStarted=false;
 
 function getPresenceState(){
 
- return document.visibilityState==="visible" &&
- Date.now()-lastActivity<ACTIVE_FOR
+ return (
+  document.visibilityState==="visible" &&
+  Date.now()-lastActivity<ACTIVE_FOR
+ )
  ?"active"
  :"away";
 
@@ -2721,7 +3226,9 @@ function getPresenceState(){
 
 function scheduleAwayCheck(){
 
- clearTimeout(awayTimer);
+ clearTimeout(
+  awayTimer
+ );
 
 
  if(
@@ -2733,7 +3240,10 @@ function scheduleAwayCheck(){
   Math.max(
    0,
    ACTIVE_FOR-
-   (Date.now()-lastActivity)
+   (
+    Date.now()-
+    lastActivity
+   )
   );
 
 
@@ -2839,49 +3349,50 @@ function renderPresence(data){
   );
 
 
- people.innerHTML=
+ document.getElementById(
+  "people"
+ ).innerHTML=
+
   peopleList.length
 
   ?peopleList
-   .map(
-    person=>{
+   .map(person=>{
 
-     const active=
-      person.status!=="away";
+    const active=
+     person.status!=="away";
 
 
-     return `
+    return `
 
-      <div>
+     <div>
 
-       <span
-        class="dot"
-        style="background:${
-         active
-         ?"#7ee08d"
-         :"#f3b941"
-        }"
-       ></span>
+      <span
+       class="dot"
+       style="background:${
+        active
+        ?"#7ee08d"
+        :"#f3b941"
+       }"
+      ></span>
 
-       ${esc(person.name)}
+      ${esc(person.name)}
 
-       <small
-        style="opacity:.8"
-       >
-        —
-        ${
-         active
-         ?"Active now"
-         :"Away"
-        }
-       </small>
+      <small
+       style="opacity:.8"
+      >
+       —
+       ${
+        active
+        ?"Active now"
+        :"Away"
+       }
+      </small>
 
-      </div>
+     </div>
 
-     `;
+    `;
 
-    }
-   )
+   })
    .join("")
 
   :"Nobody online";
@@ -2910,7 +3421,10 @@ function presence(){
 
 
  onValue(
-  ref(db,".info/connected"),
+  ref(
+   db,
+   ".info/connected"
+  ),
   async snapshot=>{
 
    firebaseConnected=
@@ -2934,10 +3448,10 @@ function presence(){
 
  onValue(
   R.presence,
-  s=>{
+  snapshot=>{
 
    renderPresence(
-    s.val()
+    snapshot.val()
    );
 
   }
@@ -2982,9 +3496,7 @@ function presence(){
  heartbeatTimer=
   setInterval(
    ()=>{
-
     syncPresence(true);
-
    },
    HEARTBEAT_EVERY
   );
@@ -3002,7 +3514,10 @@ if(user)
 
 function conn(){
 
- status.textContent=
+ document.getElementById(
+  "status"
+ ).textContent=
+
   navigator.onLine
 
   ?"🟢 Online — syncing with Firebase"
