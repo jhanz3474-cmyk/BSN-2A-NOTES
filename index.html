@@ -135,6 +135,60 @@ h1,h2,h3{font-family:Georgia,serif}
  color:#c94b4b
 }
 
+/* FILE BUTTONS */
+.file-icon{
+ display:inline-flex;
+ width:32px;
+ height:32px;
+ margin-right:9px;
+ vertical-align:middle;
+ align-items:center;
+ justify-content:center;
+ border-radius:9px;
+ background:#e8efe9;
+ color:#245c43;
+}
+
+.file-icon svg{
+ width:19px;
+ height:19px;
+ display:block;
+}
+
+.file-btn{
+ display:inline-flex;
+ align-items:center;
+ gap:8px;
+ padding:10px 14px;
+ border-radius:10px;
+ background:#e8efe9;
+ color:#245c43;
+ text-decoration:none;
+ font-weight:bold;
+ transition:.15s;
+}
+
+.file-btn:hover{
+ background:#d8e6dc;
+ transform:translateY(-1px);
+}
+
+.file-btn svg{
+ width:18px;
+ height:18px;
+ flex:none;
+}
+
+body.dark .file-icon,
+body.dark .file-btn{
+ background:#273a30;
+ color:#b9e0c5;
+}
+
+body.dark .file-btn:hover{
+ background:#30483b;
+}
+
 .msg{
  padding:10px 13px;
  margin:8px 0;
@@ -740,16 +794,32 @@ function render(){
   d.className="card";
 
   d.innerHTML=`
-   <h3>📄 ${esc(f.title)}</h3>
+   <h3>
+    <span class="file-icon" aria-hidden="true">
+     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M6 3.5h8l4 4V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/>
+      <path d="M14 3.5V8h4"/>
+      <path d="M8 12h8M8 15.5h8"/>
+     </svg>
+    </span>
+    ${esc(f.title)}
+   </h3>
+
    <small>${esc(f.type)}</small>
 
    <p>
     <a
+     class="file-btn"
      href="${esc(f.url)}"
      target="_blank"
-     rel="noopener"
+     rel="noopener noreferrer"
     >
-     ${esc(f.url)}
+     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M14 3h7v7"/>
+      <path d="M10 14 21 3"/>
+      <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/>
+     </svg>
+     Open ${esc(f.type||"File")}
     </a>
    </p>
 
@@ -1343,10 +1413,6 @@ async function syncPresence(forceHeartbeat=false){
 
  const nextState=getPresenceState();
 
- /*
-  Only write when status changes,
-  except active heartbeats.
- */
  if(
   nextState===presenceState &&
   !(forceHeartbeat && nextState==="active")
@@ -1368,7 +1434,6 @@ function recordActivity(){
 
  lastActivity=Date.now();
 
- // Changes Away → Active immediately after real interaction.
  syncPresence();
 
  scheduleAwayCheck();
@@ -1420,26 +1485,14 @@ function presence(){
 
  presenceRef=ref(db,"presence/"+id);
 
- /*
-  Firebase tells us whether this browser
-  currently has a live connection.
- */
  onValue(ref(db,".info/connected"),async snapshot=>{
 
   firebaseConnected=snapshot.val()===true;
 
   if(!firebaseConnected)return;
 
-  /*
-   Firebase removes this entry when this
-   tab loses its connection.
-  */
   await onDisconnect(presenceRef).remove();
 
-  /*
-   Register/update the user as soon as
-   Firebase reconnects.
-  */
   await syncPresence(true);
  });
 
@@ -1465,11 +1518,6 @@ function presence(){
 
  addEventListener("visibilitychange",()=>{
 
-  /*
-   If the user changes tabs or minimizes
-   the browser, getPresenceState() becomes
-   "away".
-  */
   syncPresence();
   scheduleAwayCheck();
 
@@ -1477,10 +1525,6 @@ function presence(){
 
  scheduleAwayCheck();
 
- /*
-  Sends a heartbeat only while the user
-  is Active and visible.
- */
  heartbeatTimer=setInterval(()=>{
 
   syncPresence(true);
