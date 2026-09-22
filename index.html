@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,8 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#245c43">
 <title>BSN 2A Notes</title>
+
 <!-- BSN 2A favicon -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173f2d'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%23dcebd7' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%237ee08d' stroke-width='3' stroke-linecap='round'/%3E%3Ctext x='32' y='30' text-anchor='middle' font-family='Arial,sans-serif' font-size='9' font-weight='700' fill='white'%3EBSN%3C/text%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial,sans-serif' font-size='8' font-weight='700' fill='white'%3E2A%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173f2d'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%23dcebd7' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%237ee08d' stroke-width='3' stroke-linecap='round'/%3E%3Ctext x='32' y='30' text-anchor='middle' font-family='Arial,sans-serif' font-size='9' font-weight='700' fill='white'%3EBSN%3C/text%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial,sans-serif' font-size='8' font-weight='700' fill='white'%3E2A%3C/text%3E%3C/svg%3E">
 
 <style>
 *{box-sizing:border-box}
@@ -25,30 +18,38 @@ button,input,textarea,select{font:inherit}
  position:fixed;inset:0 auto 0 0;width:240px;padding:22px 16px;
  background:linear-gradient(#173f2d,#285c43);color:#fff
 }
+
 .logo{text-align:center}
 .logo b{
  display:flex;width:75px;height:75px;margin:auto;border:4px solid #dcebd7;
  border-radius:20px;align-items:center;justify-content:center
 }
+
 .nav button{
  display:block;width:100%;margin:7px 0;padding:12px;border:0;
  border-radius:10px;background:transparent;color:white;text-align:left;cursor:pointer
 }
+
 .nav button:hover,.nav .on{background:#ffffff25}
 
 .user{
  position:absolute;bottom:18px;left:16px;right:16px;padding:12px;
  background:#ffffff18;border-radius:12px
 }
+
 .online{margin-top:9px;font-size:12px;max-height:115px;overflow:auto}
+
 .dot{
  display:inline-block;width:7px;height:7px;border-radius:50%;
  background:#7ee08d;margin-right:5px
 }
 
 .main{margin-left:240px;padding:25px}
+
 .top{display:flex;gap:10px;margin-bottom:20px}
+
 .search{flex:1;padding:12px;border:1px solid #ddd;border-radius:12px}
+
 .btn{
  border:0;border-radius:10px;padding:11px 15px;
  background:#245c43;color:#fff;cursor:pointer
@@ -61,7 +62,9 @@ button,input,textarea,select{font:inherit}
  background:#fff;border-radius:18px;padding:22px;margin-bottom:18px;
  box-shadow:0 5px 20px #1e322015
 }
+
 .hero{background:linear-gradient(110deg,#e4efdc,#f4f2df)}
+
 h1,h2,h3{font-family:Georgia,serif}
 
 .cards{
@@ -102,3 +105,1271 @@ h1,h2,h3{font-family:Georgia,serif}
  display:block;
  width:100%;
  white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ line-height:1.65;
+ color:#526158
+}
+
+.task{
+ display:flex;
+ gap:12px;
+ align-items:flex-start
+}
+
+.task input{
+ width:22px;
+ height:22px;
+ cursor:pointer
+}
+
+.done{
+ text-decoration:line-through;
+ opacity:.55
+}
+
+.actions{
+ margin-top:12px;
+ display:flex;
+ gap:7px;
+ flex-wrap:wrap
+}
+
+.small{
+ border:0;
+ padding:7px 10px;
+ border-radius:8px;
+ background:#e8efe9;
+ color:#245c43;
+ cursor:pointer
+}
+
+.del{
+ background:#f9e1e1;
+ color:#c94b4b
+}
+
+.msg{
+ padding:10px 13px;
+ margin:8px 0;
+ border-radius:12px;
+ white-space:pre-wrap;
+ max-width:85%;
+ background:#f1eee6
+}
+
+.me{
+ margin-left:auto;
+ background:#e7f0e8
+}
+
+.chatlog{
+ height:380px;
+ overflow:auto
+}
+
+.chatrow{
+ display:flex;
+ gap:8px;
+ margin-top:10px
+}
+
+.chatrow input{
+ flex:1;
+ padding:12px;
+ border:1px solid #ddd;
+ border-radius:10px
+}
+
+.modal{
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#0008;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ z-index:50
+}
+
+.modal.on{display:flex}
+
+.box{
+ background:#fff;
+ padding:24px;
+ border-radius:18px;
+ width:min(650px,100%)
+}
+
+.box input,.box textarea,.box select{
+ width:100%;
+ padding:12px;
+ margin:7px 0;
+ border:1px solid #ddd;
+ border-radius:10px
+}
+
+.box textarea{min-height:190px}
+
+.login{
+ position:fixed;
+ inset:0;
+ background:linear-gradient(135deg,#173f2d,#3d7a5b);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ z-index:100
+}
+
+.loginbox{
+ background:#fff;
+ padding:30px;
+ border-radius:20px;
+ width:min(400px,90%);
+ text-align:center
+}
+
+.loginbox input{
+ width:100%;
+ padding:13px;
+ margin:10px 0;
+ border:1px solid #ddd;
+ border-radius:10px
+}
+
+.hide{display:none!important}
+
+body.dark{
+ background:#101714;
+ color:#edf4ef
+}
+
+body.dark .card,
+body.dark .task,
+body.dark .chat,
+body.dark .box,
+body.dark .loginbox{
+ background:#18211d;
+ color:#edf4ef
+}
+
+body.dark .hero{background:#203329}
+body.dark .text{color:#bdc9c2}
+
+body.dark input,
+body.dark textarea,
+body.dark select{
+ background:#18211d;
+ color:#fff;
+ border-color:#3b4942
+}
+
+body.dark .msg{background:#27302b}
+body.dark .me{background:#23352c}
+
+@media(max-width:800px){
+ .side{width:72px;padding:12px 7px}
+ .side h2,.side small,.nav span,.user{display:none}
+ .logo b{width:52px;height:52px;font-size:12px}
+ .nav button{text-align:center;font-size:19px}
+ .main{margin-left:72px;padding:15px}
+ .top{flex-wrap:wrap}
+ .search{min-width:100%}
+}
+</style>
+</head>
+
+<body>
+
+<div class="login" id="login">
+ <div class="loginbox">
+  <h1>BSN 2A</h1>
+  <p>Enter your name to continue</p>
+  <input id="name" placeholder="Your name">
+  <button class="btn" onclick="enter()">Enter Website</button>
+ </div>
+</div>
+
+<aside class="side">
+ <div class="logo">
+  <b>BSN<br>2A</b>
+  <h2>BSN 2A</h2>
+  <small>Small Steps. Big Dreams.</small>
+ </div>
+
+ <nav class="nav">
+  <button class="on" onclick="show('notes',this)">📝 <span>Notes</span></button>
+  <button onclick="show('tasks',this)">✅ <span>Tasks</span></button>
+  <button onclick="show('chat',this)">💬 <span>Chat</span></button>
+  <button onclick="show('files',this)">📚 <span>Files</span></button>
+  <button onclick="show('about',this)">ℹ️ <span>About</span></button>
+  <button onclick="adminLogin()">🔒 <span id="admBtn">Admin</span></button>
+ </nav>
+
+ <div class="user">
+  👤 <b id="who">Guest</b>
+  <div id="mode">Student mode</div>
+
+  <div class="online">
+   <b>🟢 Online</b>
+   <div id="people">Nobody online</div>
+  </div>
+ </div>
+</aside>
+
+<main class="main">
+
+ <div class="top">
+  <input
+   class="search"
+   id="search"
+   placeholder="Search notes and tasks..."
+   oninput="render()"
+  >
+
+  <button class="btn" id="addN" onclick="noteModal()" style="display:none">
+   + Note
+  </button>
+
+  <button class="btn" id="addT" onclick="taskModal()" style="display:none">
+   + Task
+  </button>
+
+  <button class="btn" onclick="dark()">🌙</button>
+ </div>
+
+ <section id="notes" class="sec on">
+  <div class="hero">
+   <h1>Welcome to BSN 2A 🌱</h1>
+   <p>Shared class notes, tasks, chat and useful files.</p>
+   <p id="status"></p>
+  </div>
+
+  <h2>Class Notes</h2>
+  <div id="notesList" class="cards"></div>
+ </section>
+
+ <section id="tasks" class="sec">
+  <h2>Tasks & Deadlines</h2>
+
+  <button class="btn" id="addT2" onclick="taskModal()" style="display:none">
+   + Add Task
+  </button>
+
+  <div id="taskList"></div>
+ </section>
+
+ <section id="chat" class="sec">
+  <h2>💬 BSN 2A Chat</h2>
+
+  <div class="chat">
+   <div id="chatLog" class="chatlog"></div>
+
+   <div class="chatrow">
+    <input
+     id="chatInput"
+     placeholder="Send a message..."
+     onkeydown="if(event.key==='Enter')sendChat()"
+    >
+
+    <button class="btn" onclick="sendChat()">Send</button>
+   </div>
+  </div>
+
+  <div id="adminChatWrap" class="hide">
+   <h2>🔐 Admin Chat</h2>
+
+   <div class="chat">
+    <div id="adminLog" class="chatlog"></div>
+
+    <div class="chatrow">
+     <input
+      id="adminInput"
+      placeholder="Admin message..."
+      onkeydown="if(event.key==='Enter')sendAdmin()"
+     >
+
+     <button class="btn" onclick="sendAdmin()">Send</button>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section id="files" class="sec">
+  <h2>📚 Class Files</h2>
+
+  <button class="btn" id="addF" onclick="fileModal()" style="display:none">
+   + Add Link
+  </button>
+
+  <div id="fileList"></div>
+ </section>
+
+ <section id="about" class="sec">
+  <div class="hero">
+   <h1>BSN 2A 🌱</h1>
+
+   <p>
+    Students can view shared content and keep their own task checklists.
+    Admins manage shared notes, tasks and file links.
+   </p>
+
+   <p>
+    Offline mode caches previously loaded data.
+    Firebase writes synchronize when connectivity returns.
+   </p>
+  </div>
+ </section>
+
+</main>
+
+<div id="modal" class="modal">
+ <div class="box">
+
+  <h2 id="mt">Add Note</h2>
+
+  <div id="noteFields">
+   <input id="nt" placeholder="Note title">
+   <textarea id="nx" placeholder="Note text"></textarea>
+  </div>
+
+  <div id="taskFields" class="hide">
+   <input id="tt" placeholder="Task title">
+   <input id="td" type="date">
+   <textarea id="tx" placeholder="Task details"></textarea>
+  </div>
+
+  <div id="fileFields" class="hide">
+   <input id="ft" placeholder="File title">
+   <input id="fu" placeholder="https://...">
+
+   <select id="fy">
+    <option>PDF</option>
+    <option>PPT</option>
+    <option>Document</option>
+    <option>Other</option>
+   </select>
+  </div>
+
+  <div style="text-align:right">
+   <button class="btn" onclick="closeModal()">Cancel</button>
+   <button class="btn" onclick="saveModal()">Save</button>
+  </div>
+
+ </div>
+</div>
+
+<script type="module">
+
+import {
+ initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+ getDatabase,
+ ref,
+ push,
+ set,
+ update,
+ remove,
+ onValue,
+ onDisconnect,
+ serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const app = initializeApp({
+ apiKey:"AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
+ authDomain:"bsn-2a-notes.firebaseapp.com",
+ databaseURL:"https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
+ projectId:"bsn-2a-notes",
+ storageBucket:"bsn-2a-notes.firebasestorage.app",
+ messagingSenderId:"991210260962",
+ appId:"1:991210260962:web:8f6a886c7478be096991bb"
+});
+
+const db=getDatabase(app);
+
+const R={
+ notes:ref(db,"notes"),
+ tasks:ref(db,"tasks"),
+ chat:ref(db,"chat"),
+ admin:ref(db,"adminChat"),
+ files:ref(db,"files"),
+ presence:ref(db,"presence")
+};
+
+let notes={};
+let tasks={};
+let chat={};
+let adminChat={};
+let files={};
+
+let isAdmin=false;
+let editId=null;
+let type="note";
+let user=localStorage.getItem("bsnUser")||"";
+
+const PASS="supperlol123123";
+const K=x=>"bsn2a_"+x;
+
+const esc=x=>String(x??"")
+ .replace(/&/g,"&amp;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;")
+ .replace(/"/g,"&quot;")
+ .replace(/'/g,"&#039;");
+
+const fmt=x=>x
+ ?new Date(x+"T00:00").toLocaleDateString(undefined,{
+   month:"long",
+   day:"numeric",
+   year:"numeric"
+ })
+ :"";
+
+const save=(k,v)=>{
+ localStorage.setItem(K(k),JSON.stringify(v));
+};
+
+const load=k=>{
+ try{
+  return JSON.parse(localStorage.getItem(K(k)))||{};
+ }catch{
+  return {};
+ }
+};
+
+function enter(){
+ let n=document.getElementById("name").value.trim();
+
+ if(!n){
+  alert("Enter your name.");
+  return;
+ }
+
+ user=n;
+ localStorage.setItem("bsnUser",n);
+
+ document.getElementById("who").textContent=n;
+ document.getElementById("login").classList.add("hide");
+
+ presence();
+}
+
+window.enter=enter;
+
+if(user){
+ document.getElementById("who").textContent=user;
+ document.getElementById("login").classList.add("hide");
+}
+
+function dark(){
+ document.body.classList.toggle("dark");
+
+ localStorage.setItem(
+  "dark",
+  document.body.classList.contains("dark")
+ );
+}
+
+window.dark=dark;
+
+if(localStorage.getItem("dark")==="true"){
+ dark();
+}
+
+function show(id,b){
+ document.querySelectorAll(".sec")
+  .forEach(x=>x.classList.remove("on"));
+
+ document.getElementById(id).classList.add("on");
+
+ document.querySelectorAll(".nav button")
+  .forEach(x=>x.classList.remove("on"));
+
+ b.classList.add("on");
+}
+
+window.show=show;
+
+function adminLogin(){
+
+ if(isAdmin){
+  isAdmin=false;
+  ui();
+  return;
+ }
+
+ if(prompt("Admin password:")===PASS){
+  isAdmin=true;
+  ui();
+  alert("Admin mode enabled 🔓");
+ }else{
+  alert("Wrong password.");
+ }
+}
+
+window.adminLogin=adminLogin;
+
+function ui(){
+
+ ["addN","addT","addT2","addF"].forEach(id=>{
+  document.getElementById(id).style.display=
+   isAdmin?"inline-block":"none";
+ });
+
+ document.getElementById("admBtn").textContent=
+  isAdmin?"Admin 🔓":"Admin";
+
+ document.getElementById("mode").textContent=
+  isAdmin?"Administrator mode":"Student mode";
+
+ document.getElementById("adminChatWrap")
+  .classList.toggle("hide",!isAdmin);
+
+ render();
+}
+
+function render(){
+
+ let q=document.getElementById("search")
+  .value.toLowerCase();
+
+ let nc=document.getElementById("notesList");
+ nc.innerHTML="";
+
+ getOrderedNotes().forEach(([id,n])=>{
+
+  if(
+   q &&
+   !((n.title+" "+n.text).toLowerCase().includes(q))
+  )return;
+
+  let d=document.createElement("div");
+
+  d.className="card";
+  d.draggable=isAdmin;
+  d.dataset.noteId=id;
+
+  d.innerHTML=`
+   <h3>${esc(n.title||"Untitled")}</h3>
+
+   <div class="text">${esc(n.text)}</div>
+
+   <small>Added by ${esc(n.author||"Admin")}</small>
+
+   ${
+    isAdmin
+    ?`
+     <div class="actions">
+      <button class="small" onclick="editNote('${id}')">
+       ✏️ Edit
+      </button>
+
+      <button class="small del" onclick="delNote('${id}')">
+       🗑️ Delete
+      </button>
+     </div>
+    `
+    :""
+   }
+  `;
+
+  nc.appendChild(d);
+
+  if(isAdmin){
+   d.addEventListener("dragstart",noteDragStart);
+   d.addEventListener("dragover",noteDragOver);
+   d.addEventListener("dragleave",noteDragLeave);
+   d.addEventListener("drop",noteDrop);
+   d.addEventListener("dragend",noteDragEnd);
+  }
+
+ });
+
+ if(!nc.children.length){
+  nc.innerHTML='<div class="card">No notes found.</div>';
+ }
+
+ let tc=document.getElementById("taskList");
+ tc.innerHTML="";
+
+ Object.entries(tasks)
+ .sort((a,b)=>(a[1].due||"").localeCompare(b[1].due||""))
+ .forEach(([id,t])=>{
+
+  if(
+   q &&
+   !((t.title+" "+t.description).toLowerCase().includes(q))
+  )return;
+
+  let checked=load("check_"+id)===true;
+
+  let d=document.createElement("div");
+  d.className="task";
+
+  d.innerHTML=`
+   <input
+    type="checkbox"
+    ${checked?"checked":""}
+    onchange="checkTask('${id}',this.checked)"
+   >
+
+   <div style="flex:1">
+    <b class="${checked?"done":""}">
+     ${esc(t.title)}
+    </b>
+
+    <div style="color:#718078">
+     ${t.due?"Due: "+fmt(t.due):"No due date"}
+    </div>
+
+    <div class="text">${esc(t.description)}</div>
+
+    ${
+     isAdmin
+     ?`
+      <div class="actions">
+       <button class="small" onclick="editTask('${id}')">
+        ✏️ Edit
+       </button>
+
+       <button class="small del" onclick="delTask('${id}')">
+        🗑️ Delete
+       </button>
+      </div>
+     `
+     :""
+    }
+   </div>
+  `;
+
+  tc.appendChild(d);
+ });
+
+ let fc=document.getElementById("fileList");
+ fc.innerHTML="";
+
+ Object.entries(files)
+ .reverse()
+ .forEach(([id,f])=>{
+
+  let d=document.createElement("div");
+  d.className="card";
+
+  d.innerHTML=`
+   <h3>📄 ${esc(f.title)}</h3>
+   <small>${esc(f.type)}</small>
+
+   <p>
+    <a
+     href="${esc(f.url)}"
+     target="_blank"
+     rel="noopener"
+    >
+     ${esc(f.url)}
+    </a>
+   </p>
+
+   ${
+    isAdmin
+    ?`
+     <button class="small del" onclick="delFile('${id}')">
+      Delete
+     </button>
+    `
+    :""
+   }
+  `;
+
+  fc.appendChild(d);
+ });
+
+ if(!fc.children.length){
+  fc.innerHTML='<div class="card">No file links yet.</div>';
+ }
+}
+
+notes=load("notes");
+tasks=load("tasks");
+files=load("files");
+
+render();
+
+onValue(R.notes,s=>{
+ notes=s.val()||{};
+ save("notes",notes);
+ render();
+});
+
+onValue(R.tasks,s=>{
+ tasks=s.val()||{};
+ save("tasks",tasks);
+ render();
+});
+
+onValue(R.files,s=>{
+ files=s.val()||{};
+ save("files",files);
+ render();
+});
+
+function noteModal(){
+
+ if(!isAdmin){
+  alert("Admin access required.");
+  return;
+ }
+
+ type="note";
+ editId=null;
+
+ document.getElementById("mt").textContent="Add Note";
+
+ document.getElementById("noteFields")
+  .classList.remove("hide");
+
+ document.getElementById("taskFields")
+  .classList.add("hide");
+
+ document.getElementById("fileFields")
+  .classList.add("hide");
+
+ document.getElementById("nt").value="";
+ document.getElementById("nx").value="";
+
+ document.getElementById("modal")
+  .classList.add("on");
+}
+
+window.noteModal=noteModal;
+
+function taskModal(){
+
+ if(!isAdmin){
+  alert("Admin access required.");
+  return;
+ }
+
+ type="task";
+ editId=null;
+
+ document.getElementById("mt").textContent="Add Task";
+
+ document.getElementById("noteFields")
+  .classList.add("hide");
+
+ document.getElementById("taskFields")
+  .classList.remove("hide");
+
+ document.getElementById("fileFields")
+  .classList.add("hide");
+
+ ["tt","td","tx"].forEach(x=>{
+  document.getElementById(x).value="";
+ });
+
+ document.getElementById("modal")
+  .classList.add("on");
+}
+
+window.taskModal=taskModal;
+
+function fileModal(){
+
+ if(!isAdmin){
+  alert("Admin access required.");
+  return;
+ }
+
+ type="file";
+
+ document.getElementById("mt").textContent="Add File Link";
+
+ document.getElementById("noteFields")
+  .classList.add("hide");
+
+ document.getElementById("taskFields")
+  .classList.add("hide");
+
+ document.getElementById("fileFields")
+  .classList.remove("hide");
+
+ ["ft","fu"].forEach(x=>{
+  document.getElementById(x).value="";
+ });
+
+ document.getElementById("modal")
+  .classList.add("on");
+}
+
+window.fileModal=fileModal;
+
+function closeModal(){
+ document.getElementById("modal")
+  .classList.remove("on");
+}
+
+window.closeModal=closeModal;
+
+async function saveModal(){
+
+ if(!isAdmin)return;
+
+ if(type==="note"){
+
+  let title=nt.value.trim();
+  let text=nx.value.trim();
+
+  if(!title){
+   alert("Title required.");
+   return;
+  }
+
+  if(editId){
+
+   await update(ref(db,"notes/"+editId),{
+    title,
+    text,
+    author:user
+   });
+
+  }else{
+
+   await set(push(R.notes),{
+    title,
+    text,
+    author:user,
+    createdAt:Date.now()
+   });
+
+  }
+
+ }else if(type==="task"){
+
+  let title=tt.value.trim();
+
+  if(!title){
+   alert("Title required.");
+   return;
+  }
+
+  let data={
+   title,
+   due:td.value,
+   description:tx.value.trim()
+  };
+
+  if(editId){
+
+   await update(ref(db,"tasks/"+editId),data);
+
+  }else{
+
+   await set(push(R.tasks),{
+    ...data,
+    createdAt:Date.now()
+   });
+
+  }
+
+ }else{
+
+  let title=ft.value.trim();
+  let url=fu.value.trim();
+
+  if(
+   !title ||
+   !/^https?:\/\//i.test(url)
+  ){
+   alert("Enter a title and full http/https link.");
+   return;
+  }
+
+  await set(push(R.files),{
+   title,
+   url,
+   type:fy.value,
+   createdAt:Date.now(),
+   author:user
+  });
+
+ }
+
+ closeModal();
+}
+
+window.saveModal=saveModal;
+
+
+/* =========================
+   GRAB AND DROP NOTES
+========================= */
+
+let draggedNoteId=null;
+
+function getOrderedNotes(){
+
+ const entries=Object.entries(notes)
+  .filter(([id])=>id!=="_order");
+
+ const order=Array.isArray(notes._order)
+  ?notes._order
+  :[];
+
+ const map=new Map(entries);
+ const result=[];
+
+ order.forEach(id=>{
+
+  if(map.has(id)){
+   result.push([id,map.get(id)]);
+   map.delete(id);
+  }
+
+ });
+
+ return result.concat(
+  [...map.entries()]
+  .sort((a,b)=>
+   (b[1].createdAt||0)-(a[1].createdAt||0)
+  )
+ );
+}
+
+function noteDragStart(e){
+
+ if(!isAdmin)return;
+
+ draggedNoteId=e.currentTarget.dataset.noteId;
+
+ e.currentTarget.classList.add("dragging");
+
+ e.dataTransfer.effectAllowed="move";
+ e.dataTransfer.setData(
+  "text/plain",
+  draggedNoteId
+ );
+}
+
+function noteDragOver(e){
+
+ if(!isAdmin)return;
+
+ e.preventDefault();
+
+ if(
+  e.currentTarget.dataset.noteId!==draggedNoteId
+ ){
+  e.currentTarget.classList.add("drag-over");
+ }
+}
+
+function noteDragLeave(e){
+ e.currentTarget.classList.remove("drag-over");
+}
+
+function noteDragEnd(e){
+
+ e.currentTarget.classList.remove("dragging");
+
+ document.querySelectorAll(".drag-over")
+  .forEach(x=>x.classList.remove("drag-over"));
+
+ draggedNoteId=null;
+}
+
+async function noteDrop(e){
+
+ if(!isAdmin)return;
+
+ e.preventDefault();
+
+ const target=e.currentTarget.dataset.noteId;
+
+ e.currentTarget.classList.remove("drag-over");
+
+ if(
+  !draggedNoteId ||
+  !target ||
+  draggedNoteId===target
+ ){
+  return;
+ }
+
+ const ids=getOrderedNotes().map(([id])=>id);
+
+ const from=ids.indexOf(draggedNoteId);
+ const to=ids.indexOf(target);
+
+ if(from===-1 || to===-1)return;
+
+ ids.splice(from,1);
+ ids.splice(to,0,draggedNoteId);
+
+ /*
+  IMPORTANT:
+  Only the order is updated.
+  The actual notes and their contents
+  are not deleted or overwritten.
+ */
+
+ await update(ref(db,"notes"),{
+  _order:ids
+ });
+
+ draggedNoteId=null;
+}
+
+
+/* =========================
+   NOTE, TASK AND FILE ACTIONS
+========================= */
+
+function editNote(id){
+
+ if(!isAdmin)return;
+
+ type="note";
+ editId=id;
+
+ nt.value=notes[id].title||"";
+ nx.value=notes[id].text||"";
+
+ document.getElementById("noteFields")
+  .classList.remove("hide");
+
+ document.getElementById("taskFields")
+  .classList.add("hide");
+
+ document.getElementById("fileFields")
+  .classList.add("hide");
+
+ document.getElementById("mt").textContent="Edit Note";
+
+ document.getElementById("modal")
+  .classList.add("on");
+}
+
+window.editNote=editNote;
+
+function editTask(id){
+
+ if(!isAdmin)return;
+
+ type="task";
+ editId=id;
+
+ tt.value=tasks[id].title||"";
+ td.value=tasks[id].due||"";
+ tx.value=tasks[id].description||"";
+
+ document.getElementById("noteFields")
+  .classList.add("hide");
+
+ document.getElementById("taskFields")
+  .classList.remove("hide");
+
+ document.getElementById("fileFields")
+  .classList.add("hide");
+
+ document.getElementById("mt").textContent="Edit Task";
+
+ document.getElementById("modal")
+  .classList.add("on");
+}
+
+window.editTask=editTask;
+
+async function delNote(id){
+
+ if(
+  isAdmin &&
+  confirm("Delete note?")
+ ){
+  await remove(ref(db,"notes/"+id));
+ }
+}
+
+window.delNote=delNote;
+
+async function delTask(id){
+
+ if(
+  isAdmin &&
+  confirm("Delete task?")
+ ){
+  await remove(ref(db,"tasks/"+id));
+ }
+}
+
+window.delTask=delTask;
+
+async function delFile(id){
+
+ if(
+  isAdmin &&
+  confirm("Delete link?")
+ ){
+  await remove(ref(db,"files/"+id));
+ }
+}
+
+window.delFile=delFile;
+
+
+/* =========================
+   PERSONAL TASK CHECKBOXES
+========================= */
+
+function checkTask(id,v){
+
+ save("check_"+id,v);
+ render();
+}
+
+window.checkTask=checkTask;
+
+
+/* =========================
+   CHAT
+========================= */
+
+function draw(id,data){
+
+ let c=document.getElementById(id);
+ c.innerHTML="";
+
+ Object.values(data)
+ .sort((a,b)=>
+  (a.createdAt||0)-(b.createdAt||0)
+ )
+ .slice(-100)
+ .forEach(m=>{
+
+  let d=document.createElement("div");
+
+  d.className="msg "+
+   (m.author===user?"me":"");
+
+  d.textContent=
+   (m.author||"User")+": "+m.text;
+
+  c.appendChild(d);
+ });
+
+ c.scrollTop=c.scrollHeight;
+}
+
+let chatData={};
+
+onValue(R.chat,s=>{
+ chatData=s.val()||{};
+ draw("chatLog",chatData);
+});
+
+onValue(R.admin,s=>{
+ adminChat=s.val()||{};
+
+ if(isAdmin){
+  draw("adminLog",adminChat);
+ }
+});
+
+async function sendChat(){
+
+ let i=chatInput;
+ let v=i.value.trim();
+
+ if(!v)return;
+
+ await set(push(R.chat),{
+  author:user||"Guest",
+  text:v,
+  createdAt:Date.now()
+ });
+
+ i.value="";
+}
+
+window.sendChat=sendChat;
+
+async function sendAdmin(){
+
+ if(!isAdmin)return;
+
+ let i=adminInput;
+ let v=i.value.trim();
+
+ if(!v)return;
+
+ await set(push(R.admin),{
+  author:user||"Admin",
+  text:v,
+  createdAt:Date.now()
+ });
+
+ i.value="";
+}
+
+window.sendAdmin=sendAdmin;
+
+
+/* =========================
+   ONLINE PRESENCE
+========================= */
+
+function presence(){
+
+ let id=Math.random()
+  .toString(36)
+  .slice(2);
+
+ let r=ref(db,"presence/"+id);
+
+ set(r,{
+  name:user,
+  lastSeen:serverTimestamp()
+ });
+
+ onDisconnect(r).remove();
+
+ onValue(R.presence,s=>{
+
+  let p=s.val()||{};
+
+  let names=Object.values(p)
+   .map(x=>x.name)
+   .filter(Boolean);
+
+  people.innerHTML=names.length
+   ?names.map(n=>
+    `<div><span class="dot"></span>${esc(n)}</div>`
+   ).join("")
+   :"Nobody online";
+ });
+}
+
+if(user)presence();
+
+
+/* =========================
+   CONNECTION STATUS
+========================= */
+
+function conn(){
+
+ status.textContent=navigator.onLine
+  ?"🟢 Online — syncing with Firebase"
+  :"🔴 Offline — cached data available; Firebase will sync when connection returns";
+}
+
+addEventListener("online",conn);
+addEventListener("offline",conn);
+
+conn();
+ui();
+
+</script>
+
+</body>
+</html>
