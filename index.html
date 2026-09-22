@@ -1,800 +1,605 @@
 <!doctype html>
 <html lang="en">
 <head>
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#245c43">
-
 <title>BSN 2A Notes</title>
 
 <style>
-
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 :root{
-  color-scheme:light;
-
-  --bg:#f6f2e9;
-  --surface:#ffffff;
-  --surface2:#f1eee6;
-  --surface3:#e8efe9;
-
-  --text:#1e2b25;
-  --muted:#526158;
-  --muted2:#718078;
-
-  --border:#d9e0db;
-
-  --primary:#245c43;
-  --primary-dark:#173f2d;
-  --primary-soft:#e7f0e8;
-
-  --hero1:#e4efdc;
-  --hero2:#f4f2df;
-
-  --shadow:#1e322015;
-  --input:#ffffff;
+ --bg:#f6f2e9;
+ --surface:#fff;
+ --surface2:#f1eee6;
+ --surface3:#e8efe9;
+ --text:#1e2b25;
+ --muted:#526158;
+ --muted2:#718078;
+ --border:#d9e0db;
+ --primary:#245c43;
+ --primarySoft:#e7f0e8;
+ --shadow:#1e322015;
+ --input:#fff;
 }
 
 body.dark{
-
-  color-scheme:dark;
-
-  --bg:#101714;
-  --surface:#18211d;
-  --surface2:#27302b;
-  --surface3:#273a30;
-
-  --text:#edf4ef;
-  --muted:#bdc9c2;
-  --muted2:#9eada4;
-
-  --border:#3b4942;
-
-  --primary:#69a785;
-  --primary-dark:#173f2d;
-  --primary-soft:#23352c;
-
-  --hero1:#203329;
-  --hero2:#1b2b23;
-
-  --shadow:#00000035;
-  --input:#18211d;
+ --bg:#101714;
+ --surface:#18211d;
+ --surface2:#27302b;
+ --surface3:#273a30;
+ --text:#edf4ef;
+ --muted:#bdc9c2;
+ --muted2:#9eada4;
+ --border:#3b4942;
+ --primary:#69a785;
+ --primarySoft:#23352c;
+ --shadow:#00000035;
+ --input:#18211d;
 }
 
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  transition:background-color .2s ease,color .2s ease;
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+ transition:.2s;
 }
 
-button,
-input,
-textarea,
-select{
-  font:inherit;
-}
+button,input,textarea,select{font:inherit}
 
-h1,
-h2,
-h3{
-  font-family:Georgia,serif;
-}
+h1,h2,h3{font-family:Georgia,serif}
 
-/* =========================
-   SIDEBAR
-========================= */
+.hide{display:none!important}
+
+/* SIDEBAR */
 
 .side{
-  position:fixed;
-  inset:0 auto 0 0;
-  width:240px;
-  padding:22px 16px;
-  background:linear-gradient(#173f2d,#285c43);
-  color:#fff;
-  z-index:20;
+ position:fixed;
+ inset:0 auto 0 0;
+ width:240px;
+ padding:22px 16px;
+ background:linear-gradient(#173f2d,#285c43);
+ color:#fff;
+ z-index:20;
 }
 
-.logo{
-  text-align:center;
-}
+.logo{text-align:center}
 
 .nursing-logo{
-  width:75px;
-  height:75px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border:4px solid #dcebd7;
-  border-radius:20px;
-  background:#ffffff12;
+ width:75px;
+ height:75px;
+ margin:auto;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ border:4px solid #dcebd7;
+ border-radius:20px;
+ background:#ffffff12;
 }
 
-.nursing-logo svg{
-  width:52px;
-  height:52px;
-}
+.nursing-logo svg{width:52px;height:52px}
 
 .nursing-logo circle{
-  fill:none;
-  stroke:#dcebd7;
-  stroke-width:5;
+ fill:none;
+ stroke:#dcebd7;
+ stroke-width:5;
 }
 
 .nursing-logo path:first-of-type{
-  fill:#dcebd7;
-  stroke:none;
+ fill:#dcebd7;
+ stroke:none;
 }
 
 .nursing-logo path:last-of-type{
-  fill:none;
-  stroke:#dcebd7;
-  stroke-width:4;
-  stroke-linecap:round;
+ fill:none;
+ stroke:#dcebd7;
+ stroke-width:4;
+ stroke-linecap:round;
 }
 
-.logo h2{
-  margin-bottom:8px;
-}
+.logo h2{margin-bottom:8px}
 
-.nav{
-  margin-top:8px;
-}
+.nav{margin-top:8px}
 
 .nav button{
-  display:block;
-  width:100%;
-  margin:7px 0;
-  padding:12px;
-  border:0;
-  border-radius:10px;
-  background:transparent;
-  color:white;
-  text-align:left;
-  cursor:pointer;
-  transition:.15s;
+ display:block;
+ width:100%;
+ margin:7px 0;
+ padding:12px;
+ border:0;
+ border-radius:10px;
+ background:transparent;
+ color:white;
+ text-align:left;
+ cursor:pointer;
+ transition:.15s;
 }
 
 .nav button:hover,
 .nav .on,
 .theme-toggle-active{
-  background:#ffffff25;
+ background:#ffffff25;
 }
 
 .user{
-  position:absolute;
-  bottom:18px;
-  left:16px;
-  right:16px;
-  padding:12px;
-  background:#ffffff18;
-  border-radius:12px;
+ position:absolute;
+ bottom:18px;
+ left:16px;
+ right:16px;
+ padding:12px;
+ background:#ffffff18;
+ border-radius:12px;
 }
 
 .online{
-  margin-top:9px;
-  font-size:12px;
-  max-height:115px;
-  overflow:auto;
+ margin-top:9px;
+ font-size:12px;
+ max-height:115px;
+ overflow:auto;
 }
 
 .dot{
-  display:inline-block;
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#7ee08d;
-  margin-right:5px;
+ display:inline-block;
+ width:7px;
+ height:7px;
+ border-radius:50%;
+ background:#7ee08d;
+ margin-right:5px;
 }
 
-/* =========================
-   MAIN
-========================= */
+/* MAIN */
 
 .main{
-  margin-left:240px;
-  padding:25px;
+ margin-left:240px;
+ padding:25px;
 }
 
-/* =========================
-   PAGE SECTIONS
-========================= */
+.sec{display:none}
+.sec.on{display:block}
 
-.sec{
-  display:none;
-}
-
-.sec.on{
-  display:block;
-}
-
-/* =========================
-   ANNOUNCEMENT
-========================= */
+/* ANNOUNCEMENT */
 
 .announcement{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  width:100%;
-  min-height:54px;
-  margin-bottom:18px;
-  padding:10px 16px;
-  background:#173f2d;
-  color:#fff;
-  border-radius:14px;
-  box-shadow:0 5px 20px var(--shadow);
-  overflow:hidden;
+ display:flex;
+ align-items:center;
+ gap:12px;
+ width:100%;
+ min-height:54px;
+ margin-bottom:18px;
+ padding:10px 16px;
+ background:#173f2d;
+ color:#fff;
+ border-radius:14px;
+ overflow:hidden;
 }
 
 .announcement-icon{
-  flex:0 0 38px;
-  width:38px;
-  height:38px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:10px;
-  background:#ffffff18;
+ width:38px;
+ height:38px;
+ flex:0 0 38px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ border-radius:10px;
+ background:#ffffff18;
 }
 
 .announcement-icon svg{
-  width:22px;
-  height:22px;
-  stroke:#dcebd7;
+ width:22px;
+ height:22px;
 }
 
 .announcement-window{
-  flex:1;
-  overflow:hidden;
-  white-space:nowrap;
+ flex:1;
+ overflow:hidden;
+ white-space:nowrap;
 }
 
 .announcement-track{
-  display:inline-block;
-  min-width:100%;
-  animation:announcementScroll 18s linear infinite;
+ display:inline-block;
+ min-width:100%;
+ animation:scrollAnnouncement 18s linear infinite;
 }
 
 .announcement:hover .announcement-track{
-  animation-play-state:paused;
+ animation-play-state:paused;
 }
 
-.announcement-text{
-  font-weight:bold;
-  letter-spacing:.2px;
-}
-
-@keyframes announcementScroll{
-
-  0%{
-    transform:translateX(100%);
-  }
-
-  100%{
-    transform:translateX(-100%);
-  }
-
-}
-
-.announcement-admin{
-  flex:0 0 auto;
+@keyframes scrollAnnouncement{
+ 0%{transform:translateX(100%)}
+ 100%{transform:translateX(-100%)}
 }
 
 .announcement-admin button{
-  border:0;
-  border-radius:8px;
-  padding:7px 10px;
-  background:#ffffff18;
-  color:#fff;
-  cursor:pointer;
+ border:0;
+ border-radius:8px;
+ padding:7px 10px;
+ background:#ffffff18;
+ color:#fff;
+ cursor:pointer;
 }
 
-/* =========================
-   HERO
-========================= */
+/* HERO */
 
 .hero{
-  background:linear-gradient(110deg,var(--hero1),var(--hero2));
-  border-radius:18px;
-  padding:24px;
-  margin-bottom:20px;
-  box-shadow:0 5px 20px var(--shadow);
+ background:linear-gradient(110deg,#e4efdc,#f4f2df);
+ border-radius:18px;
+ padding:24px;
+ margin-bottom:20px;
+ box-shadow:0 5px 20px var(--shadow);
 }
 
-.hero h1{
-  margin:0 0 10px;
+body.dark .hero{
+ background:linear-gradient(110deg,#203329,#1b2b23);
 }
 
-.hero p{
-  margin:0;
-  line-height:1.6;
-}
+.hero h1{margin:0 0 10px}
+.hero p{margin:0;line-height:1.6}
 
-/* =========================
-   NOTES
-========================= */
+/* NOTES */
 
 .notes-masonry{
-  column-width:280px;
-  column-count:3;
-  column-gap:16px;
+ column-width:280px;
+ column-count:3;
+ column-gap:16px;
 }
 
 .card{
-  background:var(--surface);
-  border-radius:18px;
-  padding:20px;
-  margin:0 0 16px;
-  box-shadow:0 5px 20px var(--shadow);
-  break-inside:avoid;
-  -webkit-column-break-inside:avoid;
-  display:block;
-  width:100%;
-  height:max-content;
-  min-height:0;
-  transition:.15s;
+ background:var(--surface);
+ border-radius:18px;
+ padding:20px;
+ margin:0 0 16px;
+ box-shadow:0 5px 20px var(--shadow);
+ break-inside:avoid;
+ width:100%;
+ transition:.15s;
 }
 
 .card:hover{
-  transform:translateY(-2px);
-  box-shadow:0 8px 24px var(--shadow);
-}
-
-.card[draggable="true"]{
-  cursor:grab;
-}
-
-.card[draggable="true"]:active{
-  cursor:grabbing;
-}
-
-.card.dragging{
-  opacity:.45;
-  transform:scale(.98);
-}
-
-.card.drag-over{
-  outline:3px dashed #3d7a5b;
-  outline-offset:4px;
+ transform:translateY(-2px);
+ box-shadow:0 8px 24px var(--shadow);
 }
 
 .card h3{
-  margin:0 0 12px;
-  line-height:1.3;
+ margin:0 0 12px;
+ line-height:1.3;
 }
 
 .card small{
-  display:block;
-  margin-top:10px;
+ display:block;
+ margin-top:10px;
 }
 
 .text{
-  display:block;
-  width:100%;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  line-height:1.65;
-  color:var(--muted);
+ display:block;
+ width:100%;
+ margin:0;
+ padding:0;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ line-height:1.65;
+ color:var(--muted);
 }
 
 .empty-card{
-  text-align:center;
-  color:var(--muted2);
+ text-align:center;
+ color:var(--muted2);
 }
 
-/* =========================
-   TASKS
-========================= */
+/* TASKS */
 
 .task-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-bottom:16px;
-  flex-wrap:wrap;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:15px;
+ margin-bottom:16px;
+ flex-wrap:wrap;
 }
 
 .task{
-  display:flex;
-  align-items:flex-start;
-  gap:14px;
-  background:var(--surface);
-  border-radius:18px;
-  padding:18px 20px;
-  margin-bottom:12px;
-  box-shadow:0 5px 20px var(--shadow);
-  transition:.15s;
-  position:relative;
+ display:flex;
+ align-items:flex-start;
+ gap:14px;
+ background:var(--surface);
+ border-radius:18px;
+ padding:18px 20px;
+ margin-bottom:12px;
+ box-shadow:0 5px 20px var(--shadow);
+ transition:.15s;
 }
 
 .task:hover{
-  transform:translateY(-1px);
-  box-shadow:0 8px 24px var(--shadow);
+ transform:translateY(-1px);
 }
 
 .task-check{
-  width:24px !important;
-  height:24px !important;
-  min-width:24px;
-  margin-top:2px;
-  cursor:pointer;
-  accent-color:#245c43;
+ width:24px!important;
+ height:24px!important;
+ min-width:24px;
+ margin-top:2px;
+ cursor:pointer;
+ accent-color:#245c43;
 }
 
 .task-content{
-  flex:1;
-  min-width:0;
+ flex:1;
+ min-width:0;
 }
 
 .task-title{
-  display:block;
-  font-size:17px;
-  line-height:1.4;
-  margin-bottom:4px;
-}
-
-.task-due{
-  font-size:13px;
-  color:var(--muted2);
-  margin-bottom:7px;
-}
-
-.task-description{
-  color:var(--muted);
-  line-height:1.55;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
+ display:block;
+ font-size:17px;
+ line-height:1.4;
+ margin-bottom:4px;
 }
 
 .task-title.done{
-  text-decoration:line-through;
-  opacity:.5;
+ text-decoration:line-through;
+ opacity:.5;
 }
 
-.task.completed{
-  opacity:.72;
+.task.completed{opacity:.72}
+
+.task-due{
+ font-size:13px;
+ color:var(--muted2);
+ margin-bottom:7px;
+}
+
+.task-description{
+ margin:0;
+ padding:0;
+ color:var(--muted);
+ line-height:1.55;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
 }
 
 .task-actions{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  margin-top:10px;
+ display:flex;
+ gap:6px;
+ flex-wrap:wrap;
+ margin-top:10px;
 }
 
 .task-admin-btn{
-  border:0;
-  padding:7px 10px;
-  border-radius:8px;
-  cursor:pointer;
-  background:var(--surface3);
-  color:var(--primary);
-  font-size:13px;
-}
-
-.task-admin-btn:hover{
-  filter:brightness(1.08);
+ border:0;
+ padding:7px 10px;
+ border-radius:8px;
+ cursor:pointer;
+ background:var(--surface3);
+ color:var(--primary);
+ font-size:13px;
 }
 
 .task-admin-delete{
-  background:#f9e1e1;
-  color:#c94b4b;
+ background:#f9e1e1;
+ color:#c94b4b;
 }
 
-.task[draggable="true"]{
-  cursor:grab;
-}
-
-.task[draggable="true"]:active{
-  cursor:grabbing;
-}
-
-.task.dragging{
-  opacity:.4;
-  transform:scale(.98);
-}
-
+.task[draggable="true"]{cursor:grab}
+.task.dragging{opacity:.4}
 .task.drag-over{
-  outline:3px dashed #3d7a5b;
-  outline-offset:4px;
+ outline:3px dashed #3d7a5b;
+ outline-offset:4px;
 }
 
-/* =========================
-   BUTTONS
-========================= */
+/* BUTTONS */
 
 .btn{
-  border:0;
-  border-radius:10px;
-  padding:11px 15px;
-  background:#245c43;
-  color:#fff;
-  cursor:pointer;
+ border:0;
+ border-radius:10px;
+ padding:11px 15px;
+ background:#245c43;
+ color:#fff;
+ cursor:pointer;
 }
 
-.btn:hover{
-  filter:brightness(1.08);
-}
+.btn:hover{filter:brightness(1.08)}
 
 .small{
-  border:0;
-  padding:7px 10px;
-  border-radius:8px;
-  background:var(--surface3);
-  color:var(--primary);
-  cursor:pointer;
+ border:0;
+ padding:7px 10px;
+ border-radius:8px;
+ background:var(--surface3);
+ color:var(--primary);
+ cursor:pointer;
 }
 
 .del{
-  background:#f9e1e1;
-  color:#c94b4b;
+ background:#f9e1e1;
+ color:#c94b4b;
 }
 
-/* =========================
-   FILES
-========================= */
-
-.file-icon{
-  display:inline-flex;
-  width:32px;
-  height:32px;
-  margin-right:9px;
-  vertical-align:middle;
-  align-items:center;
-  justify-content:center;
-  border-radius:9px;
-  background:var(--surface3);
-  color:var(--primary);
-}
-
-.file-icon svg{
-  width:19px;
-  height:19px;
-  display:block;
-}
+/* FILES */
 
 .file-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:10px 14px;
-  border-radius:10px;
-  background:var(--surface3);
-  color:var(--primary);
-  text-decoration:none;
-  font-weight:bold;
-  transition:.15s;
+ display:inline-flex;
+ align-items:center;
+ gap:8px;
+ padding:10px 14px;
+ border-radius:10px;
+ background:var(--surface3);
+ color:var(--primary);
+ text-decoration:none;
+ font-weight:bold;
 }
 
-.file-btn:hover{
-  filter:brightness(1.08);
-  transform:translateY(-1px);
-}
-
-.file-btn svg{
-  width:18px;
-  height:18px;
-  flex:none;
-}
-
-/* =========================
-   CHAT
-========================= */
+/* CHAT */
 
 .chat{
-  background:var(--surface);
-  border-radius:18px;
-  padding:22px;
-  margin-bottom:18px;
-  box-shadow:0 5px 20px var(--shadow);
-}
-
-.msg{
-  padding:10px 13px;
-  margin:8px 0;
-  border-radius:12px;
-  white-space:pre-wrap;
-  max-width:85%;
-  background:var(--surface2);
-}
-
-.me{
-  margin-left:auto;
-  background:var(--primary-soft);
+ background:var(--surface);
+ border-radius:18px;
+ padding:22px;
+ margin-bottom:18px;
+ box-shadow:0 5px 20px var(--shadow);
 }
 
 .chatlog{
-  height:380px;
-  overflow:auto;
+ height:380px;
+ overflow:auto;
+}
+
+.msg{
+ padding:10px 13px;
+ margin:8px 0;
+ border-radius:12px;
+ max-width:85%;
+ background:var(--surface2);
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ line-height:1.5;
+}
+
+.me{
+ margin-left:auto;
+ background:var(--primarySoft);
 }
 
 .chatrow{
-  display:flex;
-  gap:8px;
-  margin-top:10px;
+ display:flex;
+ gap:8px;
+ margin-top:10px;
 }
 
 .chatrow input{
-  flex:1;
-  padding:12px;
-  border:1px solid var(--border);
-  background:var(--input);
-  color:var(--text);
-  border-radius:10px;
+ flex:1;
+ padding:12px;
+ border:1px solid var(--border);
+ border-radius:10px;
+ background:var(--input);
+ color:var(--text);
 }
 
-/* =========================
-   MODAL
-========================= */
+/* MODAL */
 
 .modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:#0008;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  z-index:100;
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#0008;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ z-index:100;
 }
 
-.modal.on{
-  display:flex;
-}
+.modal.on{display:flex}
 
 .box{
-  background:var(--surface);
-  color:var(--text);
-  padding:24px;
-  border-radius:18px;
-  width:min(650px,100%);
-  max-height:90vh;
-  overflow:auto;
+ background:var(--surface);
+ color:var(--text);
+ padding:24px;
+ border-radius:18px;
+ width:min(650px,100%);
+ max-height:90vh;
+ overflow:auto;
 }
 
 .box input,
 .box textarea,
 .box select{
-  width:100%;
-  padding:12px;
-  margin:7px 0;
-  border:1px solid var(--border);
-  background:var(--input);
-  color:var(--text);
-  border-radius:10px;
+ width:100%;
+ padding:12px;
+ margin:7px 0;
+ border:1px solid var(--border);
+ border-radius:10px;
+ background:var(--input);
+ color:var(--text);
 }
 
-.box textarea{
-  min-height:190px;
-}
+.box textarea{min-height:190px}
 
 .modal-buttons{
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
-  margin-top:10px;
+ display:flex;
+ justify-content:flex-end;
+ gap:8px;
+ margin-top:10px;
 }
 
-/* =========================
-   LOGIN
-========================= */
+/* LOGIN */
 
 .login{
-  position:fixed;
-  inset:0;
-  background:linear-gradient(135deg,#173f2d,#3d7a5b);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:200;
+ position:fixed;
+ inset:0;
+ background:linear-gradient(135deg,#173f2d,#3d7a5b);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ z-index:200;
 }
 
 .loginbox{
-  background:var(--surface);
-  color:var(--text);
-  padding:30px;
-  border-radius:20px;
-  width:min(400px,90%);
-  text-align:center;
+ background:var(--surface);
+ color:var(--text);
+ padding:30px;
+ border-radius:20px;
+ width:min(400px,90%);
+ text-align:center;
 }
 
 .loginbox input{
-  width:100%;
-  padding:13px;
-  margin:10px 0;
-  border:1px solid var(--border);
-  background:var(--input);
-  color:var(--text);
-  border-radius:10px;
+ width:100%;
+ padding:13px;
+ margin:10px 0;
+ border:1px solid var(--border);
+ border-radius:10px;
+ background:var(--input);
+ color:var(--text);
 }
 
-.hide{
-  display:none!important;
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+ color:#7f9187;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* MOBILE */
 
 @media(max-width:1100px){
-
-  .notes-masonry{
-    column-count:2;
-  }
-
+ .notes-masonry{column-count:2}
 }
 
 @media(max-width:800px){
 
-  .side{
-    width:72px;
-    padding:12px 7px;
-  }
+ .side{
+  width:72px;
+  padding:12px 7px;
+ }
 
-  .side h2,
-  .side small,
-  .nav span,
-  .user{
-    display:none;
-  }
+ .side h2,
+ .side small,
+ .nav span,
+ .user{
+  display:none;
+ }
 
-  .nursing-logo{
-    width:52px;
-    height:52px;
-    border-width:3px;
-  }
+ .nursing-logo{
+  width:52px;
+  height:52px;
+  border-width:3px;
+ }
 
-  .nursing-logo svg{
-    width:36px;
-    height:36px;
-  }
+ .nursing-logo svg{
+  width:36px;
+  height:36px;
+ }
 
-  .nav button{
-    text-align:center;
-    font-size:19px;
-  }
+ .nav button{
+  text-align:center;
+  font-size:19px;
+ }
 
-  .main{
-    margin-left:72px;
-    padding:15px;
-  }
+ .main{
+  margin-left:72px;
+  padding:15px;
+ }
 
-  .notes-masonry{
-    column-count:1;
-  }
-
-  .announcement{
-    min-height:50px;
-    padding:8px 10px;
-  }
-
-  .announcement-icon{
-    flex-basis:34px;
-    width:34px;
-    height:34px;
-  }
-
-  .announcement-admin button{
-    font-size:12px;
-    padding:6px 8px;
-  }
-
-}
-
-@media(prefers-reduced-motion:reduce){
-
-  .announcement-track{
-    animation:none;
-    transform:none;
-  }
+ .notes-masonry{
+  column-count:1;
+ }
 
 }
 
@@ -803,643 +608,530 @@ h3{
 
 <body>
 
-<!-- =========================
-     LOGIN
-========================= -->
+<!-- LOGIN -->
 
-<div
-  class="login"
-  id="login"
->
+<div class="login" id="login">
 
-  <div class="loginbox">
+ <div class="loginbox">
 
-    <h1>BSN 2A</h1>
+  <h1>BSN 2A</h1>
 
-    <p>Enter your name to continue</p>
+  <p>Enter your name to continue</p>
 
-    <input
-      id="name"
-      placeholder="Your name"
-    >
+  <input
+   id="name"
+   placeholder="Your name"
+  >
 
-    <button
-      class="btn"
-      onclick="enter()"
-    >
-      Enter Website
-    </button>
+  <button
+   class="btn"
+   onclick="enter()"
+  >
+   Enter Website
+  </button>
 
-  </div>
+ </div>
 
 </div>
 
 
-<!-- =========================
-     SIDEBAR
-========================= -->
+<!-- SIDEBAR -->
 
 <aside class="side">
 
-  <div class="logo">
+ <div class="logo">
 
-    <div class="nursing-logo">
+  <div class="nursing-logo">
 
-      <svg
-        viewBox="0 0 100 100"
-        aria-label="Nursing logo"
-      >
+   <svg viewBox="0 0 100 100">
 
-        <circle
-          cx="50"
-          cy="50"
-          r="46"
-        ></circle>
+    <circle cx="50" cy="50" r="46"></circle>
 
-        <path
-          d="M42 24h16v18h18v16H58v18H42V58H24V42h18z"
-        ></path>
+    <path d="M42 24h16v18h18v16H58v18H42V58H24V42h18z"></path>
 
-        <path
-          d="M31 70c7 7 13 10 19 10s12-3 19-10"
-        ></path>
+    <path d="M31 70c7 7 13 10 19 10s12-3 19-10"></path>
 
-      </svg>
-
-    </div>
-
-    <h2>BSN 2A</h2>
-
-    <small>
-      Small Steps. Big Dreams.
-    </small>
+   </svg>
 
   </div>
 
+  <h2>BSN 2A</h2>
 
-  <nav class="nav">
+  <small>Small Steps. Big Dreams.</small>
 
-    <button
-      class="on"
-      onclick="show('notes',this)"
-    >
-      📝 <span>Notes</span>
-    </button>
-
-    <button
-      onclick="show('tasks',this)"
-    >
-      ✅ <span>Tasks</span>
-    </button>
-
-    <button
-      onclick="show('chat',this)"
-    >
-      💬 <span>Chat</span>
-    </button>
-
-    <button
-      onclick="show('files',this)"
-    >
-      📚 <span>Files</span>
-    </button>
-
-    <button
-      onclick="show('about',this)"
-    >
-      ℹ️ <span>About</span>
-    </button>
-
-    <!-- LIGHT / DARK MODE -->
-
-    <button
-      id="themeToggle"
-      onclick="toggleTheme()"
-      title="Toggle light/dark mode"
-      aria-label="Switch to dark mode"
-    >
-      🌙 <span id="themeLabel">Dark Mode</span>
-    </button>
-
-    <button
-      onclick="adminLogin()"
-    >
-      🔒 <span id="admBtn">Admin</span>
-    </button>
-
-  </nav>
+ </div>
 
 
-  <div class="user">
+ <nav class="nav">
 
-    👤 <b id="who">Guest</b>
+  <button
+   class="on"
+   onclick="show('notes',this)"
+  >
+   📝 <span>Notes</span>
+  </button>
 
-    <div id="mode">
-      Student mode
-    </div>
+  <button onclick="show('tasks',this)">
+   ✅ <span>Tasks</span>
+  </button>
 
-    <div class="online">
+  <button onclick="show('chat',this)">
+   💬 <span>Chat</span>
+  </button>
 
-      <b>🟢 Online</b>
+  <button onclick="show('files',this)">
+   📚 <span>Files</span>
+  </button>
 
-      <div id="people">
-        Nobody online
-      </div>
+  <button onclick="show('about',this)">
+   ℹ️ <span>About</span>
+  </button>
 
-    </div>
+  <button
+   id="themeToggle"
+   onclick="toggleTheme()"
+   title="Toggle light/dark mode"
+  >
+   🌙 <span id="themeLabel">Dark Mode</span>
+  </button>
+
+  <button onclick="adminLogin()">
+   🔒 <span id="admBtn">Admin</span>
+  </button>
+
+ </nav>
+
+
+ <div class="user">
+
+  👤 <b id="who">Guest</b>
+
+  <div id="mode">Student mode</div>
+
+  <div class="online">
+
+   <b>🟢 Online</b>
+
+   <div id="people">
+    Nobody online
+   </div>
 
   </div>
+
+ </div>
 
 </aside>
 
 
-<!-- =========================
-     MAIN
-========================= -->
+<!-- MAIN -->
 
 <main class="main">
 
-  <!-- =========================
-       ANNOUNCEMENT
-  ========================= -->
+ <!-- ANNOUNCEMENT -->
 
-  <div class="announcement">
+ <div class="announcement">
 
-    <div
-      class="announcement-icon"
-      title="Class announcement"
+  <div class="announcement-icon">
+
+   📢
+
+  </div>
+
+  <div class="announcement-window">
+
+   <div
+    id="announcementTrack"
+    class="announcement-track"
+   >
+
+    <span
+     id="announcementText"
+     class="announcement-text"
+    >
+     No important announcement yet.
+    </span>
+
+   </div>
+
+  </div>
+
+  <div
+   id="announcementAdmin"
+   class="announcement-admin hide"
+  >
+
+   <button onclick="announcementModal()">
+    ✏️
+   </button>
+
+  </div>
+
+ </div>
+
+
+ <!-- NOTES -->
+
+ <section
+  id="notes"
+  class="sec on"
+ >
+
+  <div class="hero">
+
+   <h1>Welcome to BSN 2A Notes</h1>
+
+   <p>My biggest update yet</p>
+
+  </div>
+
+  <h2>Class Notes</h2>
+
+  <div
+   id="notesList"
+   class="notes-masonry"
+  ></div>
+
+ </section>
+
+
+ <!-- TASKS -->
+
+ <section
+  id="tasks"
+  class="sec"
+ >
+
+  <div class="task-header">
+
+   <h2>Tasks & Deadlines</h2>
+
+   <button
+    class="btn"
+    id="addT2"
+    onclick="taskModal()"
+    style="display:none"
+   >
+    ☑️ Add Task
+   </button>
+
+  </div>
+
+  <p style="color:var(--muted)">
+   Check the box when you finish a task.
+  </p>
+
+  <div id="taskList"></div>
+
+ </section>
+
+
+ <!-- CHAT -->
+
+ <section
+  id="chat"
+  class="sec"
+ >
+
+  <h2>💬 BSN 2A Chat</h2>
+
+  <div class="chat">
+
+   <div
+    id="chatLog"
+    class="chatlog"
+   ></div>
+
+   <div class="chatrow">
+
+    <input
+     id="chatInput"
+     placeholder="Send a message..."
+     onkeydown="if(event.key==='Enter')sendChat()"
     >
 
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.8"
-      >
-
-        <path d="M4 10v4h3l7 4V6l-7 4H4Z"></path>
-
-        <path d="M17 9.5a4 4 0 0 1 0 5"></path>
-
-        <path d="M19 7a7 7 0 0 1 0 10"></path>
-
-      </svg>
-
-    </div>
-
-
-    <div class="announcement-window">
-
-      <div
-        id="announcementTrack"
-        class="announcement-track"
-      >
-
-        <span
-          id="announcementText"
-          class="announcement-text"
-        >
-          No important announcement yet.
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <div
-      id="announcementAdmin"
-      class="announcement-admin hide"
+    <button
+     class="btn"
+     onclick="sendChat()"
     >
+     Send
+    </button>
 
-      <button
-        onclick="announcementModal()"
-        title="Edit announcement"
-      >
-        ✏️
-      </button>
-
-    </div>
+   </div>
 
   </div>
 
 
-  <!-- =========================
-       NOTES
-  ========================= -->
-
-  <section
-    id="notes"
-    class="sec on"
+  <div
+   id="adminChatWrap"
+   class="hide"
   >
 
-    <div class="hero">
+   <h2>🔐 Admin Chat</h2>
 
-      <h1>
-        Welcome to BSN 2A Notes
-      </h1>
-
-      <p>
-        My biggest update yet
-      </p>
-
-    </div>
-
-
-    <h2>
-      Class Notes
-    </h2>
-
+   <div class="chat">
 
     <div
-      id="notesList"
-      class="notes-masonry"
+     id="adminLog"
+     class="chatlog"
     ></div>
 
-  </section>
+    <div class="chatrow">
 
+     <input
+      id="adminInput"
+      placeholder="Admin message..."
+      onkeydown="if(event.key==='Enter')sendAdmin()"
+     >
 
-  <!-- =========================
-       TASKS
-  ========================= -->
-
-  <section
-    id="tasks"
-    class="sec"
-  >
-
-    <div class="task-header">
-
-      <h2>
-        Tasks & Deadlines
-      </h2>
-
-      <button
-        class="btn"
-        id="addT2"
-        onclick="taskModal()"
-        style="display:none"
-      >
-        ☑️ Add Task
-      </button>
-
-    </div>
-
-    <p
-      id="taskHint"
-      style="
-        color:var(--muted);
-        margin-top:-5px;
-        margin-bottom:18px;
-      "
-    >
-      Check the box when you finish a task.
-    </p>
-
-    <div id="taskList"></div>
-
-  </section>
-
-
-  <!-- =========================
-       CHAT
-  ========================= -->
-
-  <section
-    id="chat"
-    class="sec"
-  >
-
-    <h2>
-      💬 BSN 2A Chat
-    </h2>
-
-    <div class="chat">
-
-      <div
-        id="chatLog"
-        class="chatlog"
-      ></div>
-
-      <div class="chatrow">
-
-        <input
-          id="chatInput"
-          placeholder="Send a message..."
-          onkeydown="if(event.key==='Enter')sendChat()"
-        >
-
-        <button
-          class="btn"
-          onclick="sendChat()"
-        >
-          Send
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div
-      id="adminChatWrap"
-      class="hide"
-    >
-
-      <h2>
-        🔐 Admin Chat
-      </h2>
-
-      <div class="chat">
-
-        <div
-          id="adminLog"
-          class="chatlog"
-        ></div>
-
-        <div class="chatrow">
-
-          <input
-            id="adminInput"
-            placeholder="Admin message..."
-            onkeydown="if(event.key==='Enter')sendAdmin()"
-          >
-
-          <button
-            class="btn"
-            onclick="sendAdmin()"
-          >
-            Send
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =========================
-       FILES
-  ========================= -->
-
-  <section
-    id="files"
-    class="sec"
-  >
-
-    <h2>
-      📚 Class Files
-    </h2>
-
-    <button
+     <button
       class="btn"
-      id="addF"
-      onclick="fileModal()"
-      style="display:none"
-    >
-      + Add Link
-    </button>
-
-    <div id="fileList"></div>
-
-  </section>
-
-
-  <!-- =========================
-       ABOUT
-  ========================= -->
-
-  <section
-    id="about"
-    class="sec"
-  >
-
-    <div class="hero">
-
-      <h1>
-        BSN 2A 🌱
-      </h1>
-
-      <p>
-        Students can view shared content and keep their own task checklists.
-        Admins manage shared notes, tasks, files and announcements.
-      </p>
-
-      <p>
-        Offline mode caches previously loaded data.
-        Firebase writes synchronize when connectivity returns.
-      </p>
+      onclick="sendAdmin()"
+     >
+      Send
+     </button>
 
     </div>
 
-  </section>
+   </div>
+
+  </div>
+
+ </section>
+
+
+ <!-- FILES -->
+
+ <section
+  id="files"
+  class="sec"
+ >
+
+  <h2>📚 Class Files</h2>
+
+  <button
+   class="btn"
+   id="addF"
+   onclick="fileModal()"
+   style="display:none"
+  >
+   + Add Link
+  </button>
+
+  <div id="fileList"></div>
+
+ </section>
+
+
+ <!-- ABOUT -->
+
+ <section
+  id="about"
+  class="sec"
+ >
+
+  <div class="hero">
+
+   <h1>BSN 2A 🌱</h1>
+
+   <p>
+    Students can view shared content and keep
+    their own task checklists.
+    Admins manage shared notes, tasks,
+    files and announcements.
+   </p>
+
+  </div>
+
+ </section>
 
 </main>
 
 
-<!-- =========================
-     GENERAL MODAL
-========================= -->
+<!-- GENERAL MODAL -->
 
 <div
-  id="modal"
-  class="modal"
+ id="modal"
+ class="modal"
 >
 
-  <div class="box">
+ <div class="box">
 
-    <h2 id="mt">
-      Add Note
-    </h2>
+  <h2 id="mt">Add Note</h2>
 
+  <div id="noteFields">
 
-    <div id="noteFields">
+   <input
+    id="nt"
+    placeholder="Note title"
+   >
 
-      <input
-        id="nt"
-        placeholder="Note title"
-      >
-
-      <textarea
-        id="nx"
-        placeholder="Note text"
-      ></textarea>
-
-    </div>
-
-
-    <div
-      id="taskFields"
-      class="hide"
-    >
-
-      <input
-        id="tt"
-        placeholder="Task title"
-      >
-
-      <input
-        id="td"
-        type="date"
-      >
-
-      <textarea
-        id="tx"
-        placeholder="Task details"
-      ></textarea>
-
-    </div>
-
-
-    <div
-      id="fileFields"
-      class="hide"
-    >
-
-      <input
-        id="ft"
-        placeholder="File title"
-      >
-
-      <input
-        id="fu"
-        placeholder="https://..."
-      >
-
-      <select id="fy">
-
-        <option>PDF</option>
-        <option>PPT</option>
-        <option>Document</option>
-        <option>Other</option>
-
-      </select>
-
-    </div>
-
-
-    <div class="modal-buttons">
-
-      <button
-        class="btn"
-        onclick="closeModal()"
-      >
-        Cancel
-      </button>
-
-      <button
-        class="btn"
-        onclick="saveModal()"
-      >
-        Save
-      </button>
-
-    </div>
+   <textarea
+    id="nx"
+    placeholder="Note text"
+   ></textarea>
 
   </div>
+
+
+  <div
+   id="taskFields"
+   class="hide"
+  >
+
+   <input
+    id="tt"
+    placeholder="Task title"
+   >
+
+   <input
+    id="td"
+    type="date"
+   >
+
+   <textarea
+    id="tx"
+    placeholder="Task details"
+   ></textarea>
+
+  </div>
+
+
+  <div
+   id="fileFields"
+   class="hide"
+  >
+
+   <input
+    id="ft"
+    placeholder="File title"
+   >
+
+   <input
+    id="fu"
+    placeholder="https://..."
+   >
+
+   <select id="fy">
+
+    <option>PDF</option>
+    <option>PPT</option>
+    <option>Document</option>
+    <option>Other</option>
+
+   </select>
+
+  </div>
+
+
+  <div class="modal-buttons">
+
+   <button
+    class="btn"
+    onclick="closeModal()"
+   >
+    Cancel
+   </button>
+
+   <button
+    class="btn"
+    onclick="saveModal()"
+   >
+    Save
+   </button>
+
+  </div>
+
+ </div>
 
 </div>
 
 
-<!-- =========================
-     ANNOUNCEMENT MODAL
-========================= -->
+<!-- ANNOUNCEMENT MODAL -->
 
 <div
-  id="announcementModal"
-  class="modal"
+ id="announcementModal"
+ class="modal"
 >
 
-  <div class="box">
+ <div class="box">
 
-    <h2>
-      📢 Class Announcement
-    </h2>
+  <h2>📢 Class Announcement</h2>
 
-    <p>
-      This message will slide across the top of the website.
-      Only administrators can change it.
-    </p>
+  <textarea
+   id="announcementInput"
+   placeholder="Enter announcement..."
+  ></textarea>
 
-    <textarea
-      id="announcementInput"
-      placeholder="Example: Officers of the Day — Monday: Juan, Tuesday: Maria..."
-      style="min-height:130px"
-    ></textarea>
+  <div class="modal-buttons">
 
-    <div class="modal-buttons">
+   <button
+    class="btn"
+    onclick="closeAnnouncementModal()"
+   >
+    Cancel
+   </button>
 
-      <button
-        class="btn"
-        onclick="closeAnnouncementModal()"
-      >
-        Cancel
-      </button>
-
-      <button
-        class="btn"
-        onclick="saveAnnouncement()"
-      >
-        Save Announcement
-      </button>
-
-    </div>
+   <button
+    class="btn"
+    onclick="saveAnnouncement()"
+   >
+    Save Announcement
+   </button>
 
   </div>
+
+ </div>
 
 </div>
 
 
 <script type="module">
 
-/* =========================
-   FIREBASE
-========================= */
+import {
+ initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-  initializeApp
+ getDatabase,
+ ref,
+ push,
+ set,
+ update,
+ remove,
+ onValue,
+ onDisconnect,
+ serverTimestamp
 }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-import {
-  getDatabase,
-  ref,
-  push,
-  set,
-  update,
-  remove,
-  onValue,
-  onDisconnect,
-  serverTimestamp
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+/* FIREBASE */
 
 const app=initializeApp({
 
-  apiKey:
-    "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
+ apiKey:
+ "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
 
-  authDomain:
-    "bsn-2a-notes.firebaseapp.com",
+ authDomain:
+ "bsn-2a-notes.firebaseapp.com",
 
-  databaseURL:
-    "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
+ databaseURL:
+ "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
 
-  projectId:
-    "bsn-2a-notes",
+ projectId:
+ "bsn-2a-notes",
 
-  storageBucket:
-    "bsn-2a-notes.firebasestorage.app",
+ storageBucket:
+ "bsn-2a-notes.firebasestorage.app",
 
-  messagingSenderId:
-    "991210260962",
+ messagingSenderId:
+ "991210260962",
 
-  appId:
-    "1:991210260962:web:8f6a886c7478be096991bb"
+ appId:
+ "1:991210260962:web:8f6a886c7478be096991bb"
 
 });
 
@@ -1448,132 +1140,105 @@ const db=getDatabase(app);
 
 
 const R={
-
-  notes:ref(db,"notes"),
-
-  tasks:ref(db,"tasks"),
-
-  chat:ref(db,"chat"),
-
-  admin:ref(db,"adminChat"),
-
-  files:ref(db,"files"),
-
-  presence:ref(db,"presence"),
-
-  announcement:ref(db,"announcement")
-
+ notes:ref(db,"notes"),
+ tasks:ref(db,"tasks"),
+ chat:ref(db,"chat"),
+ admin:ref(db,"adminChat"),
+ files:ref(db,"files"),
+ presence:ref(db,"presence"),
+ announcement:ref(db,"announcement")
 };
 
 
 let notes={};
 let tasks={};
-let chat={};
-let adminChat={};
 let files={};
 let announcement={};
 
 let isAdmin=false;
 let editId=null;
 let type="note";
-
-let user=
-  localStorage.getItem("bsnUser")||"";
-
+let user=localStorage.getItem("bsnUser")||"";
 
 const PASS="supperlol123123";
+
+
+/* HELPERS */
+
+const esc=x=>
+ String(x??"")
+ .replace(/&/g,"&amp;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;")
+ .replace(/"/g,"&quot;")
+ .replace(/'/g,"&#039;");
+
+
+const fmt=x=>
+ x
+ ?new Date(x+"T00:00")
+  .toLocaleDateString(
+   undefined,
+   {
+    month:"long",
+    day:"numeric",
+    year:"numeric"
+   }
+  )
+ :"";
 
 
 const K=x=>"bsn2a_"+x;
 
 
-const esc=x=>
-  String(x??"")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+function save(k,v){
+ localStorage.setItem(
+  K(k),
+  JSON.stringify(v)
+ );
+}
 
 
-const fmt=x=>
-  x
-  ?new Date(x+"T00:00")
-    .toLocaleDateString(
-      undefined,
-      {
-        month:"long",
-        day:"numeric",
-        year:"numeric"
-      }
-    )
-  :"";
-
-
-const save=(k,v)=>{
-
-  localStorage.setItem(
-    K(k),
-    JSON.stringify(v)
+function load(k){
+ try{
+  return JSON.parse(
+   localStorage.getItem(K(k))
   );
-
-};
-
-
-const load=k=>{
-
-  try{
-
-    return JSON.parse(
-      localStorage.getItem(K(k))
-    )||{};
-
-  }catch{
-
-    return {};
-
-  }
-
-};
+ }catch{
+  return null;
+ }
+}
 
 
-/* =========================
-   LOGIN
-========================= */
+/* LOGIN */
 
 function enter(){
 
-  const n=
-    document
-      .getElementById("name")
-      .value
-      .trim();
+ const n=
+ document.getElementById("name")
+ .value
+ .trim();
 
-  if(!n){
+ if(!n){
+  alert("Enter your name.");
+  return;
+ }
 
-    alert("Enter your name.");
+ user=n;
 
-    return;
+ localStorage.setItem(
+  "bsnUser",
+  n
+ );
 
-  }
+ document.getElementById("who").textContent=n;
 
-  user=n;
+ document
+ .getElementById("login")
+ .classList
+ .add("hide");
 
-  localStorage.setItem(
-    "bsnUser",
-    n
-  );
-
-  document
-    .getElementById("who")
-    .textContent=n;
-
-  document
-    .getElementById("login")
-    .classList
-    .add("hide");
-
-  presence();
+ presence();
 
 }
 
@@ -1582,207 +1247,161 @@ window.enter=enter;
 
 if(user){
 
-  document
-    .getElementById("who")
-    .textContent=user;
+ document.getElementById("who").textContent=user;
 
-  document
-    .getElementById("login")
-    .classList
-    .add("hide");
+ document
+ .getElementById("login")
+ .classList
+ .add("hide");
 
 }
 
 
-/* =========================
-   LIGHT / DARK MODE
-========================= */
+/* THEME */
 
 function applyTheme(isDark){
 
-  document.body
-    .classList
-    .toggle("dark",isDark);
+ document.body.classList.toggle(
+  "dark",
+  isDark
+ );
 
-  localStorage.setItem(
-    "dark",
-    isDark ? "true" : "false"
+ localStorage.setItem(
+  "dark",
+  isDark?"true":"false"
+ );
+
+ const button=
+ document.getElementById(
+  "themeToggle"
+ );
+
+ const label=
+ document.getElementById(
+  "themeLabel"
+ );
+
+ if(button){
+
+  button.classList.toggle(
+   "theme-toggle-active",
+   isDark
   );
 
-  const btn=
-    document.getElementById(
-      "themeToggle"
-    );
+  button.firstChild.textContent=
+   isDark
+   ?"☀️ "
+   :"🌙 ";
 
-  const label=
-    document.getElementById(
-      "themeLabel"
-    );
+  button.title=
+   isDark
+   ?"Switch to light mode"
+   :"Switch to dark mode";
 
-  if(btn){
+ }
 
-    btn.classList
-      .toggle(
-        "theme-toggle-active",
-        isDark
-      );
+ if(label){
 
-    btn.setAttribute(
-      "aria-label",
-      isDark
-        ? "Switch to light mode"
-        : "Switch to dark mode"
-    );
+  label.textContent=
+   isDark
+   ?"Light Mode"
+   :"Dark Mode";
 
-    btn.title=
-      isDark
-        ? "Switch to light mode"
-        : "Switch to dark mode";
+ }
 
-    btn.firstChild.textContent=
-      isDark
-        ? "☀️ "
-        : "🌙 ";
+ const meta=
+ document.querySelector(
+  'meta[name="theme-color"]'
+ );
 
-  }
+ if(meta){
 
-  if(label){
+  meta.content=
+   isDark
+   ?"#101714"
+   :"#245c43";
 
-    label.textContent=
-      isDark
-        ? "Light Mode"
-        : "Dark Mode";
-
-  }
-
-  const meta=
-    document.querySelector(
-      'meta[name="theme-color"]'
-    );
-
-  if(meta){
-
-    meta.setAttribute(
-      "content",
-      isDark
-        ? "#101714"
-        : "#245c43"
-    );
-
-  }
+ }
 
 }
 
 
 function toggleTheme(){
 
-  applyTheme(
-    !document.body
-      .classList
-      .contains("dark")
-  );
+ applyTheme(
+  !document.body.classList.contains("dark")
+ );
 
 }
-
-
-function dark(){
-
-  toggleTheme();
-
-}
-
 
 window.toggleTheme=toggleTheme;
-window.dark=dark;
 
 
 applyTheme(
-  localStorage.getItem("dark")==="true"
+ localStorage.getItem("dark")==="true"
 );
 
 
-/* =========================
-   NAVIGATION
-========================= */
+/* NAVIGATION */
 
-function show(id,b){
+function show(id,button){
 
-  document
-    .querySelectorAll(".sec")
-    .forEach(
-      x=>
-        x.classList.remove("on")
-    );
+ document
+ .querySelectorAll(".sec")
+ .forEach(x=>
+  x.classList.remove("on")
+ );
 
-  const target=
-    document.getElementById(id);
+ document
+ .getElementById(id)
+ .classList.add("on");
 
-  if(target){
+ document
+ .querySelectorAll(".nav button")
+ .forEach(x=>
+  x.classList.remove("on")
+ );
 
-    target
-      .classList
-      .add("on");
+ if(button){
+  button.classList.add("on");
+ }
 
-  }
-
-  document
-    .querySelectorAll(".nav button")
-    .forEach(
-      x=>
-        x.classList.remove("on")
-    );
-
-  if(b){
-
-    b.classList.add("on");
-
-  }
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+ window.scrollTo({
+  top:0,
+  behavior:"smooth"
+ });
 
 }
 
 window.show=show;
 
 
-/* =========================
-   ADMIN
-========================= */
+/* ADMIN */
 
 function adminLogin(){
 
-  if(isAdmin){
+ if(isAdmin){
 
-    isAdmin=false;
+  isAdmin=false;
+  ui();
 
-    ui();
+  return;
 
-    return;
+ }
 
-  }
+ if(prompt("Admin password:")===PASS){
 
-  if(
-    prompt("Admin password:")===PASS
-  ){
+  isAdmin=true;
 
-    isAdmin=true;
+  ui();
 
-    ui();
+  alert("Admin mode enabled 🔓");
 
-    alert(
-      "Admin mode enabled 🔓"
-    );
+ }else{
 
-  }else{
+  alert("Wrong password.");
 
-    alert(
-      "Wrong password."
-    );
-
-  }
+ }
 
 }
 
@@ -1791,1801 +1410,1370 @@ window.adminLogin=adminLogin;
 
 function ui(){
 
-  document
-    .getElementById("addT2")
-    .style
-    .display=
-      isAdmin
-      ?"inline-block"
-      :"none";
+ document.getElementById("addT2")
+ .style.display=
+ isAdmin?"inline-block":"none";
 
+ document.getElementById("addF")
+ .style.display=
+ isAdmin?"inline-block":"none";
 
-  document
-    .getElementById("addF")
-    .style
-    .display=
-      isAdmin
-      ?"inline-block"
-      :"none";
+ document.getElementById("admBtn")
+ .textContent=
+ isAdmin?"Admin 🔓":"Admin";
 
+ document.getElementById("mode")
+ .textContent=
+ isAdmin
+ ?"Administrator mode"
+ :"Student mode";
 
-  document
-    .getElementById("admBtn")
-    .textContent=
-      isAdmin
-      ?"Admin 🔓"
-      :"Admin";
+ document
+ .getElementById("adminChatWrap")
+ .classList
+ .toggle("hide",!isAdmin);
 
+ document
+ .getElementById("announcementAdmin")
+ .classList
+ .toggle("hide",!isAdmin);
 
-  document
-    .getElementById("mode")
-    .textContent=
-      isAdmin
-      ?"Administrator mode"
-      :"Student mode";
-
-
-  document
-    .getElementById("adminChatWrap")
-    .classList
-    .toggle(
-      "hide",
-      !isAdmin
-    );
-
-
-  document
-    .getElementById("announcementAdmin")
-    .classList
-    .toggle(
-      "hide",
-      !isAdmin
-    );
-
-
-  render();
+ render();
 
 }
 
 
-/* =========================
-   ANNOUNCEMENT
-========================= */
+/* ANNOUNCEMENT */
 
 function renderAnnouncement(data){
 
-  announcement=data||{};
+ announcement=data||{};
 
-  const text=
-    announcement.text||
-    "No important announcement yet.";
-
-  const el=
-    document.getElementById(
-      "announcementText"
-    );
-
-  el.textContent=text;
-
-  const track=
-    document.getElementById(
-      "announcementTrack"
-    );
-
-  track.style.animation="none";
-
-  void track.offsetWidth;
-
-  track.style.animation=
-    "announcementScroll 18s linear infinite";
+ document.getElementById(
+  "announcementText"
+ ).textContent=
+ announcement.text||
+ "No important announcement yet.";
 
 }
 
 
 onValue(
-  R.announcement,
-  snapshot=>{
-
-    renderAnnouncement(
-      snapshot.val()
-    );
-
-  }
+ R.announcement,
+ snapshot=>{
+  renderAnnouncement(
+   snapshot.val()
+  );
+ }
 );
 
 
 function announcementModal(){
 
-  if(!isAdmin){
+ if(!isAdmin){
+  alert("Admin access required.");
+  return;
+ }
 
-    alert(
-      "Admin access required."
-    );
+ document.getElementById(
+  "announcementInput"
+ ).value=
+ announcement.text||"";
 
-    return;
-
-  }
-
-  document
-    .getElementById(
-      "announcementInput"
-    )
-    .value=
-      announcement.text||"";
-
-  document
-    .getElementById(
-      "announcementModal"
-    )
-    .classList
-    .add("on");
+ document
+ .getElementById("announcementModal")
+ .classList
+ .add("on");
 
 }
 
 window.announcementModal=
-  announcementModal;
+ announcementModal;
 
 
 function closeAnnouncementModal(){
 
-  document
-    .getElementById(
-      "announcementModal"
-    )
-    .classList
-    .remove("on");
+ document
+ .getElementById("announcementModal")
+ .classList
+ .remove("on");
 
 }
 
 window.closeAnnouncementModal=
-  closeAnnouncementModal;
+ closeAnnouncementModal;
 
 
 async function saveAnnouncement(){
 
-  if(!isAdmin)return;
+ if(!isAdmin)return;
 
-  const text=
-    document
-      .getElementById(
-        "announcementInput"
-      )
-      .value
-      .trim();
+ const text=
+ document.getElementById(
+  "announcementInput"
+ ).value.trim();
 
-  if(!text){
+ if(!text){
+  alert("Enter an announcement.");
+  return;
+ }
 
-    alert(
-      "Enter an announcement."
-    );
-
-    return;
-
+ await set(
+  R.announcement,
+  {
+   text,
+   author:user,
+   updatedAt:Date.now()
   }
+ );
 
-  await set(
-    R.announcement,
-    {
-      text,
-      author:user,
-      updatedAt:Date.now()
-    }
-  );
-
-  closeAnnouncementModal();
+ closeAnnouncementModal();
 
 }
 
 window.saveAnnouncement=
-  saveAnnouncement;
+ saveAnnouncement;
 
 
-/* =========================
-   RENDER
-========================= */
+/* RENDER */
 
 function render(){
 
-  renderNotes();
-
-  renderTasks();
-
-  renderFiles();
+ renderNotes();
+ renderTasks();
+ renderFiles();
 
 }
 
 
-/* =========================
-   NOTES
-========================= */
+/* NOTES */
+
+function getOrderedNotes(){
+
+ const entries=
+ Object.entries(notes)
+ .filter(([id])=>id!=="_order");
+
+ const order=
+ Array.isArray(notes._order)
+ ?notes._order
+ :[];
+
+ const map=
+ new Map(entries);
+
+ const result=[];
+
+ order.forEach(id=>{
+
+  if(map.has(id)){
+
+   result.push([
+    id,
+    map.get(id)
+   ]);
+
+   map.delete(id);
+
+  }
+
+ });
+
+ return result.concat(
+  [...map.entries()]
+  .sort(
+   (a,b)=>
+    (b[1].createdAt||0)-
+    (a[1].createdAt||0)
+  )
+ );
+
+}
+
 
 function renderNotes(){
 
-  const nc=
-    document.getElementById(
-      "notesList"
-    );
+ const nc=
+ document.getElementById(
+  "notesList"
+ );
 
-  nc.innerHTML="";
-
-
-  getOrderedNotes()
-    .forEach(([id,n])=>{
-
-      const d=
-        document.createElement("div");
-
-      d.className="card";
-
-      d.draggable=isAdmin;
-
-      d.dataset.noteId=id;
-
-      d.innerHTML=`
-
-        <h3>
-          ${esc(n.title||"Untitled")}
-        </h3>
-
-        <div class="text">
-          ${esc(n.text)}
-        </div>
-
-        <small>
-          Added by ${esc(n.author||"Admin")}
-        </small>
-
-        ${
-          isAdmin
-          ?`
-            <div
-              style="
-                margin-top:12px;
-                display:flex;
-                gap:7px;
-                flex-wrap:wrap;
-              "
-            >
-
-              <button
-                class="small"
-                onclick="editNote('${id}')"
-              >
-                ✏️ Edit
-              </button>
-
-              <button
-                class="small del"
-                onclick="delNote('${id}')"
-              >
-                🗑️ Delete
-              </button>
-
-            </div>
-          `
-          :""
-        }
-
-      `;
-
-      nc.appendChild(d);
+ nc.innerHTML="";
 
 
-      if(isAdmin){
+ getOrderedNotes()
+ .forEach(([id,n])=>{
 
-        d.addEventListener(
-          "dragstart",
-          noteDragStart
-        );
+  const d=
+  document.createElement("div");
 
-        d.addEventListener(
-          "dragover",
-          noteDragOver
-        );
+  d.className="card";
 
-        d.addEventListener(
-          "dragleave",
-          noteDragLeave
-        );
+  d.draggable=isAdmin;
 
-        d.addEventListener(
-          "drop",
-          noteDrop
-        );
-
-        d.addEventListener(
-          "dragend",
-          noteDragEnd
-        );
-
-      }
-
-    });
+  d.dataset.noteId=id;
 
 
-  if(!nc.children.length){
+  d.innerHTML=`
 
-    nc.innerHTML=`
+   <h3>
+    ${esc(n.title||"Untitled")}
+   </h3>
 
-      <div class="card empty-card">
-        No notes found.
-      </div>
+   <div class="text">${esc(
+    String(n.text||"").trim()
+   )}</div>
 
-    `;
+   <small>
+    Added by ${esc(n.author||"Admin")}
+   </small>
+
+   ${
+    isAdmin
+    ?`
+     <div style="
+      margin-top:12px;
+      display:flex;
+      gap:7px;
+     ">
+
+      <button
+       class="small"
+       onclick="editNote('${id}')"
+      >
+       ✏️ Edit
+      </button>
+
+      <button
+       class="small del"
+       onclick="delNote('${id}')"
+      >
+       🗑️ Delete
+      </button>
+
+     </div>
+    `
+    :""
+   }
+
+  `;
+
+
+  nc.appendChild(d);
+
+
+  if(isAdmin){
+
+   d.addEventListener(
+    "dragstart",
+    noteDragStart
+   );
+
+   d.addEventListener(
+    "dragover",
+    noteDragOver
+   );
+
+   d.addEventListener(
+    "dragleave",
+    noteDragLeave
+   );
+
+   d.addEventListener(
+    "drop",
+    noteDrop
+   );
+
+   d.addEventListener(
+    "dragend",
+    noteDragEnd
+   );
 
   }
+
+ });
+
+
+ if(!nc.children.length){
+
+  nc.innerHTML=`
+   <div class="card empty-card">
+    No notes found.
+   </div>
+  `;
+
+ }
 
 }
 
 
-/* =========================
-   TASKS
-========================= */
-
-function renderTasks(){
-
-  const tc=
-    document.getElementById(
-      "taskList"
-    );
-
-  tc.innerHTML="";
-
-
-  getOrderedTasks()
-    .forEach(([id,t])=>{
-
-      const checked=
-        load("check_"+id)===true;
-
-      const d=
-        document.createElement("div");
-
-      d.className=
-        "task"+
-        (
-          checked
-          ?" completed"
-          :""
-        );
-
-      d.draggable=isAdmin;
-
-      d.dataset.taskId=id;
-
-
-      d.innerHTML=`
-
-        <input
-          class="task-check"
-          type="checkbox"
-          ${checked?"checked":""}
-          onchange="checkTask('${id}',this.checked)"
-        >
-
-        <div class="task-content">
-
-          <span
-            class="task-title ${checked?"done":""}"
-          >
-            ${esc(t.title||"Untitled Task")}
-          </span>
-
-          <div class="task-due">
-
-            ${
-              t.due
-              ?"📅 Due: "+fmt(t.due)
-              :"📅 No due date"
-            }
-
-          </div>
-
-          ${
-            t.description
-            ?`
-              <div class="task-description">
-                ${esc(t.description)}
-              </div>
-            `
-            :""
-          }
-
-          ${
-            isAdmin
-            ?`
-              <div class="task-actions">
-
-                <button
-                  class="task-admin-btn"
-                  onclick="editTask('${id}')"
-                >
-                  ✏️ Edit
-                </button>
-
-                <button
-                  class="task-admin-btn task-admin-delete"
-                  onclick="delTask('${id}')"
-                >
-                  🗑️ Delete
-                </button>
-
-              </div>
-            `
-            :""
-          }
-
-        </div>
-
-      `;
-
-
-      tc.appendChild(d);
-
-
-      if(isAdmin){
-
-        d.addEventListener(
-          "dragstart",
-          taskDragStart
-        );
-
-        d.addEventListener(
-          "dragover",
-          taskDragOver
-        );
-
-        d.addEventListener(
-          "dragleave",
-          taskDragLeave
-        );
-
-        d.addEventListener(
-          "drop",
-          taskDrop
-        );
-
-        d.addEventListener(
-          "dragend",
-          taskDragEnd
-        );
-
-      }
-
-    });
-
-
-  if(!tc.children.length){
-
-    tc.innerHTML=`
-
-      <div class="task">
-
-        <div
-          style="
-            flex:1;
-            text-align:center;
-            color:var(--muted);
-          "
-        >
-          📋 No tasks yet.
-        </div>
-
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-/* =========================
-   TASK ORDER
-========================= */
-
-let draggedTaskId=null;
-
-
-function getOrderedTasks(){
-
-  const entries=
-    Object.entries(tasks);
-
-  const order=
-    Array.isArray(tasks._order)
-    ?tasks._order
-    :[];
-
-  const map=
-    new Map(entries);
-
-  map.delete("_order");
-
-  const result=[];
-
-
-  order.forEach(id=>{
-
-    if(map.has(id)){
-
-      result.push([
-        id,
-        map.get(id)
-      ]);
-
-      map.delete(id);
-
-    }
-
-  });
-
-
-  return result.concat(
-
-    [...map.entries()]
-      .sort(
-        (a,b)=>
-          (a[1].createdAt||0)-
-          (b[1].createdAt||0)
-      )
-
-  );
-
-}
-
-
-/* =========================
-   TASK DRAG & DROP
-========================= */
-
-function taskDragStart(e){
-
-  if(!isAdmin)return;
-
-  draggedTaskId=
-    e.currentTarget
-      .dataset
-      .taskId;
-
-  e.currentTarget
-    .classList
-    .add("dragging");
-
-  e.dataTransfer.effectAllowed=
-    "move";
-
-  e.dataTransfer.setData(
-    "text/plain",
-    draggedTaskId
-  );
-
-}
-
-
-function taskDragOver(e){
-
-  if(!isAdmin)return;
-
-  e.preventDefault();
-
-  const target=
-    e.currentTarget
-      .dataset
-      .taskId;
-
-  if(target!==draggedTaskId){
-
-    e.currentTarget
-      .classList
-      .add("drag-over");
-
-  }
-
-}
-
-
-function taskDragLeave(e){
-
-  e.currentTarget
-    .classList
-    .remove("drag-over");
-
-}
-
-
-function taskDragEnd(e){
-
-  e.currentTarget
-    .classList
-    .remove("dragging");
-
-  document
-    .querySelectorAll(
-      ".task.drag-over"
-    )
-    .forEach(
-      x=>
-        x.classList
-          .remove("drag-over")
-    );
-
-  draggedTaskId=null;
-
-}
-
-
-async function taskDrop(e){
-
-  if(!isAdmin)return;
-
-  e.preventDefault();
-
-  const target=
-    e.currentTarget
-      .dataset
-      .taskId;
-
-  e.currentTarget
-    .classList
-    .remove("drag-over");
-
-
-  if(
-    !draggedTaskId||
-    !target||
-    draggedTaskId===target
-  ){
-
-    return;
-
-  }
-
-
-  const ids=
-    getOrderedTasks()
-      .map(([id])=>id);
-
-
-  const from=
-    ids.indexOf(
-      draggedTaskId
-    );
-
-  const to=
-    ids.indexOf(target);
-
-
-  if(
-    from===-1||
-    to===-1
-  ){
-
-    return;
-
-  }
-
-
-  ids.splice(
-    from,
-    1
-  );
-
-  ids.splice(
-    to,
-    0,
-    draggedTaskId
-  );
-
-
-  await update(
-    ref(db,"tasks"),
-    {
-      _order:ids
-    }
-  );
-
-
-  draggedTaskId=null;
-
-}
-
-
-/* =========================
-   FILES
-========================= */
-
-function renderFiles(){
-
-  const fc=
-    document.getElementById(
-      "fileList"
-    );
-
-  fc.innerHTML="";
-
-
-  Object.entries(files)
-    .filter(
-      ([id])=>id!=="_order"
-    )
-    .reverse()
-    .forEach(([id,f])=>{
-
-      const d=
-        document.createElement("div");
-
-      d.className="card";
-
-
-      d.innerHTML=`
-
-        <h3>
-
-          <span
-            class="file-icon"
-            aria-hidden="true"
-          >
-
-            📄
-
-          </span>
-
-          ${esc(f.title)}
-
-        </h3>
-
-
-        <small>
-          ${esc(f.type)}
-        </small>
-
-
-        <p>
-
-          <a
-            class="file-btn"
-            href="${esc(f.url)}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-
-            🔗 Open ${esc(f.type||"File")}
-
-          </a>
-
-        </p>
-
-
-        ${
-          isAdmin
-          ?`
-            <button
-              class="small del"
-              onclick="delFile('${id}')"
-            >
-              🗑️ Delete
-            </button>
-          `
-          :""
-        }
-
-      `;
-
-
-      fc.appendChild(d);
-
-    });
-
-
-  if(!fc.children.length){
-
-    fc.innerHTML=`
-
-      <div class="card empty-card">
-        No file links yet.
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-/* =========================
-   CACHE
-========================= */
-
-notes=load("notes");
-
-tasks=load("tasks");
-
-files=load("files");
-
-render();
-
-
-/* =========================
-   FIREBASE LISTENERS
-========================= */
-
-onValue(
-  R.notes,
-  snapshot=>{
-
-    notes=
-      snapshot.val()||{};
-
-    save(
-      "notes",
-      notes
-    );
-
-    renderNotes();
-
-  }
-);
-
-
-onValue(
-  R.tasks,
-  snapshot=>{
-
-    tasks=
-      snapshot.val()||{};
-
-    save(
-      "tasks",
-      tasks
-    );
-
-    renderTasks();
-
-  }
-);
-
-
-onValue(
-  R.files,
-  snapshot=>{
-
-    files=
-      snapshot.val()||{};
-
-    save(
-      "files",
-      files
-    );
-
-    renderFiles();
-
-  }
-);
-
-
-/* =========================
-   NOTE ORDER
-========================= */
+/* NOTE DRAG */
 
 let draggedNoteId=null;
 
 
-function getOrderedNotes(){
-
-  const entries=
-    Object.entries(notes)
-      .filter(
-        ([id])=>id!=="_order"
-      );
-
-  const order=
-    Array.isArray(notes._order)
-    ?notes._order
-    :[];
-
-  const map=
-    new Map(entries);
-
-  const result=[];
-
-
-  order.forEach(id=>{
-
-    if(map.has(id)){
-
-      result.push([
-        id,
-        map.get(id)
-      ]);
-
-      map.delete(id);
-
-    }
-
-  });
-
-
-  return result.concat(
-
-    [...map.entries()]
-      .sort(
-        (a,b)=>
-          (b[1].createdAt||0)-
-          (a[1].createdAt||0)
-      )
-
-  );
-
-}
-
-
 function noteDragStart(e){
 
-  if(!isAdmin)return;
+ if(!isAdmin)return;
 
-  draggedNoteId=
-    e.currentTarget
-      .dataset
-      .noteId;
+ draggedNoteId=
+ e.currentTarget.dataset.noteId;
 
-  e.currentTarget
-    .classList
-    .add("dragging");
+ e.currentTarget.classList.add(
+  "dragging"
+ );
 
-  e.dataTransfer.effectAllowed=
-    "move";
-
-  e.dataTransfer.setData(
-    "text/plain",
-    draggedNoteId
-  );
+ e.dataTransfer.effectAllowed="move";
 
 }
 
 
 function noteDragOver(e){
 
-  if(!isAdmin)return;
+ if(!isAdmin)return;
 
-  e.preventDefault();
+ e.preventDefault();
 
-  if(
-    e.currentTarget
-      .dataset
-      .noteId
-    !==draggedNoteId
-  ){
+ if(
+  e.currentTarget.dataset.noteId
+  !==draggedNoteId
+ ){
 
-    e.currentTarget
-      .classList
-      .add("drag-over");
+  e.currentTarget.classList.add(
+   "drag-over"
+  );
 
-  }
+ }
 
 }
 
 
 function noteDragLeave(e){
 
-  e.currentTarget
-    .classList
-    .remove("drag-over");
+ e.currentTarget.classList.remove(
+  "drag-over"
+ );
 
 }
 
 
 function noteDragEnd(e){
 
-  e.currentTarget
-    .classList
-    .remove("dragging");
+ e.currentTarget.classList.remove(
+  "dragging"
+ );
 
-  document
-    .querySelectorAll(".drag-over")
-    .forEach(
-      x=>
-        x.classList
-          .remove("drag-over")
-    );
+ document
+ .querySelectorAll(".drag-over")
+ .forEach(x=>
+  x.classList.remove("drag-over")
+ );
 
-  draggedNoteId=null;
+ draggedNoteId=null;
 
 }
 
 
 async function noteDrop(e){
 
-  if(!isAdmin)return;
+ if(!isAdmin)return;
 
-  e.preventDefault();
+ e.preventDefault();
 
-  const target=
-    e.currentTarget
-      .dataset
-      .noteId;
+ const target=
+ e.currentTarget.dataset.noteId;
 
-  e.currentTarget
-    .classList
-    .remove("drag-over");
+ if(
+  !draggedNoteId||
+  !target||
+  draggedNoteId===target
+ ){
+  return;
+ }
+
+ const ids=
+ getOrderedNotes()
+ .map(([id])=>id);
+
+ const from=
+ ids.indexOf(draggedNoteId);
+
+ const to=
+ ids.indexOf(target);
+
+ if(from<0||to<0)return;
+
+ ids.splice(from,1);
+
+ ids.splice(
+  to,
+  0,
+  draggedNoteId
+ );
+
+ await update(
+  ref(db,"notes"),
+  {
+   _order:ids
+  }
+ );
+
+ draggedNoteId=null;
+
+}
 
 
-  if(
-    !draggedNoteId||
-    !target||
-    draggedNoteId===target
-  ){
+/* TASKS */
 
-    return;
+function getOrderedTasks(){
+
+ const entries=
+ Object.entries(tasks)
+ .filter(([id])=>id!=="_order");
+
+ const order=
+ Array.isArray(tasks._order)
+ ?tasks._order
+ :[];
+
+ const map=
+ new Map(entries);
+
+ const result=[];
+
+ order.forEach(id=>{
+
+  if(map.has(id)){
+
+   result.push([
+    id,
+    map.get(id)
+   ]);
+
+   map.delete(id);
 
   }
 
+ });
 
-  const ids=
-    getOrderedNotes()
-      .map(([id])=>id);
+ return result.concat(
+  [...map.entries()]
+  .sort(
+   (a,b)=>
+    (a[1].createdAt||0)-
+    (b[1].createdAt||0)
+  )
+ );
+
+}
 
 
-  const from=
-    ids.indexOf(
-      draggedNoteId
-    );
+function renderTasks(){
 
-  const to=
-    ids.indexOf(target);
+ const tc=
+ document.getElementById(
+  "taskList"
+ );
+
+ tc.innerHTML="";
 
 
-  if(
-    from===-1||
-    to===-1
-  ){
+ getOrderedTasks()
+ .forEach(([id,t])=>{
 
-    return;
+  const checked=
+   load("check_"+id)===true;
+
+  const d=
+   document.createElement("div");
+
+  d.className=
+   "task"+
+   (checked?" completed":"");
+
+  d.draggable=isAdmin;
+
+  d.dataset.taskId=id;
+
+
+  d.innerHTML=`
+
+   <input
+    class="task-check"
+    type="checkbox"
+    ${checked?"checked":""}
+    onchange="checkTask('${id}',this.checked)"
+   >
+
+   <div class="task-content">
+
+    <span
+     class="task-title ${checked?"done":""}"
+    >
+     ${esc(t.title||"Untitled Task")}
+    </span>
+
+    <div class="task-due">
+
+     ${
+      t.due
+      ?"📅 Due: "+fmt(t.due)
+      :"📅 No due date"
+     }
+
+    </div>
+
+    ${
+     t.description
+     ?`
+      <div class="task-description">${esc(
+       String(t.description||"").trim()
+      )}</div>
+     `
+     :""
+    }
+
+    ${
+     isAdmin
+     ?`
+      <div class="task-actions">
+
+       <button
+        class="task-admin-btn"
+        onclick="editTask('${id}')"
+       >
+        ✏️ Edit
+       </button>
+
+       <button
+        class="task-admin-btn task-admin-delete"
+        onclick="delTask('${id}')"
+       >
+        🗑️ Delete
+       </button>
+
+      </div>
+     `
+     :""
+    }
+
+   </div>
+
+  `;
+
+
+  tc.appendChild(d);
+
+
+  if(isAdmin){
+
+   d.addEventListener(
+    "dragstart",
+    taskDragStart
+   );
+
+   d.addEventListener(
+    "dragover",
+    taskDragOver
+   );
+
+   d.addEventListener(
+    "dragleave",
+    taskDragLeave
+   );
+
+   d.addEventListener(
+    "drop",
+    taskDrop
+   );
+
+   d.addEventListener(
+    "dragend",
+    taskDragEnd
+   );
 
   }
 
+ });
 
-  ids.splice(
-    from,
-    1
+
+ if(!tc.children.length){
+
+  tc.innerHTML=`
+   <div class="task">
+    <div style="
+     flex:1;
+     text-align:center;
+     color:var(--muted);
+    ">
+     📋 No tasks yet.
+    </div>
+   </div>
+  `;
+
+ }
+
+}
+
+
+/* TASK DRAG */
+
+let draggedTaskId=null;
+
+
+function taskDragStart(e){
+
+ if(!isAdmin)return;
+
+ draggedTaskId=
+ e.currentTarget.dataset.taskId;
+
+ e.currentTarget.classList.add(
+  "dragging"
+ );
+
+ e.dataTransfer.effectAllowed="move";
+
+}
+
+
+function taskDragOver(e){
+
+ if(!isAdmin)return;
+
+ e.preventDefault();
+
+ if(
+  e.currentTarget.dataset.taskId
+  !==draggedTaskId
+ ){
+
+  e.currentTarget.classList.add(
+   "drag-over"
   );
 
-  ids.splice(
-    to,
-    0,
-    draggedNoteId
-  );
-
-
-  await update(
-    ref(db,"notes"),
-    {
-      _order:ids
-    }
-  );
-
-
-  draggedNoteId=null;
+ }
 
 }
 
 
-/* =========================
-   NOTE MODAL
-========================= */
+function taskDragLeave(e){
 
-function noteModal(){
+ e.currentTarget.classList.remove(
+  "drag-over"
+ );
 
-  if(!isAdmin){
+}
 
-    alert(
-      "Admin access required."
-    );
 
-    return;
+function taskDragEnd(e){
 
+ e.currentTarget.classList.remove(
+  "dragging"
+ );
+
+ document
+ .querySelectorAll(".task.drag-over")
+ .forEach(x=>
+  x.classList.remove("drag-over")
+ );
+
+ draggedTaskId=null;
+
+}
+
+
+async function taskDrop(e){
+
+ if(!isAdmin)return;
+
+ e.preventDefault();
+
+ const target=
+ e.currentTarget.dataset.taskId;
+
+ e.currentTarget.classList.remove(
+  "drag-over"
+ );
+
+ if(
+  !draggedTaskId||
+  !target||
+  draggedTaskId===target
+ ){
+  return;
+ }
+
+ const ids=
+ getOrderedTasks()
+ .map(([id])=>id);
+
+ const from=
+ ids.indexOf(draggedTaskId);
+
+ const to=
+ ids.indexOf(target);
+
+ if(from<0||to<0)return;
+
+ ids.splice(from,1);
+
+ ids.splice(
+  to,
+  0,
+  draggedTaskId
+ );
+
+ await update(
+  ref(db,"tasks"),
+  {
+   _order:ids
   }
+ );
 
-  type="note";
-
-  editId=null;
-
-  document
-    .getElementById("mt")
-    .textContent=
-      "Add Note";
-
-  document
-    .getElementById("noteFields")
-    .classList
-    .remove("hide");
-
-  document
-    .getElementById("taskFields")
-    .classList
-    .add("hide");
-
-  document
-    .getElementById("fileFields")
-    .classList
-    .add("hide");
-
-  document
-    .getElementById("nt")
-    .value="";
-
-  document
-    .getElementById("nx")
-    .value="";
-
-  document
-    .getElementById("modal")
-    .classList
-    .add("on");
+ draggedTaskId=null;
 
 }
 
-window.noteModal=noteModal;
 
+/* PERSONAL TASK CHECKBOX */
 
-/* =========================
-   TASK MODAL
-========================= */
+function checkTask(id,value){
 
-function taskModal(){
+ save(
+  "check_"+id,
+  value
+ );
 
-  if(!isAdmin){
-
-    alert(
-      "Admin access required."
-    );
-
-    return;
-
-  }
-
-  type="task";
-
-  editId=null;
-
-  document
-    .getElementById("mt")
-    .textContent=
-      "Add Task";
-
-  document
-    .getElementById("noteFields")
-    .classList
-    .add("hide");
-
-  document
-    .getElementById("taskFields")
-    .classList
-    .remove("hide");
-
-  document
-    .getElementById("fileFields")
-    .classList
-    .add("hide");
-
-
-  [
-    "tt",
-    "td",
-    "tx"
-  ]
-  .forEach(id=>{
-
-    document
-      .getElementById(id)
-      .value="";
-
-  });
-
-
-  document
-    .getElementById("modal")
-    .classList
-    .add("on");
-
-}
-
-window.taskModal=taskModal;
-
-
-/* =========================
-   FILE MODAL
-========================= */
-
-function fileModal(){
-
-  if(!isAdmin){
-
-    alert(
-      "Admin access required."
-    );
-
-    return;
-
-  }
-
-  type="file";
-
-  editId=null;
-
-  document
-    .getElementById("mt")
-    .textContent=
-      "Add File Link";
-
-  document
-    .getElementById("noteFields")
-    .classList
-    .add("hide");
-
-  document
-    .getElementById("taskFields")
-    .classList
-    .add("hide");
-
-  document
-    .getElementById("fileFields")
-    .classList
-    .remove("hide");
-
-
-  [
-    "ft",
-    "fu"
-  ]
-  .forEach(id=>{
-
-    document
-      .getElementById(id)
-      .value="";
-
-  });
-
-
-  document
-    .getElementById("modal")
-    .classList
-    .add("on");
-
-}
-
-window.fileModal=fileModal;
-
-
-/* =========================
-   CLOSE MODAL
-========================= */
-
-function closeModal(){
-
-  document
-    .getElementById("modal")
-    .classList
-    .remove("on");
-
-}
-
-window.closeModal=closeModal;
-
-
-/* =========================
-   SAVE MODAL
-========================= */
-
-async function saveModal(){
-
-  if(!isAdmin)return;
-
-
-  if(type==="note"){
-
-    const title=
-      document
-        .getElementById("nt")
-        .value
-        .trim();
-
-    const text=
-      document
-        .getElementById("nx")
-        .value
-        .trim();
-
-
-    if(!title){
-
-      alert(
-        "Title required."
-      );
-
-      return;
-
-    }
-
-
-    if(editId){
-
-      await update(
-        ref(
-          db,
-          "notes/"+editId
-        ),
-        {
-          title,
-          text,
-          author:user
-        }
-      );
-
-    }else{
-
-      await set(
-        push(R.notes),
-        {
-          title,
-          text,
-          author:user,
-          createdAt:Date.now()
-        }
-      );
-
-    }
-
-
-  }else if(type==="task"){
-
-    const title=
-      document
-        .getElementById("tt")
-        .value
-        .trim();
-
-
-    if(!title){
-
-      alert(
-        "Title required."
-      );
-
-      return;
-
-    }
-
-
-    const data={
-
-      title,
-
-      due:
-        document
-          .getElementById("td")
-          .value,
-
-      description:
-        document
-          .getElementById("tx")
-          .value
-          .trim()
-
-    };
-
-
-    if(editId){
-
-      await update(
-        ref(
-          db,
-          "tasks/"+editId
-        ),
-        data
-      );
-
-    }else{
-
-      await set(
-        push(R.tasks),
-        {
-          ...data,
-          createdAt:Date.now()
-        }
-      );
-
-    }
-
-
-  }else{
-
-    const title=
-      document
-        .getElementById("ft")
-        .value
-        .trim();
-
-    const url=
-      document
-        .getElementById("fu")
-        .value
-        .trim();
-
-
-    if(
-      !title||
-      !/^https?:\/\//i.test(url)
-    ){
-
-      alert(
-        "Enter a title and full http/https link."
-      );
-
-      return;
-
-    }
-
-
-    await set(
-      push(R.files),
-      {
-        title,
-        url,
-        type:
-          document
-            .getElementById("fy")
-            .value,
-        createdAt:Date.now(),
-        author:user
-      }
-    );
-
-  }
-
-
-  closeModal();
-
-}
-
-window.saveModal=saveModal;
-
-
-/* =========================
-   EDIT NOTE
-========================= */
-
-function editNote(id){
-
-  if(!isAdmin)return;
-
-  type="note";
-
-  editId=id;
-
-  document
-    .getElementById("nt")
-    .value=
-      notes[id].title||"";
-
-  document
-    .getElementById("nx")
-    .value=
-      notes[id].text||"";
-
-  document
-    .getElementById("noteFields")
-    .classList
-    .remove("hide");
-
-  document
-    .getElementById("taskFields")
-    .classList
-    .add("hide");
-
-  document
-    .getElementById("fileFields")
-    .classList
-    .add("hide");
-
-  document
-    .getElementById("mt")
-    .textContent=
-      "Edit Note";
-
-  document
-    .getElementById("modal")
-    .classList
-    .add("on");
-
-}
-
-window.editNote=editNote;
-
-
-/* =========================
-   EDIT TASK
-========================= */
-
-function editTask(id){
-
-  if(!isAdmin)return;
-
-  type="task";
-
-  editId=id;
-
-  document
-    .getElementById("tt")
-    .value=
-      tasks[id].title||"";
-
-  document
-    .getElementById("td")
-    .value=
-      tasks[id].due||"";
-
-  document
-    .getElementById("tx")
-    .value=
-      tasks[id].description||"";
-
-  document
-    .getElementById("noteFields")
-    .classList
-    .add("hide");
-
-  document
-    .getElementById("taskFields")
-    .classList
-    .remove("hide");
-
-  document
-    .getElementById("fileFields")
-    .classList
-    .add("hide");
-
-  document
-    .getElementById("mt")
-    .textContent=
-      "Edit Task";
-
-  document
-    .getElementById("modal")
-    .classList
-    .add("on");
-
-}
-
-window.editTask=editTask;
-
-
-/* =========================
-   DELETE NOTE
-========================= */
-
-async function delNote(id){
-
-  if(
-    isAdmin&&
-    confirm("Delete note?")
-  ){
-
-    await remove(
-      ref(
-        db,
-        "notes/"+id
-      )
-    );
-
-  }
-
-}
-
-window.delNote=delNote;
-
-
-/* =========================
-   DELETE TASK
-========================= */
-
-async function delTask(id){
-
-  if(
-    !isAdmin||
-    !confirm("Delete this task?")
-  ){
-
-    return;
-
-  }
-
-
-  await remove(
-    ref(
-      db,
-      "tasks/"+id
-    )
-  );
-
-
-  const ids=
-    getOrderedTasks()
-      .map(
-        ([taskId])=>taskId
-      )
-      .filter(
-        taskId=>taskId!==id
-      );
-
-
-  await update(
-    ref(db,"tasks"),
-    {
-      _order:ids
-    }
-  );
-
-}
-
-window.delTask=delTask;
-
-
-/* =========================
-   DELETE FILE
-========================= */
-
-async function delFile(id){
-
-  if(
-    isAdmin&&
-    confirm("Delete link?")
-  ){
-
-    await remove(
-      ref(
-        db,
-        "files/"+id
-      )
-    );
-
-  }
-
-}
-
-window.delFile=delFile;
-
-
-/* =========================
-   PERSONAL TASK CHECKBOX
-========================= */
-
-function checkTask(id,v){
-
-  save(
-    "check_"+id,
-    v
-  );
-
-  renderTasks();
+ renderTasks();
 
 }
 
 window.checkTask=checkTask;
 
 
-/* =========================
-   CHAT
-========================= */
+/* FILES */
 
-function draw(id,data){
+function renderFiles(){
 
-  const c=
-    document.getElementById(id);
+ const fc=
+ document.getElementById(
+  "fileList"
+ );
 
-  c.innerHTML="";
-
-
-  Object.values(data||{})
-
-    .sort(
-      (a,b)=>
-        (a.createdAt||0)-
-        (b.createdAt||0)
-    )
-
-    .slice(-100)
-
-    .forEach(m=>{
-
-      const d=
-        document.createElement("div");
-
-      d.className=
-        "msg "+
-        (
-          m.author===user
-          ?"me"
-          :""
-        );
-
-      d.textContent=
-        (m.author||"User")+
-        ": "+
-        m.text;
-
-      c.appendChild(d);
-
-    });
+ fc.innerHTML="";
 
 
-  c.scrollTop=
-    c.scrollHeight;
+ Object.entries(files)
+ .filter(([id])=>id!=="_order")
+ .reverse()
+ .forEach(([id,f])=>{
+
+  const d=
+  document.createElement("div");
+
+  d.className="card";
+
+
+  d.innerHTML=`
+
+   <h3>
+    📄 ${esc(f.title)}
+   </h3>
+
+   <small>
+    ${esc(f.type||"File")}
+   </small>
+
+   <p>
+
+    <a
+     class="file-btn"
+     href="${esc(f.url)}"
+     target="_blank"
+     rel="noopener noreferrer"
+    >
+     🔗 Open File
+    </a>
+
+   </p>
+
+   ${
+    isAdmin
+    ?`
+     <button
+      class="small del"
+      onclick="delFile('${id}')"
+     >
+      🗑️ Delete
+     </button>
+    `
+    :""
+   }
+
+  `;
+
+
+  fc.appendChild(d);
+
+ });
+
+
+ if(!fc.children.length){
+
+  fc.innerHTML=`
+   <div class="card empty-card">
+    No file links yet.
+   </div>
+  `;
+
+ }
 
 }
 
 
-let chatData={};
+/* FIREBASE CACHE */
 
+notes=load("notes")||{};
+tasks=load("tasks")||{};
+files=load("files")||{};
+
+render();
+
+
+/* FIREBASE LISTENERS */
 
 onValue(
-  R.chat,
-  snapshot=>{
+ R.notes,
+ snapshot=>{
 
-    chatData=
-      snapshot.val()||{};
+  notes=
+   snapshot.val()||{};
 
-    draw(
-      "chatLog",
-      chatData
-    );
+  save("notes",notes);
 
-  }
+  renderNotes();
+
+ }
 );
 
 
 onValue(
-  R.admin,
-  snapshot=>{
+ R.tasks,
+ snapshot=>{
 
-    adminChat=
-      snapshot.val()||{};
+  tasks=
+   snapshot.val()||{};
 
-    if(isAdmin){
+  save("tasks",tasks);
 
-      draw(
-        "adminLog",
-        adminChat
-      );
+  renderTasks();
 
+ }
+);
+
+
+onValue(
+ R.files,
+ snapshot=>{
+
+  files=
+   snapshot.val()||{};
+
+  save("files",files);
+
+  renderFiles();
+
+ }
+);
+
+
+/* NOTE MODAL */
+
+function noteModal(){
+
+ if(!isAdmin){
+  alert("Admin access required.");
+  return;
+ }
+
+ type="note";
+ editId=null;
+
+ document.getElementById("mt")
+ .textContent="Add Note";
+
+ document.getElementById("noteFields")
+ .classList.remove("hide");
+
+ document.getElementById("taskFields")
+ .classList.add("hide");
+
+ document.getElementById("fileFields")
+ .classList.add("hide");
+
+ document.getElementById("nt").value="";
+ document.getElementById("nx").value="";
+
+ document.getElementById("modal")
+ .classList.add("on");
+
+}
+
+window.noteModal=noteModal;
+
+
+/* TASK MODAL */
+
+function taskModal(){
+
+ if(!isAdmin){
+  alert("Admin access required.");
+  return;
+ }
+
+ type="task";
+ editId=null;
+
+ document.getElementById("mt")
+ .textContent="Add Task";
+
+ document.getElementById("noteFields")
+ .classList.add("hide");
+
+ document.getElementById("taskFields")
+ .classList.remove("hide");
+
+ document.getElementById("fileFields")
+ .classList.add("hide");
+
+ document.getElementById("tt").value="";
+ document.getElementById("td").value="";
+ document.getElementById("tx").value="";
+
+ document.getElementById("modal")
+ .classList.add("on");
+
+}
+
+window.taskModal=taskModal;
+
+
+/* FILE MODAL */
+
+function fileModal(){
+
+ if(!isAdmin){
+  alert("Admin access required.");
+  return;
+ }
+
+ type="file";
+ editId=null;
+
+ document.getElementById("mt")
+ .textContent="Add File Link";
+
+ document.getElementById("noteFields")
+ .classList.add("hide");
+
+ document.getElementById("taskFields")
+ .classList.add("hide");
+
+ document.getElementById("fileFields")
+ .classList.remove("hide");
+
+ document.getElementById("ft").value="";
+ document.getElementById("fu").value="";
+
+ document.getElementById("modal")
+ .classList.add("on");
+
+}
+
+window.fileModal=fileModal;
+
+
+/* CLOSE MODAL */
+
+function closeModal(){
+
+ document.getElementById("modal")
+ .classList.remove("on");
+
+}
+
+window.closeModal=closeModal;
+
+
+/* SAVE */
+
+async function saveModal(){
+
+ if(!isAdmin)return;
+
+
+ if(type==="note"){
+
+  const title=
+  document.getElementById("nt")
+  .value.trim();
+
+  const text=
+  document.getElementById("nx")
+  .value.trim();
+
+  if(!title){
+   alert("Title required.");
+   return;
+  }
+
+  if(editId){
+
+   await update(
+    ref(db,"notes/"+editId),
+    {
+     title,
+     text,
+     author:user
     }
+   );
+
+  }else{
+
+   await set(
+    push(R.notes),
+    {
+     title,
+     text,
+     author:user,
+     createdAt:Date.now()
+    }
+   );
 
   }
+
+
+ }else if(type==="task"){
+
+  const title=
+  document.getElementById("tt")
+  .value.trim();
+
+  if(!title){
+   alert("Title required.");
+   return;
+  }
+
+  const data={
+
+   title,
+
+   due:
+   document.getElementById("td")
+   .value,
+
+   description:
+   document.getElementById("tx")
+   .value.trim()
+
+  };
+
+
+  if(editId){
+
+   await update(
+    ref(db,"tasks/"+editId),
+    data
+   );
+
+  }else{
+
+   await set(
+    push(R.tasks),
+    {
+     ...data,
+     createdAt:Date.now()
+    }
+   );
+
+  }
+
+
+ }else{
+
+  const title=
+  document.getElementById("ft")
+  .value.trim();
+
+  const url=
+  document.getElementById("fu")
+  .value.trim();
+
+  if(
+   !title||
+   !/^https?:\/\//i.test(url)
+  ){
+
+   alert(
+    "Enter a title and full http/https link."
+   );
+
+   return;
+
+  }
+
+
+  await set(
+   push(R.files),
+   {
+    title,
+    url,
+    type:
+    document.getElementById("fy").value,
+    createdAt:Date.now(),
+    author:user
+   }
+  );
+
+ }
+
+
+ closeModal();
+
+}
+
+window.saveModal=saveModal;
+
+
+/* EDIT NOTE */
+
+function editNote(id){
+
+ if(!isAdmin)return;
+
+ type="note";
+ editId=id;
+
+ document.getElementById("nt")
+ .value=notes[id].title||"";
+
+ document.getElementById("nx")
+ .value=notes[id].text||"";
+
+ document.getElementById("noteFields")
+ .classList.remove("hide");
+
+ document.getElementById("taskFields")
+ .classList.add("hide");
+
+ document.getElementById("fileFields")
+ .classList.add("hide");
+
+ document.getElementById("mt")
+ .textContent="Edit Note";
+
+ document.getElementById("modal")
+ .classList.add("on");
+
+}
+
+window.editNote=editNote;
+
+
+/* EDIT TASK */
+
+function editTask(id){
+
+ if(!isAdmin)return;
+
+ type="task";
+ editId=id;
+
+ document.getElementById("tt")
+ .value=tasks[id].title||"";
+
+ document.getElementById("td")
+ .value=tasks[id].due||"";
+
+ document.getElementById("tx")
+ .value=tasks[id].description||"";
+
+ document.getElementById("noteFields")
+ .classList.add("hide");
+
+ document.getElementById("taskFields")
+ .classList.remove("hide");
+
+ document.getElementById("fileFields")
+ .classList.add("hide");
+
+ document.getElementById("mt")
+ .textContent="Edit Task";
+
+ document.getElementById("modal")
+ .classList.add("on");
+
+}
+
+window.editTask=editTask;
+
+
+/* DELETE */
+
+async function delNote(id){
+
+ if(
+  isAdmin&&
+  confirm("Delete note?")
+ ){
+
+  await remove(
+   ref(db,"notes/"+id)
+  );
+
+ }
+
+}
+
+window.delNote=delNote;
+
+
+async function delTask(id){
+
+ if(
+  isAdmin&&
+  confirm("Delete task?")
+ ){
+
+  await remove(
+   ref(db,"tasks/"+id)
+  );
+
+ }
+
+}
+
+window.delTask=delTask;
+
+
+async function delFile(id){
+
+ if(
+  isAdmin&&
+  confirm("Delete file link?")
+ ){
+
+  await remove(
+   ref(db,"files/"+id)
+  );
+
+ }
+
+}
+
+window.delFile=delFile;
+
+
+/* CHAT */
+
+function draw(id,data){
+
+ const c=
+ document.getElementById(id);
+
+ c.innerHTML="";
+
+
+ Object.values(data||{})
+ .sort(
+  (a,b)=>
+   (a.createdAt||0)-
+   (b.createdAt||0)
+ )
+ .slice(-100)
+ .forEach(m=>{
+
+  const d=
+  document.createElement("div");
+
+  d.className=
+   "msg "+
+   (
+    m.author===user
+    ?"me"
+    :""
+   );
+
+
+  d.textContent=
+   (m.author||"User")+
+   ": "+
+   String(m.text||"").trim();
+
+
+  c.appendChild(d);
+
+ });
+
+
+ c.scrollTop=c.scrollHeight;
+
+}
+
+
+onValue(
+ R.chat,
+ snapshot=>{
+
+  draw(
+   "chatLog",
+   snapshot.val()||{}
+  );
+
+ }
+);
+
+
+onValue(
+ R.admin,
+ snapshot=>{
+
+  if(isAdmin){
+
+   draw(
+    "adminLog",
+    snapshot.val()||{}
+   );
+
+  }
+
+ }
 );
 
 
 async function sendChat(){
 
-  const i=
-    document.getElementById(
-      "chatInput"
-    );
+ const input=
+ document.getElementById(
+  "chatInput"
+ );
 
-  const v=
-    i.value.trim();
+ const text=
+ input.value.trim();
 
-  if(!v)return;
+ if(!text)return;
 
-  await set(
-    push(R.chat),
-    {
-      author:user||"Guest",
-      text:v,
-      createdAt:Date.now()
-    }
-  );
+ await set(
+  push(R.chat),
+  {
+   author:user||"Guest",
+   text,
+   createdAt:Date.now()
+  }
+ );
 
-  i.value="";
+ input.value="";
 
 }
 
@@ -3594,370 +2782,228 @@ window.sendChat=sendChat;
 
 async function sendAdmin(){
 
-  if(!isAdmin)return;
+ if(!isAdmin)return;
 
-  const i=
-    document.getElementById(
-      "adminInput"
-    );
+ const input=
+ document.getElementById(
+  "adminInput"
+ );
 
-  const v=
-    i.value.trim();
+ const text=
+ input.value.trim();
 
-  if(!v)return;
+ if(!text)return;
 
-  await set(
-    push(R.admin),
-    {
-      author:user||"Admin",
-      text:v,
-      createdAt:Date.now()
-    }
-  );
+ await set(
+  push(R.admin),
+  {
+   author:user||"Admin",
+   text,
+   createdAt:Date.now()
+  }
+ );
 
-  i.value="";
+ input.value="";
 
 }
 
 window.sendAdmin=sendAdmin;
 
 
-/* =========================
-   ACTIVITY-AWARE PRESENCE
-========================= */
+/* PRESENCE */
 
-const ACTIVE_FOR=
-  2*60*1000;
-
-const HEARTBEAT_EVERY=
-  25*1000;
-
+const ACTIVE_FOR=120000;
+const HEARTBEAT_EVERY=25000;
 
 let presenceRef=null;
 let presenceState=null;
-
-let lastActivity=
-  Date.now();
-
-let awayTimer=null;
-let heartbeatTimer=null;
-
+let lastActivity=Date.now();
 let firebaseConnected=false;
 let presenceStarted=false;
 
 
-function getPresenceState(){
+function presenceStateNow(){
 
-  return(
-    document.visibilityState==="visible"&&
-    Date.now()-lastActivity<ACTIVE_FOR
-  )
-  ?"active"
-  :"away";
-
-}
-
-
-function scheduleAwayCheck(){
-
-  clearTimeout(
-    awayTimer
-  );
-
-
-  if(
-    document.visibilityState!=="visible"
-  ){
-
-    return;
-
-  }
-
-
-  const remaining=
-    Math.max(
-      0,
-      ACTIVE_FOR-
-      (
-        Date.now()-
-        lastActivity
-      )
-    );
-
-
-  awayTimer=
-    setTimeout(
-      ()=>{
-        syncPresence();
-        scheduleAwayCheck();
-      },
-      remaining+50
-    );
+ return(
+  document.visibilityState==="visible"&&
+  Date.now()-lastActivity<ACTIVE_FOR
+ )
+ ?"active"
+ :"away";
 
 }
 
 
-async function syncPresence(
-  forceHeartbeat=false
-){
+async function syncPresence(){
 
-  if(
-    !presenceRef||
-    !firebaseConnected
-  ){
+ if(!presenceRef||!firebaseConnected)return;
 
-    return;
+ const state=presenceStateNow();
 
+ if(state===presenceState)return;
+
+ presenceState=state;
+
+ await set(
+  presenceRef,
+  {
+   name:user,
+   status:state,
+   lastActive:lastActivity,
+   lastSeen:serverTimestamp()
   }
-
-
-  const nextState=
-    getPresenceState();
-
-
-  if(
-    nextState===presenceState&&
-    !(
-      forceHeartbeat&&
-      nextState==="active"
-    )
-  ){
-
-    return;
-
-  }
-
-
-  presenceState=
-    nextState;
-
-
-  await set(
-    presenceRef,
-    {
-      name:user,
-      status:nextState,
-      lastActive:lastActivity,
-      lastSeen:serverTimestamp()
-    }
-  );
+ );
 
 }
 
 
-function recordActivity(){
+function activity(){
 
-  lastActivity=
-    Date.now();
+ lastActivity=Date.now();
 
-  syncPresence();
-
-  scheduleAwayCheck();
+ syncPresence();
 
 }
 
 
 function renderPresence(data){
 
-  const peopleList=
-    Object.values(data||{})
-      .filter(
-        x=>x&&x.name
-      )
-      .sort(
-        (a,b)=>{
+ const list=
+ Object.values(data||{})
+ .filter(x=>x&&x.name);
 
-          if(
-            a.status==="away"&&
-            b.status!=="away"
-          ){
+ document.getElementById(
+  "people"
+ ).innerHTML=
 
-            return 1;
+ list.length
 
-          }
+ ?list.map(p=>`
 
-          if(
-            a.status!=="away"&&
-            b.status==="away"
-          ){
+  <div>
 
-            return -1;
+   <span
+    class="dot"
+    style="background:${
+     p.status==="active"
+     ?"#7ee08d"
+     :"#f3b941"
+    }"
+   ></span>
 
-          }
+   ${esc(p.name)}
 
-          return String(a.name)
-            .localeCompare(
-              String(b.name)
-            );
+   <small>
 
-        }
-      );
+    —
+    ${
+     p.status==="active"
+     ?"Active now"
+     :"Away"
+    }
 
+   </small>
 
-  document
-    .getElementById("people")
-    .innerHTML=
+  </div>
 
-      peopleList.length
+ `).join("")
 
-      ?peopleList
-        .map(person=>{
-
-          const active=
-            person.status!=="away";
-
-          return `
-
-            <div>
-
-              <span
-                class="dot"
-                style="background:${
-                  active
-                  ?"#7ee08d"
-                  :"#f3b941"
-                }"
-              ></span>
-
-              ${esc(person.name)}
-
-              <small
-                style="opacity:.8"
-              >
-                —
-                ${
-                  active
-                  ?"Active now"
-                  :"Away"
-                }
-              </small>
-
-            </div>
-
-          `;
-
-        })
-        .join("")
-
-      :"Nobody online";
+ :"Nobody online";
 
 }
 
 
 function presence(){
 
-  if(presenceStarted)return;
+ if(presenceStarted)return;
 
-  presenceStarted=true;
+ presenceStarted=true;
 
+ const id=
+ Math.random()
+ .toString(36)
+ .slice(2);
 
-  const id=
-    Math.random()
-      .toString(36)
-      .slice(2);
-
-
-  presenceRef=
-    ref(
-      db,
-      "presence/"+id
-    );
+ presenceRef=
+ ref(db,"presence/"+id);
 
 
-  onValue(
-    ref(
-      db,
-      ".info/connected"
-    ),
-    async snapshot=>{
+ onValue(
+  ref(db,".info/connected"),
+  async snapshot=>{
 
-      firebaseConnected=
-        snapshot.val()===true;
+   firebaseConnected=
+    snapshot.val()===true;
 
+   if(!firebaseConnected)return;
 
-      if(!firebaseConnected)
-        return;
+   await onDisconnect(
+    presenceRef
+   ).remove();
 
-
-      await onDisconnect(
-        presenceRef
-      ).remove();
-
-
-      await syncPresence(true);
-
+   await set(
+    presenceRef,
+    {
+     name:user,
+     status:presenceStateNow(),
+     lastActive:lastActivity,
+     lastSeen:serverTimestamp()
     }
-  );
+   );
+
+  }
+ );
 
 
-  onValue(
-    R.presence,
-    snapshot=>{
-
-      renderPresence(
-        snapshot.val()
-      );
-
-    }
-  );
+ onValue(
+  R.presence,
+  snapshot=>{
+   renderPresence(
+    snapshot.val()
+   );
+  }
+ );
 
 
-  [
-    "mousemove",
-    "keydown",
-    "touchstart",
-    "scroll",
-    "click"
-  ]
-  .forEach(eventName=>{
-
-    addEventListener(
-      eventName,
-      recordActivity,
-      {
-        passive:true
-      }
-    );
-
-  });
-
+ [
+  "mousemove",
+  "keydown",
+  "touchstart",
+  "scroll",
+  "click"
+ ].forEach(event=>{
 
   addEventListener(
-    "visibilitychange",
-    ()=>{
-
-      syncPresence();
-
-      scheduleAwayCheck();
-
-    }
+   event,
+   activity,
+   {passive:true}
   );
 
+ });
 
-  scheduleAwayCheck();
+
+ addEventListener(
+  "visibilitychange",
+  syncPresence
+ );
 
 
-  heartbeatTimer=
-    setInterval(
-      ()=>{
-        syncPresence(true);
-      },
-      HEARTBEAT_EVERY
-    );
+ setInterval(
+  ()=>{
+   lastActivity=
+    Date.now();
+   syncPresence();
+  },
+  HEARTBEAT_EVERY
+ );
 
 }
 
 
-if(user){
-
-  presence();
-
-}
+if(user)presence();
 
 
-/* =========================
-   INITIAL UI
-========================= */
+/* START */
 
 ui();
 
