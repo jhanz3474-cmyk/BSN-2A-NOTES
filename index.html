@@ -1,1086 +1,936 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#245c43">
 <title>BSN 2A Notes</title>
 
 <style>
-*{box-sizing:border-box}
-
 :root{
- --bg:#f6f2e9;
- --surface:#fff;
- --surface2:#f1eee6;
- --surface3:#e8efe9;
- --text:#1e2b25;
- --muted:#526158;
- --muted2:#718078;
- --border:#d9e0db;
- --primary:#245c43;
- --primarySoft:#e7f0e8;
- --shadow:#1e322015;
- --input:#fff;
+  --bg:#f6f2e9;
+  --surface:#ffffff;
+  --surface2:#f1eee6;
+  --surface3:#e8efe9;
+  --text:#1e2b25;
+  --muted:#526158;
+  --muted2:#718078;
+  --border:#d9e0db;
+  --primary:#245c43;
+  --primarySoft:#e7f0e8;
+  --danger:#b53d3d;
+  --shadow:#1e322015;
+  --input:#ffffff;
 }
 
 body.dark{
- --bg:#101714;
- --surface:#18211d;
- --surface2:#27302b;
- --surface3:#273a30;
- --text:#edf4ef;
- --muted:#bdc9c2;
- --muted2:#9eada4;
- --border:#3b4942;
- --primary:#69a785;
- --primarySoft:#23352c;
- --shadow:#00000035;
- --input:#18211d;
+  --bg:#101714;
+  --surface:#18211d;
+  --surface2:#27302b;
+  --surface3:#273a30;
+  --text:#edf4ef;
+  --muted:#bdc9c2;
+  --muted2:#9eada4;
+  --border:#3b4942;
+  --primary:#69a785;
+  --primarySoft:#23352c;
+  --danger:#ff7777;
+  --shadow:#00000035;
+  --input:#18211d;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
 }
 
 body{
- margin:0;
- font-family:Arial,sans-serif;
- background:var(--bg);
- color:var(--text);
- transition:.2s;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:background .2s,color .2s;
 }
 
-button,input,textarea,select{font:inherit}
+button,
+input,
+textarea{
+  font:inherit;
+}
 
-h1,h2,h3{font-family:Georgia,serif}
-
-.hide{display:none!important}
-
-/* SIDEBAR */
+button{
+  cursor:pointer;
+}
 
 .side{
- position:fixed;
- inset:0 auto 0 0;
- width:240px;
- padding:22px 16px;
- background:linear-gradient(#173f2d,#285c43);
- color:#fff;
- z-index:20;
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:240px;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  padding:20px 14px;
+  z-index:100;
+  display:flex;
+  flex-direction:column;
+  box-shadow:3px 0 15px var(--shadow);
 }
 
-.logo{text-align:center}
-
-.nursing-logo{
- width:75px;
- height:75px;
- margin:auto;
- display:flex;
- align-items:center;
- justify-content:center;
- border:4px solid #dcebd7;
- border-radius:20px;
- background:#ffffff12;
+.logo{
+  padding:5px 10px 22px;
 }
 
-.nursing-logo svg{width:52px;height:52px}
-
-.nursing-logo circle{
- fill:none;
- stroke:#dcebd7;
- stroke-width:5;
+.logo h1{
+  margin:0;
+  font-size:21px;
+  color:var(--primary);
 }
 
-.nursing-logo path:first-of-type{
- fill:#dcebd7;
- stroke:none;
+.logo p{
+  margin:5px 0 0;
+  color:var(--muted2);
+  font-size:12px;
 }
 
-.nursing-logo path:last-of-type{
- fill:none;
- stroke:#dcebd7;
- stroke-width:4;
- stroke-linecap:round;
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
 }
-
-.logo h2{margin-bottom:8px}
-
-.nav{margin-top:8px}
 
 .nav button{
- display:block;
- width:100%;
- margin:7px 0;
- padding:12px;
- border:0;
- border-radius:10px;
- background:transparent;
- color:white;
- text-align:left;
- cursor:pointer;
- transition:.15s;
+  width:100%;
+  border:0;
+  background:transparent;
+  color:var(--text);
+  padding:12px 13px;
+  border-radius:10px;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transition:.15s;
 }
 
-.nav button:hover,
-.nav .on,
-.theme-toggle-active{
- background:#ffffff25;
+.nav button:hover{
+  background:var(--surface2);
 }
 
-.user{
- position:absolute;
- bottom:18px;
- left:16px;
- right:16px;
- padding:12px;
- background:#ffffff18;
- border-radius:12px;
+.nav button.on{
+  background:var(--primarySoft);
+  color:var(--primary);
+  font-weight:bold;
 }
 
-.online{
- margin-top:9px;
- font-size:12px;
- max-height:115px;
- overflow:auto;
+#themeToggle{
+  justify-content:flex-end;
+  margin-top:4px;
 }
 
-.dot{
- display:inline-block;
- width:7px;
- height:7px;
- border-radius:50%;
- background:#7ee08d;
- margin-right:5px;
+#themeToggle .theme-icon{
+  margin-left:auto;
+  font-size:19px;
+  line-height:1;
 }
-
-/* MAIN */
 
 .main{
- margin-left:240px;
- padding:25px;
+  margin-left:240px;
+  min-height:100vh;
+  padding:28px;
 }
 
-.sec{display:none}
-.sec.on{display:block}
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:20px;
+}
 
-/* ANNOUNCEMENT */
+.topbar h2{
+  margin:0;
+  font-size:27px;
+}
+
+.userbox{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.user-name{
+  color:var(--muted);
+  font-size:14px;
+}
 
 .announcement{
- display:flex;
- align-items:center;
- gap:12px;
- width:100%;
- min-height:54px;
- margin-bottom:18px;
- padding:10px 16px;
- background:#173f2d;
- color:#fff;
- border-radius:14px;
- overflow:hidden;
+  background:var(--primarySoft);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:13px 15px;
+  margin-bottom:20px;
+  display:none;
 }
 
-.announcement-icon{
- width:38px;
- height:38px;
- flex:0 0 38px;
- display:flex;
- align-items:center;
- justify-content:center;
- border-radius:10px;
- background:#ffffff18;
+.announcement strong{
+  color:var(--primary);
 }
 
-.announcement-icon svg{
- width:22px;
- height:22px;
+.section{
+  display:none;
 }
 
-.announcement-window{
- flex:1;
- overflow:hidden;
- white-space:nowrap;
+.section.active{
+  display:block;
 }
-
-.announcement-track{
- display:inline-block;
- min-width:100%;
- animation:scrollAnnouncement 18s linear infinite;
-}
-
-.announcement:hover .announcement-track{
- animation-play-state:paused;
-}
-
-@keyframes scrollAnnouncement{
- 0%{transform:translateX(100%)}
- 100%{transform:translateX(-100%)}
-}
-
-.announcement-admin button{
- border:0;
- border-radius:8px;
- padding:7px 10px;
- background:#ffffff18;
- color:#fff;
- cursor:pointer;
-}
-
-/* HERO */
-
-.hero{
- background:linear-gradient(110deg,#e4efdc,#f4f2df);
- border-radius:18px;
- padding:24px;
- margin-bottom:20px;
- box-shadow:0 5px 20px var(--shadow);
-}
-
-body.dark .hero{
- background:linear-gradient(110deg,#203329,#1b2b23);
-}
-
-.hero h1{margin:0 0 10px}
-.hero p{margin:0;line-height:1.6}
-
-/* NOTES */
 
 .notes-masonry{
- column-width:280px;
- column-count:3;
- column-gap:16px;
+  columns:3 280px;
+  column-gap:16px;
 }
 
 .card{
- background:var(--surface);
- border-radius:18px;
- padding:20px;
- margin:0 0 16px;
- box-shadow:0 5px 20px var(--shadow);
- break-inside:avoid;
- width:100%;
- transition:.15s;
-}
-
-.card:hover{
- transform:translateY(-2px);
- box-shadow:0 8px 24px var(--shadow);
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:17px;
+  margin:0 0 16px;
+  break-inside:avoid;
+  box-shadow:0 5px 15px var(--shadow);
 }
 
 .card h3{
- margin:0 0 12px;
- line-height:1.3;
+  margin:0 0 10px;
+  font-size:18px;
 }
 
 .card small{
- display:block;
- margin-top:10px;
+  display:block;
+  margin-top:13px;
+  color:var(--muted2);
+  font-size:11px;
 }
 
 .text{
- display:block;
- width:100%;
- margin:0;
- padding:0;
- white-space:pre-wrap;
- overflow-wrap:anywhere;
- line-height:1.65;
- color:var(--muted);
+  display:block;
+  width:100%;
+  margin:0;
+  padding:0;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.65;
+  color:var(--muted);
 }
 
-.empty-card{
- text-align:center;
- color:var(--muted2);
+.note-actions{
+  display:flex;
+  gap:6px;
+  margin-top:13px;
 }
 
-/* TASKS */
+.btn{
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  padding:8px 11px;
+  border-radius:8px;
+  font-size:13px;
+}
 
-.task-header{
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:15px;
- margin-bottom:16px;
- flex-wrap:wrap;
+.btn:hover{
+  background:var(--surface2);
+}
+
+.btn.primary{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:white;
+}
+
+.btn.danger{
+  color:var(--danger);
+}
+
+.admin-panel{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:17px;
+  margin-bottom:18px;
+}
+
+.admin-panel h3{
+  margin:0 0 13px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+input,
+textarea{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:10px 12px;
+  background:var(--input);
+  color:var(--text);
+  outline:none;
+}
+
+textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+input:focus,
+textarea:focus{
+  border-color:var(--primary);
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+.form-buttons{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.tasks-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
 }
 
 .task{
- display:flex;
- align-items:flex-start;
- gap:14px;
- background:var(--surface);
- border-radius:18px;
- padding:18px 20px;
- margin-bottom:12px;
- box-shadow:0 5px 20px var(--shadow);
- transition:.15s;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:14px;
+  display:flex;
+  align-items:flex-start;
+  gap:11px;
+  box-shadow:0 4px 12px var(--shadow);
+  transition:.15s;
 }
 
-.task:hover{
- transform:translateY(-1px);
+.task[draggable="true"]{
+  cursor:grab;
+}
+
+.task.dragging{
+  opacity:.45;
+}
+
+.task.drag-over{
+  border:2px dashed var(--primary);
 }
 
 .task-check{
- width:24px!important;
- height:24px!important;
- min-width:24px;
- margin-top:2px;
- cursor:pointer;
- accent-color:#245c43;
+  width:20px;
+  height:20px;
+  margin-top:2px;
+  flex:none;
+  accent-color:var(--primary);
+  cursor:pointer;
 }
 
 .task-content{
- flex:1;
- min-width:0;
+  flex:1;
+  min-width:0;
 }
 
 .task-title{
- display:block;
- font-size:17px;
- line-height:1.4;
- margin-bottom:4px;
+  display:block;
+  font-weight:bold;
+  line-height:1.4;
+  overflow-wrap:anywhere;
 }
 
 .task-title.done{
- text-decoration:line-through;
- opacity:.5;
+  text-decoration:line-through;
+  opacity:.55;
 }
 
-.task.completed{opacity:.72}
+.task.completed{
+  opacity:.85;
+}
 
 .task-due{
- font-size:13px;
- color:var(--muted2);
- margin-bottom:7px;
+  margin-top:5px;
+  font-size:12px;
+  color:var(--muted2);
 }
 
 .task-description{
- margin:0;
- padding:0;
- color:var(--muted);
- line-height:1.55;
- white-space:pre-wrap;
- overflow-wrap:anywhere;
+  margin:7px 0 0;
+  padding:0;
+  color:var(--muted);
+  line-height:1.55;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
 }
 
 .task-actions{
- display:flex;
- gap:6px;
- flex-wrap:wrap;
- margin-top:10px;
+  display:flex;
+  gap:5px;
+  flex:none;
 }
 
-.task-admin-btn{
- border:0;
- padding:7px 10px;
- border-radius:8px;
- cursor:pointer;
- background:var(--surface3);
- color:var(--primary);
- font-size:13px;
+.task-admin-btn,
+.task-admin-delete{
+  border:0;
+  background:var(--surface2);
+  color:var(--text);
+  border-radius:7px;
+  padding:6px 8px;
+  cursor:pointer;
+  font-size:12px;
 }
 
 .task-admin-delete{
- background:#f9e1e1;
- color:#c94b4b;
+  color:var(--danger);
 }
-
-.task[draggable="true"]{cursor:grab}
-.task.dragging{opacity:.4}
-.task.drag-over{
- outline:3px dashed #3d7a5b;
- outline-offset:4px;
-}
-
-/* BUTTONS */
-
-.btn{
- border:0;
- border-radius:10px;
- padding:11px 15px;
- background:#245c43;
- color:#fff;
- cursor:pointer;
-}
-
-.btn:hover{filter:brightness(1.08)}
-
-.small{
- border:0;
- padding:7px 10px;
- border-radius:8px;
- background:var(--surface3);
- color:var(--primary);
- cursor:pointer;
-}
-
-.del{
- background:#f9e1e1;
- color:#c94b4b;
-}
-
-/* FILES */
-
-.file-btn{
- display:inline-flex;
- align-items:center;
- gap:8px;
- padding:10px 14px;
- border-radius:10px;
- background:var(--surface3);
- color:var(--primary);
- text-decoration:none;
- font-weight:bold;
-}
-
-/* CHAT */
 
 .chat{
- background:var(--surface);
- border-radius:18px;
- padding:22px;
- margin-bottom:18px;
- box-shadow:0 5px 20px var(--shadow);
+  max-width:850px;
 }
 
 .chatlog{
- height:380px;
- overflow:auto;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:15px;
+  height:55vh;
+  overflow-y:auto;
 }
 
 .msg{
- padding:10px 13px;
- margin:8px 0;
- border-radius:12px;
- max-width:85%;
- background:var(--surface2);
- white-space:pre-wrap;
- overflow-wrap:anywhere;
- line-height:1.5;
+  padding:10px 13px;
+  margin:8px 0;
+  border-radius:12px;
+  max-width:85%;
+  background:var(--surface2);
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.5;
 }
 
-.me{
- margin-left:auto;
- background:var(--primarySoft);
+.msg.me{
+  margin-left:auto;
+  background:var(--primarySoft);
 }
 
 .chatrow{
- display:flex;
- gap:8px;
- margin-top:10px;
+  display:flex;
+  gap:8px;
+  margin-top:10px;
 }
 
 .chatrow input{
- flex:1;
- padding:12px;
- border:1px solid var(--border);
- border-radius:10px;
- background:var(--input);
- color:var(--text);
+  flex:1;
 }
 
-/* MODAL */
+.files-list{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:12px;
+}
+
+.file-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:15px;
+}
+
+.file-card h3{
+  margin:0 0 7px;
+  font-size:15px;
+}
+
+.file-card p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.file-card a{
+  display:inline-block;
+  margin-top:10px;
+  color:var(--primary);
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.about-box{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+  max-width:800px;
+  line-height:1.65;
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted2);
+  padding:35px 10px;
+}
+
+.status{
+  font-size:12px;
+  color:var(--muted2);
+  margin-top:8px;
+}
 
 .modal{
- display:none;
- position:fixed;
- inset:0;
- background:#0008;
- align-items:center;
- justify-content:center;
- padding:20px;
- z-index:100;
+  position:fixed;
+  inset:0;
+  background:#0008;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:500;
+  padding:20px;
 }
 
-.modal.on{display:flex}
-
-.box{
- background:var(--surface);
- color:var(--text);
- padding:24px;
- border-radius:18px;
- width:min(650px,100%);
- max-height:90vh;
- overflow:auto;
+.modal.show{
+  display:flex;
 }
 
-.box input,
-.box textarea,
-.box select{
- width:100%;
- padding:12px;
- margin:7px 0;
- border:1px solid var(--border);
- border-radius:10px;
- background:var(--input);
- color:var(--text);
+.modal-box{
+  width:min(500px,100%);
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:20px;
+  box-shadow:0 20px 50px #0005;
 }
 
-.box textarea{min-height:190px}
+.modal-box h3{
+  margin:0 0 15px;
+}
 
 .modal-buttons{
- display:flex;
- justify-content:flex-end;
- gap:8px;
- margin-top:10px;
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:12px;
 }
 
-/* LOGIN */
+@media(max-width:850px){
+  .side{
+    width:190px;
+  }
 
-.login{
- position:fixed;
- inset:0;
- background:linear-gradient(135deg,#173f2d,#3d7a5b);
- display:flex;
- align-items:center;
- justify-content:center;
- z-index:200;
+  .main{
+    margin-left:190px;
+    padding:18px;
+  }
+
+  .notes-masonry{
+    columns:2 240px;
+  }
 }
 
-.loginbox{
- background:var(--surface);
- color:var(--text);
- padding:30px;
- border-radius:20px;
- width:min(400px,90%);
- text-align:center;
+@media(max-width:650px){
+  .side{
+    position:relative;
+    width:100%;
+    height:auto;
+    border-right:0;
+    border-bottom:1px solid var(--border);
+  }
+
+  .main{
+    margin-left:0;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+
+  .notes-masonry{
+    columns:1;
+  }
+
+  .topbar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
 }
-
-.loginbox input{
- width:100%;
- padding:13px;
- margin:10px 0;
- border:1px solid var(--border);
- border-radius:10px;
- background:var(--input);
- color:var(--text);
-}
-
-body.dark input::placeholder,
-body.dark textarea::placeholder{
- color:#7f9187;
-}
-
-/* MOBILE */
-
-@media(max-width:1100px){
- .notes-masonry{column-count:2}
-}
-
-@media(max-width:800px){
-
- .side{
-  width:72px;
-  padding:12px 7px;
- }
-
- .side h2,
- .side small,
- .nav span,
- .user{
-  display:none;
- }
-
- .nursing-logo{
-  width:52px;
-  height:52px;
-  border-width:3px;
- }
-
- .nursing-logo svg{
-  width:36px;
-  height:36px;
- }
-
- .nav button{
-  text-align:center;
-  font-size:19px;
- }
-
- .main{
-  margin-left:72px;
-  padding:15px;
- }
-
- .notes-masonry{
-  column-count:1;
- }
-
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-
-<div class="login" id="login">
-
- <div class="loginbox">
-
-  <h1>BSN 2A</h1>
-
-  <p>Enter your name to continue</p>
-
-  <input
-   id="name"
-   placeholder="Your name"
-  >
-
-  <button
-   class="btn"
-   onclick="enter()"
-  >
-   Enter Website
-  </button>
-
- </div>
-
-</div>
-
-
-<!-- SIDEBAR -->
-
 <aside class="side">
 
- <div class="logo">
-
-  <div class="nursing-logo">
-
-   <svg viewBox="0 0 100 100">
-
-    <circle cx="50" cy="50" r="46"></circle>
-
-    <path d="M42 24h16v18h18v16H58v18H42V58H24V42h18z"></path>
-
-    <path d="M31 70c7 7 13 10 19 10s12-3 19-10"></path>
-
-   </svg>
-
+  <div class="logo">
+    <h1>BSN 2A Notes</h1>
+    <p>Class notes &amp; tasks</p>
   </div>
 
-  <h2>BSN 2A</h2>
+  <nav class="nav">
 
-  <small>Small Steps. Big Dreams.</small>
+    <button class="on" onclick="show('notes',this)">
+      📝 <span>Notes</span>
+    </button>
 
- </div>
+    <button onclick="show('tasks',this)">
+      ✅ <span>Tasks</span>
+    </button>
 
+    <button onclick="show('chat',this)">
+      💬 <span>Chat</span>
+    </button>
 
- <nav class="nav">
+    <button onclick="show('files',this)">
+      📚 <span>Files</span>
+    </button>
 
-  <button
-   class="on"
-   onclick="show('notes',this)"
-  >
-   📝 <span>Notes</span>
-  </button>
+    <button onclick="show('about',this)">
+      ℹ️ <span>About</span>
+    </button>
 
-  <button onclick="show('tasks',this)">
-   ✅ <span>Tasks</span>
-  </button>
+    <!-- ICON ONLY THEME BUTTON -->
+    <button
+      id="themeToggle"
+      onclick="toggleTheme()"
+      title="Toggle light/dark mode"
+      aria-label="Toggle light/dark mode"
+    >
+      <span id="themeIcon" class="theme-icon">◐</span>
+    </button>
 
-  <button onclick="show('chat',this)">
-   💬 <span>Chat</span>
-  </button>
+    <button onclick="adminLogin()">
+      🔒 <span id="admBtn">Admin</span>
+    </button>
 
-  <button onclick="show('files',this)">
-   📚 <span>Files</span>
-  </button>
-
-  <button onclick="show('about',this)">
-   ℹ️ <span>About</span>
-  </button>
-
-  <button
-   id="themeToggle"
-   onclick="toggleTheme()"
-   title="Toggle light/dark mode"
-  >
-   🌙 <span id="themeLabel">Dark Mode</span>
-  </button>
-
-  <button onclick="adminLogin()">
-   🔒 <span id="admBtn">Admin</span>
-  </button>
-
- </nav>
-
-
- <div class="user">
-
-  👤 <b id="who">Guest</b>
-
-  <div id="mode">Student mode</div>
-
-  <div class="online">
-
-   <b>🟢 Online</b>
-
-   <div id="people">
-    Nobody online
-   </div>
-
-  </div>
-
- </div>
+  </nav>
 
 </aside>
 
 
-<!-- MAIN -->
-
 <main class="main">
 
- <!-- ANNOUNCEMENT -->
+  <div class="topbar">
+    <h2 id="pageTitle">Notes</h2>
 
- <div class="announcement">
-
-  <div class="announcement-icon">
-
-   📢
-
-  </div>
-
-  <div class="announcement-window">
-
-   <div
-    id="announcementTrack"
-    class="announcement-track"
-   >
-
-    <span
-     id="announcementText"
-     class="announcement-text"
-    >
-     No important announcement yet.
-    </span>
-
-   </div>
-
-  </div>
-
-  <div
-   id="announcementAdmin"
-   class="announcement-admin hide"
-  >
-
-   <button onclick="announcementModal()">
-    ✏️
-   </button>
-
-  </div>
-
- </div>
-
-
- <!-- NOTES -->
-
- <section
-  id="notes"
-  class="sec on"
- >
-
-  <div class="hero">
-
-   <h1>Welcome to BSN 2A Notes</h1>
-
-   <p>My biggest update yet</p>
-
-  </div>
-
-  <h2>Class Notes</h2>
-
-  <div
-   id="notesList"
-   class="notes-masonry"
-  ></div>
-
- </section>
-
-
- <!-- TASKS -->
-
- <section
-  id="tasks"
-  class="sec"
- >
-
-  <div class="task-header">
-
-   <h2>Tasks & Deadlines</h2>
-
-   <button
-    class="btn"
-    id="addT2"
-    onclick="taskModal()"
-    style="display:none"
-   >
-    ☑️ Add Task
-   </button>
-
-  </div>
-
-  <p style="color:var(--muted)">
-   Check the box when you finish a task.
-  </p>
-
-  <div id="taskList"></div>
-
- </section>
-
-
- <!-- CHAT -->
-
- <section
-  id="chat"
-  class="sec"
- >
-
-  <h2>💬 BSN 2A Chat</h2>
-
-  <div class="chat">
-
-   <div
-    id="chatLog"
-    class="chatlog"
-   ></div>
-
-   <div class="chatrow">
-
-    <input
-     id="chatInput"
-     placeholder="Send a message..."
-     onkeydown="if(event.key==='Enter')sendChat()"
-    >
-
-    <button
-     class="btn"
-     onclick="sendChat()"
-    >
-     Send
-    </button>
-
-   </div>
-
+    <div class="userbox">
+      <span class="user-name" id="currentUser"></span>
+    </div>
   </div>
 
 
-  <div
-   id="adminChatWrap"
-   class="hide"
-  >
+  <div id="announcement" class="announcement"></div>
 
-   <h2>🔐 Admin Chat</h2>
 
-   <div class="chat">
+  <!-- NOTES -->
+  <section id="notes" class="section active">
 
-    <div
-     id="adminLog"
-     class="chatlog"
-    ></div>
+    <div id="adminNotesPanel" class="admin-panel" style="display:none;">
 
-    <div class="chatrow">
+      <h3>Add Note</h3>
 
-     <input
-      id="adminInput"
-      placeholder="Admin message..."
-      onkeydown="if(event.key==='Enter')sendAdmin()"
-     >
+      <div class="form-grid">
 
-     <button
-      class="btn"
-      onclick="sendAdmin()"
-     >
-      Send
-     </button>
+        <input
+          id="noteTitle"
+          type="text"
+          placeholder="Note title"
+        >
+
+        <input
+          id="noteAuthor"
+          type="text"
+          placeholder="Author"
+        >
+
+        <textarea
+          id="noteText"
+          class="full"
+          placeholder="Write your note here..."
+        ></textarea>
+
+      </div>
+
+      <div class="form-buttons">
+        <button class="btn primary" onclick="addNote()">
+          Add Note
+        </button>
+      </div>
 
     </div>
 
-   </div>
+    <div id="notesList" class="notes-masonry"></div>
 
-  </div>
-
- </section>
+  </section>
 
 
- <!-- FILES -->
+  <!-- TASKS -->
+  <section id="tasks" class="section">
 
- <section
-  id="files"
-  class="sec"
- >
+    <div id="adminTasksPanel" class="admin-panel" style="display:none;">
 
-  <h2>📚 Class Files</h2>
+      <h3 id="taskFormTitle">Add Task</h3>
 
-  <button
-   class="btn"
-   id="addF"
-   onclick="fileModal()"
-   style="display:none"
-  >
-   + Add Link
-  </button>
+      <div class="form-grid">
 
-  <div id="fileList"></div>
+        <input
+          id="taskTitle"
+          type="text"
+          placeholder="Task title"
+        >
 
- </section>
+        <input
+          id="taskDue"
+          type="text"
+          placeholder="Due date / time"
+        >
+
+        <textarea
+          id="taskDescription"
+          class="full"
+          placeholder="Task description (optional)"
+        ></textarea>
+
+      </div>
+
+      <div class="form-buttons">
+
+        <button
+          id="taskSaveBtn"
+          class="btn primary"
+          onclick="saveTask()"
+        >
+          Add Task
+        </button>
+
+        <button
+          id="taskCancelBtn"
+          class="btn"
+          onclick="cancelTaskEdit()"
+          style="display:none;"
+        >
+          Cancel
+        </button>
+
+      </div>
+
+    </div>
+
+    <div id="tasksList" class="tasks-list"></div>
+
+  </section>
 
 
- <!-- ABOUT -->
+  <!-- CHAT -->
+  <section id="chat" class="section">
 
- <section
-  id="about"
-  class="sec"
- >
+    <div class="chat">
 
-  <div class="hero">
+      <div id="chatlog" class="chatlog"></div>
 
-   <h1>BSN 2A 🌱</h1>
+      <div class="chatrow">
 
-   <p>
-    Students can view shared content and keep
-    their own task checklists.
-    Admins manage shared notes, tasks,
-    files and announcements.
-   </p>
+        <input
+          id="chatInput"
+          type="text"
+          placeholder="Type a message..."
+          onkeydown="if(event.key==='Enter')sendChat()"
+        >
 
-  </div>
+        <button
+          class="btn primary"
+          onclick="sendChat()"
+        >
+          Send
+        </button>
 
- </section>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FILES -->
+  <section id="files" class="section">
+
+    <div id="adminFilesPanel" class="admin-panel" style="display:none;">
+
+      <h3>Add File Link</h3>
+
+      <div class="form-grid">
+
+        <input
+          id="fileTitle"
+          type="text"
+          placeholder="File title"
+        >
+
+        <input
+          id="fileUrl"
+          type="url"
+          placeholder="https://..."
+        >
+
+        <input
+          id="fileDescription"
+          class="full"
+          type="text"
+          placeholder="Description"
+        >
+
+      </div>
+
+      <div class="form-buttons">
+
+        <button
+          class="btn primary"
+          onclick="addFile()"
+        >
+          Add File
+        </button>
+
+      </div>
+
+    </div>
+
+    <div id="filesList" class="files-list"></div>
+
+  </section>
+
+
+  <!-- ABOUT -->
+  <section id="about" class="section">
+
+    <div class="about-box">
+
+      <h2>BSN 2A Notes</h2>
+
+      <p>
+        A shared class space for notes, tasks, announcements,
+        files, and class communication.
+      </p>
+
+      <p>
+        Students can view notes and tasks, complete tasks
+        personally, communicate through chat, and access
+        shared class resources.
+      </p>
+
+      <p class="status">
+        Firebase Realtime Database connected.
+      </p>
+
+    </div>
+
+  </section>
 
 </main>
 
 
-<!-- GENERAL MODAL -->
+<!-- ADMIN LOGIN MODAL -->
+<div id="adminModal" class="modal">
 
-<div
- id="modal"
- class="modal"
->
+  <div class="modal-box">
 
- <div class="box">
+    <h3>Admin Login</h3>
 
-  <h2 id="mt">Add Note</h2>
+    <input
+      id="adminPassword"
+      type="password"
+      placeholder="Admin password"
+      onkeydown="if(event.key==='Enter')loginAdmin()"
+    >
 
-  <div id="noteFields">
+    <div class="modal-buttons">
 
-   <input
-    id="nt"
-    placeholder="Note title"
-   >
+      <button
+        class="btn"
+        onclick="closeAdminModal()"
+      >
+        Cancel
+      </button>
 
-   <textarea
-    id="nx"
-    placeholder="Note text"
-   ></textarea>
+      <button
+        class="btn primary"
+        onclick="loginAdmin()"
+      >
+        Login
+      </button>
 
-  </div>
-
-
-  <div
-   id="taskFields"
-   class="hide"
-  >
-
-   <input
-    id="tt"
-    placeholder="Task title"
-   >
-
-   <input
-    id="td"
-    type="date"
-   >
-
-   <textarea
-    id="tx"
-    placeholder="Task details"
-   ></textarea>
+    </div>
 
   </div>
-
-
-  <div
-   id="fileFields"
-   class="hide"
-  >
-
-   <input
-    id="ft"
-    placeholder="File title"
-   >
-
-   <input
-    id="fu"
-    placeholder="https://..."
-   >
-
-   <select id="fy">
-
-    <option>PDF</option>
-    <option>PPT</option>
-    <option>Document</option>
-    <option>Other</option>
-
-   </select>
-
-  </div>
-
-
-  <div class="modal-buttons">
-
-   <button
-    class="btn"
-    onclick="closeModal()"
-   >
-    Cancel
-   </button>
-
-   <button
-    class="btn"
-    onclick="saveModal()"
-   >
-    Save
-   </button>
-
-  </div>
-
- </div>
 
 </div>
 
 
-<!-- ANNOUNCEMENT MODAL -->
+<!-- EDIT NOTE MODAL -->
+<div id="editNoteModal" class="modal">
 
-<div
- id="announcementModal"
- class="modal"
->
+  <div class="modal-box">
 
- <div class="box">
+    <h3>Edit Note</h3>
 
-  <h2>📢 Class Announcement</h2>
+    <input
+      id="editNoteTitle"
+      type="text"
+      placeholder="Note title"
+    >
 
-  <textarea
-   id="announcementInput"
-   placeholder="Enter announcement..."
-  ></textarea>
+    <br><br>
 
-  <div class="modal-buttons">
+    <input
+      id="editNoteAuthor"
+      type="text"
+      placeholder="Author"
+    >
 
-   <button
-    class="btn"
-    onclick="closeAnnouncementModal()"
-   >
-    Cancel
-   </button>
+    <br><br>
 
-   <button
-    class="btn"
-    onclick="saveAnnouncement()"
-   >
-    Save Announcement
-   </button>
+    <textarea
+      id="editNoteText"
+      placeholder="Note text..."
+    ></textarea>
+
+    <div class="modal-buttons">
+
+      <button
+        class="btn"
+        onclick="closeEditNote()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="btn primary"
+        onclick="saveNoteEdit()"
+      >
+        Save
+      </button>
+
+    </div>
 
   </div>
-
- </div>
 
 </div>
 
@@ -1088,1924 +938,1975 @@ body.dark textarea::placeholder{
 <script type="module">
 
 import {
- initializeApp
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
- getDatabase,
- ref,
- push,
- set,
- update,
- remove,
- onValue,
- onDisconnect,
- serverTimestamp
-}
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  getDatabase,
+  ref,
+  push,
+  set,
+  update,
+  remove,
+  onValue,
+  onDisconnect,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
-/* FIREBASE */
+/* =========================
+   FIREBASE
+========================= */
 
-const app=initializeApp({
+const firebaseConfig = {
 
- apiKey:
- "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
+  apiKey:
+    "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
 
- authDomain:
- "bsn-2a-notes.firebaseapp.com",
+  authDomain:
+    "bsn-2a-notes.firebaseapp.com",
 
- databaseURL:
- "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL:
+    "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
 
- projectId:
- "bsn-2a-notes",
+  projectId:
+    "bsn-2a-notes",
 
- storageBucket:
- "bsn-2a-notes.firebasestorage.app",
+  storageBucket:
+    "bsn-2a-notes.firebasestorage.app",
 
- messagingSenderId:
- "991210260962",
+  messagingSenderId:
+    "991210260962",
 
- appId:
- "1:991210260962:web:8f6a886c7478be096991bb"
+  appId:
+    "1:991210260962:web:8f6a886c7478be096991bb"
 
-});
-
-
-const db=getDatabase(app);
-
-
-const R={
- notes:ref(db,"notes"),
- tasks:ref(db,"tasks"),
- chat:ref(db,"chat"),
- admin:ref(db,"adminChat"),
- files:ref(db,"files"),
- presence:ref(db,"presence"),
- announcement:ref(db,"announcement")
 };
 
 
-let notes={};
-let tasks={};
-let files={};
-let announcement={};
-
-let isAdmin=false;
-let editId=null;
-let type="note";
-let user=localStorage.getItem("bsnUser")||"";
-
-const PASS="supperlol123123";
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 
-/* HELPERS */
+/* =========================
+   GLOBAL STATE
+========================= */
 
-const esc=x=>
- String(x??"")
- .replace(/&/g,"&amp;")
- .replace(/</g,"&lt;")
- .replace(/>/g,"&gt;")
- .replace(/"/g,"&quot;")
- .replace(/'/g,"&#039;");
+let notesData = {};
+let tasksData = {};
+let chatData = {};
+let filesData = {};
 
-
-const fmt=x=>
- x
- ?new Date(x+"T00:00")
-  .toLocaleDateString(
-   undefined,
-   {
-    month:"long",
-    day:"numeric",
-    year:"numeric"
-   }
-  )
- :"";
+let isAdmin = false;
+let editingTaskId = null;
+let editingNoteId = null;
+let draggedTaskId = null;
+let draggedNoteId = null;
 
 
-const K=x=>"bsn2a_"+x;
+/* =========================
+   USER NAME
+========================= */
 
+let userName = localStorage.getItem("bsn2a_name");
 
-function save(k,v){
- localStorage.setItem(
-  K(k),
-  JSON.stringify(v)
- );
-}
+if(!userName){
 
+  userName =
+    prompt("Enter your name:") ||
+    "Student";
 
-function load(k){
- try{
-  return JSON.parse(
-   localStorage.getItem(K(k))
+  userName = userName.trim() || "Student";
+
+  localStorage.setItem(
+    "bsn2a_name",
+    userName
   );
- }catch{
-  return null;
- }
-}
-
-
-/* LOGIN */
-
-function enter(){
-
- const n=
- document.getElementById("name")
- .value
- .trim();
-
- if(!n){
-  alert("Enter your name.");
-  return;
- }
-
- user=n;
-
- localStorage.setItem(
-  "bsnUser",
-  n
- );
-
- document.getElementById("who").textContent=n;
-
- document
- .getElementById("login")
- .classList
- .add("hide");
-
- presence();
 
 }
 
-window.enter=enter;
+document.getElementById(
+  "currentUser"
+).textContent = userName;
 
 
-if(user){
+/* =========================
+   STORAGE HELPERS
+========================= */
 
- document.getElementById("who").textContent=user;
+function save(key,value){
 
- document
- .getElementById("login")
- .classList
- .add("hide");
+  localStorage.setItem(
+    key,
+    JSON.stringify(value)
+  );
 
 }
 
 
-/* THEME */
+function load(key){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem(key)
+    );
+
+  }catch{
+
+    return null;
+
+  }
+
+}
+
+
+/* =========================
+   CLEAN TEXT
+   Removes indentation from
+   multiline content.
+========================= */
+
+function cleanText(value){
+
+  return String(value || "")
+    .replace(/^[ \t]+/gm,"")
+    .trim();
+
+}
+
+
+/* =========================
+   HTML ESCAPE
+========================= */
+
+function esc(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+window.show = function(section,button){
+
+  document
+    .querySelectorAll(".section")
+    .forEach(el =>
+      el.classList.remove("active")
+    );
+
+  document
+    .getElementById(section)
+    .classList.add("active");
+
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(el =>
+      el.classList.remove("on")
+    );
+
+
+  if(button){
+    button.classList.add("on");
+  }
+
+
+  const titles = {
+
+    notes:"Notes",
+    tasks:"Tasks",
+    chat:"Chat",
+    files:"Files",
+    about:"About"
+
+  };
+
+
+  document.getElementById(
+    "pageTitle"
+  ).textContent =
+    titles[section] || "BSN 2A";
+
+};
+
+
+/* =========================
+   THEME
+========================= */
 
 function applyTheme(isDark){
 
- document.body.classList.toggle(
-  "dark",
-  isDark
- );
-
- localStorage.setItem(
-  "dark",
-  isDark?"true":"false"
- );
-
- const button=
- document.getElementById(
-  "themeToggle"
- );
-
- const label=
- document.getElementById(
-  "themeLabel"
- );
-
- if(button){
-
-  button.classList.toggle(
-   "theme-toggle-active",
-   isDark
+  document.body.classList.toggle(
+    "dark",
+    isDark
   );
 
-  button.firstChild.textContent=
-   isDark
-   ?"☀️ "
-   :"🌙 ";
+  localStorage.setItem(
+    "dark",
+    isDark ? "true" : "false"
+  );
 
-  button.title=
-   isDark
-   ?"Switch to light mode"
-   :"Switch to dark mode";
 
- }
+  const icon =
+    document.getElementById("themeIcon");
 
- if(label){
 
-  label.textContent=
-   isDark
-   ?"Light Mode"
-   :"Dark Mode";
+  if(icon){
 
- }
+    /*
+      Light mode:
+      show half moon = switch to dark
 
- const meta=
- document.querySelector(
-  'meta[name="theme-color"]'
- );
+      Dark mode:
+      show sun = switch to light
+    */
 
- if(meta){
+    icon.textContent =
+      isDark ? "☀️" : "◐";
 
-  meta.content=
-   isDark
-   ?"#101714"
-   :"#245c43";
+  }
 
- }
+
+  const button =
+    document.getElementById("themeToggle");
+
+
+  if(button){
+
+    button.title =
+      isDark
+        ? "Switch to light mode"
+        : "Switch to dark mode";
+
+    button.setAttribute(
+      "aria-label",
+      isDark
+        ? "Switch to light mode"
+        : "Switch to dark mode"
+    );
+
+  }
+
+
+  const meta =
+    document.querySelector(
+      'meta[name="theme-color"]'
+    );
+
+
+  if(meta){
+
+    meta.setAttribute(
+      "content",
+      isDark
+        ? "#101714"
+        : "#245c43"
+    );
+
+  }
 
 }
 
 
-function toggleTheme(){
+window.toggleTheme = function(){
 
- applyTheme(
-  !document.body.classList.contains("dark")
- );
+  applyTheme(
+    !document.body.classList.contains("dark")
+  );
 
-}
-
-window.toggleTheme=toggleTheme;
+};
 
 
 applyTheme(
- localStorage.getItem("dark")==="true"
+  localStorage.getItem("dark") === "true"
 );
 
 
-/* NAVIGATION */
+/* =========================
+   ADMIN
+========================= */
 
-function show(id,button){
+window.adminLogin = function(){
 
- document
- .querySelectorAll(".sec")
- .forEach(x=>
-  x.classList.remove("on")
- );
+  if(isAdmin){
 
- document
- .getElementById(id)
- .classList.add("on");
+    isAdmin = false;
 
- document
- .querySelectorAll(".nav button")
- .forEach(x=>
-  x.classList.remove("on")
- );
+    document.getElementById(
+      "admBtn"
+    ).textContent = "Admin";
 
- if(button){
-  button.classList.add("on");
- }
+    updateAdminUI();
 
- window.scrollTo({
-  top:0,
-  behavior:"smooth"
- });
+    return;
 
-}
-
-window.show=show;
+  }
 
 
-/* ADMIN */
+  document
+    .getElementById("adminModal")
+    .classList.add("show");
 
-function adminLogin(){
+  document
+    .getElementById("adminPassword")
+    .value = "";
 
- if(isAdmin){
+  setTimeout(() => {
 
-  isAdmin=false;
-  ui();
+    document
+      .getElementById("adminPassword")
+      .focus();
 
-  return;
+  },100);
 
- }
-
- if(prompt("Admin password:")===PASS){
-
-  isAdmin=true;
-
-  ui();
-
-  alert("Admin mode enabled 🔓");
-
- }else{
-
-  alert("Wrong password.");
-
- }
-
-}
-
-window.adminLogin=adminLogin;
+};
 
 
-function ui(){
+window.closeAdminModal = function(){
 
- document.getElementById("addT2")
- .style.display=
- isAdmin?"inline-block":"none";
+  document
+    .getElementById("adminModal")
+    .classList.remove("show");
 
- document.getElementById("addF")
- .style.display=
- isAdmin?"inline-block":"none";
-
- document.getElementById("admBtn")
- .textContent=
- isAdmin?"Admin 🔓":"Admin";
-
- document.getElementById("mode")
- .textContent=
- isAdmin
- ?"Administrator mode"
- :"Student mode";
-
- document
- .getElementById("adminChatWrap")
- .classList
- .toggle("hide",!isAdmin);
-
- document
- .getElementById("announcementAdmin")
- .classList
- .toggle("hide",!isAdmin);
-
- render();
-
-}
+};
 
 
-/* ANNOUNCEMENT */
+window.loginAdmin = function(){
 
-function renderAnnouncement(data){
+  const password =
+    document
+      .getElementById("adminPassword")
+      .value;
 
- announcement=data||{};
 
- document.getElementById(
-  "announcementText"
- ).textContent=
- announcement.text||
- "No important announcement yet.";
+  /*
+    NOTE:
+    This is frontend-only.
+    For real security use Firebase Auth
+    and database security rules.
+  */
+
+  if(password === "supperlol123123"){
+
+    isAdmin = true;
+
+    document.getElementById(
+      "admBtn"
+    ).textContent = "Logout";
+
+    closeAdminModal();
+
+    updateAdminUI();
+
+    renderNotes();
+    renderTasks();
+    renderFiles();
+
+  }else{
+
+    alert("Wrong admin password.");
+
+  }
+
+};
+
+
+function updateAdminUI(){
+
+  document.getElementById(
+    "adminNotesPanel"
+  ).style.display =
+    isAdmin ? "block" : "none";
+
+
+  document.getElementById(
+    "adminTasksPanel"
+  ).style.display =
+    isAdmin ? "block" : "none";
+
+
+  document.getElementById(
+    "adminFilesPanel"
+  ).style.display =
+    isAdmin ? "block" : "none";
 
 }
 
+
+/* =========================
+   NOTES
+========================= */
 
 onValue(
- R.announcement,
- snapshot=>{
-  renderAnnouncement(
-   snapshot.val()
-  );
- }
+  ref(db,"notes"),
+  snapshot => {
+
+    notesData =
+      snapshot.val() || {};
+
+    renderNotes();
+
+  }
 );
 
-
-function announcementModal(){
-
- if(!isAdmin){
-  alert("Admin access required.");
-  return;
- }
-
- document.getElementById(
-  "announcementInput"
- ).value=
- announcement.text||"";
-
- document
- .getElementById("announcementModal")
- .classList
- .add("on");
-
-}
-
-window.announcementModal=
- announcementModal;
-
-
-function closeAnnouncementModal(){
-
- document
- .getElementById("announcementModal")
- .classList
- .remove("on");
-
-}
-
-window.closeAnnouncementModal=
- closeAnnouncementModal;
-
-
-async function saveAnnouncement(){
-
- if(!isAdmin)return;
-
- const text=
- document.getElementById(
-  "announcementInput"
- ).value.trim();
-
- if(!text){
-  alert("Enter an announcement.");
-  return;
- }
-
- await set(
-  R.announcement,
-  {
-   text,
-   author:user,
-   updatedAt:Date.now()
-  }
- );
-
- closeAnnouncementModal();
-
-}
-
-window.saveAnnouncement=
- saveAnnouncement;
-
-
-/* RENDER */
-
-function render(){
-
- renderNotes();
- renderTasks();
- renderFiles();
-
-}
-
-
-/* NOTES */
 
 function getOrderedNotes(){
 
- const entries=
- Object.entries(notes)
- .filter(([id])=>id!=="_order");
-
- const order=
- Array.isArray(notes._order)
- ?notes._order
- :[];
-
- const map=
- new Map(entries);
-
- const result=[];
-
- order.forEach(id=>{
-
-  if(map.has(id)){
-
-   result.push([
-    id,
-    map.get(id)
-   ]);
-
-   map.delete(id);
-
-  }
-
- });
-
- return result.concat(
-  [...map.entries()]
-  .sort(
-   (a,b)=>
-    (b[1].createdAt||0)-
-    (a[1].createdAt||0)
-  )
- );
+  return Object.entries(notesData)
+    .sort(
+      ([,a],[,b]) =>
+        (a.order ?? 999999) -
+        (b.order ?? 999999)
+    );
 
 }
 
 
 function renderNotes(){
 
- const nc=
- document.getElementById(
-  "notesList"
- );
+  const container =
+    document.getElementById(
+      "notesList"
+    );
 
- nc.innerHTML="";
-
-
- getOrderedNotes()
- .forEach(([id,n])=>{
-
-  const d=
-  document.createElement("div");
-
-  d.className="card";
-
-  d.draggable=isAdmin;
-
-  d.dataset.noteId=id;
+  container.innerHTML = "";
 
 
-  d.innerHTML=`
-
-   <h3>
-    ${esc(n.title||"Untitled")}
-   </h3>
-
-   <div class="text">${esc(
-    String(n.text||"").trim()
-   )}</div>
-
-   <small>
-    Added by ${esc(n.author||"Admin")}
-   </small>
-
-   ${
-    isAdmin
-    ?`
-     <div style="
-      margin-top:12px;
-      display:flex;
-      gap:7px;
-     ">
-
-      <button
-       class="small"
-       onclick="editNote('${id}')"
-      >
-       ✏️ Edit
-      </button>
-
-      <button
-       class="small del"
-       onclick="delNote('${id}')"
-      >
-       🗑️ Delete
-      </button>
-
-     </div>
-    `
-    :""
-   }
-
-  `;
+  const notes =
+    getOrderedNotes();
 
 
-  nc.appendChild(d);
+  if(notes.length === 0){
 
+    container.innerHTML =
+      `<div class="empty">
+        No notes yet.
+      </div>`;
 
-  if(isAdmin){
-
-   d.addEventListener(
-    "dragstart",
-    noteDragStart
-   );
-
-   d.addEventListener(
-    "dragover",
-    noteDragOver
-   );
-
-   d.addEventListener(
-    "dragleave",
-    noteDragLeave
-   );
-
-   d.addEventListener(
-    "drop",
-    noteDrop
-   );
-
-   d.addEventListener(
-    "dragend",
-    noteDragEnd
-   );
+    return;
 
   }
 
- });
+
+  notes.forEach(([id,n]) => {
+
+    const d =
+      document.createElement("div");
 
 
- if(!nc.children.length){
+    d.className = "card";
 
-  nc.innerHTML=`
-   <div class="card empty-card">
-    No notes found.
-   </div>
-  `;
+    d.draggable = isAdmin;
 
- }
+    d.dataset.noteId = id;
+
+
+    const title =
+      String(
+        n.title ||
+        "Untitled"
+      ).trim();
+
+
+    const text =
+      cleanText(n.text);
+
+
+    const author =
+      String(
+        n.author ||
+        "Admin"
+      ).trim();
+
+
+    d.innerHTML = `
+
+      <h3>${esc(title)}</h3>
+
+      <div class="text">${esc(text)}</div>
+
+      <small>
+        Added by ${esc(author)}
+      </small>
+
+      ${
+        isAdmin
+        ? `
+
+          <div class="note-actions">
+
+            <button
+              class="btn"
+              onclick="editNote('${id}')"
+            >
+              Edit
+            </button>
+
+            <button
+              class="btn danger"
+              onclick="deleteNote('${id}')"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        `
+        : ""
+      }
+
+    `;
+
+
+    if(isAdmin){
+
+      d.addEventListener(
+        "dragstart",
+        () => {
+
+          draggedNoteId = id;
+
+          d.classList.add(
+            "dragging"
+          );
+
+        }
+      );
+
+
+      d.addEventListener(
+        "dragend",
+        () => {
+
+          d.classList.remove(
+            "dragging"
+          );
+
+          draggedNoteId = null;
+
+        }
+      );
+
+
+      d.addEventListener(
+        "dragover",
+        e => {
+
+          e.preventDefault();
+
+          d.classList.add(
+            "drag-over"
+          );
+
+        }
+      );
+
+
+      d.addEventListener(
+        "dragleave",
+        () => {
+
+          d.classList.remove(
+            "drag-over"
+          );
+
+        }
+      );
+
+
+      d.addEventListener(
+        "drop",
+        async e => {
+
+          e.preventDefault();
+
+          d.classList.remove(
+            "drag-over"
+          );
+
+          if(
+            draggedNoteId &&
+            draggedNoteId !== id
+          ){
+
+            await reorderNotes(
+              draggedNoteId,
+              id
+            );
+
+          }
+
+        }
+      );
+
+    }
+
+
+    container.appendChild(d);
+
+  });
 
 }
 
 
-/* NOTE DRAG */
+window.addNote = async function(){
 
-let draggedNoteId=null;
-
-
-function noteDragStart(e){
-
- if(!isAdmin)return;
-
- draggedNoteId=
- e.currentTarget.dataset.noteId;
-
- e.currentTarget.classList.add(
-  "dragging"
- );
-
- e.dataTransfer.effectAllowed="move";
-
-}
+  if(!isAdmin) return;
 
 
-function noteDragOver(e){
+  const title =
+    document
+      .getElementById("noteTitle")
+      .value
+      .trim();
 
- if(!isAdmin)return;
 
- e.preventDefault();
+  const author =
+    document
+      .getElementById("noteAuthor")
+      .value
+      .trim() ||
+    userName;
 
- if(
-  e.currentTarget.dataset.noteId
-  !==draggedNoteId
- ){
 
-  e.currentTarget.classList.add(
-   "drag-over"
+  const text =
+    cleanText(
+      document
+        .getElementById("noteText")
+        .value
+    );
+
+
+  if(!title || !text){
+
+    alert(
+      "Please enter a title and note."
+    );
+
+    return;
+
+  }
+
+
+  const orders =
+    getOrderedNotes()
+      .map(([,n]) =>
+        Number(n.order ?? 0)
+      );
+
+
+  const nextOrder =
+    orders.length
+      ? Math.max(...orders) + 1
+      : 0;
+
+
+  const newRef =
+    push(ref(db,"notes"));
+
+
+  await set(
+    newRef,
+    {
+
+      title,
+      author,
+      text,
+      order:nextOrder,
+      createdAt:
+        serverTimestamp()
+
+    }
   );
 
- }
 
-}
-
-
-function noteDragLeave(e){
-
- e.currentTarget.classList.remove(
-  "drag-over"
- );
-
-}
+  document.getElementById(
+    "noteTitle"
+  ).value = "";
 
 
-function noteDragEnd(e){
-
- e.currentTarget.classList.remove(
-  "dragging"
- );
-
- document
- .querySelectorAll(".drag-over")
- .forEach(x=>
-  x.classList.remove("drag-over")
- );
-
- draggedNoteId=null;
-
-}
+  document.getElementById(
+    "noteAuthor"
+  ).value = "";
 
 
-async function noteDrop(e){
+  document.getElementById(
+    "noteText"
+  ).value = "";
 
- if(!isAdmin)return;
+};
 
- e.preventDefault();
 
- const target=
- e.currentTarget.dataset.noteId;
+window.editNote = function(id){
 
- if(
-  !draggedNoteId||
-  !target||
-  draggedNoteId===target
- ){
-  return;
- }
+  if(!isAdmin) return;
 
- const ids=
- getOrderedNotes()
- .map(([id])=>id);
 
- const from=
- ids.indexOf(draggedNoteId);
+  const n =
+    notesData[id];
 
- const to=
- ids.indexOf(target);
 
- if(from<0||to<0)return;
+  if(!n) return;
 
- ids.splice(from,1);
 
- ids.splice(
-  to,
-  0,
-  draggedNoteId
- );
+  editingNoteId = id;
 
- await update(
-  ref(db,"notes"),
-  {
-   _order:ids
+
+  document.getElementById(
+    "editNoteTitle"
+  ).value =
+    n.title || "";
+
+
+  document.getElementById(
+    "editNoteAuthor"
+  ).value =
+    n.author || "";
+
+
+  document.getElementById(
+    "editNoteText"
+  ).value =
+    n.text || "";
+
+
+  document
+    .getElementById("editNoteModal")
+    .classList.add("show");
+
+};
+
+
+window.closeEditNote = function(){
+
+  editingNoteId = null;
+
+  document
+    .getElementById("editNoteModal")
+    .classList.remove("show");
+
+};
+
+
+window.saveNoteEdit = async function(){
+
+  if(!isAdmin || !editingNoteId)
+    return;
+
+
+  const title =
+    document
+      .getElementById("editNoteTitle")
+      .value
+      .trim();
+
+
+  const author =
+    document
+      .getElementById("editNoteAuthor")
+      .value
+      .trim();
+
+
+  const text =
+    cleanText(
+      document
+        .getElementById("editNoteText")
+        .value
+    );
+
+
+  if(!title || !text){
+
+    alert(
+      "Title and note are required."
+    );
+
+    return;
+
   }
- );
 
- draggedNoteId=null;
+
+  await update(
+    ref(
+      db,
+      "notes/" +
+      editingNoteId
+    ),
+    {
+      title,
+      author:
+        author || "Admin",
+      text
+    }
+  );
+
+
+  closeEditNote();
+
+};
+
+
+window.deleteNote = async function(id){
+
+  if(!isAdmin) return;
+
+
+  if(
+    !confirm(
+      "Delete this note?"
+    )
+  ) return;
+
+
+  await remove(
+    ref(
+      db,
+      "notes/" + id
+    )
+  );
+
+};
+
+
+async function reorderNotes(
+  draggedId,
+  targetId
+){
+
+  const entries =
+    getOrderedNotes();
+
+
+  const ids =
+    entries.map(([id]) => id);
+
+
+  const from =
+    ids.indexOf(draggedId);
+
+
+  const to =
+    ids.indexOf(targetId);
+
+
+  if(from < 0 || to < 0)
+    return;
+
+
+  ids.splice(
+    from,
+    1
+  );
+
+
+  ids.splice(
+    to,
+    0,
+    draggedId
+  );
+
+
+  const changes = {};
+
+
+  ids.forEach(
+    (id,index) => {
+
+      changes[
+        "notes/" +
+        id +
+        "/order"
+      ] = index;
+
+    }
+  );
+
+
+  await update(
+    ref(db),
+    changes
+  );
 
 }
 
 
-/* TASKS */
+/* =========================
+   TASKS
+========================= */
+
+onValue(
+  ref(db,"tasks"),
+  snapshot => {
+
+    tasksData =
+      snapshot.val() || {};
+
+    renderTasks();
+
+  }
+);
+
 
 function getOrderedTasks(){
 
- const entries=
- Object.entries(tasks)
- .filter(([id])=>id!=="_order");
-
- const order=
- Array.isArray(tasks._order)
- ?tasks._order
- :[];
-
- const map=
- new Map(entries);
-
- const result=[];
-
- order.forEach(id=>{
-
-  if(map.has(id)){
-
-   result.push([
-    id,
-    map.get(id)
-   ]);
-
-   map.delete(id);
-
-  }
-
- });
-
- return result.concat(
-  [...map.entries()]
-  .sort(
-   (a,b)=>
-    (a[1].createdAt||0)-
-    (b[1].createdAt||0)
-  )
- );
+  return Object.entries(tasksData)
+    .sort(
+      ([,a],[,b]) =>
+        (a.order ?? 999999) -
+        (b.order ?? 999999)
+    );
 
 }
 
 
 function renderTasks(){
 
- const tc=
- document.getElementById(
-  "taskList"
- );
+  const container =
+    document.getElementById(
+      "tasksList"
+    );
 
- tc.innerHTML="";
-
-
- getOrderedTasks()
- .forEach(([id,t])=>{
-
-  const checked=
-   load("check_"+id)===true;
-
-  const d=
-   document.createElement("div");
-
-  d.className=
-   "task"+
-   (checked?" completed":"");
-
-  d.draggable=isAdmin;
-
-  d.dataset.taskId=id;
+  container.innerHTML = "";
 
 
-  d.innerHTML=`
+  const tasks =
+    getOrderedTasks();
 
-   <input
-    class="task-check"
-    type="checkbox"
-    ${checked?"checked":""}
-    onchange="checkTask('${id}',this.checked)"
-   >
 
-   <div class="task-content">
+  if(tasks.length === 0){
 
-    <span
-     class="task-title ${checked?"done":""}"
-    >
-     ${esc(t.title||"Untitled Task")}
-    </span>
+    container.innerHTML =
+      `<div class="empty">
+        No tasks yet.
+      </div>`;
 
-    <div class="task-due">
+    return;
 
-     ${
-      t.due
-      ?"📅 Due: "+fmt(t.due)
-      :"📅 No due date"
-     }
+  }
 
-    </div>
 
-    ${
-     t.description
-     ?`
-      <div class="task-description">${esc(
-       String(t.description||"").trim()
-      )}</div>
-     `
-     :""
-    }
+  tasks.forEach(([id,t]) => {
 
-    ${
-     isAdmin
-     ?`
-      <div class="task-actions">
+    const d =
+      document.createElement("div");
 
-       <button
-        class="task-admin-btn"
-        onclick="editTask('${id}')"
-       >
-        ✏️ Edit
-       </button>
 
-       <button
-        class="task-admin-btn task-admin-delete"
-        onclick="delTask('${id}')"
-       >
-        🗑️ Delete
-       </button>
+    const checked =
+      load("check_" + id) === true;
+
+
+    d.className =
+      "task" +
+      (checked
+        ? " completed"
+        : "");
+
+
+    d.draggable = isAdmin;
+
+    d.dataset.taskId = id;
+
+
+    const title =
+      String(
+        t.title ||
+        "Untitled Task"
+      ).trim();
+
+
+    const description =
+      cleanText(
+        t.description
+      );
+
+
+    const due =
+      String(
+        t.due ||
+        ""
+      ).trim();
+
+
+    d.innerHTML = `
+
+      <input
+        class="task-check"
+        type="checkbox"
+        ${checked ? "checked" : ""}
+        onchange="checkTask('${id}',this.checked)"
+      >
+
+      <div class="task-content">
+
+        <span
+          class="task-title ${
+            checked ? "done" : ""
+          }"
+        >${esc(title)}</span>
+
+        ${
+          due
+          ? `
+            <div class="task-due">
+              Due: ${esc(due)}
+            </div>
+          `
+          : ""
+        }
+
+        ${
+          description
+          ? `
+            <div class="task-description">
+              ${esc(description)}
+            </div>
+          `
+          : ""
+        }
 
       </div>
-     `
-     :""
+
+      ${
+        isAdmin
+        ? `
+
+          <div class="task-actions">
+
+            <button
+              class="task-admin-btn"
+              onclick="editTask('${id}')"
+            >
+              Edit
+            </button>
+
+            <button
+              class="task-admin-delete"
+              onclick="deleteTask('${id}')"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        `
+        : ""
+      }
+
+    `;
+
+
+    if(isAdmin){
+
+      d.addEventListener(
+        "dragstart",
+        () => {
+
+          draggedTaskId = id;
+
+          d.classList.add(
+            "dragging"
+          );
+
+        }
+      );
+
+
+      d.addEventListener(
+        "dragend",
+        () => {
+
+          d.classList.remove(
+            "dragging"
+          );
+
+          draggedTaskId = null;
+
+        }
+      );
+
+
+      d.addEventListener(
+        "dragover",
+        e => {
+
+          e.preventDefault();
+
+          d.classList.add(
+            "drag-over"
+          );
+
+        }
+      );
+
+
+      d.addEventListener(
+        "dragleave",
+        () => {
+
+          d.classList.remove(
+            "drag-over"
+          );
+
+        }
+      );
+
+
+      d.addEventListener(
+        "drop",
+        async e => {
+
+          e.preventDefault();
+
+          d.classList.remove(
+            "drag-over"
+          );
+
+
+          if(
+            draggedTaskId &&
+            draggedTaskId !== id
+          ){
+
+            await reorderTasks(
+              draggedTaskId,
+              id
+            );
+
+          }
+
+        }
+      );
+
     }
 
-   </div>
 
-  `;
+    container.appendChild(d);
 
-
-  tc.appendChild(d);
-
-
-  if(isAdmin){
-
-   d.addEventListener(
-    "dragstart",
-    taskDragStart
-   );
-
-   d.addEventListener(
-    "dragover",
-    taskDragOver
-   );
-
-   d.addEventListener(
-    "dragleave",
-    taskDragLeave
-   );
-
-   d.addEventListener(
-    "drop",
-    taskDrop
-   );
-
-   d.addEventListener(
-    "dragend",
-    taskDragEnd
-   );
-
-  }
-
- });
-
-
- if(!tc.children.length){
-
-  tc.innerHTML=`
-   <div class="task">
-    <div style="
-     flex:1;
-     text-align:center;
-     color:var(--muted);
-    ">
-     📋 No tasks yet.
-    </div>
-   </div>
-  `;
-
- }
+  });
 
 }
 
 
-/* TASK DRAG */
+window.checkTask = function(
+  id,
+  checked
+){
 
-let draggedTaskId=null;
-
-
-function taskDragStart(e){
-
- if(!isAdmin)return;
-
- draggedTaskId=
- e.currentTarget.dataset.taskId;
-
- e.currentTarget.classList.add(
-  "dragging"
- );
-
- e.dataTransfer.effectAllowed="move";
-
-}
-
-
-function taskDragOver(e){
-
- if(!isAdmin)return;
-
- e.preventDefault();
-
- if(
-  e.currentTarget.dataset.taskId
-  !==draggedTaskId
- ){
-
-  e.currentTarget.classList.add(
-   "drag-over"
+  save(
+    "check_" + id,
+    checked
   );
-
- }
-
-}
-
-
-function taskDragLeave(e){
-
- e.currentTarget.classList.remove(
-  "drag-over"
- );
-
-}
-
-
-function taskDragEnd(e){
-
- e.currentTarget.classList.remove(
-  "dragging"
- );
-
- document
- .querySelectorAll(".task.drag-over")
- .forEach(x=>
-  x.classList.remove("drag-over")
- );
-
- draggedTaskId=null;
-
-}
-
-
-async function taskDrop(e){
-
- if(!isAdmin)return;
-
- e.preventDefault();
-
- const target=
- e.currentTarget.dataset.taskId;
-
- e.currentTarget.classList.remove(
-  "drag-over"
- );
-
- if(
-  !draggedTaskId||
-  !target||
-  draggedTaskId===target
- ){
-  return;
- }
-
- const ids=
- getOrderedTasks()
- .map(([id])=>id);
-
- const from=
- ids.indexOf(draggedTaskId);
-
- const to=
- ids.indexOf(target);
-
- if(from<0||to<0)return;
-
- ids.splice(from,1);
-
- ids.splice(
-  to,
-  0,
-  draggedTaskId
- );
-
- await update(
-  ref(db,"tasks"),
-  {
-   _order:ids
-  }
- );
-
- draggedTaskId=null;
-
-}
-
-
-/* PERSONAL TASK CHECKBOX */
-
-function checkTask(id,value){
-
- save(
-  "check_"+id,
-  value
- );
-
- renderTasks();
-
-}
-
-window.checkTask=checkTask;
-
-
-/* FILES */
-
-function renderFiles(){
-
- const fc=
- document.getElementById(
-  "fileList"
- );
-
- fc.innerHTML="";
-
-
- Object.entries(files)
- .filter(([id])=>id!=="_order")
- .reverse()
- .forEach(([id,f])=>{
-
-  const d=
-  document.createElement("div");
-
-  d.className="card";
-
-
-  d.innerHTML=`
-
-   <h3>
-    📄 ${esc(f.title)}
-   </h3>
-
-   <small>
-    ${esc(f.type||"File")}
-   </small>
-
-   <p>
-
-    <a
-     class="file-btn"
-     href="${esc(f.url)}"
-     target="_blank"
-     rel="noopener noreferrer"
-    >
-     🔗 Open File
-    </a>
-
-   </p>
-
-   ${
-    isAdmin
-    ?`
-     <button
-      class="small del"
-      onclick="delFile('${id}')"
-     >
-      🗑️ Delete
-     </button>
-    `
-    :""
-   }
-
-  `;
-
-
-  fc.appendChild(d);
-
- });
-
-
- if(!fc.children.length){
-
-  fc.innerHTML=`
-   <div class="card empty-card">
-    No file links yet.
-   </div>
-  `;
-
- }
-
-}
-
-
-/* FIREBASE CACHE */
-
-notes=load("notes")||{};
-tasks=load("tasks")||{};
-files=load("files")||{};
-
-render();
-
-
-/* FIREBASE LISTENERS */
-
-onValue(
- R.notes,
- snapshot=>{
-
-  notes=
-   snapshot.val()||{};
-
-  save("notes",notes);
-
-  renderNotes();
-
- }
-);
-
-
-onValue(
- R.tasks,
- snapshot=>{
-
-  tasks=
-   snapshot.val()||{};
-
-  save("tasks",tasks);
 
   renderTasks();
 
- }
-);
+};
 
 
-onValue(
- R.files,
- snapshot=>{
+window.saveTask = async function(){
 
-  files=
-   snapshot.val()||{};
-
-  save("files",files);
-
-  renderFiles();
-
- }
-);
+  if(!isAdmin)
+    return;
 
 
-/* NOTE MODAL */
-
-function noteModal(){
-
- if(!isAdmin){
-  alert("Admin access required.");
-  return;
- }
-
- type="note";
- editId=null;
-
- document.getElementById("mt")
- .textContent="Add Note";
-
- document.getElementById("noteFields")
- .classList.remove("hide");
-
- document.getElementById("taskFields")
- .classList.add("hide");
-
- document.getElementById("fileFields")
- .classList.add("hide");
-
- document.getElementById("nt").value="";
- document.getElementById("nx").value="";
-
- document.getElementById("modal")
- .classList.add("on");
-
-}
-
-window.noteModal=noteModal;
+  const title =
+    document
+      .getElementById("taskTitle")
+      .value
+      .trim();
 
 
-/* TASK MODAL */
-
-function taskModal(){
-
- if(!isAdmin){
-  alert("Admin access required.");
-  return;
- }
-
- type="task";
- editId=null;
-
- document.getElementById("mt")
- .textContent="Add Task";
-
- document.getElementById("noteFields")
- .classList.add("hide");
-
- document.getElementById("taskFields")
- .classList.remove("hide");
-
- document.getElementById("fileFields")
- .classList.add("hide");
-
- document.getElementById("tt").value="";
- document.getElementById("td").value="";
- document.getElementById("tx").value="";
-
- document.getElementById("modal")
- .classList.add("on");
-
-}
-
-window.taskModal=taskModal;
+  const due =
+    document
+      .getElementById("taskDue")
+      .value
+      .trim();
 
 
-/* FILE MODAL */
+  const description =
+    cleanText(
+      document
+        .getElementById(
+          "taskDescription"
+        )
+        .value
+    );
 
-function fileModal(){
-
- if(!isAdmin){
-  alert("Admin access required.");
-  return;
- }
-
- type="file";
- editId=null;
-
- document.getElementById("mt")
- .textContent="Add File Link";
-
- document.getElementById("noteFields")
- .classList.add("hide");
-
- document.getElementById("taskFields")
- .classList.add("hide");
-
- document.getElementById("fileFields")
- .classList.remove("hide");
-
- document.getElementById("ft").value="";
- document.getElementById("fu").value="";
-
- document.getElementById("modal")
- .classList.add("on");
-
-}
-
-window.fileModal=fileModal;
-
-
-/* CLOSE MODAL */
-
-function closeModal(){
-
- document.getElementById("modal")
- .classList.remove("on");
-
-}
-
-window.closeModal=closeModal;
-
-
-/* SAVE */
-
-async function saveModal(){
-
- if(!isAdmin)return;
-
-
- if(type==="note"){
-
-  const title=
-  document.getElementById("nt")
-  .value.trim();
-
-  const text=
-  document.getElementById("nx")
-  .value.trim();
 
   if(!title){
-   alert("Title required.");
-   return;
-  }
 
-  if(editId){
+    alert(
+      "Please enter a task title."
+    );
 
-   await update(
-    ref(db,"notes/"+editId),
-    {
-     title,
-     text,
-     author:user
-    }
-   );
-
-  }else{
-
-   await set(
-    push(R.notes),
-    {
-     title,
-     text,
-     author:user,
-     createdAt:Date.now()
-    }
-   );
+    return;
 
   }
 
 
- }else if(type==="task"){
+  if(editingTaskId){
 
-  const title=
-  document.getElementById("tt")
-  .value.trim();
-
-  if(!title){
-   alert("Title required.");
-   return;
-  }
-
-  const data={
-
-   title,
-
-   due:
-   document.getElementById("td")
-   .value,
-
-   description:
-   document.getElementById("tx")
-   .value.trim()
-
-  };
+    await update(
+      ref(
+        db,
+        "tasks/" +
+        editingTaskId
+      ),
+      {
+        title,
+        due,
+        description
+      }
+    );
 
 
-  if(editId){
+    cancelTaskEdit();
 
-   await update(
-    ref(db,"tasks/"+editId),
-    data
-   );
-
-  }else{
-
-   await set(
-    push(R.tasks),
-    {
-     ...data,
-     createdAt:Date.now()
-    }
-   );
+    return;
 
   }
 
 
- }else{
+  const orders =
+    getOrderedTasks()
+      .map(([,t]) =>
+        Number(t.order ?? 0)
+      );
 
-  const title=
-  document.getElementById("ft")
-  .value.trim();
 
-  const url=
-  document.getElementById("fu")
-  .value.trim();
+  const nextOrder =
+    orders.length
+      ? Math.max(...orders) + 1
+      : 0;
 
-  if(
-   !title||
-   !/^https?:\/\//i.test(url)
-  ){
 
-   alert(
-    "Enter a title and full http/https link."
-   );
-
-   return;
-
-  }
+  const newRef =
+    push(ref(db,"tasks"));
 
 
   await set(
-   push(R.files),
-   {
-    title,
-    url,
-    type:
-    document.getElementById("fy").value,
-    createdAt:Date.now(),
-    author:user
-   }
+    newRef,
+    {
+
+      title,
+      due,
+      description,
+      order:nextOrder,
+      createdAt:
+        serverTimestamp()
+
+    }
   );
 
- }
+
+  document.getElementById(
+    "taskTitle"
+  ).value = "";
 
 
- closeModal();
-
-}
-
-window.saveModal=saveModal;
+  document.getElementById(
+    "taskDue"
+  ).value = "";
 
 
-/* EDIT NOTE */
+  document.getElementById(
+    "taskDescription"
+  ).value = "";
 
-function editNote(id){
-
- if(!isAdmin)return;
-
- type="note";
- editId=id;
-
- document.getElementById("nt")
- .value=notes[id].title||"";
-
- document.getElementById("nx")
- .value=notes[id].text||"";
-
- document.getElementById("noteFields")
- .classList.remove("hide");
-
- document.getElementById("taskFields")
- .classList.add("hide");
-
- document.getElementById("fileFields")
- .classList.add("hide");
-
- document.getElementById("mt")
- .textContent="Edit Note";
-
- document.getElementById("modal")
- .classList.add("on");
-
-}
-
-window.editNote=editNote;
+};
 
 
-/* EDIT TASK */
+window.editTask = function(id){
 
-function editTask(id){
-
- if(!isAdmin)return;
-
- type="task";
- editId=id;
-
- document.getElementById("tt")
- .value=tasks[id].title||"";
-
- document.getElementById("td")
- .value=tasks[id].due||"";
-
- document.getElementById("tx")
- .value=tasks[id].description||"";
-
- document.getElementById("noteFields")
- .classList.add("hide");
-
- document.getElementById("taskFields")
- .classList.remove("hide");
-
- document.getElementById("fileFields")
- .classList.add("hide");
-
- document.getElementById("mt")
- .textContent="Edit Task";
-
- document.getElementById("modal")
- .classList.add("on");
-
-}
-
-window.editTask=editTask;
+  if(!isAdmin)
+    return;
 
 
-/* DELETE */
+  const t =
+    tasksData[id];
 
-async function delNote(id){
 
- if(
-  isAdmin&&
-  confirm("Delete note?")
- ){
+  if(!t)
+    return;
+
+
+  editingTaskId = id;
+
+
+  document.getElementById(
+    "taskFormTitle"
+  ).textContent =
+    "Edit Task";
+
+
+  document.getElementById(
+    "taskSaveBtn"
+  ).textContent =
+    "Save Changes";
+
+
+  document.getElementById(
+    "taskCancelBtn"
+  ).style.display =
+    "inline-block";
+
+
+  document.getElementById(
+    "taskTitle"
+  ).value =
+    t.title || "";
+
+
+  document.getElementById(
+    "taskDue"
+  ).value =
+    t.due || "";
+
+
+  document.getElementById(
+    "taskDescription"
+  ).value =
+    t.description || "";
+
+
+  document
+    .getElementById("taskTitle")
+    .focus();
+
+};
+
+
+window.cancelTaskEdit = function(){
+
+  editingTaskId = null;
+
+
+  document.getElementById(
+    "taskFormTitle"
+  ).textContent =
+    "Add Task";
+
+
+  document.getElementById(
+    "taskSaveBtn"
+  ).textContent =
+    "Add Task";
+
+
+  document.getElementById(
+    "taskCancelBtn"
+  ).style.display =
+    "none";
+
+
+  document.getElementById(
+    "taskTitle"
+  ).value = "";
+
+
+  document.getElementById(
+    "taskDue"
+  ).value = "";
+
+
+  document.getElementById(
+    "taskDescription"
+  ).value = "";
+
+};
+
+
+window.deleteTask = async function(id){
+
+  if(!isAdmin)
+    return;
+
+
+  if(
+    !confirm(
+      "Delete this task?"
+    )
+  ) return;
+
 
   await remove(
-   ref(db,"notes/"+id)
+    ref(
+      db,
+      "tasks/" + id
+    )
   );
 
- }
 
-}
-
-window.delNote=delNote;
-
-
-async function delTask(id){
-
- if(
-  isAdmin&&
-  confirm("Delete task?")
- ){
-
-  await remove(
-   ref(db,"tasks/"+id)
+  localStorage.removeItem(
+    "check_" + id
   );
 
- }
-
-}
-
-window.delTask=delTask;
+};
 
 
-async function delFile(id){
+async function reorderTasks(
+  draggedId,
+  targetId
+){
 
- if(
-  isAdmin&&
-  confirm("Delete file link?")
- ){
+  const entries =
+    getOrderedTasks();
 
-  await remove(
-   ref(db,"files/"+id)
+
+  const ids =
+    entries.map(([id]) => id);
+
+
+  const from =
+    ids.indexOf(draggedId);
+
+
+  const to =
+    ids.indexOf(targetId);
+
+
+  if(from < 0 || to < 0)
+    return;
+
+
+  ids.splice(
+    from,
+    1
   );
 
- }
+
+  ids.splice(
+    to,
+    0,
+    draggedId
+  );
+
+
+  const changes = {};
+
+
+  ids.forEach(
+    (id,index) => {
+
+      changes[
+        "tasks/" +
+        id +
+        "/order"
+      ] = index;
+
+    }
+  );
+
+
+  await update(
+    ref(db),
+    changes
+  );
 
 }
 
-window.delFile=delFile;
 
-
-/* CHAT */
-
-function draw(id,data){
-
- const c=
- document.getElementById(id);
-
- c.innerHTML="";
-
-
- Object.values(data||{})
- .sort(
-  (a,b)=>
-   (a.createdAt||0)-
-   (b.createdAt||0)
- )
- .slice(-100)
- .forEach(m=>{
-
-  const d=
-  document.createElement("div");
-
-  d.className=
-   "msg "+
-   (
-    m.author===user
-    ?"me"
-    :""
-   );
-
-
-  d.textContent=
-   (m.author||"User")+
-   ": "+
-   String(m.text||"").trim();
-
-
-  c.appendChild(d);
-
- });
-
-
- c.scrollTop=c.scrollHeight;
-
-}
-
+/* =========================
+   CHAT
+========================= */
 
 onValue(
- R.chat,
- snapshot=>{
+  ref(db,"chat"),
+  snapshot => {
 
-  draw(
-   "chatLog",
-   snapshot.val()||{}
-  );
+    chatData =
+      snapshot.val() || {};
 
- }
+    drawChat();
+
+  }
 );
 
 
-onValue(
- R.admin,
- snapshot=>{
+function drawChat(){
 
-  if(isAdmin){
+  const container =
+    document.getElementById(
+      "chatlog"
+    );
 
-   draw(
-    "adminLog",
-    snapshot.val()||{}
-   );
+
+  container.innerHTML = "";
+
+
+  const messages =
+    Object.values(chatData)
+      .sort(
+        (a,b) =>
+          Number(a.createdAt || 0) -
+          Number(b.createdAt || 0)
+      );
+
+
+  if(messages.length === 0){
+
+    container.innerHTML =
+      `<div class="empty">
+        No messages yet.
+      </div>`;
+
+    return;
 
   }
 
- }
+
+  messages.forEach(m => {
+
+    const d =
+      document.createElement("div");
+
+
+    d.className =
+      "msg" +
+      (
+        m.author === userName
+          ? " me"
+          : ""
+      );
+
+
+    const messageText =
+      cleanText(m.text);
+
+
+    d.textContent =
+      `${m.author || "User"}: ${messageText}`;
+
+
+    container.appendChild(d);
+
+  });
+
+
+  container.scrollTop =
+    container.scrollHeight;
+
+}
+
+
+window.sendChat = async function(){
+
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
+
+
+  const text =
+    cleanText(input.value);
+
+
+  if(!text)
+    return;
+
+
+  const newRef =
+    push(ref(db,"chat"));
+
+
+  await set(
+    newRef,
+    {
+
+      author:userName,
+      text,
+      createdAt:
+        serverTimestamp()
+
+    }
+  );
+
+
+  input.value = "";
+
+};
+
+
+/* =========================
+   FILES
+========================= */
+
+onValue(
+  ref(db,"files"),
+  snapshot => {
+
+    filesData =
+      snapshot.val() || {};
+
+    renderFiles();
+
+  }
 );
 
 
-async function sendChat(){
+function renderFiles(){
 
- const input=
- document.getElementById(
-  "chatInput"
- );
+  const container =
+    document.getElementById(
+      "filesList"
+    );
 
- const text=
- input.value.trim();
 
- if(!text)return;
+  container.innerHTML = "";
 
- await set(
-  push(R.chat),
-  {
-   author:user||"Guest",
-   text,
-   createdAt:Date.now()
+
+  const files =
+    Object.entries(filesData);
+
+
+  if(files.length === 0){
+
+    container.innerHTML =
+      `<div class="empty">
+        No files yet.
+      </div>`;
+
+    return;
+
   }
- );
 
- input.value="";
+
+  files.forEach(
+    ([id,f]) => {
+
+      const d =
+        document.createElement(
+          "div"
+        );
+
+
+      d.className =
+        "file-card";
+
+
+      const title =
+        String(
+          f.title ||
+          "File"
+        ).trim();
+
+
+      const description =
+        cleanText(
+          f.description
+        );
+
+
+      d.innerHTML = `
+
+        <h3>
+          📄 ${esc(title)}
+        </h3>
+
+        ${
+          description
+          ? `
+            <p>
+              ${esc(description)}
+            </p>
+          `
+          : ""
+        }
+
+        ${
+          f.url
+          ? `
+            <a
+              href="${esc(f.url)}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open File
+            </a>
+          `
+          : ""
+        }
+
+        ${
+          isAdmin
+          ? `
+            <div class="note-actions">
+
+              <button
+                class="btn danger"
+                onclick="deleteFile('${id}')"
+              >
+                Delete
+              </button>
+
+            </div>
+          `
+          : ""
+        }
+
+      `;
+
+
+      container.appendChild(d);
+
+    }
+  );
 
 }
 
-window.sendChat=sendChat;
+
+window.addFile = async function(){
+
+  if(!isAdmin)
+    return;
 
 
-async function sendAdmin(){
+  const title =
+    document
+      .getElementById("fileTitle")
+      .value
+      .trim();
 
- if(!isAdmin)return;
 
- const input=
- document.getElementById(
-  "adminInput"
- );
+  const url =
+    document
+      .getElementById("fileUrl")
+      .value
+      .trim();
 
- const text=
- input.value.trim();
 
- if(!text)return;
+  const description =
+    document
+      .getElementById(
+        "fileDescription"
+      )
+      .value
+      .trim();
 
- await set(
-  push(R.admin),
-  {
-   author:user||"Admin",
-   text,
-   createdAt:Date.now()
+
+  if(!title || !url){
+
+    alert(
+      "Please enter a title and URL."
+    );
+
+    return;
+
   }
- );
-
- input.value="";
-
-}
-
-window.sendAdmin=sendAdmin;
 
 
-/* PRESENCE */
-
-const ACTIVE_FOR=120000;
-const HEARTBEAT_EVERY=25000;
-
-let presenceRef=null;
-let presenceState=null;
-let lastActivity=Date.now();
-let firebaseConnected=false;
-let presenceStarted=false;
+  const newRef =
+    push(ref(db,"files"));
 
 
-function presenceStateNow(){
+  await set(
+    newRef,
+    {
 
- return(
-  document.visibilityState==="visible"&&
-  Date.now()-lastActivity<ACTIVE_FOR
- )
- ?"active"
- :"away";
+      title,
+      url,
+      description,
+      createdAt:
+        serverTimestamp()
 
-}
+    }
+  );
 
 
-async function syncPresence(){
+  document.getElementById(
+    "fileTitle"
+  ).value = "";
 
- if(!presenceRef||!firebaseConnected)return;
 
- const state=presenceStateNow();
+  document.getElementById(
+    "fileUrl"
+  ).value = "";
 
- if(state===presenceState)return;
 
- presenceState=state;
+  document.getElementById(
+    "fileDescription"
+  ).value = "";
 
- await set(
+};
+
+
+window.deleteFile = async function(id){
+
+  if(!isAdmin)
+    return;
+
+
+  if(
+    !confirm(
+      "Delete this file?"
+    )
+  ) return;
+
+
+  await remove(
+    ref(
+      db,
+      "files/" + id
+    )
+  );
+
+};
+
+
+/* =========================
+   ANNOUNCEMENT
+========================= */
+
+onValue(
+  ref(db,"announcement"),
+  snapshot => {
+
+    const data =
+      snapshot.val();
+
+
+    const box =
+      document.getElementById(
+        "announcement"
+      );
+
+
+    if(
+      data &&
+      cleanText(data.text)
+    ){
+
+      box.innerHTML = `
+
+        <strong>📢 Announcement</strong><br>
+
+        ${esc(
+          cleanText(data.text)
+        )}
+
+      `;
+
+      box.style.display =
+        "block";
+
+    }else{
+
+      box.style.display =
+        "none";
+
+    }
+
+  }
+);
+
+
+/* =========================
+   PRESENCE
+========================= */
+
+const presenceId =
+  push(
+    ref(db,"presence")
+  ).key;
+
+
+const presenceRef =
+  ref(
+    db,
+    "presence/" +
+    presenceId
+  );
+
+
+set(
   presenceRef,
   {
-   name:user,
-   status:state,
-   lastActive:lastActivity,
-   lastSeen:serverTimestamp()
+
+    name:userName,
+
+    online:true,
+
+    lastSeen:
+      serverTimestamp()
+
   }
- );
-
-}
+);
 
 
-function activity(){
+onDisconnect(
+  presenceRef
+).update({
 
- lastActivity=Date.now();
+  online:false,
 
- syncPresence();
+  lastSeen:
+    serverTimestamp()
 
-}
+});
 
 
-function renderPresence(data){
+/* =========================
+   CLOSE MODALS
+========================= */
 
- const list=
- Object.values(data||{})
- .filter(x=>x&&x.name);
+document
+  .getElementById("adminModal")
+  .addEventListener(
+    "click",
+    e => {
 
- document.getElementById(
-  "people"
- ).innerHTML=
+      if(
+        e.target.id ===
+        "adminModal"
+      ){
 
- list.length
+        closeAdminModal();
 
- ?list.map(p=>`
+      }
 
-  <div>
-
-   <span
-    class="dot"
-    style="background:${
-     p.status==="active"
-     ?"#7ee08d"
-     :"#f3b941"
-    }"
-   ></span>
-
-   ${esc(p.name)}
-
-   <small>
-
-    —
-    ${
-     p.status==="active"
-     ?"Active now"
-     :"Away"
     }
-
-   </small>
-
-  </div>
-
- `).join("")
-
- :"Nobody online";
-
-}
-
-
-function presence(){
-
- if(presenceStarted)return;
-
- presenceStarted=true;
-
- const id=
- Math.random()
- .toString(36)
- .slice(2);
-
- presenceRef=
- ref(db,"presence/"+id);
-
-
- onValue(
-  ref(db,".info/connected"),
-  async snapshot=>{
-
-   firebaseConnected=
-    snapshot.val()===true;
-
-   if(!firebaseConnected)return;
-
-   await onDisconnect(
-    presenceRef
-   ).remove();
-
-   await set(
-    presenceRef,
-    {
-     name:user,
-     status:presenceStateNow(),
-     lastActive:lastActivity,
-     lastSeen:serverTimestamp()
-    }
-   );
-
-  }
- );
-
-
- onValue(
-  R.presence,
-  snapshot=>{
-   renderPresence(
-    snapshot.val()
-   );
-  }
- );
-
-
- [
-  "mousemove",
-  "keydown",
-  "touchstart",
-  "scroll",
-  "click"
- ].forEach(event=>{
-
-  addEventListener(
-   event,
-   activity,
-   {passive:true}
   );
 
- });
+
+document
+  .getElementById("editNoteModal")
+  .addEventListener(
+    "click",
+    e => {
+
+      if(
+        e.target.id ===
+        "editNoteModal"
+      ){
+
+        closeEditNote();
+
+      }
+
+    }
+  );
 
 
- addEventListener(
-  "visibilitychange",
-  syncPresence
- );
+/* =========================
+   INITIAL UI
+========================= */
 
+updateAdminUI();
 
- setInterval(
-  ()=>{
-   lastActivity=
-    Date.now();
-   syncPresence();
-  },
-  HEARTBEAT_EVERY
- );
-
-}
-
-
-if(user)presence();
-
-
-/* START */
-
-ui();
+renderNotes();
+renderTasks();
+renderFiles();
+drawChat();
 
 </script>
 
