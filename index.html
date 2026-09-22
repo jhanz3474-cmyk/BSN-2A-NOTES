@@ -6,9 +6,6 @@
 <meta name="theme-color" content="#245c43">
 <title>BSN 2A Notes</title>
 
-<!-- BSN 2A favicon -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173f2d'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%23dcebd7' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%237ee08d' stroke-width='3' stroke-linecap='round'/%3E%3Ctext x='32' y='30' text-anchor='middle' font-family='Arial,sans-serif' font-size='9' font-weight='700' fill='white'%3EBSN%3C/text%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial,sans-serif' font-size='8' font-weight='700' fill='white'%3E2A%3C/text%3E%3C/svg%3E">
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial;background:#f6f2e9;color:#1e2b25}
@@ -18,38 +15,30 @@ button,input,textarea,select{font:inherit}
  position:fixed;inset:0 auto 0 0;width:240px;padding:22px 16px;
  background:linear-gradient(#173f2d,#285c43);color:#fff
 }
-
 .logo{text-align:center}
 .logo b{
  display:flex;width:75px;height:75px;margin:auto;border:4px solid #dcebd7;
  border-radius:20px;align-items:center;justify-content:center
 }
-
 .nav button{
  display:block;width:100%;margin:7px 0;padding:12px;border:0;
  border-radius:10px;background:transparent;color:white;text-align:left;cursor:pointer
 }
-
 .nav button:hover,.nav .on{background:#ffffff25}
 
 .user{
  position:absolute;bottom:18px;left:16px;right:16px;padding:12px;
  background:#ffffff18;border-radius:12px
 }
-
 .online{margin-top:9px;font-size:12px;max-height:115px;overflow:auto}
-
 .dot{
  display:inline-block;width:7px;height:7px;border-radius:50%;
  background:#7ee08d;margin-right:5px
 }
 
 .main{margin-left:240px;padding:25px}
-
 .top{display:flex;gap:10px;margin-bottom:20px}
-
 .search{flex:1;padding:12px;border:1px solid #ddd;border-radius:12px}
-
 .btn{
  border:0;border-radius:10px;padding:11px 15px;
  background:#245c43;color:#fff;cursor:pointer
@@ -62,9 +51,7 @@ button,input,textarea,select{font:inherit}
  background:#fff;border-radius:18px;padding:22px;margin-bottom:18px;
  box-shadow:0 5px 20px #1e322015
 }
-
 .hero{background:linear-gradient(110deg,#e4efdc,#f4f2df)}
-
 h1,h2,h3{font-family:Georgia,serif}
 
 .cards{
@@ -370,7 +357,6 @@ body.dark .me{background:#23352c}
      placeholder="Send a message..."
      onkeydown="if(event.key==='Enter')sendChat()"
     >
-
     <button class="btn" onclick="sendChat()">Send</button>
    </div>
   </div>
@@ -387,7 +373,6 @@ body.dark .me{background:#23352c}
       placeholder="Admin message..."
       onkeydown="if(event.key==='Enter')sendAdmin()"
      >
-
      <button class="btn" onclick="sendAdmin()">Send</button>
     </div>
    </div>
@@ -407,12 +392,10 @@ body.dark .me{background:#23352c}
  <section id="about" class="sec">
   <div class="hero">
    <h1>BSN 2A 🌱</h1>
-
    <p>
     Students can view shared content and keep their own task checklists.
     Admins manage shared notes, tasks and file links.
    </p>
-
    <p>
     Offline mode caches previously loaded data.
     Firebase writes synchronize when connectivity returns.
@@ -523,7 +506,7 @@ const fmt=x=>x
    month:"long",
    day:"numeric",
    year:"numeric"
- })
+  })
  :"";
 
 const save=(k,v)=>{
@@ -1315,38 +1298,194 @@ window.sendAdmin=sendAdmin;
 
 
 /* =========================
-   ONLINE PRESENCE
+   ACTIVITY-AWARE PRESENCE
 ========================= */
+
+const ACTIVE_FOR=2*60*1000;
+const HEARTBEAT_EVERY=25*1000;
+
+let presenceRef=null;
+let presenceState=null;
+let lastActivity=Date.now();
+let awayTimer=null;
+let heartbeatTimer=null;
+let firebaseConnected=false;
+let presenceStarted=false;
+
+function getPresenceState(){
+
+ return document.visibilityState==="visible" &&
+ Date.now()-lastActivity<ACTIVE_FOR
+ ?"active"
+ :"away";
+}
+
+function scheduleAwayCheck(){
+
+ clearTimeout(awayTimer);
+
+ if(document.visibilityState!=="visible")return;
+
+ const remaining=Math.max(
+  0,
+  ACTIVE_FOR-(Date.now()-lastActivity)
+ );
+
+ awayTimer=setTimeout(()=>{
+  syncPresence();
+  scheduleAwayCheck();
+ },remaining+50);
+}
+
+async function syncPresence(forceHeartbeat=false){
+
+ if(!presenceRef || !firebaseConnected)return;
+
+ const nextState=getPresenceState();
+
+ /*
+  Only write when status changes,
+  except active heartbeats.
+ */
+ if(
+  nextState===presenceState &&
+  !(forceHeartbeat && nextState==="active")
+ ){
+  return;
+ }
+
+ presenceState=nextState;
+
+ await set(presenceRef,{
+  name:user,
+  status:nextState,
+  lastActive:lastActivity,
+  lastSeen:serverTimestamp()
+ });
+}
+
+function recordActivity(){
+
+ lastActivity=Date.now();
+
+ // Changes Away → Active immediately after real interaction.
+ syncPresence();
+
+ scheduleAwayCheck();
+}
+
+function renderPresence(data){
+
+ const peopleList=Object.values(data||{})
+ .filter(x=>x && x.name)
+ .sort((a,b)=>{
+
+  if(a.status==="away" && b.status!=="away")return 1;
+  if(a.status!=="away" && b.status==="away")return -1;
+
+  return String(a.name).localeCompare(String(b.name));
+ });
+
+ people.innerHTML=peopleList.length
+ ?peopleList.map(person=>{
+
+   const active=person.status!=="away";
+
+   return `
+    <div>
+     <span
+      class="dot"
+      style="background:${active?"#7ee08d":"#f3b941"}"
+     ></span>
+     ${esc(person.name)}
+     <small style="opacity:.8">
+      — ${active?"Active now":"Away"}
+     </small>
+    </div>
+   `;
+
+ }).join("")
+ :"Nobody online";
+}
 
 function presence(){
 
- let id=Math.random()
+ if(presenceStarted)return;
+
+ presenceStarted=true;
+
+ const id=Math.random()
   .toString(36)
   .slice(2);
 
- let r=ref(db,"presence/"+id);
+ presenceRef=ref(db,"presence/"+id);
 
- set(r,{
-  name:user,
-  lastSeen:serverTimestamp()
+ /*
+  Firebase tells us whether this browser
+  currently has a live connection.
+ */
+ onValue(ref(db,".info/connected"),async snapshot=>{
+
+  firebaseConnected=snapshot.val()===true;
+
+  if(!firebaseConnected)return;
+
+  /*
+   Firebase removes this entry when this
+   tab loses its connection.
+  */
+  await onDisconnect(presenceRef).remove();
+
+  /*
+   Register/update the user as soon as
+   Firebase reconnects.
+  */
+  await syncPresence(true);
  });
-
- onDisconnect(r).remove();
 
  onValue(R.presence,s=>{
-
-  let p=s.val()||{};
-
-  let names=Object.values(p)
-   .map(x=>x.name)
-   .filter(Boolean);
-
-  people.innerHTML=names.length
-   ?names.map(n=>
-    `<div><span class="dot"></span>${esc(n)}</div>`
-   ).join("")
-   :"Nobody online";
+  renderPresence(s.val());
  });
+
+ [
+  "mousemove",
+  "keydown",
+  "touchstart",
+  "scroll",
+  "click"
+ ].forEach(eventName=>{
+
+  addEventListener(
+   eventName,
+   recordActivity,
+   {passive:true}
+  );
+
+ });
+
+ addEventListener("visibilitychange",()=>{
+
+  /*
+   If the user changes tabs or minimizes
+   the browser, getPresenceState() becomes
+   "away".
+  */
+  syncPresence();
+  scheduleAwayCheck();
+
+ });
+
+ scheduleAwayCheck();
+
+ /*
+  Sends a heartbeat only while the user
+  is Active and visible.
+ */
+ heartbeatTimer=setInterval(()=>{
+
+  syncPresence(true);
+
+ },HEARTBEAT_EVERY);
 }
 
 if(user)presence();
