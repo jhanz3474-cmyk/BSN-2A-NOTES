@@ -1,146 +1,104 @@
-window.checkTask=checkTask;
 
 
-/* =========================
-   CHAT
-========================= */
 
-function draw(id,data){
 
- let c=document.getElementById(id);
- c.innerHTML="";
 
- Object.values(data)
- .sort((a,b)=>
-  (a.createdAt||0)-(b.createdAt||0)
- )
- .slice(-100)
- .forEach(m=>{
 
-  let d=document.createElement("div");
 
-  d.className="msg "+
-   (m.author===user?"me":"");
 
-  d.textContent=
-   (m.author||"User")+": "+m.text;
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#245c43">
+<title>BSN 2A Notes</title>
+<!-- BSN 2A favicon -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173f2d'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%23dcebd7' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%237ee08d' stroke-width='3' stroke-linecap='round'/%3E%3Ctext x='32' y='30' text-anchor='middle' font-family='Arial,sans-serif' font-size='9' font-weight='700' fill='white'%3EBSN%3C/text%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial,sans-serif' font-size='8' font-weight='700' fill='white'%3E2A%3C/text%3E%3C/svg%3E">
 
-  c.appendChild(d);
- });
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f6f2e9;color:#1e2b25}
+button,input,textarea,select{font:inherit}
 
- c.scrollTop=c.scrollHeight;
+.side{
+ position:fixed;inset:0 auto 0 0;width:240px;padding:22px 16px;
+ background:linear-gradient(#173f2d,#285c43);color:#fff
+}
+.logo{text-align:center}
+.logo b{
+ display:flex;width:75px;height:75px;margin:auto;border:4px solid #dcebd7;
+ border-radius:20px;align-items:center;justify-content:center
+}
+.nav button{
+ display:block;width:100%;margin:7px 0;padding:12px;border:0;
+ border-radius:10px;background:transparent;color:white;text-align:left;cursor:pointer
+}
+.nav button:hover,.nav .on{background:#ffffff25}
+
+.user{
+ position:absolute;bottom:18px;left:16px;right:16px;padding:12px;
+ background:#ffffff18;border-radius:12px
+}
+.online{margin-top:9px;font-size:12px;max-height:115px;overflow:auto}
+.dot{
+ display:inline-block;width:7px;height:7px;border-radius:50%;
+ background:#7ee08d;margin-right:5px
 }
 
-let chatData={};
-
-onValue(R.chat,s=>{
- chatData=s.val()||{};
- draw("chatLog",chatData);
-});
-
-onValue(R.admin,s=>{
- adminChat=s.val()||{};
-
- if(isAdmin){
-  draw("adminLog",adminChat);
- }
-});
-
-async function sendChat(){
-
- let i=chatInput;
- let v=i.value.trim();
-
- if(!v)return;
-
- await set(push(R.chat),{
-  author:user||"Guest",
-  text:v,
-  createdAt:Date.now()
- });
-
- i.value="";
+.main{margin-left:240px;padding:25px}
+.top{display:flex;gap:10px;margin-bottom:20px}
+.search{flex:1;padding:12px;border:1px solid #ddd;border-radius:12px}
+.btn{
+ border:0;border-radius:10px;padding:11px 15px;
+ background:#245c43;color:#fff;cursor:pointer
 }
 
-window.sendChat=sendChat;
+.sec{display:none}
+.sec.on{display:block}
 
-async function sendAdmin(){
+.hero,.card,.task,.chat{
+ background:#fff;border-radius:18px;padding:22px;margin-bottom:18px;
+ box-shadow:0 5px 20px #1e322015
+}
+.hero{background:linear-gradient(110deg,#e4efdc,#f4f2df)}
+h1,h2,h3{font-family:Georgia,serif}
 
- if(!isAdmin)return;
-
- let i=adminInput;
- let v=i.value.trim();
-
- if(!v)return;
-
- await set(push(R.admin),{
-  author:user||"Admin",
-  text:v,
-  createdAt:Date.now()
- });
-
- i.value="";
+.cards{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+ gap:16px
 }
 
-window.sendAdmin=sendAdmin;
-
-
-/* =========================
-   ONLINE PRESENCE
-========================= */
-
-function presence(){
-
- let id=Math.random()
-  .toString(36)
-  .slice(2);
-
- let r=ref(db,"presence/"+id);
-
- set(r,{
-  name:user,
-  lastSeen:serverTimestamp()
- });
-
- onDisconnect(r).remove();
-
- onValue(R.presence,s=>{
-
-  let p=s.val()||{};
-
-  let names=Object.values(p)
-   .map(x=>x.name)
-   .filter(Boolean);
-
-  people.innerHTML=names.length
-   ?names.map(n=>
-    `<div><span class="dot"></span>${esc(n)}</div>`
-   ).join("")
-   :"Nobody online";
- });
+.card{
+ display:block;
+ cursor:default;
+ transition:.15s
 }
 
-if(user)presence();
-
-
-/* =========================
-   CONNECTION STATUS
-========================= */
-
-function conn(){
-
- status.textContent=navigator.onLine
-  ?"🟢 Online — syncing with Firebase"
-  :"🔴 Offline — cached data available; Firebase will sync when connection returns";
+.card[draggable="true"]{
+ cursor:grab
 }
 
-addEventListener("online",conn);
-addEventListener("offline",conn);
+.card[draggable="true"]:active{
+ cursor:grabbing
+}
 
-conn();
-ui();
+.card.dragging{
+ opacity:.45;
+ transform:scale(.98)
+}
 
-</script>
+.card.drag-over{
+ outline:3px dashed #3d7a5b;
+ outline-offset:4px
+}
 
-</body>
-</html>
+.card h3{
+ margin:0 0 12px 0
+}
+
+.text{
+ display:block;
+ width:100%;
+ white-space:pre-wrap;
