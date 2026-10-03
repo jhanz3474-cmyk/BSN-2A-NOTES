@@ -1586,6 +1586,89 @@ select:focus{
 }
 
 
+
+/* =========================================================
+   GROUP LOGIN
+========================================================= */
+.login-screen{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
+  padding:20px;
+}
+.login-box{
+  width:min(420px,100%);
+  background:var(--surface);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+.login-box h2{margin:0 0 8px;}
+.login-box p{color:var(--muted);line-height:1.5;margin:0 0 18px;}
+.login-box input{width:100%;margin-bottom:10px;}
+.login-error{display:none;color:var(--danger);font-size:13px;margin-top:10px;}
+
+/* =========================================================
+   RICH NOTE EDITOR
+========================================================= */
+.note-editor-box{
+  width:min(900px,100%);
+  max-height:90vh;
+  overflow:auto;
+}
+.editor-toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  padding:10px;
+  margin:10px 0;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:10px;
+}
+.editor-toolbar button{
+  min-width:36px;
+  min-height:34px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  border-radius:7px;
+  cursor:pointer;
+}
+.editor-toolbar button:hover{background:var(--surface3);}
+.editor-toolbar input[type="color"]{
+  width:38px;
+  height:34px;
+  padding:2px;
+  border:1px solid var(--border);
+  border-radius:7px;
+  background:var(--surface);
+}
+.rich-note-editor{
+  min-height:300px;
+  max-height:48vh;
+  overflow:auto;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--input);
+  color:var(--text);
+  line-height:1.6;
+  outline:none;
+}
+.rich-note-editor:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 2px var(--primarySoft);
+}
+.rich-note-editor ul.checklist{list-style:none;padding-left:0;}
+.note-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+
 /* =========================================================
    TABLET
 ========================================================= */
@@ -1874,6 +1957,21 @@ and (orientation:landscape){
 
 
 <body>
+
+<!-- =======================================================
+     GROUP LOGIN
+======================================================= -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <h2>🩺 BSN 2A • Group 4</h2>
+    <p>Enter your name and the group password to continue. Your login will be remembered on this device.</p>
+    <input id="loginName" type="text" placeholder="Your name" autocomplete="name">
+    <input id="loginPassword" type="password" placeholder="Group password" autocomplete="current-password" onkeydown="if(event.key==='Enter') loginUser()">
+    <button class="btn primary" style="width:100%;" onclick="loginUser()">Enter Group 4</button>
+    <div id="loginError" class="login-error"></div>
+  </div>
+</div>
+
 
 
 <!-- =======================================================
@@ -2727,6 +2825,43 @@ and (orientation:landscape){
 </main>
 
 
+
+<!-- =======================================================
+     NURSING NOTE EDITOR
+======================================================= -->
+<div id="noteEditorModal" class="modal">
+  <div class="modal-box note-editor-box">
+    <h3 id="noteEditorTitle">Add Nursing Note</h3>
+
+    <input id="editorNoteTitle" type="text" placeholder="Note title">
+    <input id="editorNoteCategory" type="text" placeholder="Category (optional)">
+
+    <div class="editor-toolbar" onmousedown="event.preventDefault()">
+      <button type="button" title="Bold" onclick="editorCommand('bold')"><strong>B</strong></button>
+      <button type="button" title="Italic" onclick="editorCommand('italic')"><em>I</em></button>
+      <button type="button" title="Underline" onclick="editorCommand('underline')"><u>U</u></button>
+      <button type="button" title="Strikethrough" onclick="editorCommand('strikeThrough')"><s>S</s></button>
+      <button type="button" title="Bulleted list" onclick="editorCommand('insertUnorderedList')">• List</button>
+      <button type="button" title="Numbered list" onclick="editorCommand('insertOrderedList')">1. List</button>
+      <button type="button" title="Checkbox" onclick="insertChecklist()">☐</button>
+      <button type="button" title="Align left" onclick="editorCommand('justifyLeft')">≡</button>
+      <button type="button" title="Align center" onclick="editorCommand('justifyCenter')">≡</button>
+      <button type="button" title="Align right" onclick="editorCommand('justifyRight')">≡</button>
+      <button type="button" title="Undo" onclick="editorCommand('undo')">↶</button>
+      <button type="button" title="Redo" onclick="editorCommand('redo')">↷</button>
+      <label title="Text color">A <input type="color" value="#176b4d" onchange="editorCommand('foreColor',this.value)"></label>
+      <label title="Highlight">🖍 <input type="color" value="#fff59d" onchange="highlightSelection(this.value)"></label>
+    </div>
+
+    <div id="richNoteEditor" class="rich-note-editor" contenteditable="true" spellcheck="true"></div>
+
+    <div class="modal-buttons">
+      <button class="btn" onclick="closeNoteEditor()">Cancel</button>
+      <button class="btn primary" onclick="saveNoteEditor()">Save Note</button>
+    </div>
+  </div>
+</div>
+
 <!-- =======================================================
      ADMIN LOGIN MODAL
 ======================================================= -->
@@ -2943,59 +3078,80 @@ const chatSeenKey =
    USER
 ========================================================= */
 
-let userName =
-  localStorage.getItem(
-    "nursingDutyName"
-  );
+const GROUP_PASSWORD = "supboi";
 
+let userName = localStorage.getItem("nursingDutyName") || "";
 
-if(!userName){
+function initializeUserDisplay(name){
 
-  userName =
-    prompt(
-      "Enter your name:"
-    ) ||
-    "Student";
+  userName = String(name || "").trim() || "Student";
 
-  userName =
-    userName.trim() ||
-    "Student";
+  document.getElementById("currentUser").textContent = userName;
 
-  localStorage.setItem(
-    "nursingDutyName",
-    userName
-  );
-
-}
-
-
-document.getElementById(
-  "currentUser"
-).textContent =
-  userName;
-
-
-const initials =
-  userName
+  const initials = userName
     .split(/\s+/)
-    .map(
-      x => x[0]
-    )
+    .map(x => x[0])
     .join("")
     .slice(0,2)
     .toUpperCase();
 
+  document.getElementById("userAvatar").textContent = initials || "S";
+  document.getElementById("welcomeText").textContent = `Welcome, ${userName} 👋`;
+}
 
-document.getElementById(
-  "userAvatar"
-).textContent =
-  initials || "S";
+function showLogin(){
+  const screen = document.getElementById("loginScreen");
+  if(screen) screen.style.display = "flex";
+}
 
+function hideLogin(){
+  const screen = document.getElementById("loginScreen");
+  if(screen) screen.style.display = "none";
+}
 
-document.getElementById(
-  "welcomeText"
-).textContent =
-  `Welcome, ${userName} 👋`;
+window.loginUser = function(){
+
+  const name = document.getElementById("loginName").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const error = document.getElementById("loginError");
+
+  if(!name){
+    error.textContent = "Please enter your name.";
+    error.style.display = "block";
+    return;
+  }
+
+  if(password !== GROUP_PASSWORD){
+    error.textContent = "Incorrect group password.";
+    error.style.display = "block";
+    return;
+  }
+
+  localStorage.setItem("nursingDutyName", name);
+  localStorage.setItem("nursingDutyLoggedIn", "true");
+
+  error.style.display = "none";
+  hideLogin();
+  initializeUserDisplay(name);
+};
+
+function ensureGroupLogin(){
+
+  const loggedIn = localStorage.getItem("nursingDutyLoggedIn") === "true";
+  const savedName = localStorage.getItem("nursingDutyName");
+
+  if(loggedIn && savedName){
+    hideLogin();
+    initializeUserDisplay(savedName);
+  }else{
+    showLogin();
+  }
+}
+
+if(userName){
+  initializeUserDisplay(userName);
+}
+
 
 
 /* =========================================================
@@ -3695,7 +3851,10 @@ window.openNoteEditor = function(id=null){
     category.value = note.category || "";
     editor.innerHTML = note.html
       ? note.html
-      : esc(cleanText(note.text || "")).replace(/\n/g,"<br>");
+      : cleanText(note.text || "")
+          .split("\n")
+          .map(line => esc(line))
+          .join("<br>");
 
   }else{
 
@@ -5519,6 +5678,14 @@ document.getElementById(
 
   }
 );
+
+
+document.getElementById("noteEditorModal")
+.addEventListener("click", event => {
+  if(event.target.id === "noteEditorModal"){
+    closeNoteEditor();
+  }
+});
 
 
 /* =========================================================
