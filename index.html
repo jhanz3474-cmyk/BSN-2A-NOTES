@@ -91,7 +91,7 @@ button{
 }
 
 .brand{
-  padding:5px 10px 22px;
+  padding:5px 10px 10px;
 }
 
 .brand-icon{
@@ -116,6 +116,51 @@ button{
   margin:5px 0 0;
   color:var(--muted2);
   font-size:12px;
+}
+
+/* SIDEBAR ARROW */
+
+.sidebar-toggle{
+  width:100%;
+  height:38px;
+  margin:7px 0 8px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  color:var(--primary);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  transition:.2s;
+}
+
+.sidebar-toggle:hover{
+  background:var(--primarySoft);
+}
+
+.sidebar-toggle span{
+  transition:transform .2s;
+}
+
+.side.expanded .sidebar-toggle span{
+  transform:rotate(180deg);
+}
+
+/* NAVIGATION */
+
+.nav-wrapper{
+  overflow:hidden;
+  max-height:0;
+  opacity:0;
+  transition:
+    max-height .25s ease,
+    opacity .2s ease;
+}
+
+.side.expanded .nav-wrapper{
+  max-height:1000px;
+  opacity:1;
 }
 
 .nav{
@@ -199,7 +244,7 @@ button{
 }
 
 /* =====================================================
-   TOP-RIGHT THEME BUTTON
+   THEME
 ===================================================== */
 
 .theme-toggle{
@@ -384,6 +429,12 @@ button{
   background:var(--surface2);
   border-radius:9px;
   padding:9px;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.member-preview-item:hover{
+  background:var(--surface3);
 }
 
 .member-preview-avatar{
@@ -410,10 +461,11 @@ button{
 }
 
 /* =====================================================
-   GENERAL PANELS
+   GENERAL
 ===================================================== */
 
-.panel{
+.panel,
+.admin-panel{
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:14px;
@@ -422,10 +474,6 @@ button{
 }
 
 .admin-panel{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:17px;
   margin-bottom:18px;
 }
 
@@ -598,7 +646,7 @@ select:focus{
 }
 
 /* =====================================================
-   DUTY SCHEDULE
+   SCHEDULE
 ===================================================== */
 
 .schedule-grid{
@@ -644,7 +692,7 @@ select:focus{
 }
 
 /* =====================================================
-   GROUP MEMBERS
+   MEMBERS
 ===================================================== */
 
 .members-header{
@@ -677,6 +725,13 @@ select:focus{
   align-items:center;
   gap:11px;
   box-shadow:0 4px 12px var(--shadow);
+  cursor:pointer;
+  transition:.15s;
+}
+
+.member:hover{
+  border-color:var(--primary);
+  transform:translateY(-1px);
 }
 
 .member-avatar{
@@ -883,6 +938,15 @@ select:focus{
   margin:0 0 15px;
 }
 
+.member-edit-info{
+  background:var(--surface2);
+  border-radius:10px;
+  padding:10px;
+  margin-bottom:12px;
+  color:var(--muted);
+  font-size:11px;
+}
+
 .modal-buttons{
   display:flex;
   justify-content:flex-end;
@@ -949,7 +1013,10 @@ select:focus{
      SIDEBAR
 ===================================================== -->
 
-<aside class="side">
+<aside
+  class="side"
+  id="sidebar"
+>
 
   <div class="brand">
 
@@ -968,95 +1035,116 @@ select:focus{
   </div>
 
 
-  <nav class="nav">
+  <!-- UP / DOWN ARROW -->
 
-    <div class="nav-label">
-      Main
-    </div>
-
-    <button
-      class="on"
-      onclick="show('dashboard',this)"
-    >
-      <span class="nav-icon">🏠</span>
-      <span>Dashboard</span>
-    </button>
+  <button
+    class="sidebar-toggle"
+    onclick="toggleSidebar()"
+    title="Show navigation"
+    aria-label="Show navigation"
+  >
+    <span id="sidebarArrow">⌄</span>
+  </button>
 
 
-    <button
-      onclick="show('notes',this)"
-    >
-      <span class="nav-icon">📚</span>
-      <span>Nursing Notes</span>
-    </button>
+  <!-- ALL NAVIGATION HIDDEN UNTIL ARROW IS CLICKED -->
+
+  <div
+    class="nav-wrapper"
+    id="navWrapper"
+  >
+
+    <nav class="nav">
+
+      <div class="nav-label">
+        Main
+      </div>
+
+      <button
+        class="on"
+        onclick="show('dashboard',this)"
+      >
+        <span class="nav-icon">🏠</span>
+        <span>Dashboard</span>
+      </button>
 
 
-    <div class="nav-label">
-      Group
-    </div>
+      <button
+        onclick="show('notes',this)"
+      >
+        <span class="nav-icon">📚</span>
+        <span>Nursing Notes</span>
+      </button>
 
 
-    <button
-      onclick="show('requirements',this)"
-    >
-      <span class="nav-icon">📝</span>
-      <span>Requirements</span>
-    </button>
+      <div class="nav-label">
+        Group
+      </div>
 
 
-    <button
-      onclick="show('schedule',this)"
-    >
-      <span class="nav-icon">📅</span>
-      <span>Duty Schedule</span>
-    </button>
+      <button
+        onclick="show('requirements',this)"
+      >
+        <span class="nav-icon">📝</span>
+        <span>Requirements</span>
+      </button>
 
 
-    <button
-      onclick="show('members',this)"
-    >
-      <span class="nav-icon">👥</span>
-      <span>Group Members</span>
-    </button>
+      <button
+        onclick="show('schedule',this)"
+      >
+        <span class="nav-icon">📅</span>
+        <span>Duty Schedule</span>
+      </button>
 
 
-    <button
-      onclick="show('chat',this)"
-    >
-      <span class="nav-icon">💬</span>
-      <span>Group Chat</span>
-    </button>
+      <button
+        onclick="show('members',this)"
+      >
+        <span class="nav-icon">👥</span>
+        <span>Group Members</span>
+      </button>
 
 
-    <button
-      onclick="show('files',this)"
-    >
-      <span class="nav-icon">📁</span>
-      <span>Files</span>
-    </button>
+      <button
+        onclick="show('chat',this)"
+      >
+        <span class="nav-icon">💬</span>
+        <span>Group Chat</span>
+      </button>
 
 
-    <div class="nav-label">
-      System
-    </div>
+      <button
+        onclick="show('files',this)"
+      >
+        <span class="nav-icon">📁</span>
+        <span>Files</span>
+      </button>
 
 
-    <button
-      onclick="adminLogin()"
-    >
-      <span class="nav-icon">🔐</span>
-      <span id="admBtn">Admin</span>
-    </button>
+      <div class="nav-label">
+        System
+      </div>
 
 
-    <button
-      onclick="show('about',this)"
-    >
-      <span class="nav-icon">ℹ️</span>
-      <span>About</span>
-    </button>
+      <button
+        onclick="adminLogin()"
+      >
+        <span class="nav-icon">🔐</span>
+        <span id="admBtn">Admin</span>
+      </button>
 
-  </nav>
+
+      <button
+        onclick="show('about',this)"
+      >
+        <span class="nav-icon">ℹ️</span>
+        <span>About</span>
+      </button>
+
+    </nav>
+
+  </div>
 
 </aside>
 
@@ -1083,8 +1171,6 @@ select:focus{
 
 
     <div class="topbar-right">
-
-      <!-- THEME IS NOW HERE -->
 
       <button
         id="themeToggle"
@@ -1145,8 +1231,6 @@ select:focus{
 
 
     <div class="dashboard-layout">
-
-      <!-- LEFT DASHBOARD -->
 
       <div class="dashboard-panel">
 
@@ -1247,11 +1331,7 @@ select:focus{
       </div>
 
 
-      <!-- GROUP MEMBERS -->
-
-      <div
-        class="dashboard-panel dashboard-members"
-      >
+      <div class="dashboard-panel dashboard-members">
 
         <h3>
           👥 Group Members
@@ -1715,6 +1795,15 @@ select:focus{
       Add Group Member
     </h3>
 
+    <div
+      id="memberEditInfo"
+      class="member-edit-info"
+      style="display:none;"
+    >
+      Admin mode: You can edit this member's
+      information below.
+    </div>
+
     <input
       id="memberName"
       placeholder="Full name"
@@ -1901,6 +1990,90 @@ function esc(value){
 
 
 /* =====================================================
+   SIDEBAR TOGGLE
+===================================================== */
+
+window.toggleSidebar =
+function(){
+
+  const sidebar =
+    document.getElementById(
+      "sidebar"
+    );
+
+  const arrow =
+    document.getElementById(
+      "sidebarArrow"
+    );
+
+
+  const expanded =
+    sidebar.classList.toggle(
+      "expanded"
+    );
+
+
+  if(expanded){
+
+    arrow.textContent = "⌃";
+
+    document
+      .querySelector(
+        ".sidebar-toggle"
+      )
+      .setAttribute(
+        "title",
+        "Hide navigation"
+      );
+
+  }else{
+
+    arrow.textContent = "⌄";
+
+    document
+      .querySelector(
+        ".sidebar-toggle"
+      )
+      .setAttribute(
+        "title",
+        "Show navigation"
+      );
+
+  }
+
+
+  localStorage.setItem(
+    "sidebarExpanded",
+    expanded
+      ? "true"
+      : "false"
+  );
+
+};
+
+
+/* Keep sidebar collapsed when page first opens */
+
+const savedSidebar =
+  localStorage.getItem(
+    "sidebarExpanded"
+  ) === "true";
+
+
+if(savedSidebar){
+
+  document
+    .getElementById("sidebar")
+    .classList.add("expanded");
+
+  document
+    .getElementById("sidebarArrow")
+    .textContent = "⌃";
+
+}
+
+
+/* =====================================================
    NAVIGATION
 ===================================================== */
 
@@ -2022,6 +2195,33 @@ function(section){
     about:7
 
   };
+
+
+  /*
+    Automatically expand the sidebar
+    when a dashboard card is clicked.
+  */
+
+  const sidebar =
+    document.getElementById(
+      "sidebar"
+    );
+
+
+  if(!sidebar.classList.contains("expanded")){
+
+    sidebar.classList.add("expanded");
+
+    document.getElementById(
+      "sidebarArrow"
+    ).textContent = "⌃";
+
+    localStorage.setItem(
+      "sidebarExpanded",
+      "true"
+    );
+
+  }
 
 
   show(
@@ -2692,7 +2892,7 @@ async function(id){
 
 
 /* =====================================================
-   DUTY SCHEDULE
+   SCHEDULE
 ===================================================== */
 
 onValue(
@@ -2751,31 +2951,19 @@ function renderSchedule(){
       el.innerHTML = `
 
         <div class="schedule-day">
-          ${esc(
-            s.day ||
-            "Duty"
-          )}
+          ${esc(s.day || "Duty")}
         </div>
 
         <div class="schedule-area">
-          ${esc(
-            s.area ||
-            "Clinical Area"
-          )}
+          ${esc(s.area || "Clinical Area")}
         </div>
 
         <div class="schedule-time">
-          🕐 ${esc(
-            s.time ||
-            "Time not set"
-          )}
+          🕐 ${esc(s.time || "Time not set")}
         </div>
 
         <div class="schedule-time">
-          👥 ${esc(
-            s.group ||
-            "Group not set"
-          )}
+          👥 ${esc(s.group || "Group not set")}
         </div>
 
         ${
@@ -2950,6 +3138,45 @@ function getInitials(name){
 }
 
 
+/* =====================================================
+   MEMBER CLICK
+===================================================== */
+
+window.memberClicked =
+function(id){
+
+  const member =
+    membersData[id];
+
+
+  if(!member)
+    return;
+
+
+  /*
+    Only admins can edit.
+    Normal students simply view
+    the member information.
+  */
+
+  if(isAdmin){
+
+    editMember(id);
+
+  }else{
+
+    alert(
+      "Member\n\n" +
+      (member.name || "Student") +
+      "\n" +
+      (member.role || "Nursing Student")
+    );
+
+  }
+
+};
+
+
 function renderMembers(){
 
   const box =
@@ -2990,6 +3217,11 @@ function renderMembers(){
         "member";
 
 
+      el.onclick =
+        () =>
+          memberClicked(id);
+
+
       el.innerHTML = `
 
         <div class="member-avatar">
@@ -3025,7 +3257,10 @@ function renderMembers(){
 
               <button
                 class="btn small"
-                onclick="editMember('${id}')"
+                onclick="
+                  event.stopPropagation();
+                  editMember('${id}');
+                "
                 title="Edit member"
               >
                 ✏️
@@ -3033,7 +3268,10 @@ function renderMembers(){
 
               <button
                 class="btn small danger"
-                onclick="deleteMember('${id}')"
+                onclick="
+                  event.stopPropagation();
+                  deleteMember('${id}');
+                "
                 title="Delete member"
               >
                 🗑️
@@ -3097,6 +3335,20 @@ function renderMemberPreview(){
           "member-preview-item";
 
 
+        el.onclick =
+          () => {
+
+            goToSection("members");
+
+            setTimeout(
+              () =>
+                memberClicked(id),
+              100
+            );
+
+          };
+
+
         el.innerHTML = `
 
           <div class="member-preview-avatar">
@@ -3153,6 +3405,10 @@ function renderMemberPreview(){
 }
 
 
+/* =====================================================
+   MEMBER MODAL
+===================================================== */
+
 window.openMemberModal =
 function(){
 
@@ -3167,6 +3423,12 @@ function(){
     "memberModalTitle"
   ).textContent =
     "Add Group Member";
+
+
+  document.getElementById(
+    "memberEditInfo"
+  ).style.display =
+    "none";
 
 
   document.getElementById(
@@ -3220,6 +3482,12 @@ function(id){
 
 
   document.getElementById(
+    "memberEditInfo"
+  ).style.display =
+    "block";
+
+
+  document.getElementById(
     "memberName"
   ).value =
     member.name ||
@@ -3236,6 +3504,15 @@ function(id){
   document.getElementById(
     "memberModal"
   ).classList.add("show");
+
+
+  setTimeout(
+    () =>
+      document.getElementById(
+        "memberName"
+      ).focus(),
+    100
+  );
 
 };
 
