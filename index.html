@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <meta name="bsn2a-build" content="offline-v2">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="bsn2a-build" content="offline-v3">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -3581,7 +3582,9 @@ window.addEventListener("offline",()=>{
 
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{
-    navigator.serviceWorker.register("./sw.js?v=bsn2a-v2", {updateViaCache:"none"}).then(reg=>{\n      reg.update().catch(()=>{});\n    }).catch(error=>{
+    navigator.serviceWorker.register("./sw.js?v=bsn2a-v3", {updateViaCache:"none"}).then(reg=>{
+      reg.update().catch(()=>{});
+    }).catch(error=>{
       console.warn("Offline app cache could not be registered:",error);
     });
   });
