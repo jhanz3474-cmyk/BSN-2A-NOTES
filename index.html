@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#176b4d">
+
 <title>Nursing Duty Hub</title>
 
 <style>
+
 :root{
   --bg:#f4f8f6;
   --surface:#ffffff;
@@ -70,9 +72,10 @@ button{
   cursor:pointer;
 }
 
-/* =====================================================
+
+/* =========================================================
    SIDEBAR
-===================================================== */
+========================================================= */
 
 .side{
   position:fixed;
@@ -88,6 +91,7 @@ button{
   flex-direction:column;
   box-shadow:4px 0 18px var(--shadow);
   overflow-y:auto;
+  transition:width .25s ease,transform .25s ease;
 }
 
 .brand{
@@ -118,50 +122,10 @@ button{
   font-size:12px;
 }
 
-/* SIDEBAR ARROW */
 
-.sidebar-toggle{
-  width:100%;
-  height:38px;
-  margin:7px 0 8px;
-  border:1px solid var(--border);
-  background:var(--surface2);
-  color:var(--primary);
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
-  transition:.2s;
-}
-
-.sidebar-toggle:hover{
-  background:var(--primarySoft);
-}
-
-.sidebar-toggle span{
-  transition:transform .2s;
-}
-
-.side.expanded .sidebar-toggle span{
-  transform:rotate(180deg);
-}
-
-/* NAVIGATION */
-
-.nav-wrapper{
-  overflow:hidden;
-  max-height:0;
-  opacity:0;
-  transition:
-    max-height .25s ease,
-    opacity .2s ease;
-}
-
-.side.expanded .nav-wrapper{
-  max-height:1000px;
-  opacity:1;
-}
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
 .nav{
   display:flex;
@@ -206,17 +170,81 @@ button{
   width:23px;
   text-align:center;
   font-size:17px;
+  flex-shrink:0;
 }
 
-/* =====================================================
+
+/* =========================================================
+   GROUP ONLY COLLAPSIBLE
+========================================================= */
+
+.group-header{
+  margin-top:13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 6px 5px 10px;
+}
+
+.group-header-title{
+  font-size:10px;
+  font-weight:bold;
+  color:var(--muted2);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.group-toggle{
+  width:28px;
+  height:25px;
+  border:0;
+  background:transparent;
+  color:var(--primary);
+  border-radius:7px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px;
+  transition:.15s;
+}
+
+.group-toggle:hover{
+  background:var(--surface2);
+}
+
+.group-toggle span{
+  display:block;
+  transition:transform .2s ease;
+}
+
+.group-nav{
+  max-height:500px;
+  overflow:hidden;
+  opacity:1;
+  transition:max-height .25s ease,opacity .2s ease;
+}
+
+.group-nav.collapsed{
+  max-height:0;
+  opacity:0;
+}
+
+
+/* =========================================================
    MAIN
-===================================================== */
+========================================================= */
 
 .main{
   margin-left:250px;
   min-height:100vh;
   padding:28px;
+  transition:margin-left .25s ease;
 }
+
+
+/* =========================================================
+   TOPBAR
+========================================================= */
 
 .topbar{
   display:flex;
@@ -243,9 +271,10 @@ button{
   gap:10px;
 }
 
-/* =====================================================
-   THEME
-===================================================== */
+
+/* =========================================================
+   THEME + NOTIFICATION
+========================================================= */
 
 .theme-toggle{
   width:42px;
@@ -257,7 +286,7 @@ button{
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:20px;
+  font-size:19px;
   transition:.2s;
 }
 
@@ -265,6 +294,51 @@ button{
   background:var(--surface2);
   transform:scale(1.04);
 }
+
+.notification-button{
+  position:relative;
+}
+
+.notification-dot{
+  position:absolute;
+  top:5px;
+  right:5px;
+  width:10px;
+  height:10px;
+  background:#ef4444;
+  border:2px solid var(--surface);
+  border-radius:50%;
+  display:none;
+}
+
+.notification-dot.show{
+  display:block;
+}
+
+@keyframes notificationPulse{
+
+  0%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.12);
+  }
+
+  100%{
+    transform:scale(1);
+  }
+
+}
+
+.notification-button.has-notification{
+  animation:notificationPulse 1s infinite;
+}
+
+
+/* =========================================================
+   USER
+========================================================= */
 
 .userbox{
   display:flex;
@@ -294,9 +368,10 @@ button{
   font-weight:bold;
 }
 
-/* =====================================================
+
+/* =========================================================
    SECTIONS
-===================================================== */
+========================================================= */
 
 .section{
   display:none;
@@ -306,9 +381,10 @@ button{
   display:block;
 }
 
-/* =====================================================
+
+/* =========================================================
    WELCOME
-===================================================== */
+========================================================= */
 
 .welcome{
   background:linear-gradient(
@@ -316,6 +392,7 @@ button{
     var(--primary),
     var(--primary2)
   );
+
   color:white;
   border-radius:17px;
   padding:25px;
@@ -336,21 +413,26 @@ button{
 .welcome h2{
   margin:0;
   font-size:23px;
+  position:relative;
+  z-index:1;
 }
 
 .welcome p{
   margin:7px 0 0;
   opacity:.92;
   font-size:13px;
+  position:relative;
+  z-index:1;
 }
 
-/* =====================================================
+
+/* =========================================================
    DASHBOARD
-===================================================== */
+========================================================= */
 
 .dashboard-layout{
   display:grid;
-  grid-template-columns:1fr 360px;
+  grid-template-columns:minmax(0,1fr) minmax(280px,360px);
   gap:15px;
 }
 
@@ -412,8 +494,36 @@ button{
   line-height:1.4;
 }
 
+
+/* =========================================================
+   MEMBERS ON DASHBOARD
+========================================================= */
+
 .dashboard-members{
-  min-height:200px;
+  min-height:300px;
+}
+
+.dashboard-member-scroll{
+  max-height:330px;
+  overflow-y:auto;
+  padding-right:5px;
+}
+
+.dashboard-member-scroll::-webkit-scrollbar{
+  width:6px;
+}
+
+.dashboard-member-scroll::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+.dashboard-member-scroll::-webkit-scrollbar-thumb{
+  background:var(--border);
+  border-radius:10px;
+}
+
+.dashboard-member-scroll::-webkit-scrollbar-thumb:hover{
+  background:var(--muted2);
 }
 
 .member-preview{
@@ -448,6 +558,7 @@ button{
   justify-content:center;
   font-size:11px;
   font-weight:bold;
+  flex-shrink:0;
 }
 
 .member-preview-name{
@@ -460,9 +571,10 @@ button{
   color:var(--muted2);
 }
 
-/* =====================================================
-   GENERAL
-===================================================== */
+
+/* =========================================================
+   GENERAL PANELS
+========================================================= */
 
 .panel,
 .admin-panel{
@@ -548,16 +660,18 @@ select:focus{
   font-size:11px;
 }
 
-/* =====================================================
+
+/* =========================================================
    NOTES
-===================================================== */
+========================================================= */
 
 .notes-grid{
   display:grid;
-  grid-template-columns:repeat(
-    auto-fit,
-    minmax(270px,1fr)
-  );
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(270px,1fr)
+    );
   gap:14px;
 }
 
@@ -585,6 +699,15 @@ select:focus{
   margin-bottom:9px;
 }
 
+
+/*
+   IMPORTANT FIX:
+
+   white-space:pre-wrap keeps line breaks,
+   while JavaScript removes indentation
+   from every individual line.
+*/
+
 .note-text{
   display:block;
   width:100%;
@@ -602,16 +725,18 @@ select:focus{
   margin-top:12px;
 }
 
-/* =====================================================
+
+/* =========================================================
    REQUIREMENTS
-===================================================== */
+========================================================= */
 
 .requirements{
   display:grid;
-  grid-template-columns:repeat(
-    auto-fit,
-    minmax(260px,1fr)
-  );
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(260px,1fr)
+    );
   gap:13px;
 }
 
@@ -645,16 +770,18 @@ select:focus{
   line-height:1.5;
 }
 
-/* =====================================================
-   SCHEDULE
-===================================================== */
+
+/* =========================================================
+   DUTY SCHEDULE
+========================================================= */
 
 .schedule-grid{
   display:grid;
-  grid-template-columns:repeat(
-    auto-fit,
-    minmax(250px,1fr)
-  );
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(250px,1fr)
+    );
   gap:13px;
 }
 
@@ -691,9 +818,10 @@ select:focus{
   font-size:11px;
 }
 
-/* =====================================================
+
+/* =========================================================
    MEMBERS
-===================================================== */
+========================================================= */
 
 .members-header{
   display:flex;
@@ -709,10 +837,11 @@ select:focus{
 
 .members-grid{
   display:grid;
-  grid-template-columns:repeat(
-    auto-fit,
-    minmax(230px,1fr)
-  );
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(230px,1fr)
+    );
   gap:12px;
 }
 
@@ -769,9 +898,10 @@ select:focus{
   gap:4px;
 }
 
-/* =====================================================
+
+/* =========================================================
    CHAT
-===================================================== */
+========================================================= */
 
 .chat{
   max-width:900px;
@@ -820,16 +950,18 @@ select:focus{
   flex:1;
 }
 
-/* =====================================================
+
+/* =========================================================
    FILES
-===================================================== */
+========================================================= */
 
 .files-grid{
   display:grid;
-  grid-template-columns:repeat(
-    auto-fit,
-    minmax(240px,1fr)
-  );
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(240px,1fr)
+    );
   gap:13px;
 }
 
@@ -874,9 +1006,10 @@ select:focus{
   font-size:12px;
 }
 
-/* =====================================================
+
+/* =========================================================
    ABOUT
-===================================================== */
+========================================================= */
 
 .about-box{
   background:var(--surface);
@@ -896,9 +1029,10 @@ select:focus{
   color:var(--muted);
 }
 
-/* =====================================================
+
+/* =========================================================
    EMPTY
-===================================================== */
+========================================================= */
 
 .empty{
   text-align:center;
@@ -906,9 +1040,10 @@ select:focus{
   padding:35px 10px;
 }
 
-/* =====================================================
+
+/* =========================================================
    MODAL
-===================================================== */
+========================================================= */
 
 .modal{
   position:fixed;
@@ -954,11 +1089,23 @@ select:focus{
   margin-top:12px;
 }
 
-/* =====================================================
-   RESPONSIVE
-===================================================== */
 
-@media(max-width:900px){
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media
+(min-width:701px)
+and (max-width:1100px){
+
+  .side{
+    width:220px;
+  }
+
+  .main{
+    margin-left:220px;
+    padding:22px;
+  }
 
   .dashboard-layout{
     grid-template-columns:1fr;
@@ -966,7 +1113,14 @@ select:focus{
 
 }
 
-@media(max-width:700px){
+
+/* =========================================================
+   SMALL TABLET
+========================================================= */
+
+@media
+(min-width:481px)
+and (max-width:700px){
 
   .side{
     position:relative;
@@ -974,21 +1128,112 @@ select:focus{
     height:auto;
     border-right:0;
     border-bottom:1px solid var(--border);
+    box-shadow:0 3px 15px var(--shadow);
   }
 
   .main{
     margin-left:0;
-    padding:16px;
+    padding:20px;
+  }
+
+  .dashboard-layout{
+    grid-template-columns:1fr;
+  }
+
+}
+
+
+/* =========================================================
+   PHONE
+========================================================= */
+
+@media(max-width:480px){
+
+  .side{
+    position:relative;
+    width:100%;
+    height:auto;
+    min-height:auto;
+    border-right:0;
+    border-bottom:1px solid var(--border);
+    padding:12px;
+    box-shadow:0 3px 15px var(--shadow);
+  }
+
+  .brand{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    column-gap:10px;
+    align-items:center;
+  }
+
+  .brand-icon{
+    grid-row:1 / span 2;
+    margin:0;
+    width:43px;
+    height:43px;
+  }
+
+  .brand h1{
+    font-size:18px;
+  }
+
+  .brand p{
+    margin-top:2px;
+  }
+
+  .main{
+    margin-left:0;
+    padding:14px;
   }
 
   .topbar{
     align-items:flex-start;
     flex-direction:column;
+    margin-bottom:15px;
+  }
+
+  .topbar-left h2{
+    font-size:24px;
   }
 
   .topbar-right{
     width:100%;
     justify-content:flex-end;
+  }
+
+  .welcome{
+    padding:20px;
+    border-radius:14px;
+  }
+
+  .welcome h2{
+    font-size:20px;
+    padding-right:35px;
+  }
+
+  .welcome p{
+    font-size:12px;
+  }
+
+  .dashboard-layout{
+    grid-template-columns:1fr;
+  }
+
+  .dashboard-links{
+    grid-template-columns:1fr;
+  }
+
+  .dashboard-panel{
+    padding:14px;
+  }
+
+  .dashboard-members{
+    min-height:0;
+  }
+
+  .dashboard-member-scroll{
+    max-height:280px;
   }
 
   .form-grid{
@@ -999,24 +1244,95 @@ select:focus{
     grid-column:auto;
   }
 
-  .dashboard-links{
+  .members-header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .members-grid{
     grid-template-columns:1fr;
   }
 
+  .notes-grid{
+    grid-template-columns:1fr;
+  }
+
+  .requirements{
+    grid-template-columns:1fr;
+  }
+
+  .schedule-grid{
+    grid-template-columns:1fr;
+  }
+
+  .files-grid{
+    grid-template-columns:1fr;
+  }
+
+  .chatlog{
+    height:58vh;
+  }
+
 }
+
+
+/* =========================================================
+   PHONE LANDSCAPE
+========================================================= */
+
+@media
+(max-width:700px)
+and (orientation:landscape){
+
+  .side{
+    padding:10px 14px;
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .brand-icon{
+    margin:0;
+  }
+
+  .brand h1{
+    font-size:17px;
+  }
+
+  .brand p{
+    font-size:10px;
+  }
+
+  .main{
+    padding:16px;
+  }
+
+  .dashboard-layout{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .dashboard-links{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+
 </style>
 </head>
 
+
 <body>
 
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
 
-<aside
-  class="side"
-  id="sidebar"
->
+<!-- =======================================================
+     SIDEBAR
+======================================================= -->
+
+<aside class="side">
+
 
   <div class="brand">
 
@@ -1024,138 +1340,217 @@ select:focus{
       🩺
     </div>
 
-    <h1>
-      Nursing Duty Hub
-    </h1>
+    <div>
 
-    <p>
-      BSN 2A • Clinical Duty Group
-    </p>
+      <h1>
+        Nursing Duty Hub
+      </h1>
+
+      <p>
+        BSN 2A • Clinical Duty Group
+      </p>
+
+    </div>
 
   </div>
 
 
-  <!-- UP / DOWN ARROW -->
-
-  <button
-    class="sidebar-toggle"
-    onclick="toggleSidebar()"
-    title="Show navigation"
-    aria-label="Show navigation"
-  >
-    <span id="sidebarArrow">⌄</span>
-  </button>
+  <div class="nav">
 
 
-  <!-- ALL NAVIGATION HIDDEN UNTIL ARROW IS CLICKED -->
-
-  <div
-    class="nav-wrapper"
-    id="navWrapper"
-  >
-
-    <nav class="nav">
-
-      <div class="nav-label">
-        Main
-      </div>
-
-      <button
-        class="on"
-        onclick="show('dashboard',this)"
-      >
-        <span class="nav-icon">🏠</span>
-        <span>Dashboard</span>
-      </button>
+    <div class="nav-label">
+      Main
+    </div>
 
 
-      <button
-        onclick="show('notes',this)"
-      >
-        <span class="nav-icon">📚</span>
-        <span>Nursing Notes</span>
-      </button>
+    <button
+      class="on"
+      onclick="show('dashboard',this)"
+    >
+
+      <span class="nav-icon">
+        🏠
+      </span>
+
+      <span>
+        Dashboard
+      </span>
+
+    </button>
 
 
-      <div class="nav-label">
+    <button
+      onclick="show('notes',this)"
+    >
+
+      <span class="nav-icon">
+        📚
+      </span>
+
+      <span>
+        Nursing Notes
+      </span>
+
+    </button>
+
+
+    <!-- GROUP -->
+
+    <div class="group-header">
+
+      <span class="group-header-title">
         Group
-      </div>
+      </span>
+
+      <button
+        class="group-toggle"
+        id="groupToggle"
+        onclick="toggleGroup()"
+        title="Collapse group navigation"
+      >
+
+        <span id="groupArrow">
+          ⌃
+        </span>
+
+      </button>
+
+    </div>
+
+
+    <div
+      class="group-nav"
+      id="groupNav"
+    >
 
 
       <button
         onclick="show('requirements',this)"
       >
-        <span class="nav-icon">📝</span>
-        <span>Requirements</span>
+
+        <span class="nav-icon">
+          📝
+        </span>
+
+        <span>
+          Requirements
+        </span>
+
       </button>
 
 
       <button
         onclick="show('schedule',this)"
       >
-        <span class="nav-icon">📅</span>
-        <span>Duty Schedule</span>
+
+        <span class="nav-icon">
+          📅
+        </span>
+
+        <span>
+          Duty Schedule
+        </span>
+
       </button>
 
 
       <button
         onclick="show('members',this)"
       >
-        <span class="nav-icon">👥</span>
-        <span>Group Members</span>
+
+        <span class="nav-icon">
+          👥
+        </span>
+
+        <span>
+          Group Members
+        </span>
+
       </button>
 
 
       <button
         onclick="show('chat',this)"
       >
-        <span class="nav-icon">💬</span>
-        <span>Group Chat</span>
+
+        <span class="nav-icon">
+          💬
+        </span>
+
+        <span>
+          Group Chat
+        </span>
+
       </button>
 
 
       <button
         onclick="show('files',this)"
       >
-        <span class="nav-icon">📁</span>
-        <span>Files</span>
+
+        <span class="nav-icon">
+          📁
+        </span>
+
+        <span>
+          Files
+        </span>
+
       </button>
 
 
-      <div class="nav-label">
-        System
-      </div>
+    </div>
 
 
-      <button
-        onclick="adminLogin()"
-      >
-        <span class="nav-icon">🔐</span>
-        <span id="admBtn">Admin</span>
-      </button>
+    <div class="nav-label">
+      System
+    </div>
 
 
-      <button
-        onclick="show('about',this)"
-      >
-        <span class="nav-icon">ℹ️</span>
-        <span>About</span>
-      </button>
+    <button
+      onclick="adminLogin()"
+    >
 
-    </nav>
+      <span class="nav-icon">
+        🔐
+      </span>
+
+      <span id="admBtn">
+        Admin
+      </span>
+
+    </button>
+
+
+    <button
+      onclick="show('about',this)"
+    >
+
+      <span class="nav-icon">
+        ℹ️
+      </span>
+
+      <span>
+        About
+      </span>
+
+    </button>
+
 
   </div>
 
 </aside>
 
 
-<!-- =====================================================
+<!-- =======================================================
      MAIN
-===================================================== -->
+======================================================= -->
 
 <main class="main">
 
+
   <div class="topbar">
+
 
     <div class="topbar-left">
 
@@ -1172,6 +1567,25 @@ select:focus{
 
     <div class="topbar-right">
 
+
+      <button
+        id="notificationButton"
+        class="theme-toggle notification-button"
+        onclick="openNotifications()"
+        title="No new messages"
+        aria-label="Chat notifications"
+      >
+
+        🔔
+
+        <span
+          id="notificationDot"
+          class="notification-dot"
+        ></span>
+
+      </button>
+
+
       <button
         id="themeToggle"
         class="theme-toggle"
@@ -1179,7 +1593,11 @@ select:focus{
         title="Switch to dark mode"
         aria-label="Switch to dark mode"
       >
-        <span id="themeIcon">◐</span>
+
+        <span id="themeIcon">
+          ◐
+        </span>
+
       </button>
 
 
@@ -1201,19 +1619,21 @@ select:focus{
 
       </div>
 
+
     </div>
 
   </div>
 
 
-  <!-- ===================================================
+  <!-- =====================================================
        DASHBOARD
-  ==================================================== -->
+  ====================================================== -->
 
   <section
     id="dashboard"
     class="section active"
   >
+
 
     <div class="welcome">
 
@@ -1232,6 +1652,7 @@ select:focus{
 
     <div class="dashboard-layout">
 
+
       <div class="dashboard-panel">
 
         <h3>
@@ -1246,6 +1667,7 @@ select:focus{
 
 
         <div class="dashboard-links">
+
 
           <div
             class="dashboard-link"
@@ -1326,10 +1748,13 @@ select:focus{
 
           </div>
 
+
         </div>
 
       </div>
 
+
+      <!-- MEMBERS DIRECTLY ON DASHBOARD -->
 
       <div class="dashboard-panel dashboard-members">
 
@@ -1339,32 +1764,27 @@ select:focus{
 
         <div
           id="memberPreview"
-          class="member-preview"
+          class="member-preview dashboard-member-scroll"
         ></div>
-
-        <button
-          class="btn primary"
-          style="width:100%;margin-top:12px;"
-          onclick="goToSection('members')"
-        >
-          View All Members
-        </button>
 
       </div>
 
+
     </div>
+
 
   </section>
 
 
-  <!-- ===================================================
+  <!-- =====================================================
        NURSING NOTES
-  ==================================================== -->
+  ====================================================== -->
 
   <section
     id="notes"
     class="section"
   >
+
 
     <div
       id="adminNotesPanel"
@@ -1375,6 +1795,7 @@ select:focus{
       <h3>
         ➕ Add Nursing Note
       </h3>
+
 
       <div class="form-grid">
 
@@ -1396,6 +1817,7 @@ select:focus{
 
       </div>
 
+
       <div class="form-buttons">
 
         <button
@@ -1415,17 +1837,19 @@ select:focus{
       class="notes-grid"
     ></div>
 
+
   </section>
 
 
-  <!-- ===================================================
+  <!-- =====================================================
        REQUIREMENTS
-  ==================================================== -->
+  ====================================================== -->
 
   <section
     id="requirements"
     class="section"
   >
+
 
     <div
       id="adminRequirementsPanel"
@@ -1436,6 +1860,7 @@ select:focus{
       <h3>
         ➕ Add Requirement
       </h3>
+
 
       <div class="form-grid">
 
@@ -1457,6 +1882,7 @@ select:focus{
 
       </div>
 
+
       <div class="form-buttons">
 
         <button
@@ -1476,17 +1902,19 @@ select:focus{
       class="requirements"
     ></div>
 
+
   </section>
 
 
-  <!-- ===================================================
+  <!-- =====================================================
        DUTY SCHEDULE
-  ==================================================== -->
+  ====================================================== -->
 
   <section
     id="schedule"
     class="section"
   >
+
 
     <div
       id="adminSchedulePanel"
@@ -1497,6 +1925,7 @@ select:focus{
       <h3>
         ➕ Add Duty Schedule
       </h3>
+
 
       <div class="form-grid">
 
@@ -1528,6 +1957,7 @@ select:focus{
 
       </div>
 
+
       <div class="form-buttons">
 
         <button
@@ -1547,23 +1977,26 @@ select:focus{
       class="schedule-grid"
     ></div>
 
+
   </section>
 
 
-  <!-- ===================================================
-       GROUP MEMBERS
-  ==================================================== -->
+  <!-- =====================================================
+       MEMBERS
+  ====================================================== -->
 
   <section
     id="members"
     class="section"
   >
 
+
     <div class="members-header">
 
       <h3>
         👥 Group Members
       </h3>
+
 
       <button
         id="addMemberButton"
@@ -1582,24 +2015,28 @@ select:focus{
       class="members-grid"
     ></div>
 
+
   </section>
 
 
-  <!-- ===================================================
-       GROUP CHAT
-  ==================================================== -->
+  <!-- =====================================================
+       CHAT
+  ====================================================== -->
 
   <section
     id="chat"
     class="section"
   >
 
+
     <div class="chat">
+
 
       <div
         id="chatlog"
         class="chatlog"
       ></div>
+
 
       <div class="chatrow">
 
@@ -1614,6 +2051,7 @@ select:focus{
           "
         >
 
+
         <button
           class="btn primary"
           onclick="sendChat()"
@@ -1623,19 +2061,22 @@ select:focus{
 
       </div>
 
+
     </div>
+
 
   </section>
 
 
-  <!-- ===================================================
+  <!-- =====================================================
        FILES
-  ==================================================== -->
+  ====================================================== -->
 
   <section
     id="files"
     class="section"
   >
+
 
     <div
       id="adminFilesPanel"
@@ -1646,6 +2087,7 @@ select:focus{
       <h3>
         ➕ Add Clinical File
       </h3>
+
 
       <div class="form-grid">
 
@@ -1667,6 +2109,7 @@ select:focus{
 
       </div>
 
+
       <div class="form-buttons">
 
         <button
@@ -1686,23 +2129,26 @@ select:focus{
       class="files-grid"
     ></div>
 
+
   </section>
 
 
-  <!-- ===================================================
+  <!-- =====================================================
        ABOUT
-  ==================================================== -->
+  ====================================================== -->
 
   <section
     id="about"
     class="section"
   >
 
+
     <div class="about-box">
 
       <h2>
         🩺 Nursing Duty Hub
       </h2>
+
 
       <p>
         A shared digital workspace for our nursing
@@ -1711,29 +2157,37 @@ select:focus{
         communication in one place.
       </p>
 
+
       <p>
         This system is designed for educational
         and organizational purposes during nursing
         school and clinical duty activities.
       </p>
 
+
       <p>
-        <strong>Privacy reminder:</strong>
+        <strong>
+          Privacy reminder:
+        </strong>
+
         Do not place real patient names, hospital
         numbers, addresses, or other identifying
         information in the shared system.
       </p>
 
+
     </div>
 
+
   </section>
+
 
 </main>
 
 
-<!-- =====================================================
-     ADMIN LOGIN MODAL
-===================================================== -->
+<!-- =======================================================
+     ADMIN MODAL
+======================================================= -->
 
 <div
   id="adminModal"
@@ -1746,6 +2200,7 @@ select:focus{
       🔐 Admin Login
     </h3>
 
+
     <input
       id="adminPassword"
       type="password"
@@ -1757,6 +2212,7 @@ select:focus{
       "
     >
 
+
     <div class="modal-buttons">
 
       <button
@@ -1765,6 +2221,7 @@ select:focus{
       >
         Cancel
       </button>
+
 
       <button
         class="btn primary"
@@ -1775,14 +2232,15 @@ select:focus{
 
     </div>
 
+
   </div>
 
 </div>
 
 
-<!-- =====================================================
-     MEMBER EDIT MODAL
-===================================================== -->
+<!-- =======================================================
+     MEMBER MODAL
+======================================================= -->
 
 <div
   id="memberModal"
@@ -1795,6 +2253,7 @@ select:focus{
       Add Group Member
     </h3>
 
+
     <div
       id="memberEditInfo"
       class="member-edit-info"
@@ -1804,17 +2263,21 @@ select:focus{
       information below.
     </div>
 
+
     <input
       id="memberName"
       placeholder="Full name"
     >
 
+
     <div style="height:9px;"></div>
+
 
     <input
       id="memberRole"
       placeholder="Role / Group"
     >
+
 
     <div class="modal-buttons">
 
@@ -1825,6 +2288,7 @@ select:focus{
         Cancel
       </button>
 
+
       <button
         class="btn primary"
         onclick="saveMember()"
@@ -1834,20 +2298,24 @@ select:focus{
 
     </div>
 
+
   </div>
 
 </div>
 
 
-<script type="module">
+<!-- =======================================================
+     FIREBASE + JAVASCRIPT
+======================================================= -->
 
-/* =====================================================
-   FIREBASE
-===================================================== */
+<script type="module">
 
 import {
   initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 
 import {
   getDatabase,
@@ -1858,8 +2326,14 @@ import {
   remove,
   onValue,
   serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+
+/* =========================================================
+   FIREBASE CONFIG
+========================================================= */
 
 const firebaseConfig = {
 
@@ -1888,15 +2362,18 @@ const firebaseConfig = {
 
 
 const app =
-  initializeApp(firebaseConfig);
+  initializeApp(
+    firebaseConfig
+  );
+
 
 const db =
   getDatabase(app);
 
 
-/* =====================================================
+/* =========================================================
    DATA
-===================================================== */
+========================================================= */
 
 let notesData = {};
 let requirementsData = {};
@@ -1906,12 +2383,15 @@ let chatData = {};
 let filesData = {};
 
 let isAdmin = false;
+
 let editingMemberId = null;
 
+let unreadChat = false;
 
-/* =====================================================
+
+/* =========================================================
    USER
-===================================================== */
+========================================================= */
 
 let userName =
   localStorage.getItem(
@@ -1922,7 +2402,9 @@ let userName =
 if(!userName){
 
   userName =
-    prompt("Enter your name:") ||
+    prompt(
+      "Enter your name:"
+    ) ||
     "Student";
 
   userName =
@@ -1943,19 +2425,12 @@ document.getElementById(
   userName;
 
 
-const initials =
-  userName
-    .split(/\s+/)
-    .map(x => x[0])
-    .join("")
-    .slice(0,2)
-    .toUpperCase();
-
-
 document.getElementById(
   "userAvatar"
 ).textContent =
-  initials || "S";
+  getInitials(
+    userName
+  );
 
 
 document.getElementById(
@@ -1964,87 +2439,193 @@ document.getElementById(
   `Welcome, ${userName} 👋`;
 
 
-/* =====================================================
-   HELPERS
-===================================================== */
+/* =========================================================
+   IMPORTANT TEXT CLEANER
+========================================================= */
+
+/*
+  THIS IS THE FIX FOR:
+
+        the dog
+  barked
+
+  The problem can come from indentation
+  stored on every line.
+
+  Example:
+
+      the dog
+  barked
+      loudly
+
+  becomes:
+
+  the dog
+  barked
+  loudly
+
+  Existing line breaks are preserved.
+*/
 
 function cleanText(value){
 
-  return String(value || "")
-    .replace(/^[ \t]+/gm,"")
-    .trim();
+  if(
+    value === null ||
+    value === undefined
+  ){
 
-}
-
-
-function esc(value){
-
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* =====================================================
-   SIDEBAR TOGGLE
-===================================================== */
-
-window.toggleSidebar =
-function(){
-
-  const sidebar =
-    document.getElementById(
-      "sidebar"
-    );
-
-  const arrow =
-    document.getElementById(
-      "sidebarArrow"
-    );
-
-
-  const expanded =
-    sidebar.classList.toggle(
-      "expanded"
-    );
-
-
-  if(expanded){
-
-    arrow.textContent = "⌃";
-
-    document
-      .querySelector(
-        ".sidebar-toggle"
-      )
-      .setAttribute(
-        "title",
-        "Hide navigation"
-      );
-
-  }else{
-
-    arrow.textContent = "⌄";
-
-    document
-      .querySelector(
-        ".sidebar-toggle"
-      )
-      .setAttribute(
-        "title",
-        "Show navigation"
-      );
+    return "";
 
   }
 
 
+  return String(value)
+
+    /* Normalize Windows line endings */
+
+    .replace(
+      /\r\n/g,
+      "\n"
+    )
+
+    .replace(
+      /\r/g,
+      "\n"
+    )
+
+    /*
+      Remove spaces/tabs at the beginning
+      of EVERY line.
+    */
+
+    .replace(
+      /^[ \t]+/gm,
+      ""
+    )
+
+    /*
+      Remove spaces/tabs at the end
+      of EVERY line.
+    */
+
+    .replace(
+      /[ \t]+$/gm,
+      ""
+    )
+
+    /*
+      Remove blank lines at the very beginning
+      and very end.
+    */
+
+    .replace(
+      /^\n+/,
+      ""
+    )
+
+    .replace(
+      /\n+$/,
+      ""
+
+    );
+
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
+
+function esc(value){
+
+  return String(
+    value ?? ""
+  )
+
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+
+  .replace(
+    /</g,
+    "&lt;"
+  )
+
+  .replace(
+    />/g,
+    "&gt;"
+  )
+
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+
+  .replace(
+    /'/g,
+    "&#039;"
+  );
+
+}
+
+
+/* =========================================================
+   INITIALS
+========================================================= */
+
+function getInitials(
+  name
+){
+
+  return String(
+    name ||
+    "Student"
+  )
+  .trim()
+  .split(/\s+/)
+  .map(
+    x => x[0]
+  )
+  .join("")
+  .slice(0,2)
+  .toUpperCase();
+
+}
+
+
+/* =========================================================
+   GROUP COLLAPSE
+========================================================= */
+
+window.toggleGroup =
+function(){
+
+  const groupNav =
+    document.getElementById(
+      "groupNav"
+    );
+
+  const arrow =
+    document.getElementById(
+      "groupArrow"
+    );
+
+  const collapsed =
+    groupNav.classList.toggle(
+      "collapsed"
+    );
+
+
+  arrow.textContent =
+    collapsed
+      ? "⌄"
+      : "⌃";
+
+
   localStorage.setItem(
-    "sidebarExpanded",
-    expanded
+    "groupCollapsed",
+    collapsed
       ? "true"
       : "false"
   );
@@ -2052,61 +2633,86 @@ function(){
 };
 
 
-/* Keep sidebar collapsed when page first opens */
-
-const savedSidebar =
+if(
   localStorage.getItem(
-    "sidebarExpanded"
-  ) === "true";
-
-
-if(savedSidebar){
+    "groupCollapsed"
+  ) === "true"
+){
 
   document
-    .getElementById("sidebar")
-    .classList.add("expanded");
+    .getElementById(
+      "groupNav"
+    )
+    .classList.add(
+      "collapsed"
+    );
+
 
   document
-    .getElementById("sidebarArrow")
-    .textContent = "⌃";
+    .getElementById(
+      "groupArrow"
+    )
+    .textContent =
+      "⌄";
 
 }
 
 
-/* =====================================================
+/* =========================================================
    NAVIGATION
-===================================================== */
+========================================================= */
 
 window.show =
-function(section,button){
+function(
+  section,
+  button
+){
 
   document
-    .querySelectorAll(".section")
+    .querySelectorAll(
+      ".section"
+    )
     .forEach(
-      x =>
-        x.classList.remove("active")
+      element =>
+        element.classList.remove(
+          "active"
+        )
     );
 
 
   const target =
-    document.getElementById(section);
+    document.getElementById(
+      section
+    );
 
 
   if(target){
-    target.classList.add("active");
+
+    target.classList.add(
+      "active"
+    );
+
   }
 
 
   document
-    .querySelectorAll(".nav button")
+    .querySelectorAll(
+      ".nav button"
+    )
     .forEach(
-      x =>
-        x.classList.remove("on")
+      element =>
+        element.classList.remove(
+          "on"
+        )
     );
 
 
   if(button){
-    button.classList.add("on");
+
+    button.classList.add(
+      "on"
+    );
+
   }
 
 
@@ -2157,7 +2763,10 @@ function(section,button){
 
   const data =
     titles[section] ||
-    ["Nursing Duty Hub",""];
+    [
+      "Nursing Duty Hub",
+      ""
+    ];
 
 
   document.getElementById(
@@ -2170,6 +2779,15 @@ function(section,button){
     "pageSubtitle"
   ).textContent =
     data[1];
+
+
+  if(
+    section === "chat"
+  ){
+
+    markChatAsSeen();
+
+  }
 
 };
 
@@ -2197,46 +2815,23 @@ function(section){
   };
 
 
-  /*
-    Automatically expand the sidebar
-    when a dashboard card is clicked.
-  */
-
-  const sidebar =
-    document.getElementById(
-      "sidebar"
-    );
-
-
-  if(!sidebar.classList.contains("expanded")){
-
-    sidebar.classList.add("expanded");
-
-    document.getElementById(
-      "sidebarArrow"
-    ).textContent = "⌃";
-
-    localStorage.setItem(
-      "sidebarExpanded",
-      "true"
-    );
-
-  }
-
-
   show(
     section,
-    buttons[map[section]]
+    buttons[
+      map[section]
+    ]
   );
 
 };
 
 
-/* =====================================================
+/* =========================================================
    THEME
-===================================================== */
+========================================================= */
 
-function applyTheme(isDark){
+function applyTheme(
+  isDark
+){
 
   document.body.classList.toggle(
     "dark",
@@ -2266,27 +2861,19 @@ function applyTheme(isDark){
 
   if(isDark){
 
-    icon.textContent = "☀️";
+    icon.textContent =
+      "☀️";
 
     button.title =
       "Switch to light mode";
 
-    button.setAttribute(
-      "aria-label",
-      "Switch to light mode"
-    );
-
   }else{
 
-    icon.textContent = "◐";
+    icon.textContent =
+      "◐";
 
     button.title =
       "Switch to dark mode";
-
-    button.setAttribute(
-      "aria-label",
-      "Switch to dark mode"
-    );
 
   }
 
@@ -2314,13 +2901,11 @@ function applyTheme(isDark){
 window.toggleTheme =
 function(){
 
-  const dark =
-    document.body.classList.contains(
+  applyTheme(
+    !document.body.classList.contains(
       "dark"
-    );
-
-
-  applyTheme(!dark);
+    )
+  );
 
 };
 
@@ -2332,16 +2917,17 @@ applyTheme(
 );
 
 
-/* =====================================================
+/* =========================================================
    ADMIN
-===================================================== */
+========================================================= */
 
 window.adminLogin =
 function(){
 
   if(isAdmin){
 
-    isAdmin = false;
+    isAdmin =
+      false;
 
     document.getElementById(
       "admBtn"
@@ -2360,12 +2946,15 @@ function(){
   document.getElementById(
     "adminModal"
   )
-  .classList.add("show");
+  .classList.add(
+    "show"
+  );
 
 
   document.getElementById(
     "adminPassword"
-  ).value = "";
+  ).value =
+    "";
 
 
   setTimeout(
@@ -2385,7 +2974,9 @@ function(){
   document.getElementById(
     "adminModal"
   )
-  .classList.remove("show");
+  .classList.remove(
+    "show"
+  );
 
 };
 
@@ -2404,12 +2995,15 @@ function(){
     "supperlol123123"
   ){
 
-    isAdmin = true;
+    isAdmin =
+      true;
+
 
     document.getElementById(
       "admBtn"
     ).textContent =
       "Logout";
+
 
     closeAdminModal();
 
@@ -2440,21 +3034,26 @@ function updateAdminUI(){
   ];
 
 
-  panels.forEach(id => {
+  panels.forEach(
+    id => {
 
-    const el =
-      document.getElementById(id);
+      const element =
+        document.getElementById(
+          id
+        );
 
-    if(el){
 
-      el.style.display =
-        isAdmin
-          ? "block"
-          : "none";
+      if(element){
+
+        element.style.display =
+          isAdmin
+            ? "block"
+            : "none";
+
+      }
 
     }
-
-  });
+  );
 
 
   document.getElementById(
@@ -2467,16 +3066,20 @@ function updateAdminUI(){
 }
 
 
-/* =====================================================
+/* =========================================================
    NOTES
-===================================================== */
+========================================================= */
 
 onValue(
-  ref(db,"notes"),
+  ref(
+    db,
+    "notes"
+  ),
   snapshot => {
 
     notesData =
-      snapshot.val() || {};
+      snapshot.val() ||
+      {};
 
     renderNotes();
 
@@ -2492,7 +3095,8 @@ function renderNotes(){
     );
 
 
-  box.innerHTML = "";
+  box.innerHTML =
+    "";
 
 
   const entries =
@@ -2504,9 +3108,11 @@ function renderNotes(){
   if(!entries.length){
 
     box.innerHTML =
-      `<div class="empty">
+      `
+      <div class="empty">
         No nursing notes yet.
-      </div>`;
+      </div>
+      `;
 
     return;
 
@@ -2516,62 +3122,86 @@ function renderNotes(){
   entries.forEach(
     ([id,n]) => {
 
-      const el =
-        document.createElement("div");
+      const element =
+        document.createElement(
+          "div"
+        );
 
 
-      el.className =
+      element.className =
         "card";
 
 
-      el.innerHTML = `
+      /*
+        IMPORTANT:
+
+        cleanText() is applied BEFORE
+        inserting the note into the page.
+      */
+
+      const title =
+        String(
+          n.title ||
+          "Nursing Note"
+        ).trim();
+
+
+      const category =
+        String(
+          n.category ||
+          ""
+        ).trim();
+
+
+      const text =
+        cleanText(
+          n.text
+        );
+
+
+      element.innerHTML = `
 
         ${
-          n.category
-          ? `
-            <span class="note-category">
-              ${esc(n.category)}
-            </span>
-          `
-          : ""
+          category
+            ? `
+              <span class="note-category">
+                ${esc(category)}
+              </span>
+            `
+            : ""
         }
 
         <h3>
-          ${esc(
-            String(
-              n.title ||
-              "Nursing Note"
-            ).trim()
-          )}
+          ${esc(title)}
         </h3>
 
-        <div class="note-text">
-          ${esc(
-            cleanText(n.text)
-          )}
-        </div>
+        <div class="note-text">${esc(text)}</div>
 
         ${
           isAdmin
-          ? `
-            <div class="note-actions">
+            ? `
+              <div class="note-actions">
 
-              <button
-                class="btn danger"
-                onclick="deleteNote('${id}')"
-              >
-                Delete
-              </button>
+                <button
+                  class="btn danger"
+                  onclick="
+                    deleteNote('${id}')
+                  "
+                >
+                  Delete
+                </button>
 
-            </div>
-          `
-          : ""
+              </div>
+            `
+            : ""
         }
 
       `;
 
 
-      box.appendChild(el);
+      box.appendChild(
+        element
+      );
 
     }
   );
@@ -2606,7 +3236,10 @@ async function(){
     );
 
 
-  if(!title || !text){
+  if(
+    !title ||
+    !text
+  ){
 
     alert(
       "Please enter a title and note."
@@ -2619,7 +3252,10 @@ async function(){
 
   const newRef =
     push(
-      ref(db,"notes")
+      ref(
+        db,
+        "notes"
+      )
     );
 
 
@@ -2635,16 +3271,19 @@ async function(){
   );
 
 
-  [
-    "noteTitle",
-    "noteCategory",
+  document.getElementById(
+    "noteTitle"
+  ).value = "";
+
+
+  document.getElementById(
+    "noteCategory"
+  ).value = "";
+
+
+  document.getElementById(
     "noteText"
-  ].forEach(
-    id =>
-      document.getElementById(
-        id
-      ).value = ""
-  );
+  ).value = "";
 
 };
 
@@ -2664,23 +3303,28 @@ async function(id){
   await remove(
     ref(
       db,
-      "notes/" + id
+      "notes/" +
+      id
     )
   );
 
 };
 
 
-/* =====================================================
+/* =========================================================
    REQUIREMENTS
-===================================================== */
+========================================================= */
 
 onValue(
-  ref(db,"requirements"),
+  ref(
+    db,
+    "requirements"
+  ),
   snapshot => {
 
     requirementsData =
-      snapshot.val() || {};
+      snapshot.val() ||
+      {};
 
     renderRequirements();
 
@@ -2696,7 +3340,8 @@ function renderRequirements(){
     );
 
 
-  box.innerHTML = "";
+  box.innerHTML =
+    "";
 
 
   const entries =
@@ -2708,9 +3353,11 @@ function renderRequirements(){
   if(!entries.length){
 
     box.innerHTML =
-      `<div class="empty">
+      `
+      <div class="empty">
         No requirements added yet.
-      </div>`;
+      </div>
+      `;
 
     return;
 
@@ -2720,15 +3367,23 @@ function renderRequirements(){
   entries.forEach(
     ([id,r]) => {
 
-      const el =
-        document.createElement("div");
+      const element =
+        document.createElement(
+          "div"
+        );
 
 
-      el.className =
+      element.className =
         "requirement";
 
 
-      el.innerHTML = `
+      const description =
+        cleanText(
+          r.description
+        );
+
+
+      element.innerHTML = `
 
         <div class="requirement-top">
 
@@ -2740,33 +3395,35 @@ function renderRequirements(){
 
             <h3>
               ${esc(
-                r.title ||
-                "Requirement"
+                String(
+                  r.title ||
+                  "Requirement"
+                ).trim()
               )}
             </h3>
 
             ${
               r.type
-              ? `
-                <p>
-                  ${esc(r.type)}
-                </p>
-              `
-              : ""
+                ? `
+                  <p>
+                    ${esc(
+                      String(
+                        r.type
+                      ).trim()
+                    )}
+                  </p>
+                `
+                : ""
             }
 
             ${
-              r.description
-              ? `
-                <p>
-                  ${esc(
-                    cleanText(
-                      r.description
-                    )
-                  )}
-                </p>
-              `
-              : ""
+              description
+                ? `
+                  <p>
+                    ${esc(description)}
+                  </p>
+                `
+                : ""
             }
 
           </div>
@@ -2775,25 +3432,29 @@ function renderRequirements(){
 
         ${
           isAdmin
-          ? `
-            <div class="note-actions">
+            ? `
+              <div class="note-actions">
 
-              <button
-                class="btn danger"
-                onclick="deleteRequirement('${id}')"
-              >
-                Delete
-              </button>
+                <button
+                  class="btn danger"
+                  onclick="
+                    deleteRequirement('${id}')
+                  "
+                >
+                  Delete
+                </button>
 
-            </div>
-          `
-          : ""
+              </div>
+            `
+            : ""
         }
 
       `;
 
 
-      box.appendChild(el);
+      box.appendChild(
+        element
+      );
 
     }
   );
@@ -2841,7 +3502,10 @@ async function(){
 
   const newRef =
     push(
-      ref(db,"requirements")
+      ref(
+        db,
+        "requirements"
+      )
     );
 
 
@@ -2855,16 +3519,19 @@ async function(){
   );
 
 
-  [
-    "reqTitle",
-    "reqType",
+  document.getElementById(
+    "reqTitle"
+  ).value = "";
+
+
+  document.getElementById(
+    "reqType"
+  ).value = "";
+
+
+  document.getElementById(
     "reqDescription"
-  ].forEach(
-    id =>
-      document.getElementById(
-        id
-      ).value = ""
-  );
+  ).value = "";
 
 };
 
@@ -2884,23 +3551,28 @@ async function(id){
   await remove(
     ref(
       db,
-      "requirements/" + id
+      "requirements/" +
+      id
     )
   );
 
 };
 
 
-/* =====================================================
+/* =========================================================
    SCHEDULE
-===================================================== */
+========================================================= */
 
 onValue(
-  ref(db,"schedule"),
+  ref(
+    db,
+    "schedule"
+  ),
   snapshot => {
 
     scheduleData =
-      snapshot.val() || {};
+      snapshot.val() ||
+      {};
 
     renderSchedule();
 
@@ -2916,7 +3588,8 @@ function renderSchedule(){
     );
 
 
-  box.innerHTML = "";
+  box.innerHTML =
+    "";
 
 
   const entries =
@@ -2928,9 +3601,11 @@ function renderSchedule(){
   if(!entries.length){
 
     box.innerHTML =
-      `<div class="empty">
+      `
+      <div class="empty">
         No duty schedule added yet.
-      </div>`;
+      </div>
+      `;
 
     return;
 
@@ -2940,63 +3615,96 @@ function renderSchedule(){
   entries.forEach(
     ([id,s]) => {
 
-      const el =
-        document.createElement("div");
+      const element =
+        document.createElement(
+          "div"
+        );
 
 
-      el.className =
+      element.className =
         "schedule-card";
 
 
-      el.innerHTML = `
+      element.innerHTML = `
 
         <div class="schedule-day">
-          ${esc(s.day || "Duty")}
+          ${esc(
+            String(
+              s.day ||
+              "Duty"
+            ).trim()
+          )}
         </div>
 
         <div class="schedule-area">
-          ${esc(s.area || "Clinical Area")}
+          ${esc(
+            String(
+              s.area ||
+              "Clinical Area"
+            ).trim()
+          )}
         </div>
 
         <div class="schedule-time">
-          🕐 ${esc(s.time || "Time not set")}
+          🕐
+          ${esc(
+            String(
+              s.time ||
+              "Time not set"
+            ).trim()
+          )}
         </div>
 
         <div class="schedule-time">
-          👥 ${esc(s.group || "Group not set")}
+          👥
+          ${esc(
+            String(
+              s.group ||
+              "Group not set"
+            ).trim()
+          )}
         </div>
 
         ${
           s.ci
-          ? `
-            <div class="schedule-ci">
-              CI: ${esc(s.ci)}
-            </div>
-          `
-          : ""
+            ? `
+              <div class="schedule-ci">
+                CI:
+                ${esc(
+                  String(
+                    s.ci
+                  ).trim()
+                )}
+              </div>
+            `
+            : ""
         }
 
         ${
           isAdmin
-          ? `
-            <div class="note-actions">
+            ? `
+              <div class="note-actions">
 
-              <button
-                class="btn danger"
-                onclick="deleteSchedule('${id}')"
-              >
-                Delete
-              </button>
+                <button
+                  class="btn danger"
+                  onclick="
+                    deleteSchedule('${id}')
+                  "
+                >
+                  Delete
+                </button>
 
-            </div>
-          `
-          : ""
+              </div>
+            `
+            : ""
         }
 
       `;
 
 
-      box.appendChild(el);
+      box.appendChild(
+        element
+      );
 
     }
   );
@@ -3041,7 +3749,10 @@ async function(){
   };
 
 
-  if(!data.day || !data.area){
+  if(
+    !data.day ||
+    !data.area
+  ){
 
     alert(
       "Please enter the day and area."
@@ -3054,7 +3765,10 @@ async function(){
 
   const newRef =
     push(
-      ref(db,"schedule")
+      ref(
+        db,
+        "schedule"
+      )
     );
 
 
@@ -3070,11 +3784,13 @@ async function(){
     "scheduleTime",
     "scheduleGroup",
     "scheduleCI"
-  ].forEach(
+  ]
+  .forEach(
     id =>
       document.getElementById(
         id
-      ).value = ""
+      ).value =
+        ""
   );
 
 };
@@ -3095,86 +3811,35 @@ async function(id){
   await remove(
     ref(
       db,
-      "schedule/" + id
+      "schedule/" +
+      id
     )
   );
 
 };
 
 
-/* =====================================================
-   GROUP MEMBERS
-===================================================== */
+/* =========================================================
+   MEMBERS
+========================================================= */
 
 onValue(
-  ref(db,"members"),
+  ref(
+    db,
+    "members"
+  ),
   snapshot => {
 
     membersData =
-      snapshot.val() || {};
+      snapshot.val() ||
+      {};
 
     renderMembers();
+
     renderMemberPreview();
 
   }
 );
-
-
-function getInitials(name){
-
-  return String(
-    name ||
-    "Student"
-  )
-  .trim()
-  .split(/\s+/)
-  .map(
-    x => x[0]
-  )
-  .join("")
-  .slice(0,2)
-  .toUpperCase();
-
-}
-
-
-/* =====================================================
-   MEMBER CLICK
-===================================================== */
-
-window.memberClicked =
-function(id){
-
-  const member =
-    membersData[id];
-
-
-  if(!member)
-    return;
-
-
-  /*
-    Only admins can edit.
-    Normal students simply view
-    the member information.
-  */
-
-  if(isAdmin){
-
-    editMember(id);
-
-  }else{
-
-    alert(
-      "Member\n\n" +
-      (member.name || "Student") +
-      "\n" +
-      (member.role || "Nursing Student")
-    );
-
-  }
-
-};
 
 
 function renderMembers(){
@@ -3185,7 +3850,8 @@ function renderMembers(){
     );
 
 
-  box.innerHTML = "";
+  box.innerHTML =
+    "";
 
 
   const entries =
@@ -3197,9 +3863,11 @@ function renderMembers(){
   if(!entries.length){
 
     box.innerHTML =
-      `<div class="empty">
+      `
+      <div class="empty">
         No group members added yet.
-      </div>`;
+      </div>
+      `;
 
     return;
 
@@ -3209,89 +3877,99 @@ function renderMembers(){
   entries.forEach(
     ([id,m]) => {
 
-      const el =
-        document.createElement("div");
+      const element =
+        document.createElement(
+          "div"
+        );
 
 
-      el.className =
+      element.className =
         "member";
 
 
-      el.onclick =
+      element.onclick =
         () =>
           memberClicked(id);
 
 
-      el.innerHTML = `
+      element.innerHTML = `
 
         <div class="member-avatar">
           ${esc(
-            getInitials(m.name)
+            getInitials(
+              m.name
+            )
           )}
         </div>
-
 
         <div class="member-info">
 
           <strong>
             ${esc(
-              m.name ||
-              "Student"
+              String(
+                m.name ||
+                "Student"
+              ).trim()
             )}
           </strong>
 
           <span>
             ${esc(
-              m.role ||
-              "Nursing Student"
+              String(
+                m.role ||
+                "Nursing Student"
+              ).trim()
             )}
           </span>
 
         </div>
 
-
         ${
           isAdmin
-          ? `
-            <div class="member-actions">
+            ? `
+              <div class="member-actions">
 
-              <button
-                class="btn small"
-                onclick="
-                  event.stopPropagation();
-                  editMember('${id}');
-                "
-                title="Edit member"
-              >
-                ✏️
-              </button>
+                <button
+                  class="btn small"
+                  onclick="
+                    event.stopPropagation();
+                    editMember('${id}');
+                  "
+                >
+                  ✏️
+                </button>
 
-              <button
-                class="btn small danger"
-                onclick="
-                  event.stopPropagation();
-                  deleteMember('${id}');
-                "
-                title="Delete member"
-              >
-                🗑️
-              </button>
+                <button
+                  class="btn small danger"
+                  onclick="
+                    event.stopPropagation();
+                    deleteMember('${id}');
+                  "
+                >
+                  🗑️
+                </button>
 
-            </div>
-          `
-          : ""
+              </div>
+            `
+            : ""
         }
 
       `;
 
 
-      box.appendChild(el);
+      box.appendChild(
+        element
+      );
 
     }
   );
 
 }
 
+
+/* =========================================================
+   DASHBOARD MEMBER PREVIEW
+========================================================= */
 
 function renderMemberPreview(){
 
@@ -3301,7 +3979,8 @@ function renderMemberPreview(){
     );
 
 
-  box.innerHTML = "";
+  box.innerHTML =
+    "";
 
 
   const entries =
@@ -3313,101 +3992,98 @@ function renderMemberPreview(){
   if(!entries.length){
 
     box.innerHTML =
-      `<div class="empty" style="padding:20px 5px;">
+      `
+      <div
+        class="empty"
+        style="padding:20px 5px;"
+      >
         No members added yet.
-      </div>`;
+      </div>
+      `;
 
     return;
 
   }
 
 
-  entries
-    .slice(0,5)
-    .forEach(
-      ([id,m]) => {
+  entries.forEach(
+    ([id,m]) => {
 
-        const el =
-          document.createElement("div");
-
-
-        el.className =
-          "member-preview-item";
+      const element =
+        document.createElement(
+          "div"
+        );
 
 
-        el.onclick =
-          () => {
-
-            goToSection("members");
-
-            setTimeout(
-              () =>
-                memberClicked(id),
-              100
-            );
-
-          };
+      element.className =
+        "member-preview-item";
 
 
-        el.innerHTML = `
+      element.onclick =
+        () => {
 
-          <div class="member-preview-avatar">
+          goToSection(
+            "members"
+          );
+
+
+          setTimeout(
+            () =>
+              memberClicked(id),
+            100
+          );
+
+        };
+
+
+      element.innerHTML = `
+
+        <div class="member-preview-avatar">
+          ${esc(
+            getInitials(
+              m.name
+            )
+          )}
+        </div>
+
+        <div>
+
+          <div class="member-preview-name">
             ${esc(
-              getInitials(m.name)
+              String(
+                m.name ||
+                "Student"
+              ).trim()
             )}
           </div>
 
-          <div>
-
-            <div class="member-preview-name">
-              ${esc(
-                m.name ||
-                "Student"
-              )}
-            </div>
-
-            <div class="member-preview-role">
-              ${esc(
+          <div class="member-preview-role">
+            ${esc(
+              String(
                 m.role ||
                 "Nursing Student"
-              )}
-            </div>
-
+              ).trim()
+            )}
           </div>
 
-        `;
+        </div>
+
+      `;
 
 
-        box.appendChild(el);
+      box.appendChild(
+        element
+      );
 
-      }
-    );
-
-
-  if(entries.length > 5){
-
-    const more =
-      document.createElement("div");
-
-
-    more.style.cssText =
-      "font-size:11px;color:var(--muted);text-align:center;margin-top:3px;";
-
-
-    more.textContent =
-      `+ ${entries.length - 5} more members`;
-
-
-    box.appendChild(more);
-
-  }
+    }
+  );
 
 }
 
 
-/* =====================================================
+/* =========================================================
    MEMBER MODAL
-===================================================== */
+========================================================= */
 
 window.openMemberModal =
 function(){
@@ -3416,7 +4092,8 @@ function(){
     return;
 
 
-  editingMemberId = null;
+  editingMemberId =
+    null;
 
 
   document.getElementById(
@@ -3433,25 +4110,21 @@ function(){
 
   document.getElementById(
     "memberName"
-  ).value = "";
+  ).value =
+    "";
 
 
   document.getElementById(
     "memberRole"
-  ).value = "";
+  ).value =
+    "";
 
 
   document.getElementById(
     "memberModal"
-  ).classList.add("show");
-
-
-  setTimeout(
-    () =>
-      document.getElementById(
-        "memberName"
-      ).focus(),
-    100
+  )
+  .classList.add(
+    "show"
   );
 
 };
@@ -3472,7 +4145,8 @@ function(id){
     return;
 
 
-  editingMemberId = id;
+  editingMemberId =
+    id;
 
 
   document.getElementById(
@@ -3503,15 +4177,9 @@ function(id){
 
   document.getElementById(
     "memberModal"
-  ).classList.add("show");
-
-
-  setTimeout(
-    () =>
-      document.getElementById(
-        "memberName"
-      ).focus(),
-    100
+  )
+  .classList.add(
+    "show"
   );
 
 };
@@ -3522,9 +4190,14 @@ function(){
 
   document.getElementById(
     "memberModal"
-  ).classList.remove("show");
+  )
+  .classList.remove(
+    "show"
+  );
 
-  editingMemberId = null;
+
+  editingMemberId =
+    null;
 
 };
 
@@ -3579,7 +4252,10 @@ async function(){
 
     const newRef =
       push(
-        ref(db,"members")
+        ref(
+          db,
+          "members"
+        )
       );
 
 
@@ -3616,25 +4292,262 @@ async function(id){
   await remove(
     ref(
       db,
-      "members/" + id
+      "members/" +
+      id
     )
   );
 
 };
 
 
-/* =====================================================
+window.memberClicked =
+function(id){
+
+  const member =
+    membersData[id];
+
+
+  if(!member)
+    return;
+
+
+  if(isAdmin){
+
+    editMember(id);
+
+  }else{
+
+    alert(
+      (
+        member.name ||
+        "Student"
+      ) +
+      "\n" +
+      (
+        member.role ||
+        "Nursing Student"
+      )
+    );
+
+  }
+
+};
+
+
+/* =========================================================
+   CHAT NOTIFICATIONS
+========================================================= */
+
+const chatSeenKey =
+  "nursingDutyLastSeenChat";
+
+
+function getLastSeenChat(){
+
+  return Number(
+    localStorage.getItem(
+      chatSeenKey
+    ) || 0
+  );
+
+}
+
+
+function setLastSeenChat(
+  timestamp
+){
+
+  localStorage.setItem(
+    chatSeenKey,
+    String(timestamp)
+  );
+
+}
+
+
+function updateChatNotification(){
+
+  const dot =
+    document.getElementById(
+      "notificationDot"
+    );
+
+
+  const button =
+    document.getElementById(
+      "notificationButton"
+    );
+
+
+  if(unreadChat){
+
+    dot.classList.add(
+      "show"
+    );
+
+    button.classList.add(
+      "has-notification"
+    );
+
+    button.title =
+      "New group chat message";
+
+  }else{
+
+    dot.classList.remove(
+      "show"
+    );
+
+    button.classList.remove(
+      "has-notification"
+    );
+
+    button.title =
+      "No new messages";
+
+  }
+
+}
+
+
+function markChatAsSeen(){
+
+  const messages =
+    Object.values(
+      chatData
+    );
+
+
+  let newestTime = 0;
+
+
+  messages.forEach(
+    message => {
+
+      const time =
+        Number(
+          message.createdAt ||
+          0
+        );
+
+
+      if(
+        time >
+        newestTime
+      ){
+
+        newestTime =
+          time;
+
+      }
+
+    }
+  );
+
+
+  if(newestTime){
+
+    setLastSeenChat(
+      newestTime
+    );
+
+  }
+
+
+  unreadChat =
+    false;
+
+
+  updateChatNotification();
+
+}
+
+
+window.openNotifications =
+function(){
+
+  markChatAsSeen();
+
+  goToSection(
+    "chat"
+  );
+
+};
+
+
+/* =========================================================
    CHAT
-===================================================== */
+========================================================= */
 
 onValue(
-  ref(db,"chat"),
+  ref(
+    db,
+    "chat"
+  ),
   snapshot => {
 
     chatData =
-      snapshot.val() || {};
+      snapshot.val() ||
+      {};
 
     renderChat();
+
+
+    const messages =
+      Object.values(
+        chatData
+      );
+
+
+    let newestTime = 0;
+
+    let newestMessage = null;
+
+
+    messages.forEach(
+      message => {
+
+        const time =
+          Number(
+            message.createdAt ||
+            0
+          );
+
+
+        if(
+          time >
+          newestTime
+        ){
+
+          newestTime =
+            time;
+
+          newestMessage =
+            message;
+
+        }
+
+      }
+    );
+
+
+    const lastSeen =
+      getLastSeenChat();
+
+
+    if(
+      newestMessage &&
+      newestMessage.author !== userName &&
+      newestTime > lastSeen
+    ){
+
+      unreadChat =
+        true;
+
+    }
+
+
+    updateChatNotification();
 
   }
 );
@@ -3648,7 +4561,8 @@ function renderChat(){
     );
 
 
-  box.innerHTML = "";
+  box.innerHTML =
+    "";
 
 
   const messages =
@@ -3660,9 +4574,11 @@ function renderChat(){
   if(!messages.length){
 
     box.innerHTML =
-      `<div class="empty">
+      `
+      <div class="empty">
         No messages yet.
-      </div>`;
+      </div>
+      `;
 
     return;
 
@@ -3672,12 +4588,15 @@ function renderChat(){
   messages.forEach(
     message => {
 
-      const el =
-        document.createElement("div");
+      const element =
+        document.createElement(
+          "div"
+        );
 
 
-      el.className =
+      element.className =
         "msg" +
+
         (
           message.author ===
           userName
@@ -3686,25 +4605,39 @@ function renderChat(){
         );
 
 
-      el.innerHTML = `
+      /*
+        IMPORTANT FIX:
+
+        cleanText() removes indentation
+        from EVERY line while preserving
+        line breaks.
+      */
+
+      const messageText =
+        cleanText(
+          message.text
+        );
+
+
+      element.innerHTML = `
 
         <span class="msg-name">
           ${esc(
-            message.author ||
-            "Student"
+            String(
+              message.author ||
+              "Student"
+            ).trim()
           )}
         </span>
 
-        ${esc(
-          cleanText(
-            message.text
-          )
-        )}
+        ${esc(messageText)}
 
       `;
 
 
-      box.appendChild(el);
+      box.appendChild(
+        element
+      );
 
     }
   );
@@ -3712,6 +4645,21 @@ function renderChat(){
 
   box.scrollTop =
     box.scrollHeight;
+
+
+  const chatIsActive =
+    document.getElementById(
+      "chat"
+    ).classList.contains(
+      "active"
+    );
+
+
+  if(chatIsActive){
+
+    markChatAsSeen();
+
+  }
 
 }
 
@@ -3725,6 +4673,11 @@ async function(){
     );
 
 
+  /*
+    Clean the message BEFORE
+    saving it to Firebase.
+  */
+
   const text =
     cleanText(
       input.value
@@ -3737,36 +4690,47 @@ async function(){
 
   const newRef =
     push(
-      ref(db,"chat")
+      ref(
+        db,
+        "chat"
+      )
     );
 
 
   await set(
     newRef,
     {
-      author:userName,
+      author:
+        userName,
+
       text,
+
       createdAt:
         serverTimestamp()
     }
   );
 
 
-  input.value = "";
+  input.value =
+    "";
 
 };
 
 
-/* =====================================================
+/* =========================================================
    FILES
-===================================================== */
+========================================================= */
 
 onValue(
-  ref(db,"files"),
+  ref(
+    db,
+    "files"
+  ),
   snapshot => {
 
     filesData =
-      snapshot.val() || {};
+      snapshot.val() ||
+      {};
 
     renderFiles();
 
@@ -3782,7 +4746,8 @@ function renderFiles(){
     );
 
 
-  box.innerHTML = "";
+  box.innerHTML =
+    "";
 
 
   const entries =
@@ -3794,9 +4759,11 @@ function renderFiles(){
   if(!entries.length){
 
     box.innerHTML =
-      `<div class="empty">
+      `
+      <div class="empty">
         No clinical files added yet.
-      </div>`;
+      </div>
+      `;
 
     return;
 
@@ -3806,15 +4773,23 @@ function renderFiles(){
   entries.forEach(
     ([id,f]) => {
 
-      const el =
-        document.createElement("div");
+      const element =
+        document.createElement(
+          "div"
+        );
 
 
-      el.className =
+      element.className =
         "file-card";
 
 
-      el.innerHTML = `
+      const description =
+        cleanText(
+          f.description
+        );
+
+
+      element.innerHTML = `
 
         <div class="file-icon">
           📄
@@ -3822,60 +4797,62 @@ function renderFiles(){
 
         <h3>
           ${esc(
-            f.title ||
-            "Clinical File"
+            String(
+              f.title ||
+              "Clinical File"
+            ).trim()
           )}
         </h3>
 
         ${
-          f.description
-          ? `
-            <p>
-              ${esc(
-                cleanText(
-                  f.description
-                )
-              )}
-            </p>
-          `
-          : ""
+          description
+            ? `
+              <p>
+                ${esc(description)}
+              </p>
+            `
+            : ""
         }
 
         ${
           f.url
-          ? `
-            <a
-              href="${esc(f.url)}"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Open File →
-            </a>
-          `
-          : ""
+            ? `
+              <a
+                href="${esc(f.url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open File →
+              </a>
+            `
+            : ""
         }
 
         ${
           isAdmin
-          ? `
-            <div class="note-actions">
+            ? `
+              <div class="note-actions">
 
-              <button
-                class="btn danger"
-                onclick="deleteFile('${id}')"
-              >
-                Delete
-              </button>
+                <button
+                  class="btn danger"
+                  onclick="
+                    deleteFile('${id}')
+                  "
+                >
+                  Delete
+                </button>
 
-            </div>
-          `
-          : ""
+              </div>
+            `
+            : ""
         }
 
       `;
 
 
-      box.appendChild(el);
+      box.appendChild(
+        element
+      );
 
     }
   );
@@ -3903,12 +4880,17 @@ async function(){
 
 
   const description =
-    document.getElementById(
-      "fileDescription"
-    ).value.trim();
+    cleanText(
+      document.getElementById(
+        "fileDescription"
+      ).value
+    );
 
 
-  if(!title || !url){
+  if(
+    !title ||
+    !url
+  ){
 
     alert(
       "Please enter a title and URL."
@@ -3921,7 +4903,10 @@ async function(){
 
   const newRef =
     push(
-      ref(db,"files")
+      ref(
+        db,
+        "files"
+      )
     );
 
 
@@ -3935,16 +4920,19 @@ async function(){
   );
 
 
-  [
-    "fileTitle",
-    "fileUrl",
+  document.getElementById(
+    "fileTitle"
+  ).value = "";
+
+
+  document.getElementById(
+    "fileUrl"
+  ).value = "";
+
+
+  document.getElementById(
     "fileDescription"
-  ].forEach(
-    id =>
-      document.getElementById(
-        id
-      ).value = ""
-  );
+  ).value = "";
 
 };
 
@@ -3964,43 +4952,50 @@ async function(id){
   await remove(
     ref(
       db,
-      "files/" + id
+      "files/" +
+      id
     )
   );
 
 };
 
 
-/* =====================================================
+/* =========================================================
    RENDER ALL
-===================================================== */
+========================================================= */
 
 function renderAll(){
 
   renderNotes();
+
   renderRequirements();
+
   renderSchedule();
+
   renderMembers();
+
   renderMemberPreview();
+
   renderChat();
+
   renderFiles();
 
 }
 
 
-/* =====================================================
+/* =========================================================
    MODAL OUTSIDE CLICK
-===================================================== */
+========================================================= */
 
 document.getElementById(
   "adminModal"
 )
 .addEventListener(
   "click",
-  e => {
+  event => {
 
     if(
-      e.target.id ===
+      event.target.id ===
       "adminModal"
     ){
 
@@ -4017,10 +5012,10 @@ document.getElementById(
 )
 .addEventListener(
   "click",
-  e => {
+  event => {
 
     if(
-      e.target.id ===
+      event.target.id ===
       "memberModal"
     ){
 
@@ -4032,12 +5027,15 @@ document.getElementById(
 );
 
 
-/* =====================================================
+/* =========================================================
    INITIALIZE
-===================================================== */
+========================================================= */
 
 updateAdminUI();
+
 renderAll();
+
+updateChatNotification();
 
 </script>
 
