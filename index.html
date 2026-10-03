@@ -2,26 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#176b4d">
 <title>Nursing Duty Hub</title>
 
 <style>
 :root{
   --bg:#f4f8f6;
-  --surface:#fff;
+  --surface:#ffffff;
   --surface2:#eef5f1;
-  --surface3:#e3f0ea;
+  --surface3:#e2f0e9;
   --text:#18332a;
   --muted:#587066;
   --muted2:#7b9188;
-  --border:#d6e3dd;
+  --border:#d5e3dc;
   --primary:#176b4d;
-  --primary2:#23845f;
+  --primary2:#23855f;
   --primarySoft:#e2f1e9;
   --danger:#c64242;
-  --shadow:#17382b16;
-  --input:#fff;
+  --input:#ffffff;
+  --shadow:rgba(24,51,42,.08);
 }
 
 body.dark{
@@ -37,15 +37,16 @@ body.dark{
   --primary2:#77c7a0;
   --primarySoft:#1e3a2e;
   --danger:#ff7777;
-  --shadow:#00000045;
   --input:#17221e;
+  --shadow:rgba(0,0,0,.3);
 }
 
 *{
   box-sizing:border-box;
 }
 
-html,body{
+html,
+body{
   margin:0;
   padding:0;
   min-height:100%;
@@ -55,10 +56,13 @@ body{
   font-family:Arial,Helvetica,sans-serif;
   background:var(--bg);
   color:var(--text);
-  transition:.2s;
+  transition:background .2s,color .2s;
 }
 
-button,input,textarea,select{
+button,
+input,
+textarea,
+select{
   font:inherit;
 }
 
@@ -66,7 +70,9 @@ button{
   cursor:pointer;
 }
 
-/* ================= SIDEBAR ================= */
+/* =====================================================
+   SIDEBAR
+===================================================== */
 
 .side{
   position:fixed;
@@ -157,17 +163,9 @@ button{
   font-size:17px;
 }
 
-#themeToggle{
-  justify-content:flex-end;
-  margin-top:7px;
-}
-
-#themeToggle .theme-icon{
-  margin-left:auto;
-  font-size:19px;
-}
-
-/* ================= MAIN ================= */
+/* =====================================================
+   MAIN
+===================================================== */
 
 .main{
   margin-left:250px;
@@ -194,13 +192,42 @@ button{
   font-size:13px;
 }
 
+.topbar-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* =====================================================
+   TOP-RIGHT THEME BUTTON
+===================================================== */
+
+.theme-toggle{
+  width:42px;
+  height:42px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  transition:.2s;
+}
+
+.theme-toggle:hover{
+  background:var(--surface2);
+  transform:scale(1.04);
+}
+
 .userbox{
   display:flex;
   align-items:center;
   gap:9px;
   background:var(--surface);
   border:1px solid var(--border);
-  padding:8px 12px;
+  padding:7px 12px 7px 8px;
   border-radius:12px;
 }
 
@@ -214,7 +241,7 @@ button{
   align-items:center;
   justify-content:center;
   font-weight:bold;
-  font-size:13px;
+  font-size:12px;
 }
 
 .user-name{
@@ -222,24 +249,9 @@ button{
   font-weight:bold;
 }
 
-/* ================= ANNOUNCEMENT ================= */
-
-.announcement{
-  background:var(--primarySoft);
-  color:var(--text);
-  border:1px solid var(--border);
-  border-left:4px solid var(--primary);
-  border-radius:12px;
-  padding:13px 15px;
-  margin-bottom:20px;
-  display:none;
-}
-
-.announcement strong{
-  color:var(--primary);
-}
-
-/* ================= SECTIONS ================= */
+/* =====================================================
+   SECTIONS
+===================================================== */
 
 .section{
   display:none;
@@ -249,10 +261,16 @@ button{
   display:block;
 }
 
-/* ================= DASHBOARD ================= */
+/* =====================================================
+   WELCOME
+===================================================== */
 
 .welcome{
-  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  background:linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary2)
+  );
   color:white;
   border-radius:17px;
   padding:25px;
@@ -267,7 +285,7 @@ button{
   right:30px;
   top:17px;
   font-size:70px;
-  opacity:.15;
+  opacity:.14;
 }
 
 .welcome h2{
@@ -277,15 +295,123 @@ button{
 
 .welcome p{
   margin:7px 0 0;
-  opacity:.9;
+  opacity:.92;
   font-size:13px;
 }
 
-.dashboard-grid{
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+.dashboard-layout{
   display:grid;
-  grid-template-columns:1.3fr .7fr;
+  grid-template-columns:1fr 360px;
   gap:15px;
 }
+
+.dashboard-panel{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 4px 12px var(--shadow);
+}
+
+.dashboard-panel h3{
+  margin:0 0 14px;
+  font-size:16px;
+}
+
+.dashboard-intro{
+  color:var(--muted);
+  line-height:1.6;
+  font-size:13px;
+  margin:0 0 16px;
+}
+
+.dashboard-links{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.dashboard-link{
+  border:1px solid var(--border);
+  background:var(--surface2);
+  border-radius:11px;
+  padding:14px;
+  cursor:pointer;
+  transition:.15s;
+}
+
+.dashboard-link:hover{
+  background:var(--surface3);
+  transform:translateY(-1px);
+}
+
+.dashboard-link-icon{
+  font-size:21px;
+  margin-bottom:8px;
+}
+
+.dashboard-link strong{
+  display:block;
+  font-size:13px;
+}
+
+.dashboard-link small{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  margin-top:4px;
+  line-height:1.4;
+}
+
+.dashboard-members{
+  min-height:200px;
+}
+
+.member-preview{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.member-preview-item{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  background:var(--surface2);
+  border-radius:9px;
+  padding:9px;
+}
+
+.member-preview-avatar{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:var(--primarySoft);
+  color:var(--primary);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.member-preview-name{
+  font-size:12px;
+  font-weight:bold;
+}
+
+.member-preview-role{
+  font-size:10px;
+  color:var(--muted2);
+}
+
+/* =====================================================
+   GENERAL PANELS
+===================================================== */
 
 .panel{
   background:var(--surface);
@@ -294,117 +420,6 @@ button{
   padding:17px;
   box-shadow:0 4px 12px var(--shadow);
 }
-
-.panel h3{
-  margin:0 0 13px;
-  font-size:16px;
-}
-
-.quick-list{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.quick-item{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:11px;
-  background:var(--surface2);
-  border-radius:10px;
-  cursor:pointer;
-}
-
-.quick-item:hover{
-  background:var(--surface3);
-}
-
-.quick-item-icon{
-  width:35px;
-  height:35px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--primarySoft);
-  border-radius:9px;
-  font-size:17px;
-}
-
-.quick-item div{
-  flex:1;
-}
-
-.quick-item strong{
-  display:block;
-  font-size:13px;
-}
-
-.quick-item small{
-  color:var(--muted2);
-  font-size:11px;
-}
-
-.duty-card{
-  background:var(--primarySoft);
-  border-radius:12px;
-  padding:15px;
-}
-
-.duty-card .label{
-  color:var(--muted);
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.7px;
-}
-
-.duty-card .value{
-  font-weight:bold;
-  margin-top:4px;
-  color:var(--primary);
-}
-
-/* ================= CARDS ================= */
-
-.card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:17px;
-  box-shadow:0 4px 12px var(--shadow);
-}
-
-.card h3{
-  margin:0 0 9px;
-  font-size:17px;
-}
-
-.note-category{
-  display:inline-block;
-  background:var(--primarySoft);
-  color:var(--primary);
-  padding:4px 8px;
-  border-radius:6px;
-  font-size:10px;
-  font-weight:bold;
-  margin-bottom:9px;
-}
-
-.note-text{
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  color:var(--muted);
-  line-height:1.6;
-  margin:0;
-}
-
-.note-actions{
-  display:flex;
-  gap:6px;
-  margin-top:12px;
-}
-
-/* ================= ADMIN ================= */
 
 .admin-panel{
   background:var(--surface);
@@ -428,7 +443,9 @@ button{
   grid-column:1/-1;
 }
 
-input,textarea,select{
+input,
+textarea,
+select{
   width:100%;
   border:1px solid var(--border);
   border-radius:9px;
@@ -478,19 +495,75 @@ select:focus{
   color:var(--danger);
 }
 
-/* ================= NOTES ================= */
+.btn.small{
+  padding:6px 9px;
+  font-size:11px;
+}
+
+/* =====================================================
+   NOTES
+===================================================== */
 
 .notes-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  grid-template-columns:repeat(
+    auto-fit,
+    minmax(270px,1fr)
+  );
   gap:14px;
 }
 
-/* ================= REQUIREMENTS ================= */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:17px;
+  box-shadow:0 4px 12px var(--shadow);
+}
+
+.card h3{
+  margin:0 0 9px;
+  font-size:17px;
+}
+
+.note-category{
+  display:inline-block;
+  background:var(--primarySoft);
+  color:var(--primary);
+  padding:4px 8px;
+  border-radius:6px;
+  font-size:10px;
+  font-weight:bold;
+  margin-bottom:9px;
+}
+
+.note-text{
+  display:block;
+  width:100%;
+  margin:0;
+  padding:0;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.note-actions{
+  display:flex;
+  gap:6px;
+  margin-top:12px;
+}
+
+/* =====================================================
+   REQUIREMENTS
+===================================================== */
 
 .requirements{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  grid-template-columns:repeat(
+    auto-fit,
+    minmax(260px,1fr)
+  );
   gap:13px;
 }
 
@@ -524,11 +597,16 @@ select:focus{
   line-height:1.5;
 }
 
-/* ================= SCHEDULE ================= */
+/* =====================================================
+   DUTY SCHEDULE
+===================================================== */
 
 .schedule-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  grid-template-columns:repeat(
+    auto-fit,
+    minmax(250px,1fr)
+  );
   gap:13px;
 }
 
@@ -565,11 +643,28 @@ select:focus{
   font-size:11px;
 }
 
-/* ================= MEMBERS ================= */
+/* =====================================================
+   GROUP MEMBERS
+===================================================== */
+
+.members-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.members-header h3{
+  margin:0;
+}
 
 .members-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  grid-template-columns:repeat(
+    auto-fit,
+    minmax(230px,1fr)
+  );
   gap:12px;
 }
 
@@ -581,11 +676,12 @@ select:focus{
   display:flex;
   align-items:center;
   gap:11px;
+  box-shadow:0 4px 12px var(--shadow);
 }
 
 .member-avatar{
-  width:40px;
-  height:40px;
+  width:42px;
+  height:42px;
   border-radius:50%;
   background:var(--primarySoft);
   color:var(--primary);
@@ -593,6 +689,7 @@ select:focus{
   align-items:center;
   justify-content:center;
   font-weight:bold;
+  flex-shrink:0;
 }
 
 .member-info{
@@ -608,9 +705,18 @@ select:focus{
 .member-info span{
   color:var(--muted2);
   font-size:10px;
+  display:block;
+  margin-top:3px;
 }
 
-/* ================= CHAT ================= */
+.member-actions{
+  display:flex;
+  gap:4px;
+}
+
+/* =====================================================
+   CHAT
+===================================================== */
 
 .chat{
   max-width:900px;
@@ -659,11 +765,16 @@ select:focus{
   flex:1;
 }
 
-/* ================= FILES ================= */
+/* =====================================================
+   FILES
+===================================================== */
 
 .files-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  grid-template-columns:repeat(
+    auto-fit,
+    minmax(240px,1fr)
+  );
   gap:13px;
 }
 
@@ -708,7 +819,9 @@ select:focus{
   font-size:12px;
 }
 
-/* ================= ABOUT ================= */
+/* =====================================================
+   ABOUT
+===================================================== */
 
 .about-box{
   background:var(--surface);
@@ -728,7 +841,9 @@ select:focus{
   color:var(--muted);
 }
 
-/* ================= EMPTY ================= */
+/* =====================================================
+   EMPTY
+===================================================== */
 
 .empty{
   text-align:center;
@@ -736,12 +851,14 @@ select:focus{
   padding:35px 10px;
 }
 
-/* ================= MODAL ================= */
+/* =====================================================
+   MODAL
+===================================================== */
 
 .modal{
   position:fixed;
   inset:0;
-  background:#0008;
+  background:rgba(0,0,0,.55);
   display:none;
   align-items:center;
   justify-content:center;
@@ -759,7 +876,7 @@ select:focus{
   border:1px solid var(--border);
   border-radius:15px;
   padding:20px;
-  box-shadow:0 20px 50px #0005;
+  box-shadow:0 20px 50px rgba(0,0,0,.3);
 }
 
 .modal-box h3{
@@ -773,11 +890,13 @@ select:focus{
   margin-top:12px;
 }
 
-/* ================= RESPONSIVE ================= */
+/* =====================================================
+   RESPONSIVE
+===================================================== */
 
 @media(max-width:900px){
 
-  .dashboard-grid{
+  .dashboard-layout{
     grid-template-columns:1fr;
   }
 
@@ -803,12 +922,21 @@ select:focus{
     flex-direction:column;
   }
 
+  .topbar-right{
+    width:100%;
+    justify-content:flex-end;
+  }
+
   .form-grid{
     grid-template-columns:1fr;
   }
 
   .full{
     grid-column:auto;
+  }
+
+  .dashboard-links{
+    grid-template-columns:1fr;
   }
 
 }
@@ -913,21 +1041,6 @@ select:focus{
     </div>
 
 
-    <!-- ICON ONLY THEME BUTTON -->
-
-    <button
-      id="themeToggle"
-      onclick="toggleTheme()"
-      title="Toggle light/dark mode"
-      aria-label="Toggle light/dark mode"
-    >
-      <span
-        id="themeIcon"
-        class="theme-icon"
-      >◐</span>
-    </button>
-
-
     <button
       onclick="adminLogin()"
     >
@@ -969,31 +1082,42 @@ select:focus{
     </div>
 
 
-    <div class="userbox">
+    <div class="topbar-right">
 
-      <div
-        class="user-avatar"
-        id="userAvatar"
+      <!-- THEME IS NOW HERE -->
+
+      <button
+        id="themeToggle"
+        class="theme-toggle"
+        onclick="toggleTheme()"
+        title="Switch to dark mode"
+        aria-label="Switch to dark mode"
       >
-        S
+        <span id="themeIcon">◐</span>
+      </button>
+
+
+      <div class="userbox">
+
+        <div
+          class="user-avatar"
+          id="userAvatar"
+        >
+          S
+        </div>
+
+        <span
+          class="user-name"
+          id="currentUser"
+        >
+          Student
+        </span>
+
       </div>
-
-      <span
-        class="user-name"
-        id="currentUser"
-      >
-        Student
-      </span>
 
     </div>
 
   </div>
-
-
-  <div
-    id="announcement"
-    class="announcement"
-  ></div>
 
 
   <!-- ===================================================
@@ -1013,114 +1137,108 @@ select:focus{
 
       <p>
         Keep your nursing notes, requirements,
-        duty schedule, group members, and files organized.
+        duty schedule, group members, files,
+        and group communication organized.
       </p>
 
     </div>
 
 
-    <div class="dashboard-grid">
+    <div class="dashboard-layout">
 
-      <div class="panel">
+      <!-- LEFT DASHBOARD -->
+
+      <div class="dashboard-panel">
 
         <h3>
-          ⚡ Quick Access
+          🩺 Clinical Duty Hub
         </h3>
 
-        <div class="quick-list">
+        <p class="dashboard-intro">
+          Your group's central space for organizing
+          nursing school and clinical duty information.
+          Select a section below to get started.
+        </p>
+
+
+        <div class="dashboard-links">
 
           <div
-            class="quick-item"
+            class="dashboard-link"
             onclick="goToSection('notes')"
           >
 
-            <div class="quick-item-icon">
+            <div class="dashboard-link-icon">
               📚
             </div>
 
-            <div>
+            <strong>
+              Nursing Notes
+            </strong>
 
-              <strong>
-                Nursing Notes
-              </strong>
-
-              <small>
-                Review shared nursing notes
-              </small>
-
-            </div>
+            <small>
+              Review shared study and clinical notes.
+            </small>
 
           </div>
 
 
           <div
-            class="quick-item"
+            class="dashboard-link"
             onclick="goToSection('requirements')"
           >
 
-            <div class="quick-item-icon">
+            <div class="dashboard-link-icon">
               📝
             </div>
 
-            <div>
+            <strong>
+              Requirements
+            </strong>
 
-              <strong>
-                Requirements
-              </strong>
-
-              <small>
-                Check school and duty requirements
-              </small>
-
-            </div>
+            <small>
+              Keep track of school and duty requirements.
+            </small>
 
           </div>
 
 
           <div
-            class="quick-item"
+            class="dashboard-link"
             onclick="goToSection('schedule')"
           >
 
-            <div class="quick-item-icon">
+            <div class="dashboard-link-icon">
               📅
             </div>
 
-            <div>
+            <strong>
+              Duty Schedule
+            </strong>
 
-              <strong>
-                Duty Schedule
-              </strong>
-
-              <small>
-                View your group's clinical schedule
-              </small>
-
-            </div>
+            <small>
+              View your group's clinical schedule.
+            </small>
 
           </div>
 
 
           <div
-            class="quick-item"
+            class="dashboard-link"
             onclick="goToSection('files')"
           >
 
-            <div class="quick-item-icon">
+            <div class="dashboard-link-icon">
               📁
             </div>
 
-            <div>
+            <strong>
+              Files
+            </strong>
 
-              <strong>
-                Files
-              </strong>
-
-              <small>
-                Access shared class resources
-              </small>
-
-            </div>
+            <small>
+              Access shared clinical resources.
+            </small>
 
           </div>
 
@@ -1129,27 +1247,28 @@ select:focus{
       </div>
 
 
-      <div class="panel">
+      <!-- GROUP MEMBERS -->
+
+      <div
+        class="dashboard-panel dashboard-members"
+      >
 
         <h3>
-          📅 Next Duty
+          👥 Group Members
         </h3>
 
-        <div id="nextDuty">
+        <div
+          id="memberPreview"
+          class="member-preview"
+        ></div>
 
-          <div class="duty-card">
-
-            <div class="label">
-              Status
-            </div>
-
-            <div class="value">
-              No duty schedule yet
-            </div>
-
-          </div>
-
-        </div>
+        <button
+          class="btn primary"
+          style="width:100%;margin-top:12px;"
+          onclick="goToSection('members')"
+        >
+          View All Members
+        </button>
 
       </div>
 
@@ -1174,7 +1293,7 @@ select:focus{
     >
 
       <h3>
-        Add Nursing Note
+        ➕ Add Nursing Note
       </h3>
 
       <div class="form-grid">
@@ -1235,7 +1354,7 @@ select:focus{
     >
 
       <h3>
-        Add Requirement
+        ➕ Add Requirement
       </h3>
 
       <div class="form-grid">
@@ -1296,7 +1415,7 @@ select:focus{
     >
 
       <h3>
-        Add Duty Schedule
+        ➕ Add Duty Schedule
       </h3>
 
       <div class="form-grid">
@@ -1360,40 +1479,20 @@ select:focus{
     class="section"
   >
 
-    <div
-      id="adminMembersPanel"
-      class="admin-panel"
-      style="display:none;"
-    >
+    <div class="members-header">
 
       <h3>
-        Add Group Member
+        👥 Group Members
       </h3>
 
-      <div class="form-grid">
-
-        <input
-          id="memberName"
-          placeholder="Name"
-        >
-
-        <input
-          id="memberRole"
-          placeholder="Role / Group"
-        >
-
-      </div>
-
-      <div class="form-buttons">
-
-        <button
-          class="btn primary"
-          onclick="addMember()"
-        >
-          Add Member
-        </button>
-
-      </div>
+      <button
+        id="addMemberButton"
+        class="btn primary"
+        style="display:none;"
+        onclick="openMemberModal()"
+      >
+        + Add Member
+      </button>
 
     </div>
 
@@ -1407,7 +1506,7 @@ select:focus{
 
 
   <!-- ===================================================
-       CHAT
+       GROUP CHAT
   ==================================================== -->
 
   <section
@@ -1428,7 +1527,11 @@ select:focus{
           id="chatInput"
           type="text"
           placeholder="Message your duty group..."
-          onkeydown="if(event.key==='Enter')sendChat()"
+          onkeydown="
+            if(event.key==='Enter'){
+              sendChat();
+            }
+          "
         >
 
         <button
@@ -1461,7 +1564,7 @@ select:focus{
     >
 
       <h3>
-        Add Clinical File
+        ➕ Add Clinical File
       </h3>
 
       <div class="form-grid">
@@ -1524,8 +1627,8 @@ select:focus{
       <p>
         A shared digital workspace for our nursing
         duty group. It keeps clinical notes,
-        requirements, schedules, files, and
-        group communication in one place.
+        requirements, schedules, files, and group
+        communication in one place.
       </p>
 
       <p>
@@ -1567,7 +1670,11 @@ select:focus{
       id="adminPassword"
       type="password"
       placeholder="Admin password"
-      onkeydown="if(event.key==='Enter')loginAdmin()"
+      onkeydown="
+        if(event.key==='Enter'){
+          loginAdmin();
+        }
+      "
     >
 
     <div class="modal-buttons">
@@ -1584,6 +1691,56 @@ select:focus{
         onclick="loginAdmin()"
       >
         Login
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     MEMBER EDIT MODAL
+===================================================== -->
+
+<div
+  id="memberModal"
+  class="modal"
+>
+
+  <div class="modal-box">
+
+    <h3 id="memberModalTitle">
+      Add Group Member
+    </h3>
+
+    <input
+      id="memberName"
+      placeholder="Full name"
+    >
+
+    <div style="height:9px;"></div>
+
+    <input
+      id="memberRole"
+      placeholder="Role / Group"
+    >
+
+    <div class="modal-buttons">
+
+      <button
+        class="btn"
+        onclick="closeMemberModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="btn primary"
+        onclick="saveMember()"
+      >
+        Save
       </button>
 
     </div>
@@ -1660,6 +1817,7 @@ let chatData = {};
 let filesData = {};
 
 let isAdmin = false;
+let editingMemberId = null;
 
 
 /* =====================================================
@@ -1761,8 +1919,9 @@ function(section,button){
     document.getElementById(section);
 
 
-  if(target)
+  if(target){
     target.classList.add("active");
+  }
 
 
   document
@@ -1773,8 +1932,9 @@ function(section,button){
     );
 
 
-  if(button)
+  if(button){
     button.classList.add("on");
+  }
 
 
   const titles = {
@@ -1859,7 +2019,7 @@ function(section){
     members:4,
     chat:5,
     files:6,
-    about:8
+    about:7
 
   };
 
@@ -1876,17 +2036,19 @@ function(section){
    THEME
 ===================================================== */
 
-function applyTheme(dark){
+function applyTheme(isDark){
 
   document.body.classList.toggle(
     "dark",
-    dark
+    isDark
   );
 
 
   localStorage.setItem(
     "nursingDark",
-    dark ? "true" : "false"
+    isDark
+      ? "true"
+      : "false"
   );
 
 
@@ -1896,26 +2058,35 @@ function applyTheme(dark){
     );
 
 
-  if(icon){
-
-    icon.textContent =
-      dark ? "☀️" : "◐";
-
-  }
-
-
   const button =
     document.getElementById(
       "themeToggle"
     );
 
 
-  if(button){
+  if(isDark){
+
+    icon.textContent = "☀️";
 
     button.title =
-      dark
-        ? "Switch to light mode"
-        : "Switch to dark mode";
+      "Switch to light mode";
+
+    button.setAttribute(
+      "aria-label",
+      "Switch to light mode"
+    );
+
+  }else{
+
+    icon.textContent = "◐";
+
+    button.title =
+      "Switch to dark mode";
+
+    button.setAttribute(
+      "aria-label",
+      "Switch to dark mode"
+    );
 
   }
 
@@ -1930,7 +2101,7 @@ function applyTheme(dark){
 
     meta.setAttribute(
       "content",
-      dark
+      isDark
         ? "#0e1714"
         : "#176b4d"
     );
@@ -1943,11 +2114,13 @@ function applyTheme(dark){
 window.toggleTheme =
 function(){
 
-  applyTheme(
-    !document.body.classList.contains(
+  const dark =
+    document.body.classList.contains(
       "dark"
-    )
-  );
+    );
+
+
+  applyTheme(!dark);
 
 };
 
@@ -2062,7 +2235,6 @@ function updateAdminUI(){
     "adminNotesPanel",
     "adminRequirementsPanel",
     "adminSchedulePanel",
-    "adminMembersPanel",
     "adminFilesPanel"
 
   ];
@@ -2083,6 +2255,14 @@ function updateAdminUI(){
     }
 
   });
+
+
+  document.getElementById(
+    "addMemberButton"
+  ).style.display =
+    isAdmin
+      ? "block"
+      : "none";
 
 }
 
@@ -2393,7 +2573,6 @@ function renderRequirements(){
 
         </div>
 
-
         ${
           isAdmin
           ? `
@@ -2513,7 +2692,7 @@ async function(id){
 
 
 /* =====================================================
-   SCHEDULE
+   DUTY SCHEDULE
 ===================================================== */
 
 onValue(
@@ -2524,8 +2703,6 @@ onValue(
       snapshot.val() || {};
 
     renderSchedule();
-
-    updateNextDuty();
 
   }
 );
@@ -2554,8 +2731,6 @@ function renderSchedule(){
       `<div class="empty">
         No duty schedule added yet.
       </div>`;
-
-    updateNextDuty();
 
     return;
 
@@ -2637,9 +2812,6 @@ function renderSchedule(){
 
     }
   );
-
-
-  updateNextDuty();
 
 }
 
@@ -2742,78 +2914,8 @@ async function(id){
 };
 
 
-function updateNextDuty(){
-
-  const box =
-    document.getElementById(
-      "nextDuty"
-    );
-
-
-  const first =
-    Object.values(
-      scheduleData
-    )[0];
-
-
-  if(!first){
-
-    box.innerHTML =
-      `<div class="duty-card">
-
-        <div class="label">
-          Status
-        </div>
-
-        <div class="value">
-          No duty schedule yet
-        </div>
-
-      </div>`;
-
-    return;
-
-  }
-
-
-  box.innerHTML = `
-
-    <div class="duty-card">
-
-      <div class="label">
-        Next Duty
-      </div>
-
-      <div class="value">
-        ${esc(
-          first.day ||
-          "Duty"
-        )}
-      </div>
-
-      <div style="margin-top:6px;font-size:12px;">
-        ${esc(
-          first.area ||
-          "Clinical Area"
-        )}
-      </div>
-
-      <div style="margin-top:4px;font-size:11px;color:var(--muted);">
-        ${esc(
-          first.time ||
-          "Time not set"
-        )}
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
 /* =====================================================
-   MEMBERS
+   GROUP MEMBERS
 ===================================================== */
 
 onValue(
@@ -2824,9 +2926,28 @@ onValue(
       snapshot.val() || {};
 
     renderMembers();
+    renderMemberPreview();
 
   }
 );
+
+
+function getInitials(name){
+
+  return String(
+    name ||
+    "Student"
+  )
+  .trim()
+  .split(/\s+/)
+  .map(
+    x => x[0]
+  )
+  .join("")
+  .slice(0,2)
+  .toUpperCase();
+
+}
 
 
 function renderMembers(){
@@ -2869,23 +2990,14 @@ function renderMembers(){
         "member";
 
 
-      const initials =
-        String(
-          m.name ||
-          "Student"
-        )
-        .split(/\s+/)
-        .map(x => x[0])
-        .join("")
-        .slice(0,2)
-        .toUpperCase();
-
-
       el.innerHTML = `
 
         <div class="member-avatar">
-          ${esc(initials)}
+          ${esc(
+            getInitials(m.name)
+          )}
         </div>
+
 
         <div class="member-info">
 
@@ -2905,15 +3017,29 @@ function renderMembers(){
 
         </div>
 
+
         ${
           isAdmin
           ? `
-            <button
-              class="btn danger"
-              onclick="deleteMember('${id}')"
-            >
-              ×
-            </button>
+            <div class="member-actions">
+
+              <button
+                class="btn small"
+                onclick="editMember('${id}')"
+                title="Edit member"
+              >
+                ✏️
+              </button>
+
+              <button
+                class="btn small danger"
+                onclick="deleteMember('${id}')"
+                title="Delete member"
+              >
+                🗑️
+              </button>
+
+            </div>
           `
           : ""
         }
@@ -2929,7 +3055,204 @@ function renderMembers(){
 }
 
 
-window.addMember =
+function renderMemberPreview(){
+
+  const box =
+    document.getElementById(
+      "memberPreview"
+    );
+
+
+  box.innerHTML = "";
+
+
+  const entries =
+    Object.entries(
+      membersData
+    );
+
+
+  if(!entries.length){
+
+    box.innerHTML =
+      `<div class="empty" style="padding:20px 5px;">
+        No members added yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  entries
+    .slice(0,5)
+    .forEach(
+      ([id,m]) => {
+
+        const el =
+          document.createElement("div");
+
+
+        el.className =
+          "member-preview-item";
+
+
+        el.innerHTML = `
+
+          <div class="member-preview-avatar">
+            ${esc(
+              getInitials(m.name)
+            )}
+          </div>
+
+          <div>
+
+            <div class="member-preview-name">
+              ${esc(
+                m.name ||
+                "Student"
+              )}
+            </div>
+
+            <div class="member-preview-role">
+              ${esc(
+                m.role ||
+                "Nursing Student"
+              )}
+            </div>
+
+          </div>
+
+        `;
+
+
+        box.appendChild(el);
+
+      }
+    );
+
+
+  if(entries.length > 5){
+
+    const more =
+      document.createElement("div");
+
+
+    more.style.cssText =
+      "font-size:11px;color:var(--muted);text-align:center;margin-top:3px;";
+
+
+    more.textContent =
+      `+ ${entries.length - 5} more members`;
+
+
+    box.appendChild(more);
+
+  }
+
+}
+
+
+window.openMemberModal =
+function(){
+
+  if(!isAdmin)
+    return;
+
+
+  editingMemberId = null;
+
+
+  document.getElementById(
+    "memberModalTitle"
+  ).textContent =
+    "Add Group Member";
+
+
+  document.getElementById(
+    "memberName"
+  ).value = "";
+
+
+  document.getElementById(
+    "memberRole"
+  ).value = "";
+
+
+  document.getElementById(
+    "memberModal"
+  ).classList.add("show");
+
+
+  setTimeout(
+    () =>
+      document.getElementById(
+        "memberName"
+      ).focus(),
+    100
+  );
+
+};
+
+
+window.editMember =
+function(id){
+
+  if(!isAdmin)
+    return;
+
+
+  const member =
+    membersData[id];
+
+
+  if(!member)
+    return;
+
+
+  editingMemberId = id;
+
+
+  document.getElementById(
+    "memberModalTitle"
+  ).textContent =
+    "Edit Group Member";
+
+
+  document.getElementById(
+    "memberName"
+  ).value =
+    member.name ||
+    "";
+
+
+  document.getElementById(
+    "memberRole"
+  ).value =
+    member.role ||
+    "";
+
+
+  document.getElementById(
+    "memberModal"
+  ).classList.add("show");
+
+};
+
+
+window.closeMemberModal =
+function(){
+
+  document.getElementById(
+    "memberModal"
+  ).classList.remove("show");
+
+  editingMemberId = null;
+
+};
+
+
+window.saveMember =
 async function(){
 
   if(!isAdmin)
@@ -2959,31 +3282,44 @@ async function(){
   }
 
 
-  const newRef =
-    push(
-      ref(db,"members")
+  if(editingMemberId){
+
+    await update(
+      ref(
+        db,
+        "members/" +
+        editingMemberId
+      ),
+      {
+        name,
+        role:
+          role ||
+          "Nursing Student"
+      }
     );
 
+  }else{
 
-  await set(
-    newRef,
-    {
-      name,
-      role:
-        role ||
-        "Nursing Student"
-    }
-  );
+    const newRef =
+      push(
+        ref(db,"members")
+      );
 
 
-  document.getElementById(
-    "memberName"
-  ).value = "";
+    await set(
+      newRef,
+      {
+        name,
+        role:
+          role ||
+          "Nursing Student"
+      }
+    );
+
+  }
 
 
-  document.getElementById(
-    "memberRole"
-  ).value = "";
+  closeMemberModal();
 
 };
 
@@ -2994,7 +3330,7 @@ async function(id){
   if(
     !isAdmin ||
     !confirm(
-      "Remove this member?"
+      "Remove this group member?"
     )
   )
     return;
@@ -3359,58 +3695,7 @@ async function(id){
 
 
 /* =====================================================
-   ANNOUNCEMENT
-===================================================== */
-
-onValue(
-  ref(db,"announcement"),
-  snapshot => {
-
-    const data =
-      snapshot.val();
-
-
-    const box =
-      document.getElementById(
-        "announcement"
-      );
-
-
-    if(
-      data &&
-      cleanText(data.text)
-    ){
-
-      box.innerHTML = `
-
-        <strong>
-          📢 Clinical Announcement
-        </strong>
-
-        <br>
-
-        ${esc(
-          cleanText(data.text)
-        )}
-
-      `;
-
-      box.style.display =
-        "block";
-
-    }else{
-
-      box.style.display =
-        "none";
-
-    }
-
-  }
-);
-
-
-/* =====================================================
-   INITIALIZE
+   RENDER ALL
 ===================================================== */
 
 function renderAll(){
@@ -3419,20 +3704,15 @@ function renderAll(){
   renderRequirements();
   renderSchedule();
   renderMembers();
+  renderMemberPreview();
   renderChat();
   renderFiles();
-  updateNextDuty();
 
 }
 
 
-updateAdminUI();
-
-renderAll();
-
-
 /* =====================================================
-   MODAL
+   MODAL OUTSIDE CLICK
 ===================================================== */
 
 document.getElementById(
@@ -3453,6 +3733,34 @@ document.getElementById(
 
   }
 );
+
+
+document.getElementById(
+  "memberModal"
+)
+.addEventListener(
+  "click",
+  e => {
+
+    if(
+      e.target.id ===
+      "memberModal"
+    ){
+
+      closeMemberModal();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+updateAdminUI();
+renderAll();
 
 </script>
 
