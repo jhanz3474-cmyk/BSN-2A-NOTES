@@ -3,62 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#245c43">
-<title>BSN 2A Notes</title>
+<meta name="theme-color" content="#176b4d">
+
+<title>Nursing Duty Hub</title>
 
 <style>
+/* =========================================================
+   NURSING DUTY HUB
+   BSN 2A - Clinical Duty Group
+========================================================= */
+
 :root{
-  --bg:#f6f2e9;
+  --bg:#f4f8f6;
   --surface:#ffffff;
-  --surface2:#f1eee6;
-  --surface3:#e8efe9;
-  --text:#1e2b25;
-  --muted:#526158;
-  --muted2:#718078;
-  --border:#d9e0db;
-  --primary:#245c43;
-  --primarySoft:#e7f0e8;
-  --danger:#b53d3d;
-  --shadow:#1e322015;
+  --surface2:#eef5f1;
+  --surface3:#e3f0ea;
+
+  --text:#18332a;
+  --muted:#587066;
+  --muted2:#7b9188;
+
+  --border:#d6e3dd;
+
+  --primary:#176b4d;
+  --primary2:#23845f;
+  --primarySoft:#e2f1e9;
+
+  --danger:#c64242;
+  --warning:#b87916;
+  --blue:#356fa8;
+
+  --shadow:#17382b16;
   --input:#ffffff;
 }
 
 body.dark{
-  --bg:#101714;
-  --surface:#18211d;
-  --surface2:#27302b;
-  --surface3:#273a30;
-  --text:#edf4ef;
-  --muted:#bdc9c2;
-  --muted2:#9eada4;
-  --border:#3b4942;
-  --primary:#69a785;
-  --primarySoft:#23352c;
+  --bg:#0e1714;
+  --surface:#17221e;
+  --surface2:#22302a;
+  --surface3:#294036;
+
+  --text:#edf7f2;
+  --muted:#b9cbc3;
+  --muted2:#91a69d;
+
+  --border:#35483f;
+
+  --primary:#62b58f;
+  --primary2:#77c7a0;
+  --primarySoft:#1e3a2e;
+
   --danger:#ff7777;
-  --shadow:#00000035;
-  --input:#18211d;
+  --warning:#e0a94d;
+  --blue:#72a6db;
+
+  --shadow:#00000045;
+  --input:#17221e;
 }
 
 *{
   box-sizing:border-box;
 }
 
-html,body{
+html,
+body{
   margin:0;
   padding:0;
   min-height:100%;
 }
 
 body{
-  font-family:Arial,Helvetica,sans-serif;
+  font-family:
+    Inter,
+    Arial,
+    Helvetica,
+    sans-serif;
+
   background:var(--bg);
   color:var(--text);
-  transition:background .2s,color .2s;
+
+  transition:
+    background .2s,
+    color .2s;
 }
 
 button,
 input,
-textarea{
+textarea,
+select{
   font:inherit;
 }
 
@@ -66,54 +98,118 @@ button{
   cursor:pointer;
 }
 
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
 .side{
   position:fixed;
   left:0;
   top:0;
   bottom:0;
-  width:240px;
+
+  width:250px;
+
   background:var(--surface);
-  border-right:1px solid var(--border);
+
+  border-right:
+    1px solid var(--border);
+
   padding:20px 14px;
+
   z-index:100;
+
   display:flex;
   flex-direction:column;
-  box-shadow:3px 0 15px var(--shadow);
+
+  box-shadow:
+    4px 0 18px var(--shadow);
+
+  overflow-y:auto;
 }
 
-.logo{
-  padding:5px 10px 22px;
+.brand{
+  padding:
+    5px 10px 22px;
 }
 
-.logo h1{
+.brand-icon{
+  width:46px;
+  height:46px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:var(--primarySoft);
+
+  border-radius:14px;
+
+  font-size:25px;
+
+  margin-bottom:11px;
+}
+
+.brand h1{
   margin:0;
-  font-size:21px;
+
+  font-size:20px;
+
   color:var(--primary);
 }
 
-.logo p{
+.brand p{
   margin:5px 0 0;
+
   color:var(--muted2);
+
   font-size:12px;
 }
 
 .nav{
   display:flex;
   flex-direction:column;
-  gap:6px;
+
+  gap:5px;
+}
+
+.nav-label{
+  margin:
+    13px 10px 5px;
+
+  font-size:10px;
+
+  font-weight:bold;
+
+  color:var(--muted2);
+
+  text-transform:uppercase;
+
+  letter-spacing:1px;
 }
 
 .nav button{
   width:100%;
+
   border:0;
+
   background:transparent;
+
   color:var(--text);
-  padding:12px 13px;
+
+  padding:
+    11px 12px;
+
   border-radius:10px;
+
   text-align:left;
+
   display:flex;
+
   align-items:center;
-  gap:10px;
+
+  gap:11px;
+
   transition:.15s;
 }
 
@@ -123,64 +219,148 @@ button{
 
 .nav button.on{
   background:var(--primarySoft);
+
   color:var(--primary);
+
   font-weight:bold;
+}
+
+.nav-icon{
+  width:23px;
+
+  text-align:center;
+
+  font-size:17px;
 }
 
 #themeToggle{
   justify-content:flex-end;
-  margin-top:4px;
+
+  margin-top:7px;
 }
 
 #themeToggle .theme-icon{
   margin-left:auto;
+
   font-size:19px;
+
   line-height:1;
 }
 
+/* =========================================================
+   MAIN
+========================================================= */
+
 .main{
-  margin-left:240px;
+  margin-left:250px;
+
   min-height:100vh;
+
   padding:28px;
 }
 
 .topbar{
   display:flex;
+
   align-items:center;
+
   justify-content:space-between;
+
   gap:15px;
-  margin-bottom:20px;
+
+  margin-bottom:22px;
 }
 
-.topbar h2{
+.topbar-left h2{
   margin:0;
-  font-size:27px;
+
+  font-size:28px;
+}
+
+.topbar-left p{
+  margin:5px 0 0;
+
+  color:var(--muted);
+
+  font-size:13px;
 }
 
 .userbox{
   display:flex;
+
   align-items:center;
-  gap:10px;
+
+  gap:9px;
+
+  background:var(--surface);
+
+  border:
+    1px solid var(--border);
+
+  padding:
+    8px 12px;
+
+  border-radius:12px;
+}
+
+.user-avatar{
+  width:31px;
+  height:31px;
+
+  border-radius:50%;
+
+  background:var(--primarySoft);
+
+  color:var(--primary);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-weight:bold;
+
+  font-size:13px;
 }
 
 .user-name{
-  color:var(--muted);
-  font-size:14px;
+  color:var(--text);
+
+  font-size:13px;
+
+  font-weight:bold;
 }
+
+/* =========================================================
+   ANNOUNCEMENT
+========================================================= */
 
 .announcement{
   background:var(--primarySoft);
+
   color:var(--text);
-  border:1px solid var(--border);
-  border-radius:13px;
+
+  border:
+    1px solid var(--border);
+
+  border-left:
+    4px solid var(--primary);
+
+  border-radius:12px;
+
   padding:13px 15px;
+
   margin-bottom:20px;
+
   display:none;
 }
 
 .announcement strong{
   color:var(--primary);
 }
+
+/* =========================================================
+   SECTIONS
+========================================================= */
 
 .section{
   display:none;
@@ -190,78 +370,260 @@ button{
   display:block;
 }
 
-.notes-masonry{
-  columns:3 280px;
-  column-gap:16px;
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.welcome{
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--primary2)
+    );
+
+  color:white;
+
+  border-radius:17px;
+
+  padding:23px;
+
+  margin-bottom:18px;
+
+  position:relative;
+
+  overflow:hidden;
 }
 
-.card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:17px;
-  margin:0 0 16px;
-  break-inside:avoid;
-  box-shadow:0 5px 15px var(--shadow);
+.welcome:after{
+  content:"🩺";
+
+  position:absolute;
+
+  right:28px;
+  top:18px;
+
+  font-size:65px;
+
+  opacity:.15;
 }
 
-.card h3{
-  margin:0 0 10px;
-  font-size:18px;
-}
-
-.card small{
-  display:block;
-  margin-top:13px;
-  color:var(--muted2);
-  font-size:11px;
-}
-
-.text{
-  display:block;
-  width:100%;
+.welcome h2{
   margin:0;
-  padding:0;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  line-height:1.65;
-  color:var(--muted);
+
+  font-size:23px;
 }
 
-.note-actions{
-  display:flex;
-  gap:6px;
-  margin-top:13px;
-}
+.welcome p{
+  margin:7px 0 0;
 
-.btn{
-  border:1px solid var(--border);
-  background:var(--surface);
-  color:var(--text);
-  padding:8px 11px;
-  border-radius:8px;
+  opacity:.9;
+
   font-size:13px;
 }
 
-.btn:hover{
+.stats{
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:13px;
+
+  margin-bottom:18px;
+}
+
+.stat{
+  background:var(--surface);
+
+  border:
+    1px solid var(--border);
+
+  border-radius:13px;
+
+  padding:16px;
+
+  box-shadow:
+    0 4px 12px var(--shadow);
+}
+
+.stat-icon{
+  font-size:20px;
+
+  margin-bottom:9px;
+}
+
+.stat-number{
+  font-size:24px;
+
+  font-weight:bold;
+
+  color:var(--primary);
+}
+
+.stat-label{
+  margin-top:3px;
+
+  font-size:11px;
+
+  color:var(--muted2);
+}
+
+.dashboard-grid{
+  display:grid;
+
+  grid-template-columns:
+    1.3fr .7fr;
+
+  gap:15px;
+}
+
+.panel{
+  background:var(--surface);
+
+  border:
+    1px solid var(--border);
+
+  border-radius:14px;
+
+  padding:17px;
+
+  box-shadow:
+    0 4px 12px var(--shadow);
+}
+
+.panel h3{
+  margin:0 0 13px;
+
+  font-size:16px;
+}
+
+.quick-list{
+  display:flex;
+
+  flex-direction:column;
+
+  gap:8px;
+}
+
+.quick-item{
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  padding:10px;
+
   background:var(--surface2);
+
+  border-radius:10px;
 }
 
-.btn.primary{
-  background:var(--primary);
-  border-color:var(--primary);
-  color:white;
+.quick-item-icon{
+  width:34px;
+  height:34px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  background:var(--primarySoft);
+
+  border-radius:9px;
+
+  font-size:17px;
 }
 
-.btn.danger{
-  color:var(--danger);
+.quick-item div{
+  flex:1;
 }
+
+.quick-item strong{
+  display:block;
+
+  font-size:13px;
+}
+
+.quick-item small{
+  color:var(--muted2);
+
+  font-size:11px;
+}
+
+.duty-card{
+  background:var(--primarySoft);
+
+  border-radius:12px;
+
+  padding:14px;
+}
+
+.duty-card .label{
+  color:var(--muted);
+
+  font-size:10px;
+
+  text-transform:uppercase;
+
+  letter-spacing:.7px;
+}
+
+.duty-card .value{
+  font-weight:bold;
+
+  margin-top:4px;
+
+  color:var(--primary);
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card{
+  background:var(--surface);
+
+  border:
+    1px solid var(--border);
+
+  border-radius:14px;
+
+  padding:17px;
+
+  box-shadow:
+    0 4px 12px var(--shadow);
+}
+
+.card h3{
+  margin:0 0 9px;
+
+  font-size:17px;
+}
+
+.card p{
+  margin:0;
+
+  color:var(--muted);
+
+  line-height:1.55;
+}
+
+/* =========================================================
+   ADMIN PANEL
+========================================================= */
 
 .admin-panel{
   background:var(--surface);
-  border:1px solid var(--border);
+
+  border:
+    1px solid var(--border);
+
   border-radius:14px;
+
   padding:17px;
+
   margin-bottom:18px;
 }
 
@@ -271,56 +633,120 @@ button{
 
 .form-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
+
+  grid-template-columns:
+    1fr 1fr;
+
   gap:10px;
-}
-
-input,
-textarea{
-  width:100%;
-  border:1px solid var(--border);
-  border-radius:9px;
-  padding:10px 12px;
-  background:var(--input);
-  color:var(--text);
-  outline:none;
-}
-
-textarea{
-  min-height:110px;
-  resize:vertical;
-}
-
-input:focus,
-textarea:focus{
-  border-color:var(--primary);
 }
 
 .full{
   grid-column:1/-1;
 }
 
+input,
+textarea,
+select{
+  width:100%;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:9px;
+
+  padding:
+    10px 12px;
+
+  background:var(--input);
+
+  color:var(--text);
+
+  outline:none;
+}
+
+textarea{
+  min-height:100px;
+
+  resize:vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  border-color:var(--primary);
+}
+
 .form-buttons{
   display:flex;
+
   gap:8px;
+
   margin-top:10px;
 }
 
+.btn{
+  border:
+    1px solid var(--border);
+
+  background:var(--surface);
+
+  color:var(--text);
+
+  padding:
+    8px 12px;
+
+  border-radius:8px;
+
+  font-size:12px;
+}
+
+.btn:hover{
+  background:var(--surface2);
+}
+
+.btn.primary{
+  background:var(--primary);
+
+  border-color:var(--primary);
+
+  color:white;
+}
+
+.btn.danger{
+  color:var(--danger);
+}
+
+/* =========================================================
+   DUTY TASKS
+========================================================= */
+
 .tasks-list{
   display:flex;
+
   flex-direction:column;
+
   gap:10px;
 }
 
 .task{
   background:var(--surface);
-  border:1px solid var(--border);
+
+  border:
+    1px solid var(--border);
+
   border-radius:13px;
+
   padding:14px;
+
   display:flex;
+
   align-items:flex-start;
+
   gap:11px;
-  box-shadow:0 4px 12px var(--shadow);
+
+  box-shadow:
+    0 4px 12px var(--shadow);
+
   transition:.15s;
 }
 
@@ -333,107 +759,469 @@ textarea:focus{
 }
 
 .task.drag-over{
-  border:2px dashed var(--primary);
+  border:
+    2px dashed var(--primary);
 }
 
 .task-check{
   width:20px;
   height:20px;
+
   margin-top:2px;
+
   flex:none;
+
   accent-color:var(--primary);
+
   cursor:pointer;
 }
 
 .task-content{
   flex:1;
+
   min-width:0;
 }
 
 .task-title{
   display:block;
+
   font-weight:bold;
+
   line-height:1.4;
+
   overflow-wrap:anywhere;
 }
 
 .task-title.done{
   text-decoration:line-through;
-  opacity:.55;
-}
 
-.task.completed{
-  opacity:.85;
+  opacity:.55;
 }
 
 .task-due{
   margin-top:5px;
-  font-size:12px;
+
+  font-size:11px;
+
   color:var(--muted2);
 }
 
 .task-description{
   margin:7px 0 0;
+
   padding:0;
+
   color:var(--muted);
-  line-height:1.55;
+
+  line-height:1.5;
+
   white-space:pre-wrap;
+
   overflow-wrap:anywhere;
 }
 
 .task-actions{
   display:flex;
+
   gap:5px;
-  flex:none;
 }
 
 .task-admin-btn,
 .task-admin-delete{
   border:0;
+
   background:var(--surface2);
+
   color:var(--text);
+
   border-radius:7px;
-  padding:6px 8px;
-  cursor:pointer;
-  font-size:12px;
+
+  padding:
+    6px 8px;
+
+  font-size:11px;
 }
 
 .task-admin-delete{
   color:var(--danger);
 }
 
+/* =========================================================
+   NURSING NOTES
+========================================================= */
+
+.notes-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(270px,1fr));
+
+  gap:14px;
+}
+
+.note-category{
+  display:inline-block;
+
+  background:var(--primarySoft);
+
+  color:var(--primary);
+
+  padding:
+    4px 8px;
+
+  border-radius:6px;
+
+  font-size:10px;
+
+  font-weight:bold;
+
+  margin-bottom:9px;
+}
+
+.note-text{
+  white-space:pre-wrap;
+
+  overflow-wrap:anywhere;
+
+  color:var(--muted);
+
+  line-height:1.6;
+
+  margin:0;
+}
+
+.note-meta{
+  margin-top:12px;
+
+  color:var(--muted2);
+
+  font-size:10px;
+}
+
+.note-actions{
+  display:flex;
+
+  gap:6px;
+
+  margin-top:12px;
+}
+
+/* =========================================================
+   DRUG STUDY
+========================================================= */
+
+.drug-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(300px,1fr));
+
+  gap:13px;
+}
+
+.drug-card{
+  background:var(--surface);
+
+  border:
+    1px solid var(--border);
+
+  border-radius:13px;
+
+  padding:16px;
+
+  box-shadow:
+    0 4px 12px var(--shadow);
+}
+
+.drug-header{
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  margin-bottom:13px;
+}
+
+.drug-icon{
+  width:39px;
+  height:39px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  background:var(--primarySoft);
+
+  border-radius:10px;
+
+  font-size:19px;
+}
+
+.drug-header h3{
+  margin:0;
+
+  font-size:15px;
+}
+
+.drug-header small{
+  color:var(--muted2);
+
+  font-size:10px;
+}
+
+.drug-info{
+  display:grid;
+
+  gap:8px;
+}
+
+.drug-row{
+  padding:8px 9px;
+
+  background:var(--surface2);
+
+  border-radius:8px;
+}
+
+.drug-row strong{
+  display:block;
+
+  font-size:10px;
+
+  color:var(--primary);
+
+  text-transform:uppercase;
+
+  margin-bottom:3px;
+}
+
+.drug-row span{
+  color:var(--muted);
+
+  font-size:12px;
+
+  line-height:1.4;
+}
+
+/* =========================================================
+   PATIENT CASES
+========================================================= */
+
+.case-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(300px,1fr));
+
+  gap:14px;
+}
+
+.case-card{
+  background:var(--surface);
+
+  border:
+    1px solid var(--border);
+
+  border-radius:14px;
+
+  padding:16px;
+
+  box-shadow:
+    0 4px 12px var(--shadow);
+}
+
+.case-top{
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:10px;
+
+  margin-bottom:13px;
+}
+
+.patient-code{
+  color:var(--primary);
+
+  font-weight:bold;
+}
+
+.case-badge{
+  background:var(--surface2);
+
+  color:var(--muted);
+
+  border-radius:6px;
+
+  padding:4px 7px;
+
+  font-size:10px;
+}
+
+.case-info{
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:8px;
+}
+
+.case-info div{
+  background:var(--surface2);
+
+  padding:9px;
+
+  border-radius:8px;
+}
+
+.case-info strong{
+  display:block;
+
+  color:var(--muted2);
+
+  font-size:9px;
+
+  text-transform:uppercase;
+
+  margin-bottom:3px;
+}
+
+.case-info span{
+  font-size:12px;
+}
+
+.case-notes{
+  margin-top:10px;
+
+  color:var(--muted);
+
+  font-size:12px;
+
+  line-height:1.5;
+}
+
+/* =========================================================
+   REQUIREMENTS
+========================================================= */
+
+.requirements{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(260px,1fr));
+
+  gap:13px;
+}
+
+.requirement{
+  background:var(--surface);
+
+  border:
+    1px solid var(--border);
+
+  border-radius:13px;
+
+  padding:15px;
+}
+
+.requirement-top{
+  display:flex;
+
+  gap:10px;
+
+  align-items:flex-start;
+}
+
+.requirement-icon{
+  font-size:20px;
+}
+
+.requirement h3{
+  margin:0;
+
+  font-size:14px;
+}
+
+.requirement p{
+  margin:6px 0 0;
+
+  color:var(--muted);
+
+  font-size:11px;
+
+  line-height:1.5;
+}
+
+/* =========================================================
+   CHAT
+========================================================= */
+
 .chat{
-  max-width:850px;
+  max-width:900px;
 }
 
 .chatlog{
   background:var(--surface);
-  border:1px solid var(--border);
+
+  border:
+    1px solid var(--border);
+
   border-radius:14px;
+
   padding:15px;
+
   height:55vh;
+
   overflow-y:auto;
 }
 
 .msg{
-  padding:10px 13px;
+  padding:
+    10px 13px;
+
   margin:8px 0;
+
   border-radius:12px;
+
   max-width:85%;
+
   background:var(--surface2);
+
   white-space:pre-wrap;
+
   overflow-wrap:anywhere;
+
   line-height:1.5;
 }
 
 .msg.me{
   margin-left:auto;
+
   background:var(--primarySoft);
+}
+
+.msg-name{
+  display:block;
+
+  font-size:10px;
+
+  font-weight:bold;
+
+  color:var(--primary);
+
+  margin-bottom:3px;
 }
 
 .chatrow{
   display:flex;
+
   gap:8px;
+
   margin-top:10px;
 }
 
@@ -441,67 +1229,264 @@ textarea:focus{
   flex:1;
 }
 
-.files-list{
+/* =========================================================
+   FILES
+========================================================= */
+
+.files-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:12px;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(240px,1fr));
+
+  gap:13px;
 }
 
 .file-card{
   background:var(--surface);
-  border:1px solid var(--border);
+
+  border:
+    1px solid var(--border);
+
   border-radius:13px;
+
   padding:15px;
+
+  box-shadow:
+    0 4px 12px var(--shadow);
+}
+
+.file-icon{
+  width:38px;
+  height:38px;
+
+  background:var(--primarySoft);
+
+  border-radius:9px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  font-size:19px;
+
+  margin-bottom:10px;
 }
 
 .file-card h3{
-  margin:0 0 7px;
-  font-size:15px;
+  margin:0 0 5px;
+
+  font-size:14px;
 }
 
 .file-card p{
   margin:0;
+
   color:var(--muted);
-  font-size:13px;
+
+  font-size:11px;
+
+  line-height:1.5;
 }
 
 .file-card a{
   display:inline-block;
+
   margin-top:10px;
+
   color:var(--primary);
+
   text-decoration:none;
+
+  font-weight:bold;
+
+  font-size:12px;
+}
+
+/* =========================================================
+   SCHEDULE
+========================================================= */
+
+.schedule-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(250px,1fr));
+
+  gap:13px;
+}
+
+.schedule-card{
+  background:var(--surface);
+
+  border:
+    1px solid var(--border);
+
+  border-radius:13px;
+
+  padding:15px;
+}
+
+.schedule-day{
+  color:var(--primary);
+
+  font-size:12px;
+
+  font-weight:bold;
+
+  text-transform:uppercase;
+
+  letter-spacing:.5px;
+}
+
+.schedule-area{
+  font-size:18px;
+
+  font-weight:bold;
+
+  margin:5px 0;
+}
+
+.schedule-time{
+  color:var(--muted);
+
+  font-size:12px;
+}
+
+.schedule-ci{
+  margin-top:9px;
+
+  color:var(--muted2);
+
+  font-size:11px;
+}
+
+/* =========================================================
+   MEMBERS
+========================================================= */
+
+.members-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+  gap:12px;
+}
+
+.member{
+  background:var(--surface);
+
+  border:
+    1px solid var(--border);
+
+  border-radius:13px;
+
+  padding:14px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:11px;
+}
+
+.member-avatar{
+  width:40px;
+  height:40px;
+
+  border-radius:50%;
+
+  background:var(--primarySoft);
+
+  color:var(--primary);
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
   font-weight:bold;
 }
 
+.member-info{
+  min-width:0;
+}
+
+.member-info strong{
+  display:block;
+
+  font-size:13px;
+}
+
+.member-info span{
+  color:var(--muted2);
+
+  font-size:10px;
+}
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
 .about-box{
   background:var(--surface);
-  border:1px solid var(--border);
+
+  border:
+    1px solid var(--border);
+
   border-radius:14px;
+
   padding:20px;
-  max-width:800px;
+
+  max-width:850px;
+
   line-height:1.65;
+
+  box-shadow:
+    0 4px 12px var(--shadow);
 }
+
+.about-box h2{
+  color:var(--primary);
+}
+
+.about-box p{
+  color:var(--muted);
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
 
 .empty{
   text-align:center;
+
   color:var(--muted2);
+
   padding:35px 10px;
 }
 
-.status{
-  font-size:12px;
-  color:var(--muted2);
-  margin-top:8px;
-}
+/* =========================================================
+   MODAL
+========================================================= */
 
 .modal{
   position:fixed;
+
   inset:0;
+
   background:#0008;
+
   display:none;
+
   align-items:center;
+
   justify-content:center;
+
   z-index:500;
+
   padding:20px;
 }
 
@@ -510,12 +1495,19 @@ textarea:focus{
 }
 
 .modal-box{
-  width:min(500px,100%);
+  width:min(520px,100%);
+
   background:var(--surface);
-  border:1px solid var(--border);
+
+  border:
+    1px solid var(--border);
+
   border-radius:15px;
+
   padding:20px;
-  box-shadow:0 20px 50px #0005;
+
+  box-shadow:
+    0 20px 50px #0005;
 }
 
 .modal-box h3{
@@ -524,37 +1516,74 @@ textarea:focus{
 
 .modal-buttons{
   display:flex;
+
   justify-content:flex-end;
+
   gap:8px;
+
   margin-top:12px;
 }
 
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px){
+
+  .stats{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .dashboard-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
 @media(max-width:850px){
+
   .side{
-    width:190px;
+    width:205px;
   }
 
   .main{
-    margin-left:190px;
+    margin-left:205px;
+
     padding:18px;
   }
 
-  .notes-masonry{
-    columns:2 240px;
-  }
 }
 
 @media(max-width:650px){
+
   .side{
     position:relative;
+
     width:100%;
+
     height:auto;
+
     border-right:0;
-    border-bottom:1px solid var(--border);
+
+    border-bottom:
+      1px solid var(--border);
   }
 
   .main{
     margin-left:0;
+
+    padding:15px;
+  }
+
+  .topbar{
+    align-items:flex-start;
+
+    flex-direction:column;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
   }
 
   .form-grid{
@@ -565,61 +1594,178 @@ textarea:focus{
     grid-column:auto;
   }
 
-  .notes-masonry{
-    columns:1;
+}
+
+@media(max-width:430px){
+
+  .stats{
+    grid-template-columns:1fr;
   }
 
-  .topbar{
-    align-items:flex-start;
-    flex-direction:column;
+  .stats .stat{
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
   }
+
+  .stat-icon{
+    margin:0;
+  }
+
 }
 </style>
 </head>
 
+
 <body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
 
 <aside class="side">
 
-  <div class="logo">
-    <h1>BSN 2A Notes</h1>
-    <p>Class notes &amp; tasks</p>
+  <div class="brand">
+
+    <div class="brand-icon">
+      🩺
+    </div>
+
+    <h1>Nursing Duty Hub</h1>
+
+    <p>
+      BSN 2A • Clinical Duty Group
+    </p>
+
   </div>
+
 
   <nav class="nav">
 
-    <button class="on" onclick="show('notes',this)">
-      📝 <span>Notes</span>
+    <div class="nav-label">
+      Main
+    </div>
+
+    <button
+      class="on"
+      onclick="show('dashboard',this)"
+    >
+      <span class="nav-icon">🏠</span>
+      <span>Dashboard</span>
     </button>
 
-    <button onclick="show('tasks',this)">
-      ✅ <span>Tasks</span>
+
+    <button
+      onclick="show('tasks',this)"
+    >
+      <span class="nav-icon">📋</span>
+      <span>Duty Tasks</span>
     </button>
 
-    <button onclick="show('chat',this)">
-      💬 <span>Chat</span>
+
+    <button
+      onclick="show('cases',this)"
+    >
+      <span class="nav-icon">🩺</span>
+      <span>Patient Cases</span>
     </button>
 
-    <button onclick="show('files',this)">
-      📚 <span>Files</span>
+
+    <button
+      onclick="show('notes',this)"
+    >
+      <span class="nav-icon">📚</span>
+      <span>Nursing Notes</span>
     </button>
 
-    <button onclick="show('about',this)">
-      ℹ️ <span>About</span>
+
+    <button
+      onclick="show('drugs',this)"
+    >
+      <span class="nav-icon">💊</span>
+      <span>Drug Study</span>
     </button>
 
-    <!-- ICON ONLY THEME BUTTON -->
+
+    <div class="nav-label">
+      Group
+    </div>
+
+
+    <button
+      onclick="show('requirements',this)"
+    >
+      <span class="nav-icon">📝</span>
+      <span>Requirements</span>
+    </button>
+
+
+    <button
+      onclick="show('schedule',this)"
+    >
+      <span class="nav-icon">📅</span>
+      <span>Duty Schedule</span>
+    </button>
+
+
+    <button
+      onclick="show('members',this)"
+    >
+      <span class="nav-icon">👥</span>
+      <span>Group Members</span>
+    </button>
+
+
+    <button
+      onclick="show('chat',this)"
+    >
+      <span class="nav-icon">💬</span>
+      <span>Group Chat</span>
+    </button>
+
+
+    <button
+      onclick="show('files',this)"
+    >
+      <span class="nav-icon">📁</span>
+      <span>Files</span>
+    </button>
+
+
+    <div class="nav-label">
+      System
+    </div>
+
+
+    <!-- THEME ICON ONLY -->
     <button
       id="themeToggle"
       onclick="toggleTheme()"
       title="Toggle light/dark mode"
       aria-label="Toggle light/dark mode"
     >
-      <span id="themeIcon" class="theme-icon">◐</span>
+      <span
+        id="themeIcon"
+        class="theme-icon"
+      >◐</span>
     </button>
 
-    <button onclick="adminLogin()">
-      🔒 <span id="admBtn">Admin</span>
+
+    <button
+      onclick="adminLogin()"
+    >
+      <span class="nav-icon">🔐</span>
+      <span id="admBtn">Admin</span>
+    </button>
+
+
+    <button
+      onclick="show('about',this)"
+    >
+      <span class="nav-icon">ℹ️</span>
+      <span>About</span>
     </button>
 
   </nav>
@@ -627,68 +1773,292 @@ textarea:focus{
 </aside>
 
 
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
 <main class="main">
 
   <div class="topbar">
-    <h2 id="pageTitle">Notes</h2>
+
+    <div class="topbar-left">
+
+      <h2 id="pageTitle">
+        Dashboard
+      </h2>
+
+      <p id="pageSubtitle">
+        Clinical duty management for your nursing group
+      </p>
+
+    </div>
+
 
     <div class="userbox">
-      <span class="user-name" id="currentUser"></span>
+
+      <div
+        class="user-avatar"
+        id="userAvatar"
+      >
+        S
+      </div>
+
+      <span
+        class="user-name"
+        id="currentUser"
+      >
+        Student
+      </span>
+
     </div>
+
   </div>
 
 
-  <div id="announcement" class="announcement"></div>
+  <!-- ANNOUNCEMENT -->
+
+  <div
+    id="announcement"
+    class="announcement"
+  ></div>
 
 
-  <!-- NOTES -->
-  <section id="notes" class="section active">
+  <!-- =======================================================
+       DASHBOARD
+  ======================================================== -->
 
-    <div id="adminNotesPanel" class="admin-panel" style="display:none;">
+  <section
+    id="dashboard"
+    class="section active"
+  >
 
-      <h3>Add Note</h3>
+    <div class="welcome">
 
-      <div class="form-grid">
+      <h2 id="welcomeText">
+        Welcome to your Clinical Duty Hub 👋
+      </h2>
 
-        <input
-          id="noteTitle"
-          type="text"
-          placeholder="Note title"
-        >
+      <p>
+        Keep your duty tasks, patient cases,
+        requirements, and group information organized.
+      </p>
 
-        <input
-          id="noteAuthor"
-          type="text"
-          placeholder="Author"
-        >
+    </div>
 
-        <textarea
-          id="noteText"
-          class="full"
-          placeholder="Write your note here..."
-        ></textarea>
+
+    <div class="stats">
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          📋
+        </div>
+
+        <div class="stat-number"
+             id="statTasks">
+          0
+        </div>
+
+        <div class="stat-label">
+          Duty Tasks
+        </div>
 
       </div>
 
-      <div class="form-buttons">
-        <button class="btn primary" onclick="addNote()">
-          Add Note
-        </button>
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          🩺
+        </div>
+
+        <div class="stat-number"
+             id="statCases">
+          0
+        </div>
+
+        <div class="stat-label">
+          Patient Cases
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          💊
+        </div>
+
+        <div class="stat-number"
+             id="statDrugs">
+          0
+        </div>
+
+        <div class="stat-label">
+          Drug Studies
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          👥
+        </div>
+
+        <div class="stat-number"
+             id="statMembers">
+          0
+        </div>
+
+        <div class="stat-label">
+          Group Members
+        </div>
+
       </div>
 
     </div>
 
-    <div id="notesList" class="notes-masonry"></div>
+
+    <div class="dashboard-grid">
+
+      <div class="panel">
+
+        <h3>
+          ⚡ Quick Access
+        </h3>
+
+        <div class="quick-list">
+
+          <div class="quick-item">
+
+            <div class="quick-item-icon">
+              📋
+            </div>
+
+            <div>
+              <strong>
+                Duty Tasks
+              </strong>
+
+              <small>
+                Check your clinical responsibilities
+              </small>
+            </div>
+
+          </div>
+
+
+          <div class="quick-item">
+
+            <div class="quick-item-icon">
+              🩺
+            </div>
+
+            <div>
+              <strong>
+                Patient Cases
+              </strong>
+
+              <small>
+                Review assigned patient information
+              </small>
+            </div>
+
+          </div>
+
+
+          <div class="quick-item">
+
+            <div class="quick-item-icon">
+              💊
+            </div>
+
+            <div>
+              <strong>
+                Drug Study
+              </strong>
+
+              <small>
+                Review medications before duty
+              </small>
+            </div>
+
+          </div>
+
+
+          <div class="quick-item">
+
+            <div class="quick-item-icon">
+              📁
+            </div>
+
+            <div>
+              <strong>
+                Files
+              </strong>
+
+              <small>
+                Access shared clinical resources
+              </small>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <h3>
+          📅 Next Duty
+        </h3>
+
+        <div id="nextDuty">
+
+          <div class="duty-card">
+
+            <div class="label">
+              Status
+            </div>
+
+            <div class="value">
+              No duty schedule yet
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
 
   </section>
 
 
-  <!-- TASKS -->
-  <section id="tasks" class="section">
+  <!-- =======================================================
+       DUTY TASKS
+  ======================================================== -->
 
-    <div id="adminTasksPanel" class="admin-panel" style="display:none;">
+  <section
+    id="tasks"
+    class="section"
+  >
 
-      <h3 id="taskFormTitle">Add Task</h3>
+    <div
+      id="adminTasksPanel"
+      class="admin-panel"
+      style="display:none;"
+    >
+
+      <h3 id="taskFormTitle">
+        Add Duty Task
+      </h3>
 
       <div class="form-grid">
 
@@ -707,7 +2077,7 @@ textarea:focus{
         <textarea
           id="taskDescription"
           class="full"
-          placeholder="Task description (optional)"
+          placeholder="Task description"
         ></textarea>
 
       </div>
@@ -715,16 +2085,16 @@ textarea:focus{
       <div class="form-buttons">
 
         <button
-          id="taskSaveBtn"
           class="btn primary"
+          id="taskSaveBtn"
           onclick="saveTask()"
         >
           Add Task
         </button>
 
         <button
-          id="taskCancelBtn"
           class="btn"
+          id="taskCancelBtn"
           onclick="cancelTaskEdit()"
           style="display:none;"
         >
@@ -735,24 +2105,452 @@ textarea:focus{
 
     </div>
 
-    <div id="tasksList" class="tasks-list"></div>
+
+    <div
+      id="tasksList"
+      class="tasks-list"
+    ></div>
 
   </section>
 
 
-  <!-- CHAT -->
-  <section id="chat" class="section">
+  <!-- =======================================================
+       PATIENT CASES
+  ======================================================== -->
+
+  <section
+    id="cases"
+    class="section"
+  >
+
+    <div
+      id="adminCasesPanel"
+      class="admin-panel"
+      style="display:none;"
+    >
+
+      <h3>
+        Add Patient Case
+      </h3>
+
+      <div class="form-grid">
+
+        <input
+          id="caseCode"
+          placeholder="Patient code"
+        >
+
+        <input
+          id="caseDiagnosis"
+          placeholder="Diagnosis"
+        >
+
+        <input
+          id="caseAge"
+          placeholder="Age / Sex"
+        >
+
+        <input
+          id="caseAssigned"
+          placeholder="Assigned student"
+        >
+
+        <input
+          id="caseArea"
+          placeholder="Ward / Area"
+        >
+
+        <input
+          id="caseStatus"
+          placeholder="Status"
+        >
+
+        <textarea
+          id="caseNotes"
+          class="full"
+          placeholder="Assessment / notes"
+        ></textarea>
+
+      </div>
+
+      <div class="form-buttons">
+
+        <button
+          class="btn primary"
+          onclick="addCase()"
+        >
+          Add Case
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="casesList"
+      class="case-grid"
+    ></div>
+
+  </section>
+
+
+  <!-- =======================================================
+       NURSING NOTES
+  ======================================================== -->
+
+  <section
+    id="notes"
+    class="section"
+  >
+
+    <div
+      id="adminNotesPanel"
+      class="admin-panel"
+      style="display:none;"
+    >
+
+      <h3>
+        Add Nursing Note
+      </h3>
+
+      <div class="form-grid">
+
+        <input
+          id="noteTitle"
+          placeholder="Note title"
+        >
+
+        <input
+          id="noteCategory"
+          placeholder="Category"
+        >
+
+        <textarea
+          id="noteText"
+          class="full"
+          placeholder="Write your nursing note..."
+        ></textarea>
+
+      </div>
+
+      <div class="form-buttons">
+
+        <button
+          class="btn primary"
+          onclick="addNote()"
+        >
+          Add Note
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="notesList"
+      class="notes-grid"
+    ></div>
+
+  </section>
+
+
+  <!-- =======================================================
+       DRUG STUDY
+  ======================================================== -->
+
+  <section
+    id="drugs"
+    class="section"
+  >
+
+    <div
+      id="adminDrugsPanel"
+      class="admin-panel"
+      style="display:none;"
+    >
+
+      <h3>
+        Add Drug Study
+      </h3>
+
+      <div class="form-grid">
+
+        <input
+          id="drugName"
+          placeholder="Drug name"
+        >
+
+        <input
+          id="drugClass"
+          placeholder="Drug class"
+        >
+
+        <input
+          id="drugDose"
+          placeholder="Dose"
+        >
+
+        <input
+          id="drugRoute"
+          placeholder="Route / Frequency"
+        >
+
+        <input
+          id="drugIndication"
+          placeholder="Indication"
+        >
+
+        <input
+          id="drugContra"
+          placeholder="Contraindications"
+        >
+
+        <input
+          id="drugSide"
+          placeholder="Side effects"
+        >
+
+        <textarea
+          id="drugNursing"
+          class="full"
+          placeholder="Nursing responsibilities"
+        ></textarea>
+
+      </div>
+
+      <div class="form-buttons">
+
+        <button
+          class="btn primary"
+          onclick="addDrug()"
+        >
+          Add Drug
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="drugsList"
+      class="drug-grid"
+    ></div>
+
+  </section>
+
+
+  <!-- =======================================================
+       REQUIREMENTS
+  ======================================================== -->
+
+  <section
+    id="requirements"
+    class="section"
+  >
+
+    <div
+      id="adminRequirementsPanel"
+      class="admin-panel"
+      style="display:none;"
+    >
+
+      <h3>
+        Add Requirement
+      </h3>
+
+      <div class="form-grid">
+
+        <input
+          id="reqTitle"
+          placeholder="Requirement"
+        >
+
+        <input
+          id="reqType"
+          placeholder="Type / Deadline"
+        >
+
+        <textarea
+          id="reqDescription"
+          class="full"
+          placeholder="Description"
+        ></textarea>
+
+      </div>
+
+      <div class="form-buttons">
+
+        <button
+          class="btn primary"
+          onclick="addRequirement()"
+        >
+          Add Requirement
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="requirementsList"
+      class="requirements"
+    ></div>
+
+  </section>
+
+
+  <!-- =======================================================
+       DUTY SCHEDULE
+  ======================================================== -->
+
+  <section
+    id="schedule"
+    class="section"
+  >
+
+    <div
+      id="adminSchedulePanel"
+      class="admin-panel"
+      style="display:none;"
+    >
+
+      <h3>
+        Add Duty Schedule
+      </h3>
+
+      <div class="form-grid">
+
+        <input
+          id="scheduleDay"
+          placeholder="Day"
+        >
+
+        <input
+          id="scheduleArea"
+          placeholder="Ward / Area"
+        >
+
+        <input
+          id="scheduleTime"
+          placeholder="Time"
+        >
+
+        <input
+          id="scheduleGroup"
+          placeholder="Group"
+        >
+
+        <input
+          id="scheduleCI"
+          class="full"
+          placeholder="Clinical Instructor"
+        >
+
+      </div>
+
+      <div class="form-buttons">
+
+        <button
+          class="btn primary"
+          onclick="addSchedule()"
+        >
+          Add Schedule
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="scheduleList"
+      class="schedule-grid"
+    ></div>
+
+  </section>
+
+
+  <!-- =======================================================
+       GROUP MEMBERS
+  ======================================================== -->
+
+  <section
+    id="members"
+    class="section"
+  >
+
+    <div
+      id="adminMembersPanel"
+      class="admin-panel"
+      style="display:none;"
+    >
+
+      <h3>
+        Add Group Member
+      </h3>
+
+      <div class="form-grid">
+
+        <input
+          id="memberName"
+          placeholder="Name"
+        >
+
+        <input
+          id="memberRole"
+          placeholder="Role / Group"
+        >
+
+      </div>
+
+      <div class="form-buttons">
+
+        <button
+          class="btn primary"
+          onclick="addMember()"
+        >
+          Add Member
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="membersList"
+      class="members-grid"
+    ></div>
+
+  </section>
+
+
+  <!-- =======================================================
+       CHAT
+  ======================================================== -->
+
+  <section
+    id="chat"
+    class="section"
+  >
 
     <div class="chat">
 
-      <div id="chatlog" class="chatlog"></div>
+      <div
+        id="chatlog"
+        class="chatlog"
+      ></div>
 
       <div class="chatrow">
 
         <input
           id="chatInput"
           type="text"
-          placeholder="Type a message..."
+          placeholder="Message your duty group..."
           onkeydown="if(event.key==='Enter')sendChat()"
         >
 
@@ -770,31 +2568,40 @@ textarea:focus{
   </section>
 
 
-  <!-- FILES -->
-  <section id="files" class="section">
+  <!-- =======================================================
+       FILES
+  ======================================================== -->
 
-    <div id="adminFilesPanel" class="admin-panel" style="display:none;">
+  <section
+    id="files"
+    class="section"
+  >
 
-      <h3>Add File Link</h3>
+    <div
+      id="adminFilesPanel"
+      class="admin-panel"
+      style="display:none;"
+    >
+
+      <h3>
+        Add Clinical File
+      </h3>
 
       <div class="form-grid">
 
         <input
           id="fileTitle"
-          type="text"
           placeholder="File title"
         >
 
         <input
           id="fileUrl"
-          type="url"
-          placeholder="https://..."
+          placeholder="File URL"
         >
 
         <input
           id="fileDescription"
           class="full"
-          type="text"
           placeholder="Description"
         >
 
@@ -813,31 +2620,50 @@ textarea:focus{
 
     </div>
 
-    <div id="filesList" class="files-list"></div>
+
+    <div
+      id="filesList"
+      class="files-grid"
+    ></div>
 
   </section>
 
 
-  <!-- ABOUT -->
-  <section id="about" class="section">
+  <!-- =======================================================
+       ABOUT
+  ======================================================== -->
+
+  <section
+    id="about"
+    class="section"
+  >
 
     <div class="about-box">
 
-      <h2>BSN 2A Notes</h2>
+      <h2>
+        🩺 Nursing Duty Hub
+      </h2>
 
       <p>
-        A shared class space for notes, tasks, announcements,
-        files, and class communication.
+        A shared digital workspace for our nursing
+        duty group. It keeps clinical tasks, schedules,
+        patient cases, drug studies, requirements,
+        files, and group communication in one place.
       </p>
 
       <p>
-        Students can view notes and tasks, complete tasks
-        personally, communicate through chat, and access
-        shared class resources.
+        This system is designed for educational and
+        organizational purposes during nursing clinical
+        activities.
       </p>
 
-      <p class="status">
-        Firebase Realtime Database connected.
+      <p>
+        <strong>
+          Privacy reminder:
+        </strong>
+        Do not place real patient names, hospital
+        numbers, addresses, or other identifying
+        information in the shared system.
       </p>
 
     </div>
@@ -847,12 +2673,20 @@ textarea:focus{
 </main>
 
 
-<!-- ADMIN LOGIN MODAL -->
-<div id="adminModal" class="modal">
+<!-- =========================================================
+     ADMIN LOGIN
+========================================================= -->
+
+<div
+  id="adminModal"
+  class="modal"
+>
 
   <div class="modal-box">
 
-    <h3>Admin Login</h3>
+    <h3>
+      🔐 Admin Login
+    </h3>
 
     <input
       id="adminPassword"
@@ -884,58 +2718,11 @@ textarea:focus{
 </div>
 
 
-<!-- EDIT NOTE MODAL -->
-<div id="editNoteModal" class="modal">
-
-  <div class="modal-box">
-
-    <h3>Edit Note</h3>
-
-    <input
-      id="editNoteTitle"
-      type="text"
-      placeholder="Note title"
-    >
-
-    <br><br>
-
-    <input
-      id="editNoteAuthor"
-      type="text"
-      placeholder="Author"
-    >
-
-    <br><br>
-
-    <textarea
-      id="editNoteText"
-      placeholder="Note text..."
-    ></textarea>
-
-    <div class="modal-buttons">
-
-      <button
-        class="btn"
-        onclick="closeEditNote()"
-      >
-        Cancel
-      </button>
-
-      <button
-        class="btn primary"
-        onclick="saveNoteEdit()"
-      >
-        Save
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
 <script type="module">
+
+/* =========================================================
+   FIREBASE IMPORTS
+========================================================= */
 
 import {
   initializeApp
@@ -949,14 +2736,13 @@ import {
   update,
   remove,
   onValue,
-  onDisconnect,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
-/* =========================
-   FIREBASE
-========================= */
+/* =========================================================
+   FIREBASE CONFIG
+========================================================= */
 
 const firebaseConfig = {
 
@@ -983,58 +2769,120 @@ const firebaseConfig = {
 
 };
 
+const app =
+  initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const db =
+  getDatabase(app);
 
 
-/* =========================
-   GLOBAL STATE
-========================= */
+/* =========================================================
+   STATE
+========================================================= */
 
-let notesData = {};
 let tasksData = {};
+let casesData = {};
+let notesData = {};
+let drugsData = {};
+let requirementsData = {};
+let scheduleData = {};
+let membersData = {};
 let chatData = {};
 let filesData = {};
 
 let isAdmin = false;
+
 let editingTaskId = null;
-let editingNoteId = null;
+
 let draggedTaskId = null;
-let draggedNoteId = null;
 
 
-/* =========================
-   USER NAME
-========================= */
+/* =========================================================
+   USER
+========================================================= */
 
-let userName = localStorage.getItem("bsn2a_name");
+let userName =
+  localStorage.getItem(
+    "nursingDutyName"
+  );
+
 
 if(!userName){
 
   userName =
-    prompt("Enter your name:") ||
+    prompt(
+      "Enter your name:"
+    ) ||
     "Student";
 
-  userName = userName.trim() || "Student";
+  userName =
+    userName.trim() ||
+    "Student";
 
   localStorage.setItem(
-    "bsn2a_name",
+    "nursingDutyName",
     userName
   );
 
 }
 
+
 document.getElementById(
   "currentUser"
-).textContent = userName;
+).textContent =
+  userName;
 
 
-/* =========================
-   STORAGE HELPERS
-========================= */
+document.getElementById(
+  "welcomeText"
+).textContent =
+  `Welcome, ${userName} 👋`;
 
-function save(key,value){
+
+const initials =
+  userName
+    .split(/\s+/)
+    .map(x => x[0])
+    .join("")
+    .slice(0,2)
+    .toUpperCase();
+
+
+document.getElementById(
+  "userAvatar"
+).textContent =
+  initials || "S";
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function cleanText(value){
+
+  return String(value || "")
+    .replace(/^[ \t]+/gm,"")
+    .trim();
+
+}
+
+
+function esc(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function saveLocal(
+  key,
+  value
+){
 
   localStorage.setItem(
     key,
@@ -1044,7 +2892,7 @@ function save(key,value){
 }
 
 
-function load(key){
+function loadLocal(key){
 
   try{
 
@@ -1061,139 +2909,196 @@ function load(key){
 }
 
 
-/* =========================
-   CLEAN TEXT
-   Removes indentation from
-   multiline content.
-========================= */
-
-function cleanText(value){
-
-  return String(value || "")
-    .replace(/^[ \t]+/gm,"")
-    .trim();
-
-}
-
-
-/* =========================
-   HTML ESCAPE
-========================= */
-
-function esc(value){
-
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================
+/* =========================================================
    NAVIGATION
-========================= */
+========================================================= */
 
-window.show = function(section,button){
+window.show =
+function(
+  section,
+  button
+){
 
   document
     .querySelectorAll(".section")
-    .forEach(el =>
-      el.classList.remove("active")
+    .forEach(
+      x =>
+        x.classList.remove(
+          "active"
+        )
     );
 
-  document
-    .getElementById(section)
-    .classList.add("active");
+
+  const target =
+    document.getElementById(
+      section
+    );
+
+
+  if(target){
+
+    target.classList.add(
+      "active"
+    );
+
+  }
 
 
   document
-    .querySelectorAll(".nav button")
-    .forEach(el =>
-      el.classList.remove("on")
+    .querySelectorAll(
+      ".nav button"
+    )
+    .forEach(
+      x =>
+        x.classList.remove(
+          "on"
+        )
     );
 
 
   if(button){
-    button.classList.add("on");
+
+    button.classList.add(
+      "on"
+    );
+
   }
 
 
   const titles = {
 
-    notes:"Notes",
-    tasks:"Tasks",
-    chat:"Chat",
-    files:"Files",
-    about:"About"
+    dashboard:[
+      "Dashboard",
+      "Clinical duty overview"
+    ],
+
+    tasks:[
+      "Duty Tasks",
+      "Clinical responsibilities"
+    ],
+
+    cases:[
+      "Patient Cases",
+      "Educational case information"
+    ],
+
+    notes:[
+      "Nursing Notes",
+      "Study and clinical reference notes"
+    ],
+
+    drugs:[
+      "Drug Study",
+      "Medication reference"
+    ],
+
+    requirements:[
+      "Requirements",
+      "Duty and school requirements"
+    ],
+
+    schedule:[
+      "Duty Schedule",
+      "Clinical duty schedule"
+    ],
+
+    members:[
+      "Group Members",
+      "Your nursing duty group"
+    ],
+
+    chat:[
+      "Group Chat",
+      "Communicate with your group"
+    ],
+
+    files:[
+      "Files",
+      "Shared clinical resources"
+    ],
+
+    about:[
+      "About",
+      "Nursing Duty Hub"
+    ]
 
   };
+
+
+  const data =
+    titles[section] ||
+    [
+      "Nursing Duty Hub",
+      ""
+    ];
 
 
   document.getElementById(
     "pageTitle"
   ).textContent =
-    titles[section] || "BSN 2A";
+    data[0];
+
+
+  document.getElementById(
+    "pageSubtitle"
+  ).textContent =
+    data[1];
 
 };
 
 
-/* =========================
+/* =========================================================
    THEME
-========================= */
+========================================================= */
 
-function applyTheme(isDark){
+function applyTheme(
+  dark
+){
 
-  document.body.classList.toggle(
-    "dark",
-    isDark
-  );
+  document.body
+    .classList
+    .toggle(
+      "dark",
+      dark
+    );
+
 
   localStorage.setItem(
-    "dark",
-    isDark ? "true" : "false"
+    "nursingDark",
+    dark
+      ? "true"
+      : "false"
   );
 
 
   const icon =
-    document.getElementById("themeIcon");
+    document.getElementById(
+      "themeIcon"
+    );
 
 
   if(icon){
 
-    /*
-      Light mode:
-      show half moon = switch to dark
-
-      Dark mode:
-      show sun = switch to light
-    */
-
     icon.textContent =
-      isDark ? "☀️" : "◐";
+      dark
+        ? "☀️"
+        : "◐";
 
   }
 
 
   const button =
-    document.getElementById("themeToggle");
+    document.getElementById(
+      "themeToggle"
+    );
 
 
   if(button){
 
     button.title =
-      isDark
+      dark
         ? "Switch to light mode"
         : "Switch to dark mode";
-
-    button.setAttribute(
-      "aria-label",
-      isDark
-        ? "Switch to light mode"
-        : "Switch to dark mode"
-    );
 
   }
 
@@ -1208,9 +3113,9 @@ function applyTheme(isDark){
 
     meta.setAttribute(
       "content",
-      isDark
-        ? "#101714"
-        : "#245c43"
+      dark
+        ? "#0e1714"
+        : "#176b4d"
     );
 
   }
@@ -1218,25 +3123,31 @@ function applyTheme(isDark){
 }
 
 
-window.toggleTheme = function(){
+window.toggleTheme =
+function(){
 
   applyTheme(
-    !document.body.classList.contains("dark")
+    !document.body.classList.contains(
+      "dark"
+    )
   );
 
 };
 
 
 applyTheme(
-  localStorage.getItem("dark") === "true"
+  localStorage.getItem(
+    "nursingDark"
+  ) === "true"
 );
 
 
-/* =========================
+/* =========================================================
    ADMIN
-========================= */
+========================================================= */
 
-window.adminLogin = function(){
+window.adminLogin =
+function(){
 
   if(isAdmin){
 
@@ -1244,77 +3155,94 @@ window.adminLogin = function(){
 
     document.getElementById(
       "admBtn"
-    ).textContent = "Admin";
+    ).textContent =
+      "Admin";
 
     updateAdminUI();
+
+    renderAll();
 
     return;
 
   }
 
 
-  document
-    .getElementById("adminModal")
-    .classList.add("show");
-
-  document
-    .getElementById("adminPassword")
-    .value = "";
-
-  setTimeout(() => {
-
-    document
-      .getElementById("adminPassword")
-      .focus();
-
-  },100);
-
-};
+  document.getElementById(
+    "adminModal"
+  )
+  .classList
+  .add("show");
 
 
-window.closeAdminModal = function(){
+  document.getElementById(
+    "adminPassword"
+  ).value = "";
 
-  document
-    .getElementById("adminModal")
-    .classList.remove("show");
+
+  setTimeout(
+    () => {
+
+      document.getElementById(
+        "adminPassword"
+      ).focus();
+
+    },
+    100
+  );
 
 };
 
 
-window.loginAdmin = function(){
+window.closeAdminModal =
+function(){
+
+  document.getElementById(
+    "adminModal"
+  )
+  .classList
+  .remove("show");
+
+};
+
+
+window.loginAdmin =
+function(){
 
   const password =
-    document
-      .getElementById("adminPassword")
-      .value;
+    document.getElementById(
+      "adminPassword"
+    ).value;
 
 
   /*
-    NOTE:
-    This is frontend-only.
-    For real security use Firebase Auth
-    and database security rules.
+    Frontend password only.
+    Use Firebase Authentication and
+    database rules for real security.
   */
 
-  if(password === "supperlol123123"){
+  if(
+    password ===
+    "supperlol123123"
+  ){
 
     isAdmin = true;
 
     document.getElementById(
       "admBtn"
-    ).textContent = "Logout";
+    ).textContent =
+      "Logout";
 
     closeAdminModal();
 
     updateAdminUI();
 
-    renderNotes();
-    renderTasks();
-    renderFiles();
+    renderAll();
 
   }else{
 
-    alert("Wrong admin password.");
+    alert(
+      "Incorrect admin password."
+    );
 
   }
 
@@ -1323,572 +3251,95 @@ window.loginAdmin = function(){
 
 function updateAdminUI(){
 
-  document.getElementById(
-    "adminNotesPanel"
-  ).style.display =
-    isAdmin ? "block" : "none";
+  const panels = [
 
-
-  document.getElementById(
-    "adminTasksPanel"
-  ).style.display =
-    isAdmin ? "block" : "none";
-
-
-  document.getElementById(
+    "adminTasksPanel",
+    "adminCasesPanel",
+    "adminNotesPanel",
+    "adminDrugsPanel",
+    "adminRequirementsPanel",
+    "adminSchedulePanel",
+    "adminMembersPanel",
     "adminFilesPanel"
-  ).style.display =
-    isAdmin ? "block" : "none";
 
-}
+  ];
 
 
-/* =========================
-   NOTES
-========================= */
+  panels.forEach(
+    id => {
 
-onValue(
-  ref(db,"notes"),
-  snapshot => {
+      const el =
+        document.getElementById(
+          id
+        );
 
-    notesData =
-      snapshot.val() || {};
+      if(el){
 
-    renderNotes();
+        el.style.display =
+          isAdmin
+            ? "block"
+            : "none";
 
-  }
-);
-
-
-function getOrderedNotes(){
-
-  return Object.entries(notesData)
-    .sort(
-      ([,a],[,b]) =>
-        (a.order ?? 999999) -
-        (b.order ?? 999999)
-    );
-
-}
-
-
-function renderNotes(){
-
-  const container =
-    document.getElementById(
-      "notesList"
-    );
-
-  container.innerHTML = "";
-
-
-  const notes =
-    getOrderedNotes();
-
-
-  if(notes.length === 0){
-
-    container.innerHTML =
-      `<div class="empty">
-        No notes yet.
-      </div>`;
-
-    return;
-
-  }
-
-
-  notes.forEach(([id,n]) => {
-
-    const d =
-      document.createElement("div");
-
-
-    d.className = "card";
-
-    d.draggable = isAdmin;
-
-    d.dataset.noteId = id;
-
-
-    const title =
-      String(
-        n.title ||
-        "Untitled"
-      ).trim();
-
-
-    const text =
-      cleanText(n.text);
-
-
-    const author =
-      String(
-        n.author ||
-        "Admin"
-      ).trim();
-
-
-    d.innerHTML = `
-
-      <h3>${esc(title)}</h3>
-
-      <div class="text">${esc(text)}</div>
-
-      <small>
-        Added by ${esc(author)}
-      </small>
-
-      ${
-        isAdmin
-        ? `
-
-          <div class="note-actions">
-
-            <button
-              class="btn"
-              onclick="editNote('${id}')"
-            >
-              Edit
-            </button>
-
-            <button
-              class="btn danger"
-              onclick="deleteNote('${id}')"
-            >
-              Delete
-            </button>
-
-          </div>
-
-        `
-        : ""
       }
 
-    `;
-
-
-    if(isAdmin){
-
-      d.addEventListener(
-        "dragstart",
-        () => {
-
-          draggedNoteId = id;
-
-          d.classList.add(
-            "dragging"
-          );
-
-        }
-      );
-
-
-      d.addEventListener(
-        "dragend",
-        () => {
-
-          d.classList.remove(
-            "dragging"
-          );
-
-          draggedNoteId = null;
-
-        }
-      );
-
-
-      d.addEventListener(
-        "dragover",
-        e => {
-
-          e.preventDefault();
-
-          d.classList.add(
-            "drag-over"
-          );
-
-        }
-      );
-
-
-      d.addEventListener(
-        "dragleave",
-        () => {
-
-          d.classList.remove(
-            "drag-over"
-          );
-
-        }
-      );
-
-
-      d.addEventListener(
-        "drop",
-        async e => {
-
-          e.preventDefault();
-
-          d.classList.remove(
-            "drag-over"
-          );
-
-          if(
-            draggedNoteId &&
-            draggedNoteId !== id
-          ){
-
-            await reorderNotes(
-              draggedNoteId,
-              id
-            );
-
-          }
-
-        }
-      );
-
     }
-
-
-    container.appendChild(d);
-
-  });
-
-}
-
-
-window.addNote = async function(){
-
-  if(!isAdmin) return;
-
-
-  const title =
-    document
-      .getElementById("noteTitle")
-      .value
-      .trim();
-
-
-  const author =
-    document
-      .getElementById("noteAuthor")
-      .value
-      .trim() ||
-    userName;
-
-
-  const text =
-    cleanText(
-      document
-        .getElementById("noteText")
-        .value
-    );
-
-
-  if(!title || !text){
-
-    alert(
-      "Please enter a title and note."
-    );
-
-    return;
-
-  }
-
-
-  const orders =
-    getOrderedNotes()
-      .map(([,n]) =>
-        Number(n.order ?? 0)
-      );
-
-
-  const nextOrder =
-    orders.length
-      ? Math.max(...orders) + 1
-      : 0;
-
-
-  const newRef =
-    push(ref(db,"notes"));
-
-
-  await set(
-    newRef,
-    {
-
-      title,
-      author,
-      text,
-      order:nextOrder,
-      createdAt:
-        serverTimestamp()
-
-    }
-  );
-
-
-  document.getElementById(
-    "noteTitle"
-  ).value = "";
-
-
-  document.getElementById(
-    "noteAuthor"
-  ).value = "";
-
-
-  document.getElementById(
-    "noteText"
-  ).value = "";
-
-};
-
-
-window.editNote = function(id){
-
-  if(!isAdmin) return;
-
-
-  const n =
-    notesData[id];
-
-
-  if(!n) return;
-
-
-  editingNoteId = id;
-
-
-  document.getElementById(
-    "editNoteTitle"
-  ).value =
-    n.title || "";
-
-
-  document.getElementById(
-    "editNoteAuthor"
-  ).value =
-    n.author || "";
-
-
-  document.getElementById(
-    "editNoteText"
-  ).value =
-    n.text || "";
-
-
-  document
-    .getElementById("editNoteModal")
-    .classList.add("show");
-
-};
-
-
-window.closeEditNote = function(){
-
-  editingNoteId = null;
-
-  document
-    .getElementById("editNoteModal")
-    .classList.remove("show");
-
-};
-
-
-window.saveNoteEdit = async function(){
-
-  if(!isAdmin || !editingNoteId)
-    return;
-
-
-  const title =
-    document
-      .getElementById("editNoteTitle")
-      .value
-      .trim();
-
-
-  const author =
-    document
-      .getElementById("editNoteAuthor")
-      .value
-      .trim();
-
-
-  const text =
-    cleanText(
-      document
-        .getElementById("editNoteText")
-        .value
-    );
-
-
-  if(!title || !text){
-
-    alert(
-      "Title and note are required."
-    );
-
-    return;
-
-  }
-
-
-  await update(
-    ref(
-      db,
-      "notes/" +
-      editingNoteId
-    ),
-    {
-      title,
-      author:
-        author || "Admin",
-      text
-    }
-  );
-
-
-  closeEditNote();
-
-};
-
-
-window.deleteNote = async function(id){
-
-  if(!isAdmin) return;
-
-
-  if(
-    !confirm(
-      "Delete this note?"
-    )
-  ) return;
-
-
-  await remove(
-    ref(
-      db,
-      "notes/" + id
-    )
-  );
-
-};
-
-
-async function reorderNotes(
-  draggedId,
-  targetId
-){
-
-  const entries =
-    getOrderedNotes();
-
-
-  const ids =
-    entries.map(([id]) => id);
-
-
-  const from =
-    ids.indexOf(draggedId);
-
-
-  const to =
-    ids.indexOf(targetId);
-
-
-  if(from < 0 || to < 0)
-    return;
-
-
-  ids.splice(
-    from,
-    1
-  );
-
-
-  ids.splice(
-    to,
-    0,
-    draggedId
-  );
-
-
-  const changes = {};
-
-
-  ids.forEach(
-    (id,index) => {
-
-      changes[
-        "notes/" +
-        id +
-        "/order"
-      ] = index;
-
-    }
-  );
-
-
-  await update(
-    ref(db),
-    changes
   );
 
 }
 
 
-/* =========================
+/* =========================================================
    TASKS
-========================= */
+========================================================= */
 
 onValue(
   ref(db,"tasks"),
-  snapshot => {
+  snap => {
 
     tasksData =
-      snapshot.val() || {};
+      snap.val() || {};
 
     renderTasks();
+
+    updateDashboard();
 
   }
 );
 
 
-function getOrderedTasks(){
+function orderedTasks(){
 
-  return Object.entries(tasksData)
-    .sort(
-      ([,a],[,b]) =>
-        (a.order ?? 999999) -
-        (b.order ?? 999999)
-    );
+  return Object.entries(
+    tasksData
+  ).sort(
+    ([,a],[,b]) =>
+      (a.order ?? 999999) -
+      (b.order ?? 999999)
+  );
 
 }
 
 
 function renderTasks(){
 
-  const container =
+  const box =
     document.getElementById(
       "tasksList"
     );
 
-  container.innerHTML = "";
+
+  box.innerHTML = "";
 
 
-  const tasks =
-    getOrderedTasks();
+  const entries =
+    orderedTasks();
 
 
-  if(tasks.length === 0){
+  if(!entries.length){
 
-    container.innerHTML =
+    box.innerHTML =
       `<div class="empty">
-        No tasks yet.
+        No duty tasks have been added yet.
       </div>`;
 
     return;
@@ -1896,250 +3347,258 @@ function renderTasks(){
   }
 
 
-  tasks.forEach(([id,t]) => {
+  entries.forEach(
+    ([id,t]) => {
 
-    const d =
-      document.createElement("div");
-
-
-    const checked =
-      load("check_" + id) === true;
-
-
-    d.className =
-      "task" +
-      (checked
-        ? " completed"
-        : "");
+      const el =
+        document.createElement(
+          "div"
+        );
 
 
-    d.draggable = isAdmin;
-
-    d.dataset.taskId = id;
-
-
-    const title =
-      String(
-        t.title ||
-        "Untitled Task"
-      ).trim();
+      const checked =
+        loadLocal(
+          "dutyTask_" + id
+        ) === true;
 
 
-    const description =
-      cleanText(
-        t.description
-      );
+      el.className =
+        "task";
 
 
-    const due =
-      String(
-        t.due ||
-        ""
-      ).trim();
+      el.draggable =
+        isAdmin;
 
 
-    d.innerHTML = `
+      const title =
+        String(
+          t.title ||
+          "Duty Task"
+        ).trim();
 
-      <input
-        class="task-check"
-        type="checkbox"
-        ${checked ? "checked" : ""}
-        onchange="checkTask('${id}',this.checked)"
-      >
 
-      <div class="task-content">
+      const due =
+        String(
+          t.due ||
+          ""
+        ).trim();
 
-        <span
-          class="task-title ${
-            checked ? "done" : ""
-          }"
-        >${esc(title)}</span>
+
+      const description =
+        cleanText(
+          t.description
+        );
+
+
+      el.innerHTML = `
+
+        <input
+          class="task-check"
+          type="checkbox"
+          ${checked ? "checked" : ""}
+        >
+
+        <div class="task-content">
+
+          <span
+            class="task-title ${
+              checked
+                ? "done"
+                : ""
+            }"
+          >
+            ${esc(title)}
+          </span>
+
+          ${
+            due
+            ? `
+              <div class="task-due">
+                Due: ${esc(due)}
+              </div>
+            `
+            : ""
+          }
+
+          ${
+            description
+            ? `
+              <div class="task-description">
+                ${esc(description)}
+              </div>
+            `
+            : ""
+          }
+
+        </div>
 
         ${
-          due
+          isAdmin
           ? `
-            <div class="task-due">
-              Due: ${esc(due)}
+            <div class="task-actions">
+
+              <button
+                class="task-admin-btn"
+                onclick="editTask('${id}')"
+              >
+                Edit
+              </button>
+
+              <button
+                class="task-admin-delete"
+                onclick="deleteTask('${id}')"
+              >
+                Delete
+              </button>
+
             </div>
           `
           : ""
         }
 
-        ${
-          description
-          ? `
-            <div class="task-description">
-              ${esc(description)}
-            </div>
-          `
-          : ""
-        }
-
-      </div>
-
-      ${
-        isAdmin
-        ? `
-
-          <div class="task-actions">
-
-            <button
-              class="task-admin-btn"
-              onclick="editTask('${id}')"
-            >
-              Edit
-            </button>
-
-            <button
-              class="task-admin-delete"
-              onclick="deleteTask('${id}')"
-            >
-              Delete
-            </button>
-
-          </div>
-
-        `
-        : ""
-      }
-
-    `;
+      `;
 
 
-    if(isAdmin){
+      const checkbox =
+        el.querySelector(
+          ".task-check"
+        );
 
-      d.addEventListener(
-        "dragstart",
+
+      checkbox.addEventListener(
+        "change",
         () => {
 
-          draggedTaskId = id;
-
-          d.classList.add(
-            "dragging"
+          saveLocal(
+            "dutyTask_" + id,
+            checkbox.checked
           );
+
+          renderTasks();
 
         }
       );
 
 
-      d.addEventListener(
-        "dragend",
-        () => {
+      if(isAdmin){
 
-          d.classList.remove(
-            "dragging"
-          );
+        el.addEventListener(
+          "dragstart",
+          () => {
 
-          draggedTaskId = null;
+            draggedTaskId =
+              id;
 
-        }
-      );
-
-
-      d.addEventListener(
-        "dragover",
-        e => {
-
-          e.preventDefault();
-
-          d.classList.add(
-            "drag-over"
-          );
-
-        }
-      );
-
-
-      d.addEventListener(
-        "dragleave",
-        () => {
-
-          d.classList.remove(
-            "drag-over"
-          );
-
-        }
-      );
-
-
-      d.addEventListener(
-        "drop",
-        async e => {
-
-          e.preventDefault();
-
-          d.classList.remove(
-            "drag-over"
-          );
-
-
-          if(
-            draggedTaskId &&
-            draggedTaskId !== id
-          ){
-
-            await reorderTasks(
-              draggedTaskId,
-              id
+            el.classList.add(
+              "dragging"
             );
 
           }
+        );
 
-        }
-      );
+
+        el.addEventListener(
+          "dragend",
+          () => {
+
+            draggedTaskId =
+              null;
+
+            el.classList.remove(
+              "dragging"
+            );
+
+          }
+        );
+
+
+        el.addEventListener(
+          "dragover",
+          e => {
+
+            e.preventDefault();
+
+            el.classList.add(
+              "drag-over"
+            );
+
+          }
+        );
+
+
+        el.addEventListener(
+          "dragleave",
+          () => {
+
+            el.classList.remove(
+              "drag-over"
+            );
+
+          }
+        );
+
+
+        el.addEventListener(
+          "drop",
+          async e => {
+
+            e.preventDefault();
+
+            el.classList.remove(
+              "drag-over"
+            );
+
+
+            if(
+              draggedTaskId &&
+              draggedTaskId !== id
+            ){
+
+              await reorderTasks(
+                draggedTaskId,
+                id
+              );
+
+            }
+
+          }
+        );
+
+      }
+
+
+      box.appendChild(el);
 
     }
-
-
-    container.appendChild(d);
-
-  });
+  );
 
 }
 
 
-window.checkTask = function(
-  id,
-  checked
-){
-
-  save(
-    "check_" + id,
-    checked
-  );
-
-  renderTasks();
-
-};
-
-
-window.saveTask = async function(){
+window.saveTask =
+async function(){
 
   if(!isAdmin)
     return;
 
 
   const title =
-    document
-      .getElementById("taskTitle")
-      .value
-      .trim();
+    document.getElementById(
+      "taskTitle"
+    ).value.trim();
 
 
   const due =
-    document
-      .getElementById("taskDue")
-      .value
-      .trim();
+    document.getElementById(
+      "taskDue"
+    ).value.trim();
 
 
   const description =
     cleanText(
-      document
-        .getElementById(
-          "taskDescription"
-        )
-        .value
+      document.getElementById(
+        "taskDescription"
+      ).value
     );
 
 
@@ -2178,75 +3637,68 @@ window.saveTask = async function(){
 
 
   const orders =
-    getOrderedTasks()
-      .map(([,t]) =>
-        Number(t.order ?? 0)
+    orderedTasks()
+      .map(
+        ([,t]) =>
+          Number(
+            t.order ?? 0
+          )
       );
 
 
   const nextOrder =
     orders.length
-      ? Math.max(...orders) + 1
+      ? Math.max(...orders)+1
       : 0;
 
 
   const newRef =
-    push(ref(db,"tasks"));
+    push(
+      ref(db,"tasks")
+    );
 
 
   await set(
     newRef,
     {
-
       title,
       due,
       description,
       order:nextOrder,
       createdAt:
         serverTimestamp()
-
     }
   );
 
 
-  document.getElementById(
-    "taskTitle"
-  ).value = "";
-
-
-  document.getElementById(
-    "taskDue"
-  ).value = "";
-
-
-  document.getElementById(
-    "taskDescription"
-  ).value = "";
+  cancelTaskEdit();
 
 };
 
 
-window.editTask = function(id){
+window.editTask =
+function(id){
 
   if(!isAdmin)
     return;
 
 
-  const t =
+  const task =
     tasksData[id];
 
 
-  if(!t)
+  if(!task)
     return;
 
 
-  editingTaskId = id;
+  editingTaskId =
+    id;
 
 
   document.getElementById(
     "taskFormTitle"
   ).textContent =
-    "Edit Task";
+    "Edit Duty Task";
 
 
   document.getElementById(
@@ -2264,37 +3716,34 @@ window.editTask = function(id){
   document.getElementById(
     "taskTitle"
   ).value =
-    t.title || "";
+    task.title || "";
 
 
   document.getElementById(
     "taskDue"
   ).value =
-    t.due || "";
+    task.due || "";
 
 
   document.getElementById(
     "taskDescription"
   ).value =
-    t.description || "";
-
-
-  document
-    .getElementById("taskTitle")
-    .focus();
+    task.description || "";
 
 };
 
 
-window.cancelTaskEdit = function(){
+window.cancelTaskEdit =
+function(){
 
-  editingTaskId = null;
+  editingTaskId =
+    null;
 
 
   document.getElementById(
     "taskFormTitle"
   ).textContent =
-    "Add Task";
+    "Add Duty Task";
 
 
   document.getElementById(
@@ -2326,7 +3775,8 @@ window.cancelTaskEdit = function(){
 };
 
 
-window.deleteTask = async function(id){
+window.deleteTask =
+async function(id){
 
   if(!isAdmin)
     return;
@@ -2334,9 +3784,10 @@ window.deleteTask = async function(id){
 
   if(
     !confirm(
-      "Delete this task?"
+      "Delete this duty task?"
     )
-  ) return;
+  )
+    return;
 
 
   await remove(
@@ -2348,7 +3799,7 @@ window.deleteTask = async function(id){
 
 
   localStorage.removeItem(
-    "check_" + id
+    "dutyTask_" + id
   );
 
 };
@@ -2359,23 +3810,29 @@ async function reorderTasks(
   targetId
 ){
 
-  const entries =
-    getOrderedTasks();
-
-
   const ids =
-    entries.map(([id]) => id);
+    orderedTasks()
+      .map(
+        ([id]) => id
+      );
 
 
   const from =
-    ids.indexOf(draggedId);
+    ids.indexOf(
+      draggedId
+    );
 
 
   const to =
-    ids.indexOf(targetId);
+    ids.indexOf(
+      targetId
+    );
 
 
-  if(from < 0 || to < 0)
+  if(
+    from < 0 ||
+    to < 0
+  )
     return;
 
 
@@ -2416,46 +3873,1609 @@ async function reorderTasks(
 }
 
 
-/* =========================
-   CHAT
-========================= */
+/* =========================================================
+   PATIENT CASES
+========================================================= */
 
 onValue(
-  ref(db,"chat"),
-  snapshot => {
+  ref(db,"cases"),
+  snap => {
 
-    chatData =
-      snapshot.val() || {};
+    casesData =
+      snap.val() || {};
 
-    drawChat();
+    renderCases();
+
+    updateDashboard();
 
   }
 );
 
 
-function drawChat(){
+function renderCases(){
 
-  const container =
+  const box =
+    document.getElementById(
+      "casesList"
+    );
+
+
+  box.innerHTML = "";
+
+
+  const entries =
+    Object.entries(
+      casesData
+    );
+
+
+  if(!entries.length){
+
+    box.innerHTML =
+      `<div class="empty">
+        No patient cases added yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  entries.forEach(
+    ([id,c]) => {
+
+      const el =
+        document.createElement(
+          "div"
+        );
+
+
+      el.className =
+        "case-card";
+
+
+      el.innerHTML = `
+
+        <div class="case-top">
+
+          <div class="patient-code">
+            ${esc(
+              c.code ||
+              "Patient Case"
+            )}
+          </div>
+
+          <div class="case-badge">
+            ${esc(
+              c.status ||
+              "Active"
+            )}
+          </div>
+
+        </div>
+
+
+        <div class="case-info">
+
+          <div>
+            <strong>
+              Diagnosis
+            </strong>
+
+            <span>
+              ${esc(
+                c.diagnosis ||
+                "—"
+              )}
+            </span>
+          </div>
+
+
+          <div>
+            <strong>
+              Age / Sex
+            </strong>
+
+            <span>
+              ${esc(
+                c.age ||
+                "—"
+              )}
+            </span>
+          </div>
+
+
+          <div>
+            <strong>
+              Assigned
+            </strong>
+
+            <span>
+              ${esc(
+                c.assigned ||
+                "—"
+              )}
+            </span>
+          </div>
+
+
+          <div>
+            <strong>
+              Area
+            </strong>
+
+            <span>
+              ${esc(
+                c.area ||
+                "—"
+              )}
+            </span>
+          </div>
+
+        </div>
+
+
+        ${
+          c.notes
+          ? `
+            <div class="case-notes">
+              ${esc(
+                cleanText(c.notes)
+              )}
+            </div>
+          `
+          : ""
+        }
+
+
+        ${
+          isAdmin
+          ? `
+            <div class="note-actions">
+
+              <button
+                class="btn danger"
+                onclick="deleteCase('${id}')"
+              >
+                Delete
+              </button>
+
+            </div>
+          `
+          : ""
+        }
+
+      `;
+
+
+      box.appendChild(el);
+
+    }
+  );
+
+}
+
+
+window.addCase =
+async function(){
+
+  if(!isAdmin)
+    return;
+
+
+  const data = {
+
+    code:
+      document.getElementById(
+        "caseCode"
+      ).value.trim(),
+
+    diagnosis:
+      document.getElementById(
+        "caseDiagnosis"
+      ).value.trim(),
+
+    age:
+      document.getElementById(
+        "caseAge"
+      ).value.trim(),
+
+    assigned:
+      document.getElementById(
+        "caseAssigned"
+      ).value.trim(),
+
+    area:
+      document.getElementById(
+        "caseArea"
+      ).value.trim(),
+
+    status:
+      document.getElementById(
+        "caseStatus"
+      ).value.trim(),
+
+    notes:
+      cleanText(
+        document.getElementById(
+          "caseNotes"
+        ).value
+      )
+
+  };
+
+
+  if(!data.code){
+
+    alert(
+      "Please enter a patient code."
+    );
+
+    return;
+
+  }
+
+
+  const newRef =
+    push(
+      ref(db,"cases")
+    );
+
+
+  await set(
+    newRef,
+    data
+  );
+
+
+  [
+    "caseCode",
+    "caseDiagnosis",
+    "caseAge",
+    "caseAssigned",
+    "caseArea",
+    "caseStatus",
+    "caseNotes"
+  ]
+  .forEach(
+    id =>
+      document.getElementById(
+        id
+      ).value = ""
+  );
+
+};
+
+
+window.deleteCase =
+async function(id){
+
+  if(
+    !isAdmin ||
+    !confirm(
+      "Delete this case?"
+    )
+  )
+    return;
+
+
+  await remove(
+    ref(
+      db,
+      "cases/" + id
+    )
+  );
+
+};
+
+
+/* =========================================================
+   NURSING NOTES
+========================================================= */
+
+onValue(
+  ref(db,"notes"),
+  snap => {
+
+    notesData =
+      snap.val() || {};
+
+    renderNotes();
+
+  }
+);
+
+
+function renderNotes(){
+
+  const box =
+    document.getElementById(
+      "notesList"
+    );
+
+
+  box.innerHTML = "";
+
+
+  const entries =
+    Object.entries(
+      notesData
+    );
+
+
+  if(!entries.length){
+
+    box.innerHTML =
+      `<div class="empty">
+        No nursing notes yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  entries.forEach(
+    ([id,n]) => {
+
+      const el =
+        document.createElement(
+          "div"
+        );
+
+
+      el.className =
+        "card";
+
+
+      el.innerHTML = `
+
+        ${
+          n.category
+          ? `
+            <span class="note-category">
+              ${esc(
+                n.category
+              )}
+            </span>
+          `
+          : ""
+        }
+
+
+        <h3>
+          ${esc(
+            n.title ||
+            "Nursing Note"
+          )}
+        </h3>
+
+
+        <div class="note-text">
+          ${esc(
+            cleanText(n.text)
+          )}
+        </div>
+
+
+        ${
+          isAdmin
+          ? `
+            <div class="note-actions">
+
+              <button
+                class="btn danger"
+                onclick="deleteNote('${id}')"
+              >
+                Delete
+              </button>
+
+            </div>
+          `
+          : ""
+        }
+
+      `;
+
+
+      box.appendChild(el);
+
+    }
+  );
+
+}
+
+
+window.addNote =
+async function(){
+
+  if(!isAdmin)
+    return;
+
+
+  const title =
+    document.getElementById(
+      "noteTitle"
+    ).value.trim();
+
+
+  const category =
+    document.getElementById(
+      "noteCategory"
+    ).value.trim();
+
+
+  const text =
+    cleanText(
+      document.getElementById(
+        "noteText"
+      ).value
+    );
+
+
+  if(!title || !text){
+
+    alert(
+      "Please enter a title and note."
+    );
+
+    return;
+
+  }
+
+
+  const newRef =
+    push(
+      ref(db,"notes")
+    );
+
+
+  await set(
+    newRef,
+    {
+      title,
+      category,
+      text,
+      createdAt:
+        serverTimestamp()
+    }
+  );
+
+
+  [
+    "noteTitle",
+    "noteCategory",
+    "noteText"
+  ]
+  .forEach(
+    id =>
+      document.getElementById(
+        id
+      ).value = ""
+  );
+
+};
+
+
+window.deleteNote =
+async function(id){
+
+  if(
+    !isAdmin ||
+    !confirm(
+      "Delete this nursing note?"
+    )
+  )
+    return;
+
+
+  await remove(
+    ref(
+      db,
+      "notes/" + id
+    )
+  );
+
+};
+
+
+/* =========================================================
+   DRUG STUDY
+========================================================= */
+
+onValue(
+  ref(db,"drugs"),
+  snap => {
+
+    drugsData =
+      snap.val() || {};
+
+    renderDrugs();
+
+    updateDashboard();
+
+  }
+);
+
+
+function renderDrugs(){
+
+  const box =
+    document.getElementById(
+      "drugsList"
+    );
+
+
+  box.innerHTML = "";
+
+
+  const entries =
+    Object.entries(
+      drugsData
+    );
+
+
+  if(!entries.length){
+
+    box.innerHTML =
+      `<div class="empty">
+        No drug studies added yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  entries.forEach(
+    ([id,d]) => {
+
+      const el =
+        document.createElement(
+          "div"
+        );
+
+
+      el.className =
+        "drug-card";
+
+
+      el.innerHTML = `
+
+        <div class="drug-header">
+
+          <div class="drug-icon">
+            💊
+          </div>
+
+          <div>
+
+            <h3>
+              ${esc(
+                d.name ||
+                "Medication"
+              )}
+            </h3>
+
+            <small>
+              ${esc(
+                d.class ||
+                "Drug study"
+              )}
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div class="drug-info">
+
+          <div class="drug-row">
+            <strong>
+              Dose
+            </strong>
+
+            <span>
+              ${esc(
+                d.dose ||
+                "—"
+              )}
+            </span>
+          </div>
+
+
+          <div class="drug-row">
+            <strong>
+              Route / Frequency
+            </strong>
+
+            <span>
+              ${esc(
+                d.route ||
+                "—"
+              )}
+            </span>
+          </div>
+
+
+          <div class="drug-row">
+            <strong>
+              Indication
+            </strong>
+
+            <span>
+              ${esc(
+                d.indication ||
+                "—"
+              )}
+            </span>
+          </div>
+
+
+          <div class="drug-row">
+            <strong>
+              Contraindications
+            </strong>
+
+            <span>
+              ${esc(
+                d.contra ||
+                "—"
+              )}
+            </span>
+          </div>
+
+
+          <div class="drug-row">
+            <strong>
+              Side Effects
+            </strong>
+
+            <span>
+              ${esc(
+                d.side ||
+                "—"
+              )}
+            </span>
+          </div>
+
+
+          <div class="drug-row">
+            <strong>
+              Nursing Responsibilities
+            </strong>
+
+            <span>
+              ${esc(
+                cleanText(
+                  d.nursing
+                ) ||
+                "—"
+              )}
+            </span>
+          </div>
+
+        </div>
+
+
+        ${
+          isAdmin
+          ? `
+            <div class="note-actions">
+
+              <button
+                class="btn danger"
+                onclick="deleteDrug('${id}')"
+              >
+                Delete
+              </button>
+
+            </div>
+          `
+          : ""
+        }
+
+      `;
+
+
+      box.appendChild(el);
+
+    }
+  );
+
+}
+
+
+window.addDrug =
+async function(){
+
+  if(!isAdmin)
+    return;
+
+
+  const data = {
+
+    name:
+      document.getElementById(
+        "drugName"
+      ).value.trim(),
+
+    class:
+      document.getElementById(
+        "drugClass"
+      ).value.trim(),
+
+    dose:
+      document.getElementById(
+        "drugDose"
+      ).value.trim(),
+
+    route:
+      document.getElementById(
+        "drugRoute"
+      ).value.trim(),
+
+    indication:
+      document.getElementById(
+        "drugIndication"
+      ).value.trim(),
+
+    contra:
+      document.getElementById(
+        "drugContra"
+      ).value.trim(),
+
+    side:
+      document.getElementById(
+        "drugSide"
+      ).value.trim(),
+
+    nursing:
+      cleanText(
+        document.getElementById(
+          "drugNursing"
+        ).value
+      )
+
+  };
+
+
+  if(!data.name){
+
+    alert(
+      "Please enter the drug name."
+    );
+
+    return;
+
+  }
+
+
+  const newRef =
+    push(
+      ref(db,"drugs")
+    );
+
+
+  await set(
+    newRef,
+    data
+  );
+
+
+  [
+    "drugName",
+    "drugClass",
+    "drugDose",
+    "drugRoute",
+    "drugIndication",
+    "drugContra",
+    "drugSide",
+    "drugNursing"
+  ]
+  .forEach(
+    id =>
+      document.getElementById(
+        id
+      ).value = ""
+  );
+
+};
+
+
+window.deleteDrug =
+async function(id){
+
+  if(
+    !isAdmin ||
+    !confirm(
+      "Delete this drug study?"
+    )
+  )
+    return;
+
+
+  await remove(
+    ref(
+      db,
+      "drugs/" + id
+    )
+  );
+
+};
+
+
+/* =========================================================
+   REQUIREMENTS
+========================================================= */
+
+onValue(
+  ref(db,"requirements"),
+  snap => {
+
+    requirementsData =
+      snap.val() || {};
+
+    renderRequirements();
+
+  }
+);
+
+
+function renderRequirements(){
+
+  const box =
+    document.getElementById(
+      "requirementsList"
+    );
+
+
+  box.innerHTML = "";
+
+
+  const entries =
+    Object.entries(
+      requirementsData
+    );
+
+
+  if(!entries.length){
+
+    box.innerHTML =
+      `<div class="empty">
+        No requirements added yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  entries.forEach(
+    ([id,r]) => {
+
+      const el =
+        document.createElement(
+          "div"
+        );
+
+
+      el.className =
+        "requirement";
+
+
+      el.innerHTML = `
+
+        <div class="requirement-top">
+
+          <div class="requirement-icon">
+            📝
+          </div>
+
+          <div>
+
+            <h3>
+              ${esc(
+                r.title ||
+                "Requirement"
+              )}
+            </h3>
+
+            ${
+              r.type
+              ? `
+                <p>
+                  ${esc(r.type)}
+                </p>
+              `
+              : ""
+            }
+
+            ${
+              r.description
+              ? `
+                <p>
+                  ${esc(
+                    cleanText(
+                      r.description
+                    )
+                  )}
+                </p>
+              `
+              : ""
+            }
+
+          </div>
+
+        </div>
+
+
+        ${
+          isAdmin
+          ? `
+            <div class="note-actions">
+
+              <button
+                class="btn danger"
+                onclick="deleteRequirement('${id}')"
+              >
+                Delete
+              </button>
+
+            </div>
+          `
+          : ""
+        }
+
+      `;
+
+
+      box.appendChild(el);
+
+    }
+  );
+
+}
+
+
+window.addRequirement =
+async function(){
+
+  if(!isAdmin)
+    return;
+
+
+  const title =
+    document.getElementById(
+      "reqTitle"
+    ).value.trim();
+
+
+  const type =
+    document.getElementById(
+      "reqType"
+    ).value.trim();
+
+
+  const description =
+    cleanText(
+      document.getElementById(
+        "reqDescription"
+      ).value
+    );
+
+
+  if(!title){
+
+    alert(
+      "Please enter the requirement."
+    );
+
+    return;
+
+  }
+
+
+  const newRef =
+    push(
+      ref(db,"requirements")
+    );
+
+
+  await set(
+    newRef,
+    {
+      title,
+      type,
+      description
+    }
+  );
+
+
+  [
+    "reqTitle",
+    "reqType",
+    "reqDescription"
+  ]
+  .forEach(
+    id =>
+      document.getElementById(
+        id
+      ).value = ""
+  );
+
+};
+
+
+window.deleteRequirement =
+async function(id){
+
+  if(
+    !isAdmin ||
+    !confirm(
+      "Delete this requirement?"
+    )
+  )
+    return;
+
+
+  await remove(
+    ref(
+      db,
+      "requirements/" + id
+    )
+  );
+
+};
+
+
+/* =========================================================
+   SCHEDULE
+========================================================= */
+
+onValue(
+  ref(db,"schedule"),
+  snap => {
+
+    scheduleData =
+      snap.val() || {};
+
+    renderSchedule();
+
+    updateDashboard();
+
+  }
+);
+
+
+function renderSchedule(){
+
+  const box =
+    document.getElementById(
+      "scheduleList"
+    );
+
+
+  box.innerHTML = "";
+
+
+  const entries =
+    Object.entries(
+      scheduleData
+    );
+
+
+  if(!entries.length){
+
+    box.innerHTML =
+      `<div class="empty">
+        No duty schedule added yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  entries.forEach(
+    ([id,s]) => {
+
+      const el =
+        document.createElement(
+          "div"
+        );
+
+
+      el.className =
+        "schedule-card";
+
+
+      el.innerHTML = `
+
+        <div class="schedule-day">
+          ${esc(
+            s.day ||
+            "Duty"
+          )}
+        </div>
+
+        <div class="schedule-area">
+          ${esc(
+            s.area ||
+            "Clinical Area"
+          )}
+        </div>
+
+        <div class="schedule-time">
+          🕐 ${esc(
+            s.time ||
+            "Time not set"
+          )}
+        </div>
+
+        <div class="schedule-time">
+          👥 ${esc(
+            s.group ||
+            "Group not set"
+          )}
+        </div>
+
+        ${
+          s.ci
+          ? `
+            <div class="schedule-ci">
+              CI: ${esc(s.ci)}
+            </div>
+          `
+          : ""
+        }
+
+        ${
+          isAdmin
+          ? `
+            <div class="note-actions">
+
+              <button
+                class="btn danger"
+                onclick="deleteSchedule('${id}')"
+              >
+                Delete
+              </button>
+
+            </div>
+          `
+          : ""
+        }
+
+      `;
+
+
+      box.appendChild(el);
+
+    }
+  );
+
+
+  updateNextDuty();
+
+}
+
+
+window.addSchedule =
+async function(){
+
+  if(!isAdmin)
+    return;
+
+
+  const data = {
+
+    day:
+      document.getElementById(
+        "scheduleDay"
+      ).value.trim(),
+
+    area:
+      document.getElementById(
+        "scheduleArea"
+      ).value.trim(),
+
+    time:
+      document.getElementById(
+        "scheduleTime"
+      ).value.trim(),
+
+    group:
+      document.getElementById(
+        "scheduleGroup"
+      ).value.trim(),
+
+    ci:
+      document.getElementById(
+        "scheduleCI"
+      ).value.trim()
+
+  };
+
+
+  if(
+    !data.day ||
+    !data.area
+  ){
+
+    alert(
+      "Please enter the day and area."
+    );
+
+    return;
+
+  }
+
+
+  const newRef =
+    push(
+      ref(db,"schedule")
+    );
+
+
+  await set(
+    newRef,
+    data
+  );
+
+
+  [
+    "scheduleDay",
+    "scheduleArea",
+    "scheduleTime",
+    "scheduleGroup",
+    "scheduleCI"
+  ]
+  .forEach(
+    id =>
+      document.getElementById(
+        id
+      ).value = ""
+  );
+
+};
+
+
+window.deleteSchedule =
+async function(id){
+
+  if(
+    !isAdmin ||
+    !confirm(
+      "Delete this schedule?"
+    )
+  )
+    return;
+
+
+  await remove(
+    ref(
+      db,
+      "schedule/" + id
+    )
+  );
+
+};
+
+
+function updateNextDuty(){
+
+  const box =
+    document.getElementById(
+      "nextDuty"
+    );
+
+
+  const first =
+    Object.values(
+      scheduleData
+    )[0];
+
+
+  if(!first){
+
+    box.innerHTML =
+      `<div class="duty-card">
+
+        <div class="label">
+          Status
+        </div>
+
+        <div class="value">
+          No duty schedule yet
+        </div>
+
+      </div>`;
+
+    return;
+
+  }
+
+
+  box.innerHTML = `
+
+    <div class="duty-card">
+
+      <div class="label">
+        Next Duty
+      </div>
+
+      <div class="value">
+        ${esc(
+          first.day ||
+          "Duty"
+        )}
+      </div>
+
+      <div style="margin-top:6px;font-size:12px;">
+        ${esc(
+          first.area ||
+          "Clinical Area"
+        )}
+      </div>
+
+      <div style="margin-top:4px;font-size:11px;color:var(--muted);">
+        ${esc(
+          first.time ||
+          "Time not set"
+        )}
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   MEMBERS
+========================================================= */
+
+onValue(
+  ref(db,"members"),
+  snap => {
+
+    membersData =
+      snap.val() || {};
+
+    renderMembers();
+
+    updateDashboard();
+
+  }
+);
+
+
+function renderMembers(){
+
+  const box =
+    document.getElementById(
+      "membersList"
+    );
+
+
+  box.innerHTML = "";
+
+
+  const entries =
+    Object.entries(
+      membersData
+    );
+
+
+  if(!entries.length){
+
+    box.innerHTML =
+      `<div class="empty">
+        No group members added yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  entries.forEach(
+    ([id,m]) => {
+
+      const el =
+        document.createElement(
+          "div"
+        );
+
+
+      el.className =
+        "member";
+
+
+      const initials =
+        String(
+          m.name ||
+          "Student"
+        )
+        .split(/\s+/)
+        .map(
+          x => x[0]
+        )
+        .join("")
+        .slice(0,2)
+        .toUpperCase();
+
+
+      el.innerHTML = `
+
+        <div class="member-avatar">
+          ${esc(initials)}
+        </div>
+
+        <div class="member-info">
+
+          <strong>
+            ${esc(
+              m.name ||
+              "Student"
+            )}
+          </strong>
+
+          <span>
+            ${esc(
+              m.role ||
+              "Nursing Student"
+            )}
+          </span>
+
+        </div>
+
+
+        ${
+          isAdmin
+          ? `
+            <button
+              class="btn danger"
+              onclick="deleteMember('${id}')"
+            >
+              ×
+            </button>
+          `
+          : ""
+        }
+
+      `;
+
+
+      box.appendChild(el);
+
+    }
+  );
+
+}
+
+
+window.addMember =
+async function(){
+
+  if(!isAdmin)
+    return;
+
+
+  const name =
+    document.getElementById(
+      "memberName"
+    ).value.trim();
+
+
+  const role =
+    document.getElementById(
+      "memberRole"
+    ).value.trim();
+
+
+  if(!name){
+
+    alert(
+      "Please enter the member's name."
+    );
+
+    return;
+
+  }
+
+
+  const newRef =
+    push(
+      ref(db,"members")
+    );
+
+
+  await set(
+    newRef,
+    {
+      name,
+      role:
+        role ||
+        "Nursing Student"
+    }
+  );
+
+
+  document.getElementById(
+    "memberName"
+  ).value = "";
+
+
+  document.getElementById(
+    "memberRole"
+  ).value = "";
+
+};
+
+
+window.deleteMember =
+async function(id){
+
+  if(
+    !isAdmin ||
+    !confirm(
+      "Remove this member?"
+    )
+  )
+    return;
+
+
+  await remove(
+    ref(
+      db,
+      "members/" + id
+    )
+  );
+
+};
+
+
+/* =========================================================
+   CHAT
+========================================================= */
+
+onValue(
+  ref(db,"chat"),
+  snap => {
+
+    chatData =
+      snap.val() || {};
+
+    renderChat();
+
+  }
+);
+
+
+function renderChat(){
+
+  const box =
     document.getElementById(
       "chatlog"
     );
 
 
-  container.innerHTML = "";
+  box.innerHTML = "";
 
 
   const messages =
-    Object.values(chatData)
-      .sort(
-        (a,b) =>
-          Number(a.createdAt || 0) -
-          Number(b.createdAt || 0)
-      );
+    Object.values(
+      chatData
+    );
 
 
-  if(messages.length === 0){
+  if(!messages.length){
 
-    container.innerHTML =
+    box.innerHTML =
       `<div class="empty">
         No messages yet.
       </div>`;
@@ -2465,41 +5485,57 @@ function drawChat(){
   }
 
 
-  messages.forEach(m => {
+  messages.forEach(
+    m => {
 
-    const d =
-      document.createElement("div");
-
-
-    d.className =
-      "msg" +
-      (
-        m.author === userName
-          ? " me"
-          : ""
-      );
+      const el =
+        document.createElement(
+          "div"
+        );
 
 
-    const messageText =
-      cleanText(m.text);
+      el.className =
+        "msg" +
+        (
+          m.author ===
+          userName
+            ? " me"
+            : ""
+        );
 
 
-    d.textContent =
-      `${m.author || "User"}: ${messageText}`;
+      el.innerHTML = `
+
+        <span class="msg-name">
+          ${esc(
+            m.author ||
+            "Student"
+          )}
+        </span>
+
+        ${esc(
+          cleanText(
+            m.text
+          )
+        )}
+
+      `;
 
 
-    container.appendChild(d);
+      box.appendChild(el);
 
-  });
+    }
+  );
 
 
-  container.scrollTop =
-    container.scrollHeight;
+  box.scrollTop =
+    box.scrollHeight;
 
 }
 
 
-window.sendChat = async function(){
+window.sendChat =
+async function(){
 
   const input =
     document.getElementById(
@@ -2508,7 +5544,9 @@ window.sendChat = async function(){
 
 
   const text =
-    cleanText(input.value);
+    cleanText(
+      input.value
+    );
 
 
   if(!text)
@@ -2516,18 +5554,18 @@ window.sendChat = async function(){
 
 
   const newRef =
-    push(ref(db,"chat"));
+    push(
+      ref(db,"chat")
+    );
 
 
   await set(
     newRef,
     {
-
       author:userName,
       text,
       createdAt:
         serverTimestamp()
-
     }
   );
 
@@ -2537,16 +5575,16 @@ window.sendChat = async function(){
 };
 
 
-/* =========================
+/* =========================================================
    FILES
-========================= */
+========================================================= */
 
 onValue(
   ref(db,"files"),
-  snapshot => {
+  snap => {
 
     filesData =
-      snapshot.val() || {};
+      snap.val() || {};
 
     renderFiles();
 
@@ -2556,24 +5594,26 @@ onValue(
 
 function renderFiles(){
 
-  const container =
+  const box =
     document.getElementById(
       "filesList"
     );
 
 
-  container.innerHTML = "";
+  box.innerHTML = "";
 
 
-  const files =
-    Object.entries(filesData);
+  const entries =
+    Object.entries(
+      filesData
+    );
 
 
-  if(files.length === 0){
+  if(!entries.length){
 
-    container.innerHTML =
+    box.innerHTML =
       `<div class="empty">
-        No files yet.
+        No clinical files added yet.
       </div>`;
 
     return;
@@ -2581,43 +5621,41 @@ function renderFiles(){
   }
 
 
-  files.forEach(
+  entries.forEach(
     ([id,f]) => {
 
-      const d =
+      const el =
         document.createElement(
           "div"
         );
 
 
-      d.className =
+      el.className =
         "file-card";
 
 
-      const title =
-        String(
-          f.title ||
-          "File"
-        ).trim();
+      el.innerHTML = `
 
-
-      const description =
-        cleanText(
-          f.description
-        );
-
-
-      d.innerHTML = `
+        <div class="file-icon">
+          📄
+        </div>
 
         <h3>
-          📄 ${esc(title)}
+          ${esc(
+            f.title ||
+            "Clinical File"
+          )}
         </h3>
 
         ${
-          description
+          f.description
           ? `
             <p>
-              ${esc(description)}
+              ${esc(
+                cleanText(
+                  f.description
+                )
+              )}
             </p>
           `
           : ""
@@ -2631,11 +5669,12 @@ function renderFiles(){
               target="_blank"
               rel="noopener noreferrer"
             >
-              Open File
+              Open File →
             </a>
           `
           : ""
         }
+
 
         ${
           isAdmin
@@ -2657,7 +5696,7 @@ function renderFiles(){
       `;
 
 
-      container.appendChild(d);
+      box.appendChild(el);
 
     }
   );
@@ -2665,33 +5704,29 @@ function renderFiles(){
 }
 
 
-window.addFile = async function(){
+window.addFile =
+async function(){
 
   if(!isAdmin)
     return;
 
 
   const title =
-    document
-      .getElementById("fileTitle")
-      .value
-      .trim();
+    document.getElementById(
+      "fileTitle"
+    ).value.trim();
 
 
   const url =
-    document
-      .getElementById("fileUrl")
-      .value
-      .trim();
+    document.getElementById(
+      "fileUrl"
+    ).value.trim();
 
 
   const description =
-    document
-      .getElementById(
-        "fileDescription"
-      )
-      .value
-      .trim();
+    document.getElementById(
+      "fileDescription"
+    ).value.trim();
 
 
   if(!title || !url){
@@ -2706,51 +5741,46 @@ window.addFile = async function(){
 
 
   const newRef =
-    push(ref(db,"files"));
+    push(
+      ref(db,"files")
+    );
 
 
   await set(
     newRef,
     {
-
       title,
       url,
-      description,
-      createdAt:
-        serverTimestamp()
-
+      description
     }
   );
 
 
-  document.getElementById(
-    "fileTitle"
-  ).value = "";
-
-
-  document.getElementById(
-    "fileUrl"
-  ).value = "";
-
-
-  document.getElementById(
+  [
+    "fileTitle",
+    "fileUrl",
     "fileDescription"
-  ).value = "";
+  ]
+  .forEach(
+    id =>
+      document.getElementById(
+        id
+      ).value = ""
+  );
 
 };
 
 
-window.deleteFile = async function(id){
-
-  if(!isAdmin)
-    return;
-
+window.deleteFile =
+async function(id){
 
   if(
+    !isAdmin ||
     !confirm(
       "Delete this file?"
     )
-  ) return;
+  )
+    return;
 
 
   await remove(
@@ -2763,16 +5793,16 @@ window.deleteFile = async function(id){
 };
 
 
-/* =========================
+/* =========================================================
    ANNOUNCEMENT
-========================= */
+========================================================= */
 
 onValue(
   ref(db,"announcement"),
-  snapshot => {
+  snap => {
 
     const data =
-      snapshot.val();
+      snap.val();
 
 
     const box =
@@ -2783,15 +5813,23 @@ onValue(
 
     if(
       data &&
-      cleanText(data.text)
+      cleanText(
+        data.text
+      )
     ){
 
       box.innerHTML = `
 
-        <strong>📢 Announcement</strong><br>
+        <strong>
+          📢 Clinical Announcement
+        </strong>
+
+        <br>
 
         ${esc(
-          cleanText(data.text)
+          cleanText(
+            data.text
+          )
         )}
 
       `;
@@ -2810,103 +5848,109 @@ onValue(
 );
 
 
-/* =========================
-   PRESENCE
-========================= */
+/* =========================================================
+   DASHBOARD
+========================================================= */
 
-const presenceId =
-  push(
-    ref(db,"presence")
-  ).key;
+function updateDashboard(){
 
-
-const presenceRef =
-  ref(
-    db,
-    "presence/" +
-    presenceId
-  );
+  document.getElementById(
+    "statTasks"
+  ).textContent =
+    Object.keys(
+      tasksData
+    ).length;
 
 
-set(
-  presenceRef,
-  {
+  document.getElementById(
+    "statCases"
+  ).textContent =
+    Object.keys(
+      casesData
+    ).length;
 
-    name:userName,
 
-    online:true,
+  document.getElementById(
+    "statDrugs"
+  ).textContent =
+    Object.keys(
+      drugsData
+    ).length;
 
-    lastSeen:
-      serverTimestamp()
+
+  document.getElementById(
+    "statMembers"
+  ).textContent =
+    Object.keys(
+      membersData
+    ).length;
+
+
+  updateNextDuty();
+
+}
+
+
+/* =========================================================
+   RENDER EVERYTHING
+========================================================= */
+
+function renderAll(){
+
+  renderTasks();
+
+  renderCases();
+
+  renderNotes();
+
+  renderDrugs();
+
+  renderRequirements();
+
+  renderSchedule();
+
+  renderMembers();
+
+  renderChat();
+
+  renderFiles();
+
+  updateDashboard();
+
+}
+
+
+/* =========================================================
+   MODAL CLICK OUTSIDE
+========================================================= */
+
+document.getElementById(
+  "adminModal"
+)
+.addEventListener(
+  "click",
+  e => {
+
+    if(
+      e.target.id ===
+      "adminModal"
+    ){
+
+      closeAdminModal();
+
+    }
 
   }
 );
 
 
-onDisconnect(
-  presenceRef
-).update({
-
-  online:false,
-
-  lastSeen:
-    serverTimestamp()
-
-});
-
-
-/* =========================
-   CLOSE MODALS
-========================= */
-
-document
-  .getElementById("adminModal")
-  .addEventListener(
-    "click",
-    e => {
-
-      if(
-        e.target.id ===
-        "adminModal"
-      ){
-
-        closeAdminModal();
-
-      }
-
-    }
-  );
-
-
-document
-  .getElementById("editNoteModal")
-  .addEventListener(
-    "click",
-    e => {
-
-      if(
-        e.target.id ===
-        "editNoteModal"
-      ){
-
-        closeEditNote();
-
-      }
-
-    }
-  );
-
-
-/* =========================
-   INITIAL UI
-========================= */
+/* =========================================================
+   INITIAL
+========================================================= */
 
 updateAdminUI();
 
-renderNotes();
-renderTasks();
-renderFiles();
-drawChat();
+renderAll();
 
 </script>
 
