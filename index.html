@@ -2057,6 +2057,43 @@ and (orientation:landscape){
 
 }
 
+
+.offline-status{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 10px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--card);
+  color:var(--text);
+  font-size:11px;
+  box-shadow:0 6px 20px rgba(0,0,0,.08);
+  opacity:.9;
+  transition:.2s ease;
+}
+.offline-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#2e9b62;
+}
+.offline-status.offline .offline-dot{
+  background:#d8892f;
+}
+.offline-status.syncing .offline-dot{
+  background:#5b72d6;
+  animation:offlinePulse 1s infinite;
+}
+@keyframes offlinePulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.35)}
+}
+
 </style>
 </head>
 
@@ -2078,6 +2115,12 @@ and (orientation:landscape){
 </div>
 
 
+
+
+<div id="offlineStatus" class="offline-status" aria-live="polite">
+  <span class="offline-dot"></span>
+  <span id="offlineStatusText">Online</span>
+</div>
 
 <!-- =======================================================
      SIDEBAR
@@ -3191,6 +3234,385 @@ const db =
   getDatabase(app);
 
 
+
+/* =========================================================
+   OFFLINE-FIRST STORAGE + SYNC
+   Keeps a local copy on the device and queues changes while
+   offline. Firebase is synchronized automatically on reconnect.
+========================================================= */
+
+const OFFLINE_DB_NAME = "BSN2AGroup4Offline";
+const OFFLINE_DB_VERSION = 1;
+let offlineDB = null;
+const offlineMemory = {};
+const offlineListeners = {};
+let offlineSyncing = false;
+
+function openOfflineDB(){
+  return new Promise((resolve,reject)=>{
+    if(offlineDB) return resolve(offlineDB);
+
+    const request = indexedDB.open(OFFLINE_DB_NAME, OFFLINE_DB_VERSION);
+
+    request.onupgradeneeded = event => {
+      const db = event.target.result;
+      if(!db.objectStoreNames.contains("collections")){
+        db.createObjectStore("collections");
+      }
+      if(!db.objectStoreNames.contains("queue")){
+        db.createObjectStore("queue", {keyPath:"id", autoIncrement:true});
+      }
+    };
+
+    request.onsuccess = () => {
+      offlineDB = request.result;
+      resolve(offlineDB);
+    };
+
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function idbGet(storeName,key){
+  return openOfflineDB().then(db=>new Promise((resolve,reject)=>{
+    const tx = db.transaction(storeName,"readonly");
+    const req = tx.objectStore(storeName).get(key);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  }));
+}
+
+function idbPut(storeName,key,value){
+  return openOfflineDB().then(db=>new Promise((resolve,reject)=>{
+    const tx = db.transaction(storeName,"readwrite");
+    const store = tx.objectStore(storeName);
+    const req = key === undefined
+      ? store.add(value)
+      : store.put(value,key);
+
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  }));
+}
+
+function idbDelete(storeName,key){
+  return openOfflineDB().then(db=>new Promise((resolve,reject)=>{
+    const tx = db.transaction(storeName,"readwrite");
+    const req = tx.objectStore(storeName).delete(key);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  }));
+}
+
+function idbAll(storeName){
+  return openOfflineDB().then(db=>new Promise((resolve,reject)=>{
+    const tx = db.transaction(storeName,"readonly");
+    const req = tx.objectStore(storeName).getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  }));
+}
+
+function cloneOffline(value){
+  try{
+    return value == null ? value : JSON.parse(JSON.stringify(value));
+  }catch{
+    return value;
+  }
+}
+
+function normalizeOffline(value){
+  if(Array.isArray(value)){
+    return value.map(normalizeOffline);
+  }
+
+  if(value && typeof value === "object"){
+    if(value[".sv"] === "timestamp"){
+      return Date.now();
+    }
+
+    const result = {};
+    Object.keys(value).forEach(key=>{
+      result[key] = normalizeOffline(value[key]);
+    });
+    return result;
+  }
+
+  return value;
+}
+
+function splitOfflinePath(path){
+  const parts = String(path).split("/").filter(Boolean);
+  return {
+    collection: parts[0] || "",
+    key: parts.slice(1).join("/")
+  };
+}
+
+function applyQueuedOperation(data, operation){
+  const parts = splitOfflinePath(operation.path);
+  if(!parts.collection) return data;
+
+  if(parts.key){
+    if(operation.type === "remove"){
+      delete data[parts.key];
+      return data;
+    }
+
+    if(!data[parts.key] || typeof data[parts.key] !== "object"){
+      data[parts.key] = {};
+    }
+
+    if(operation.type === "set"){
+      data[parts.key] = cloneOffline(operation.data) || {};
+    }
+
+    if(operation.type === "update"){
+      Object.assign(data[parts.key], cloneOffline(operation.data) || {});
+    }
+
+    return data;
+  }
+
+  if(operation.type === "set"){
+    return cloneOffline(operation.data) || {};
+  }
+
+  return data;
+}
+
+async function saveOfflineCollection(collection,data){
+  offlineMemory[collection] = cloneOffline(data || {});
+  await idbPut("collections",collection,offlineMemory[collection]);
+}
+
+async function getOfflineCollection(collection){
+  if(offlineMemory[collection]) return offlineMemory[collection];
+
+  const stored = await idbGet("collections",collection);
+  offlineMemory[collection] = stored || {};
+  return offlineMemory[collection];
+}
+
+function setGlobalCollection(collection,data){
+  const value = cloneOffline(data || {});
+
+  if(collection === "notes") notesData = value;
+  if(collection === "requirements") requirementsData = value;
+  if(collection === "schedule") scheduleData = value;
+  if(collection === "members") membersData = value;
+  if(collection === "chat") chatData = value;
+  if(collection === "files") filesData = value;
+
+  if(collection === "notes") renderNotes?.();
+  if(collection === "requirements") renderRequirements?.();
+  if(collection === "schedule") renderSchedule?.();
+  if(collection === "members"){
+    renderMembers?.();
+    renderMemberPreview?.();
+  }
+  if(collection === "chat") renderChat?.();
+  if(collection === "files") renderFiles?.();
+}
+
+async function notifyOfflineChange(collection){
+  const data = await getOfflineCollection(collection);
+  setGlobalCollection(collection,data);
+
+  const listeners = offlineListeners[collection] || [];
+  listeners.forEach(callback=>{
+    try{
+      callback({
+        val:()=>cloneOffline(data),
+        exists:()=>Object.keys(data || {}).length > 0
+      });
+    }catch(error){
+      console.error("Offline listener error:",error);
+    }
+  });
+}
+
+async function queueOfflineOperation(type,path,data){
+  const normalized = normalizeOffline(data);
+  const operation = {
+    type,
+    path,
+    data: normalized,
+    queuedAt: Date.now()
+  };
+
+  await idbPut("queue",undefined,operation);
+
+  const parts = splitOfflinePath(path);
+  const collection = parts.collection;
+  let local = cloneOffline(await getOfflineCollection(collection)) || {};
+
+  local = applyQueuedOperation(local,{
+    type,
+    path,
+    data: normalized
+  });
+
+  await saveOfflineCollection(collection,local);
+  await notifyOfflineChange(collection);
+
+  if(navigator.onLine){
+    flushOfflineQueue();
+  }
+
+  return operation;
+}
+
+async function offlineSet(path,data){
+  return queueOfflineOperation("set",path,data);
+}
+
+async function offlineUpdate(path,data){
+  return queueOfflineOperation("update",path,data);
+}
+
+async function offlineRemove(path){
+  return queueOfflineOperation("remove",path,null);
+}
+
+async function offlinePush(collection,data){
+  const key =
+    "offline_" +
+    Date.now().toString(36) +
+    "_" +
+    Math.random().toString(36).slice(2,8);
+
+  await queueOfflineOperation(
+    "set",
+    collection + "/" + key,
+    data
+  );
+
+  return key;
+}
+
+async function offlineOnValue(collection,callback){
+  if(!offlineListeners[collection]){
+    offlineListeners[collection] = [];
+  }
+  offlineListeners[collection].push(callback);
+
+  const local = await getOfflineCollection(collection);
+  callback({
+    val:()=>cloneOffline(local),
+    exists:()=>Object.keys(local || {}).length > 0
+  });
+
+  try{
+    onValue(
+      ref(db,collection),
+      async snapshot=>{
+        let remote = snapshot.val() || {};
+
+        const queue = await idbAll("queue");
+        const pending = queue.filter(op=>{
+          return splitOfflinePath(op.path).collection === collection;
+        });
+
+        pending.forEach(op=>{
+          remote = applyQueuedOperation(remote,op);
+        });
+
+        await saveOfflineCollection(collection,remote);
+
+        callback({
+          val:()=>cloneOffline(remote),
+          exists:()=>Object.keys(remote || {}).length > 0
+        });
+
+        if(navigator.onLine){
+          flushOfflineQueue();
+        }
+      },
+      error=>{
+        console.warn("Firebase listener unavailable; using local data.",error);
+      }
+    );
+  }catch(error){
+    console.warn("Offline mode active.",error);
+  }
+}
+
+async function flushOfflineQueue(){
+  if(offlineSyncing || !navigator.onLine) return;
+
+  offlineSyncing = true;
+
+  try{
+    const queue = await idbAll("queue");
+
+    for(const operation of queue.sort((a,b)=>a.id-b.id)){
+      if(!navigator.onLine) break;
+
+      try{
+        const target = ref(db,operation.path);
+
+        if(operation.type === "set"){
+          await set(target,operation.data);
+        }else if(operation.type === "update"){
+          await update(target,operation.data);
+        }else if(operation.type === "remove"){
+          await remove(target);
+        }
+
+        await idbDelete("queue",operation.id);
+      }catch(error){
+        console.warn("Sync paused; will retry later.",error);
+        break;
+      }
+    }
+  }finally{
+    offlineSyncing = false;
+  }
+}
+
+window.addEventListener("online",()=>{
+  flushOfflineQueue();
+});
+
+window.addEventListener("offline",()=>{
+  console.log("BSN 2A Group 4 is now offline. Changes will be stored on this device.");
+});
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("./sw.js").catch(error=>{
+      console.warn("Offline app cache could not be registered:",error);
+    });
+  });
+}
+
+
+function updateOfflineStatus(){
+  const box = document.getElementById("offlineStatus");
+  const text = document.getElementById("offlineStatusText");
+  if(!box || !text) return;
+
+  if(navigator.onLine){
+    box.classList.remove("offline");
+    box.classList.remove("syncing");
+    text.textContent = "Online";
+  }else{
+    box.classList.add("offline");
+    box.classList.remove("syncing");
+    text.textContent = "Offline • saved on device";
+  }
+}
+
+window.addEventListener("online",updateOfflineStatus);
+window.addEventListener("offline",updateOfflineStatus);
+setTimeout(updateOfflineStatus,100);
+
+openOfflineDB()
+  .then(()=>flushOfflineQueue())
+  .catch(error=>console.warn("Offline storage unavailable:",error));
+
+
 /* =========================================================
    DATA
 ========================================================= */
@@ -3962,11 +4384,7 @@ function updateAdminUI(){
    NOTES
 ========================================================= */
 
-onValue(
-  ref(
-    db,
-    "notes"
-  ),
+offlineOnValue("notes",
   snapshot => {
 
     notesData =
@@ -4035,7 +4453,7 @@ function renderNotes(){
         const updated = noteCard.querySelector(".note-text").innerHTML;
         notesData[noteId].html = updated;
         try{
-          await update(ref(db, `notes/${noteId}`), {html:updated, updatedAt:Date.now()});
+          await offlineUpdate(`notes/${noteId}`, {html:updated, updatedAt:Date.now()});
         }catch(err){
           console.error("Could not save checkbox state", err);
         }
@@ -4224,22 +4642,20 @@ window.saveNoteEditor = async function(){
 
     if(editingNoteId){
 
-      await update(ref(db,"notes/"+editingNoteId),{
+      await offlineUpdate("notes/"+editingNoteId,{
         title,
         category,
         html:htmlContent,
-        updatedAt:serverTimestamp()
+        updatedAt:Date.now()
       });
 
     }else{
 
-      const newRef = push(ref(db,"notes"));
-
-      await set(newRef,{
+      await offlinePush("notes",{
         title,
         category,
         html:htmlContent,
-        createdAt:serverTimestamp()
+        createdAt:Date.now()
       });
 
     }
@@ -4271,13 +4687,7 @@ async function(id){
     return;
 
 
-  await remove(
-    ref(
-      db,
-      "notes/" +
-      id
-    )
-  );
+  await offlineRemove("notes/" + id);
 
 };
 
@@ -4286,11 +4696,7 @@ async function(id){
    REQUIREMENTS
 ========================================================= */
 
-onValue(
-  ref(
-    db,
-    "requirements"
-  ),
+offlineOnValue("requirements",
   snapshot => {
 
     requirementsData =
@@ -4463,23 +4869,11 @@ async function(){
   }
 
 
-  const newRef =
-    push(
-      ref(
-        db,
-        "requirements"
-      )
-    );
-
-
-  await set(
-    newRef,
-    {
-      title,
-      type,
-      description
-    }
-  );
+  await offlinePush("requirements",{
+    title,
+    type,
+    description
+  });
 
 
   [
@@ -4510,13 +4904,7 @@ async function(id){
     return;
 
 
-  await remove(
-    ref(
-      db,
-      "requirements/" +
-      id
-    )
-  );
+  await offlineRemove("requirements/" + id);
 
 };
 
@@ -4525,11 +4913,7 @@ async function(id){
    DUTY SCHEDULE
 ========================================================= */
 
-onValue(
-  ref(
-    db,
-    "schedule"
-  ),
+offlineOnValue("schedule",
   snapshot => {
 
     scheduleData =
@@ -4713,19 +5097,7 @@ async function(){
   }
 
 
-  const newRef =
-    push(
-      ref(
-        db,
-        "schedule"
-      )
-    );
-
-
-  await set(
-    newRef,
-    data
-  );
+  await offlinePush("schedule",data);
 
 
   [
@@ -4758,13 +5130,7 @@ async function(id){
     return;
 
 
-  await remove(
-    ref(
-      db,
-      "schedule/" +
-      id
-    )
-  );
+  await offlineRemove("schedule/" + id);
 
 };
 
@@ -4773,11 +5139,7 @@ async function(id){
    MEMBERS
 ========================================================= */
 
-onValue(
-  ref(
-    db,
-    "members"
-  ),
+offlineOnValue("members",
   snapshot => {
 
     membersData =
@@ -5246,12 +5608,8 @@ async function(){
 
   if(editingMemberId){
 
-    await update(
-      ref(
-        db,
-        "members/" +
-        editingMemberId
-      ),
+    await offlineUpdate(
+      "members/" + editingMemberId,
       {
         name,
 
@@ -5263,25 +5621,13 @@ async function(){
 
   }else{
 
-    const newRef =
-      push(
-        ref(
-          db,
-          "members"
-        )
-      );
+    await offlinePush("members",{
+      name,
 
-
-    await set(
-      newRef,
-      {
-        name,
-
-        role:
-          role ||
-          "Nursing Student"
-      }
-    );
+      role:
+        role ||
+        "Nursing Student"
+    });
 
   }
 
@@ -5303,13 +5649,7 @@ async function(id){
     return;
 
 
-  await remove(
-    ref(
-      db,
-      "members/" +
-      id
-    )
-  );
+  await offlineRemove("members/" + id);
 
 };
 
@@ -5318,11 +5658,7 @@ async function(id){
    CHAT
 ========================================================= */
 
-onValue(
-  ref(
-    db,
-    "chat"
-  ),
+offlineOnValue("chat",
   snapshot => {
 
     chatData =
@@ -5677,27 +6013,15 @@ async function(){
     return;
 
 
-  const newRef =
-    push(
-      ref(
-        db,
-        "chat"
-      )
-    );
+  await offlinePush("chat",{
+    author:
+      userName,
 
+    text,
 
-  await set(
-    newRef,
-    {
-      author:
-        userName,
-
-      text,
-
-      createdAt:
-        serverTimestamp()
-    }
-  );
+    createdAt:
+      Date.now()
+  });
 
 
   input.value =
@@ -5710,11 +6034,7 @@ async function(){
    FILES
 ========================================================= */
 
-onValue(
-  ref(
-    db,
-    "files"
-  ),
+offlineOnValue("files",
   snapshot => {
 
     filesData =
@@ -5884,23 +6204,11 @@ async function(){
   }
 
 
-  const newRef =
-    push(
-      ref(
-        db,
-        "files"
-      )
-    );
-
-
-  await set(
-    newRef,
-    {
-      title,
-      url,
-      description
-    }
-  );
+  await offlinePush("files",{
+    title,
+    url,
+    description
+  });
 
 
   [
@@ -5931,13 +6239,7 @@ async function(id){
     return;
 
 
-  await remove(
-    ref(
-      db,
-      "files/" +
-      id
-    )
-  );
+  await offlineRemove("files/" + id);
 
 };
 
