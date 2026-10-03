@@ -283,37 +283,46 @@ button{
 }
 
 .group-toggle{
-  width:28px;
-  height:25px;
-
+  position:relative;
+  width:38px;
+  height:22px;
+  padding:0;
   border:0;
-
-  background:transparent;
-
-  color:
-    var(--primary);
-
-  border-radius:7px;
-
+  background:var(--border);
+  border-radius:999px;
   display:flex;
   align-items:center;
-  justify-content:center;
+  cursor:pointer;
+  transition:background .2s ease, box-shadow .2s ease;
+}
 
-  font-size:17px;
-
-  transition:.15s;
+.group-toggle::after{
+  content:"";
+  position:absolute;
+  left:3px;
+  top:3px;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:var(--surface);
+  box-shadow:0 1px 3px rgba(0,0,0,.22);
+  transition:transform .2s ease;
 }
 
 .group-toggle:hover{
-  background:
-    var(--surface2);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.group-toggle.active{
+  background:var(--primary);
+}
+
+.group-toggle.active::after{
+  transform:translateX(16px);
 }
 
 .group-toggle span{
-  display:block;
-
-  transition:
-    transform .2s ease;
+  display:none;
 }
 
 .group-nav{
@@ -1014,6 +1023,18 @@ select:focus{
   font-weight:bold;
 
   margin-bottom:9px;
+}
+
+.note-check{
+  width:16px;
+  height:16px;
+  accent-color:var(--primary);
+  vertical-align:middle;
+  cursor:pointer;
+}
+
+.note-text input.note-check{
+  pointer-events:auto;
 }
 
 .note-text{
@@ -2021,8 +2042,10 @@ and (orientation:landscape){
         class="group-toggle"
         id="mainToggle"
         onclick="toggleNavSection('mainNav','mainToggle','mainArrow','mainCollapsed')"
-        title="Collapse main navigation"
-        aria-label="Collapse main navigation"
+        title="Toggle main navigation"
+        aria-label="Toggle main navigation"
+        role="switch"
+        aria-checked="true"
       >
         <span id="mainArrow">⌃</span>
       </button>
@@ -2185,8 +2208,10 @@ and (orientation:landscape){
         class="group-toggle"
         id="systemToggle"
         onclick="toggleNavSection('systemNav','systemToggle','systemArrow','systemCollapsed')"
-        title="Collapse system navigation"
-        aria-label="Collapse system navigation"
+        title="Toggle system navigation"
+        aria-label="Toggle system navigation"
+        role="switch"
+        aria-checked="true"
       >
         <span id="systemArrow">⌃</span>
       </button>
@@ -3260,8 +3285,10 @@ function(navId,toggleId,arrowId,storageKey){
   const collapsed =
     nav.classList.toggle("collapsed");
 
+  toggle.classList.toggle("active", !collapsed);
   arrow.textContent =
     collapsed ? "⌄" : "⌃";
+  toggle.setAttribute("aria-checked", String(!collapsed));
 
   toggle.title =
     collapsed
@@ -3301,8 +3328,10 @@ function(navId,toggleId,arrowId,storageKey){
     if(nav) nav.classList.add("collapsed");
     if(arrow) arrow.textContent = "⌄";
     if(toggle){
+      toggle.classList.remove("active");
       toggle.title = "Show navigation";
       toggle.setAttribute("aria-label","Show navigation");
+      toggle.setAttribute("aria-checked","false");
     }
   }
 });
@@ -3871,6 +3900,7 @@ function renderNotes(){
 
     const element = document.createElement("div");
     element.className = "card";
+    element.dataset.noteId = id;
 
     const content = n.html
       ? n.html
@@ -3890,6 +3920,32 @@ function renderNotes(){
     `;
 
     box.appendChild(element);
+  });
+
+  box.querySelectorAll("input.note-check").forEach(input => {
+    input.addEventListener("click", e => e.stopPropagation());
+    input.addEventListener("change", async () => {
+      if(input.checked) input.setAttribute("checked", "");
+      else input.removeAttribute("checked");
+
+      const noteCard = input.closest(".card");
+      if(!noteCard) return;
+      const noteId = entries.find(([id]) => {
+        const card = box.querySelector(`.card[data-note-id="${CSS.escape(id)}"]`);
+        return card === noteCard;
+      })?.[0];
+      if(!noteId || !notesData[noteId]) return;
+
+      if(notesData[noteId].html){
+        const updated = noteCard.querySelector(".note-text").innerHTML;
+        notesData[noteId].html = updated;
+        try{
+          await update(ref(db, `notes/${noteId}`), {html:updated, updatedAt:Date.now()});
+        }catch(err){
+          console.error("Could not save checkbox state", err);
+        }
+      }
+    });
   });
 }
 
@@ -3922,13 +3978,21 @@ window.highlightSelection = function(color){
 
 window.insertChecklist = function(){
   focusRichEditor();
-  const checkbox = document.createElement("span");
-  checkbox.innerHTML = "☐ ";
   const selection = window.getSelection();
   if(!selection || !selection.rangeCount) return;
+
   const range = selection.getRangeAt(0);
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.className = "note-check";
+  checkbox.style.marginRight = "8px";
+  checkbox.addEventListener("click", e => e.stopPropagation());
+
   range.insertNode(checkbox);
-  range.setStartAfter(checkbox);
+
+  const spacer = document.createTextNode(" ");
+  checkbox.after(spacer);
+  range.setStartAfter(spacer);
   range.collapse(true);
   selection.removeAllRanges();
   selection.addRange(range);
