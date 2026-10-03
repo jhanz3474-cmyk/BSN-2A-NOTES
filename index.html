@@ -1898,7 +1898,7 @@ and (orientation:landscape){
       </h1>
 
       <p>
-        BSN 2A • Clinical Duty Group
+        BSN 2A • Group 4
       </p>
 
     </div>
@@ -2366,42 +2366,9 @@ and (orientation:landscape){
       class="admin-panel"
       style="display:none;"
     >
-
-      <h3>
-        ➕ Add Nursing Note
-      </h3>
-
-
-      <div class="form-grid">
-
-        <input
-          id="noteTitle"
-          placeholder="Note title"
-        >
-
-        <input
-          id="noteCategory"
-          placeholder="Category"
-        >
-
-        <textarea
-          id="noteText"
-          class="full"
-          placeholder="Write your nursing note..."
-        ></textarea>
-
-      </div>
-
-
+      <h3>➕ Manage Nursing Notes</h3>
       <div class="form-buttons">
-
-        <button
-          class="btn primary"
-          onclick="addNote()"
-        >
-          Add Note
-        </button>
-
+        <button class="btn primary" onclick="openNoteEditor()">Add Note</button>
       </div>
 
     </div>
@@ -3631,185 +3598,176 @@ onValue(
 
 function renderNotes(){
 
-  const box =
-    document.getElementById(
-      "notesList"
-    );
+  const box = document.getElementById("notesList");
+  box.innerHTML = "";
 
-
-  box.innerHTML =
-    "";
-
-
-  const entries =
-    Object.entries(
-      notesData
-    );
-
+  const entries = Object.entries(notesData);
 
   if(!entries.length){
-
-    box.innerHTML =
-      `
-      <div class="empty">
-        No nursing notes yet.
-      </div>
-      `;
-
+    box.innerHTML = `<div class="empty">No nursing notes yet.</div>`;
     return;
-
   }
 
+  entries.forEach(([id,n])=>{
 
-  entries.forEach(
-    ([id,n]) => {
+    const element = document.createElement("div");
+    element.className = "card";
 
-      const element =
-        document.createElement(
-          "div"
-        );
+    const content = n.html
+      ? n.html
+      : esc(cleanText(n.text)).replace(/\n/g,"<br>");
 
+    element.innerHTML = `
+      ${n.category ? `<span class="note-category">${esc(n.category)}</span>` : ""}
+      <h3>${esc(String(n.title || "Nursing Note").trim())}</h3>
+      <div class="note-text" style="white-space:normal;">${content}</div>
 
-      element.className =
-        "card";
-
-
-      element.innerHTML = `
-
-        ${
-          n.category
-            ? `
-              <span class="note-category">
-                ${esc(n.category)}
-              </span>
-            `
-            : ""
-        }
-
-        <h3>
-          ${esc(
-            String(
-              n.title ||
-              "Nursing Note"
-            ).trim()
-          )}
-        </h3>
-
-        <div class="note-text">
-          ${esc(
-            cleanText(
-              n.text
-            )
-          )}
+      ${isAdmin ? `
+        <div class="note-actions">
+          <button class="btn small" onclick="openNoteEditor('${id}')">✏️ Edit</button>
+          <button class="btn danger small" onclick="deleteNote('${id}')">Delete</button>
         </div>
+      ` : ""}
+    `;
 
-        ${
-          isAdmin
-            ? `
-              <div class="note-actions">
-
-                <button
-                  class="btn danger"
-                  onclick="
-                    deleteNote('${id}'
-                  )"
-                >
-                  Delete
-                </button>
-
-              </div>
-            `
-            : ""
-        }
-
-      `;
-
-
-      box.appendChild(
-        element
-      );
-
-    }
-  );
-
+    box.appendChild(element);
+  });
 }
 
 
-window.addNote =
-async function(){
+let editingNoteId = null;
 
-  if(!isAdmin)
-    return;
+function requireAdmin(){
+  if(!isAdmin){
+    alert("Only administrators can edit nursing notes.");
+    return false;
+  }
+  return true;
+}
 
+function focusRichEditor(){
+  document.getElementById("richNoteEditor").focus();
+}
 
-  const title =
-    document.getElementById(
-      "noteTitle"
-    ).value.trim();
+window.editorCommand = function(command,value=null){
+  focusRichEditor();
+  document.execCommand(command,false,value);
+};
 
+window.highlightSelection = function(color){
+  focusRichEditor();
+  if(!document.execCommand("hiliteColor",false,color)){
+    document.execCommand("backColor",false,color);
+  }
+};
 
-  const category =
-    document.getElementById(
-      "noteCategory"
-    ).value.trim();
+window.insertChecklist = function(){
+  focusRichEditor();
+  const checkbox = document.createElement("span");
+  checkbox.innerHTML = "☐ ";
+  const selection = window.getSelection();
+  if(!selection || !selection.rangeCount) return;
+  const range = selection.getRangeAt(0);
+  range.insertNode(checkbox);
+  range.setStartAfter(checkbox);
+  range.collapse(true);
+  selection.removeAllRanges();
+  selection.addRange(range);
+};
 
+window.openNoteEditor = function(id=null){
 
-  const text =
-    cleanText(
-      document.getElementById(
-        "noteText"
-      ).value
-    );
+  if(!requireAdmin()) return;
 
+  editingNoteId = id;
 
-  if(
-    !title ||
-    !text
-  ){
+  const title = document.getElementById("editorNoteTitle");
+  const category = document.getElementById("editorNoteCategory");
+  const editor = document.getElementById("richNoteEditor");
 
-    alert(
-      "Please enter a title and note."
-    );
+  if(id){
 
-    return;
+    const note = notesData[id];
+    if(!note) return;
+
+    document.getElementById("noteEditorTitle").textContent = "Edit Nursing Note";
+    title.value = note.title || "";
+    category.value = note.category || "";
+    editor.innerHTML = note.html
+      ? note.html
+      : esc(cleanText(note.text || "")).replace(/\n/g,"<br>");
+
+  }else{
+
+    document.getElementById("noteEditorTitle").textContent = "Add Nursing Note";
+    title.value = "";
+    category.value = "";
+    editor.innerHTML = "";
 
   }
 
+  document.getElementById("noteEditorModal").classList.add("show");
+  setTimeout(()=>title.focus(),50);
+};
 
-  const newRef =
-    push(
-      ref(
-        db,
-        "notes"
-      )
-    );
+window.closeNoteEditor = function(){
 
+  editingNoteId = null;
+  document.getElementById("noteEditorModal").classList.remove("show");
+  document.getElementById("editorNoteTitle").value = "";
+  document.getElementById("editorNoteCategory").value = "";
+  document.getElementById("richNoteEditor").innerHTML = "";
+};
 
-  await set(
-    newRef,
-    {
-      title,
-      category,
-      text,
-      createdAt:
-        serverTimestamp()
+window.saveNoteEditor = async function(){
+
+  if(!requireAdmin()) return;
+
+  const title = document.getElementById("editorNoteTitle").value.trim();
+  const category = document.getElementById("editorNoteCategory").value.trim();
+  const htmlContent = document.getElementById("richNoteEditor").innerHTML.trim();
+
+  if(!title || !htmlContent){
+    alert("Please enter a title and note.");
+    return;
+  }
+
+  try{
+
+    if(editingNoteId){
+
+      await update(ref(db,"notes/"+editingNoteId),{
+        title,
+        category,
+        html:htmlContent,
+        updatedAt:serverTimestamp()
+      });
+
+    }else{
+
+      const newRef = push(ref(db,"notes"));
+
+      await set(newRef,{
+        title,
+        category,
+        html:htmlContent,
+        createdAt:serverTimestamp()
+      });
+
     }
-  );
 
+    closeNoteEditor();
 
-  [
-    "noteTitle",
-    "noteCategory",
-    "noteText"
-  ]
-  .forEach(
-    id =>
-      document.getElementById(
-        id
-      ).value =
-        ""
-  );
+  }catch(error){
 
+    console.error(error);
+    alert("Could not save the note. Check your Firebase permissions.");
+
+  }
+};
+
+window.addNote = function(){
+  openNoteEditor();
 };
 
 
@@ -5566,6 +5524,8 @@ document.getElementById(
 /* =========================================================
    INITIALIZE
 ========================================================= */
+
+ensureGroupLogin();
 
 updateAdminUI();
 
