@@ -1064,6 +1064,32 @@ select:focus{
     0 4px 12px var(--shadow);
 }
 
+
+/* ===== DRAGGABLE NURSING NOTES ===== */
+.notes-grid .card.note-draggable{
+  cursor:grab;
+  user-select:none;
+  transition:transform .15s ease, opacity .15s ease, box-shadow .15s ease;
+}
+.notes-grid .card.note-draggable:active{cursor:grabbing;}
+.notes-grid .card.note-dragging{
+  opacity:.45;
+  transform:scale(.985);
+}
+.notes-grid .card.note-drag-over{
+  box-shadow:0 0 0 2px var(--primary), 0 8px 20px var(--shadow);
+}
+.note-drag-hint{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  margin-left:8px;
+  font-size:10px;
+  font-weight:600;
+  color:var(--muted);
+  opacity:.8;
+}
+
 .card h3{
   margin:
     0 0 9px;
@@ -4405,7 +4431,15 @@ function renderNotes(){
   const box = document.getElementById("notesList");
   box.innerHTML = "";
 
-  const entries = Object.entries(notesData);
+  const entries = Object.entries(notesData).sort((a,b)=>{
+    const ao = Number.isFinite(Number(a[1]?.order)) ? Number(a[1].order) : Number.MAX_SAFE_INTEGER;
+    const bo = Number.isFinite(Number(b[1]?.order)) ? Number(b[1].order) : Number.MAX_SAFE_INTEGER;
+    if(ao !== bo) return ao - bo;
+    const ac = Number(a[1]?.createdAt || 0);
+    const bc = Number(b[1]?.createdAt || 0);
+    if(ac !== bc) return ac - bc;
+    return String(a[0]).localeCompare(String(b[0]));
+  });
 
   if(!entries.length){
     box.innerHTML = `<div class="empty">No nursing notes yet.</div>`;
@@ -4415,8 +4449,12 @@ function renderNotes(){
   entries.forEach(([id,n])=>{
 
     const element = document.createElement("div");
-    element.className = "card";
+    element.className = "card" + (isAdmin ? " note-draggable" : "");
     element.dataset.noteId = id;
+    if(isAdmin){
+      element.draggable = true;
+      element.title = "Drag to change this note's position";
+    }
 
     const content = n.html
       ? n.html
@@ -4424,7 +4462,7 @@ function renderNotes(){
 
     element.innerHTML = `
       ${n.category ? `<span class="note-category">${esc(n.category)}</span>` : ""}
-      <h3>${esc(String(n.title || "Nursing Note").trim())}</h3>
+      <h3>${esc(String(n.title || "Nursing Note").trim())}${isAdmin ? `<span class="note-drag-hint">↕ drag</span>` : ""}</h3>
       <div class="note-text" style="white-space:normal;">${content}</div>
 
       ${isAdmin ? `
@@ -4437,6 +4475,10 @@ function renderNotes(){
 
     box.appendChild(element);
   });
+
+  if(isAdmin){
+    setupNoteDragAndDrop(box);
+  }
 
   box.querySelectorAll("input.note-check").forEach(input => {
     input.addEventListener("click", e => e.stopPropagation());
@@ -4463,6 +4505,74 @@ function renderNotes(){
       }
     });
   });
+}
+
+
+let draggedNoteId = null;
+
+function setupNoteDragAndDrop(box){
+  const cards = Array.from(box.querySelectorAll(".note-draggable"));
+
+  cards.forEach(card => {
+    card.addEventListener("dragstart", event => {
+      const interactive = event.target.closest("button, input, textarea, select, a");
+      if(interactive){
+        event.preventDefault();
+        return;
+      }
+      draggedNoteId = card.dataset.noteId;
+      card.classList.add("note-dragging");
+      if(event.dataTransfer){
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", draggedNoteId);
+      }
+    });
+
+    card.addEventListener("dragend", () => {
+      draggedNoteId = null;
+      cards.forEach(c => c.classList.remove("note-dragging","note-drag-over"));
+    });
+
+    card.addEventListener("dragover", event => {
+      if(!draggedNoteId || draggedNoteId === card.dataset.noteId) return;
+      event.preventDefault();
+      if(event.dataTransfer) event.dataTransfer.dropEffect = "move";
+      cards.forEach(c => c.classList.remove("note-drag-over"));
+      card.classList.add("note-drag-over");
+
+      const rect = card.getBoundingClientRect();
+      const before = event.clientY < rect.top + rect.height / 2;
+      const dragged = box.querySelector(`.card[data-note-id="${CSS.escape(draggedNoteId)}"]`);
+      if(!dragged) return;
+      if(before) box.insertBefore(dragged, card);
+      else box.insertBefore(dragged, card.nextSibling);
+    });
+
+    card.addEventListener("drop", async event => {
+      event.preventDefault();
+      cards.forEach(c => c.classList.remove("note-drag-over"));
+      if(!draggedNoteId) return;
+      await saveNoteOrder(box);
+    });
+  });
+}
+
+async function saveNoteOrder(box){
+  if(!isAdmin) return;
+  const cards = Array.from(box.querySelectorAll(".card[data-note-id]"));
+  const updates = [];
+  cards.forEach((card,index) => {
+    const id = card.dataset.noteId;
+    if(!id || !notesData[id]) return;
+    notesData[id].order = index;
+    updates.push(offlineUpdate(`notes/${id}`, {order:index, updatedAt:Date.now()}));
+  });
+  try{
+    await Promise.all(updates);
+  }catch(error){
+    console.error("Could not save note order", error);
+    alert("The note position changed on this device, but could not be synced yet.");
+  }
 }
 
 
@@ -4654,10 +4764,16 @@ window.saveNoteEditor = async function(){
 
     }else{
 
+      const existingOrders = Object.values(notesData || {})
+        .map(note => Number(note?.order))
+        .filter(Number.isFinite);
+      const nextOrder = existingOrders.length ? Math.max(...existingOrders) + 1 : Object.keys(notesData || {}).length;
+
       await offlinePush("notes",{
         title,
         category,
         html:htmlContent,
+        order:nextOrder,
         createdAt:Date.now()
       });
 
