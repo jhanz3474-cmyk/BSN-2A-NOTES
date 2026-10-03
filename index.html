@@ -2011,10 +2011,25 @@ and (orientation:landscape){
 
     <!-- MAIN -->
 
-    <div class="nav-label">
-      Main
+    <div class="group-header">
+
+      <span class="group-header-title">
+        Main
+      </span>
+
+      <button
+        class="group-toggle"
+        id="mainToggle"
+        onclick="toggleNavSection('mainNav','mainToggle','mainArrow','mainCollapsed')"
+        title="Collapse main navigation"
+        aria-label="Collapse main navigation"
+      >
+        <span id="mainArrow">⌃</span>
+      </button>
+
     </div>
 
+    <div class="group-nav" id="mainNav">
 
     <button
       class="on"
@@ -2045,6 +2060,8 @@ and (orientation:landscape){
       </span>
 
     </button>
+
+    </div>
 
 
     <!-- GROUP -->
@@ -2158,10 +2175,25 @@ and (orientation:landscape){
 
     <!-- SYSTEM -->
 
-    <div class="nav-label">
-      System
+    <div class="group-header">
+
+      <span class="group-header-title">
+        System
+      </span>
+
+      <button
+        class="group-toggle"
+        id="systemToggle"
+        onclick="toggleNavSection('systemNav','systemToggle','systemArrow','systemCollapsed')"
+        title="Collapse system navigation"
+        aria-label="Collapse system navigation"
+      >
+        <span id="systemArrow">⌃</span>
+      </button>
+
     </div>
 
+    <div class="group-nav" id="systemNav">
 
     <button
       onclick="adminLogin()"
@@ -2191,6 +2223,8 @@ and (orientation:landscape){
       </span>
 
     </button>
+
+    </div>
 
 
   </div>
@@ -3203,6 +3237,75 @@ function esc(value){
   );
 
 }
+
+
+/* =========================================================
+   MAIN / SYSTEM NAVIGATION COLLAPSE
+========================================================= */
+
+window.toggleNavSection =
+function(navId,toggleId,arrowId,storageKey){
+
+  const nav =
+    document.getElementById(navId);
+
+  const toggle =
+    document.getElementById(toggleId);
+
+  const arrow =
+    document.getElementById(arrowId);
+
+  if(!nav || !toggle || !arrow) return;
+
+  const collapsed =
+    nav.classList.toggle("collapsed");
+
+  arrow.textContent =
+    collapsed ? "⌄" : "⌃";
+
+  toggle.title =
+    collapsed
+      ? "Show navigation"
+      : "Collapse navigation";
+
+  toggle.setAttribute(
+    "aria-label",
+    collapsed
+      ? "Show navigation"
+      : "Collapse navigation"
+  );
+
+  localStorage.setItem(
+    storageKey,
+    collapsed ? "true" : "false"
+  );
+
+};
+
+
+/* =========================================================
+   RESTORE MAIN / SYSTEM NAVIGATION STATE
+========================================================= */
+
+[
+  ["mainNav","mainToggle","mainArrow","mainCollapsed"],
+  ["systemNav","systemToggle","systemArrow","systemCollapsed"]
+].forEach(([navId,toggleId,arrowId,storageKey]) => {
+
+  if(localStorage.getItem(storageKey) === "true"){
+
+    const nav = document.getElementById(navId);
+    const arrow = document.getElementById(arrowId);
+    const toggle = document.getElementById(toggleId);
+
+    if(nav) nav.classList.add("collapsed");
+    if(arrow) arrow.textContent = "⌄";
+    if(toggle){
+      toggle.title = "Show navigation";
+      toggle.setAttribute("aria-label","Show navigation");
+    }
+  }
+});
 
 
 /* =========================================================
