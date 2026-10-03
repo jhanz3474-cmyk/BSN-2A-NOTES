@@ -2,39 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#176b4d">
-
 <title>Nursing Duty Hub</title>
 
 <style>
-/* =========================================================
-   NURSING DUTY HUB
-   BSN 2A - Clinical Duty Group
-========================================================= */
-
 :root{
   --bg:#f4f8f6;
-  --surface:#ffffff;
+  --surface:#fff;
   --surface2:#eef5f1;
   --surface3:#e3f0ea;
-
   --text:#18332a;
   --muted:#587066;
   --muted2:#7b9188;
-
   --border:#d6e3dd;
-
   --primary:#176b4d;
   --primary2:#23845f;
   --primarySoft:#e2f1e9;
-
   --danger:#c64242;
-  --warning:#b87916;
-  --blue:#356fa8;
-
   --shadow:#17382b16;
-  --input:#ffffff;
+  --input:#fff;
 }
 
 body.dark{
@@ -42,21 +29,14 @@ body.dark{
   --surface:#17221e;
   --surface2:#22302a;
   --surface3:#294036;
-
   --text:#edf7f2;
   --muted:#b9cbc3;
   --muted2:#91a69d;
-
   --border:#35483f;
-
   --primary:#62b58f;
   --primary2:#77c7a0;
   --primarySoft:#1e3a2e;
-
   --danger:#ff7777;
-  --warning:#e0a94d;
-  --blue:#72a6db;
-
   --shadow:#00000045;
   --input:#17221e;
 }
@@ -65,32 +45,20 @@ body.dark{
   box-sizing:border-box;
 }
 
-html,
-body{
+html,body{
   margin:0;
   padding:0;
   min-height:100%;
 }
 
 body{
-  font-family:
-    Inter,
-    Arial,
-    Helvetica,
-    sans-serif;
-
+  font-family:Arial,Helvetica,sans-serif;
   background:var(--bg);
   color:var(--text);
-
-  transition:
-    background .2s,
-    color .2s;
+  transition:.2s;
 }
 
-button,
-input,
-textarea,
-select{
+button,input,textarea,select{
   font:inherit;
 }
 
@@ -98,118 +66,78 @@ button{
   cursor:pointer;
 }
 
-/* =========================================================
-   SIDEBAR
-========================================================= */
+/* ================= SIDEBAR ================= */
 
 .side{
   position:fixed;
   left:0;
   top:0;
   bottom:0;
-
   width:250px;
-
   background:var(--surface);
-
-  border-right:
-    1px solid var(--border);
-
+  border-right:1px solid var(--border);
   padding:20px 14px;
-
   z-index:100;
-
   display:flex;
   flex-direction:column;
-
-  box-shadow:
-    4px 0 18px var(--shadow);
-
+  box-shadow:4px 0 18px var(--shadow);
   overflow-y:auto;
 }
 
 .brand{
-  padding:
-    5px 10px 22px;
+  padding:5px 10px 22px;
 }
 
 .brand-icon{
   width:46px;
   height:46px;
-
   display:flex;
   align-items:center;
   justify-content:center;
-
   background:var(--primarySoft);
-
   border-radius:14px;
-
   font-size:25px;
-
   margin-bottom:11px;
 }
 
 .brand h1{
   margin:0;
-
   font-size:20px;
-
   color:var(--primary);
 }
 
 .brand p{
   margin:5px 0 0;
-
   color:var(--muted2);
-
   font-size:12px;
 }
 
 .nav{
   display:flex;
   flex-direction:column;
-
   gap:5px;
 }
 
 .nav-label{
-  margin:
-    13px 10px 5px;
-
+  margin:13px 10px 5px;
   font-size:10px;
-
   font-weight:bold;
-
   color:var(--muted2);
-
   text-transform:uppercase;
-
   letter-spacing:1px;
 }
 
 .nav button{
   width:100%;
-
   border:0;
-
   background:transparent;
-
   color:var(--text);
-
-  padding:
-    11px 12px;
-
+  padding:11px 12px;
   border-radius:10px;
-
   text-align:left;
-
   display:flex;
-
   align-items:center;
-
   gap:11px;
-
   transition:.15s;
 }
 
@@ -219,138 +147,91 @@ button{
 
 .nav button.on{
   background:var(--primarySoft);
-
   color:var(--primary);
-
   font-weight:bold;
 }
 
 .nav-icon{
   width:23px;
-
   text-align:center;
-
   font-size:17px;
 }
 
 #themeToggle{
   justify-content:flex-end;
-
   margin-top:7px;
 }
 
 #themeToggle .theme-icon{
   margin-left:auto;
-
   font-size:19px;
-
-  line-height:1;
 }
 
-/* =========================================================
-   MAIN
-========================================================= */
+/* ================= MAIN ================= */
 
 .main{
   margin-left:250px;
-
   min-height:100vh;
-
   padding:28px;
 }
 
 .topbar{
   display:flex;
-
   align-items:center;
-
   justify-content:space-between;
-
   gap:15px;
-
   margin-bottom:22px;
 }
 
 .topbar-left h2{
   margin:0;
-
   font-size:28px;
 }
 
 .topbar-left p{
   margin:5px 0 0;
-
   color:var(--muted);
-
   font-size:13px;
 }
 
 .userbox{
   display:flex;
-
   align-items:center;
-
   gap:9px;
-
   background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
-  padding:
-    8px 12px;
-
+  border:1px solid var(--border);
+  padding:8px 12px;
   border-radius:12px;
 }
 
 .user-avatar{
   width:31px;
   height:31px;
-
   border-radius:50%;
-
   background:var(--primarySoft);
-
   color:var(--primary);
-
   display:flex;
   align-items:center;
   justify-content:center;
-
   font-weight:bold;
-
   font-size:13px;
 }
 
 .user-name{
-  color:var(--text);
-
   font-size:13px;
-
   font-weight:bold;
 }
 
-/* =========================================================
-   ANNOUNCEMENT
-========================================================= */
+/* ================= ANNOUNCEMENT ================= */
 
 .announcement{
   background:var(--primarySoft);
-
   color:var(--text);
-
-  border:
-    1px solid var(--border);
-
-  border-left:
-    4px solid var(--primary);
-
+  border:1px solid var(--border);
+  border-left:4px solid var(--primary);
   border-radius:12px;
-
   padding:13px 15px;
-
   margin-bottom:20px;
-
   display:none;
 }
 
@@ -358,9 +239,7 @@ button{
   color:var(--primary);
 }
 
-/* =========================================================
-   SECTIONS
-========================================================= */
+/* ================= SECTIONS ================= */
 
 .section{
   display:none;
@@ -370,169 +249,85 @@ button{
   display:block;
 }
 
-/* =========================================================
-   DASHBOARD
-========================================================= */
+/* ================= DASHBOARD ================= */
 
 .welcome{
-  background:
-    linear-gradient(
-      135deg,
-      var(--primary),
-      var(--primary2)
-    );
-
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
   color:white;
-
   border-radius:17px;
-
-  padding:23px;
-
+  padding:25px;
   margin-bottom:18px;
-
   position:relative;
-
   overflow:hidden;
 }
 
 .welcome:after{
   content:"🩺";
-
   position:absolute;
-
-  right:28px;
-  top:18px;
-
-  font-size:65px;
-
+  right:30px;
+  top:17px;
+  font-size:70px;
   opacity:.15;
 }
 
 .welcome h2{
   margin:0;
-
   font-size:23px;
 }
 
 .welcome p{
   margin:7px 0 0;
-
   opacity:.9;
-
   font-size:13px;
-}
-
-.stats{
-  display:grid;
-
-  grid-template-columns:
-    repeat(4,1fr);
-
-  gap:13px;
-
-  margin-bottom:18px;
-}
-
-.stat{
-  background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
-  border-radius:13px;
-
-  padding:16px;
-
-  box-shadow:
-    0 4px 12px var(--shadow);
-}
-
-.stat-icon{
-  font-size:20px;
-
-  margin-bottom:9px;
-}
-
-.stat-number{
-  font-size:24px;
-
-  font-weight:bold;
-
-  color:var(--primary);
-}
-
-.stat-label{
-  margin-top:3px;
-
-  font-size:11px;
-
-  color:var(--muted2);
 }
 
 .dashboard-grid{
   display:grid;
-
-  grid-template-columns:
-    1.3fr .7fr;
-
+  grid-template-columns:1.3fr .7fr;
   gap:15px;
 }
 
 .panel{
   background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:14px;
-
   padding:17px;
-
-  box-shadow:
-    0 4px 12px var(--shadow);
+  box-shadow:0 4px 12px var(--shadow);
 }
 
 .panel h3{
   margin:0 0 13px;
-
   font-size:16px;
 }
 
 .quick-list{
   display:flex;
-
   flex-direction:column;
-
   gap:8px;
 }
 
 .quick-item{
   display:flex;
-
   align-items:center;
-
   gap:10px;
-
-  padding:10px;
-
+  padding:11px;
   background:var(--surface2);
-
   border-radius:10px;
+  cursor:pointer;
+}
+
+.quick-item:hover{
+  background:var(--surface3);
 }
 
 .quick-item-icon{
-  width:34px;
-  height:34px;
-
+  width:35px;
+  height:35px;
   display:flex;
-
   align-items:center;
   justify-content:center;
-
   background:var(--primarySoft);
-
   border-radius:9px;
-
   font-size:17px;
 }
 
@@ -542,88 +337,80 @@ button{
 
 .quick-item strong{
   display:block;
-
   font-size:13px;
 }
 
 .quick-item small{
   color:var(--muted2);
-
   font-size:11px;
 }
 
 .duty-card{
   background:var(--primarySoft);
-
   border-radius:12px;
-
-  padding:14px;
+  padding:15px;
 }
 
 .duty-card .label{
   color:var(--muted);
-
   font-size:10px;
-
   text-transform:uppercase;
-
   letter-spacing:.7px;
 }
 
 .duty-card .value{
   font-weight:bold;
-
   margin-top:4px;
-
   color:var(--primary);
 }
 
-/* =========================================================
-   CARDS
-========================================================= */
+/* ================= CARDS ================= */
 
 .card{
   background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:14px;
-
   padding:17px;
-
-  box-shadow:
-    0 4px 12px var(--shadow);
+  box-shadow:0 4px 12px var(--shadow);
 }
 
 .card h3{
   margin:0 0 9px;
-
   font-size:17px;
 }
 
-.card p{
-  margin:0;
-
-  color:var(--muted);
-
-  line-height:1.55;
+.note-category{
+  display:inline-block;
+  background:var(--primarySoft);
+  color:var(--primary);
+  padding:4px 8px;
+  border-radius:6px;
+  font-size:10px;
+  font-weight:bold;
+  margin-bottom:9px;
 }
 
-/* =========================================================
-   ADMIN PANEL
-========================================================= */
+.note-text{
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  color:var(--muted);
+  line-height:1.6;
+  margin:0;
+}
+
+.note-actions{
+  display:flex;
+  gap:6px;
+  margin-top:12px;
+}
+
+/* ================= ADMIN ================= */
 
 .admin-panel{
   background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:14px;
-
   padding:17px;
-
   margin-bottom:18px;
 }
 
@@ -633,10 +420,7 @@ button{
 
 .form-grid{
   display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
+  grid-template-columns:1fr 1fr;
   gap:10px;
 }
 
@@ -644,29 +428,18 @@ button{
   grid-column:1/-1;
 }
 
-input,
-textarea,
-select{
+input,textarea,select{
   width:100%;
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:9px;
-
-  padding:
-    10px 12px;
-
+  padding:10px 12px;
   background:var(--input);
-
   color:var(--text);
-
   outline:none;
 }
 
 textarea{
   min-height:100px;
-
   resize:vertical;
 }
 
@@ -678,25 +451,16 @@ select:focus{
 
 .form-buttons{
   display:flex;
-
   gap:8px;
-
   margin-top:10px;
 }
 
 .btn{
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   background:var(--surface);
-
   color:var(--text);
-
-  padding:
-    8px 12px;
-
+  padding:8px 12px;
   border-radius:8px;
-
   font-size:12px;
 }
 
@@ -706,9 +470,7 @@ select:focus{
 
 .btn.primary{
   background:var(--primary);
-
   border-color:var(--primary);
-
   color:white;
 }
 
@@ -716,424 +478,33 @@ select:focus{
   color:var(--danger);
 }
 
-/* =========================================================
-   DUTY TASKS
-========================================================= */
-
-.tasks-list{
-  display:flex;
-
-  flex-direction:column;
-
-  gap:10px;
-}
-
-.task{
-  background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
-  border-radius:13px;
-
-  padding:14px;
-
-  display:flex;
-
-  align-items:flex-start;
-
-  gap:11px;
-
-  box-shadow:
-    0 4px 12px var(--shadow);
-
-  transition:.15s;
-}
-
-.task[draggable="true"]{
-  cursor:grab;
-}
-
-.task.dragging{
-  opacity:.45;
-}
-
-.task.drag-over{
-  border:
-    2px dashed var(--primary);
-}
-
-.task-check{
-  width:20px;
-  height:20px;
-
-  margin-top:2px;
-
-  flex:none;
-
-  accent-color:var(--primary);
-
-  cursor:pointer;
-}
-
-.task-content{
-  flex:1;
-
-  min-width:0;
-}
-
-.task-title{
-  display:block;
-
-  font-weight:bold;
-
-  line-height:1.4;
-
-  overflow-wrap:anywhere;
-}
-
-.task-title.done{
-  text-decoration:line-through;
-
-  opacity:.55;
-}
-
-.task-due{
-  margin-top:5px;
-
-  font-size:11px;
-
-  color:var(--muted2);
-}
-
-.task-description{
-  margin:7px 0 0;
-
-  padding:0;
-
-  color:var(--muted);
-
-  line-height:1.5;
-
-  white-space:pre-wrap;
-
-  overflow-wrap:anywhere;
-}
-
-.task-actions{
-  display:flex;
-
-  gap:5px;
-}
-
-.task-admin-btn,
-.task-admin-delete{
-  border:0;
-
-  background:var(--surface2);
-
-  color:var(--text);
-
-  border-radius:7px;
-
-  padding:
-    6px 8px;
-
-  font-size:11px;
-}
-
-.task-admin-delete{
-  color:var(--danger);
-}
-
-/* =========================================================
-   NURSING NOTES
-========================================================= */
+/* ================= NOTES ================= */
 
 .notes-grid{
   display:grid;
-
-  grid-template-columns:
-    repeat(auto-fit,minmax(270px,1fr));
-
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
   gap:14px;
 }
 
-.note-category{
-  display:inline-block;
-
-  background:var(--primarySoft);
-
-  color:var(--primary);
-
-  padding:
-    4px 8px;
-
-  border-radius:6px;
-
-  font-size:10px;
-
-  font-weight:bold;
-
-  margin-bottom:9px;
-}
-
-.note-text{
-  white-space:pre-wrap;
-
-  overflow-wrap:anywhere;
-
-  color:var(--muted);
-
-  line-height:1.6;
-
-  margin:0;
-}
-
-.note-meta{
-  margin-top:12px;
-
-  color:var(--muted2);
-
-  font-size:10px;
-}
-
-.note-actions{
-  display:flex;
-
-  gap:6px;
-
-  margin-top:12px;
-}
-
-/* =========================================================
-   DRUG STUDY
-========================================================= */
-
-.drug-grid{
-  display:grid;
-
-  grid-template-columns:
-    repeat(auto-fit,minmax(300px,1fr));
-
-  gap:13px;
-}
-
-.drug-card{
-  background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
-  border-radius:13px;
-
-  padding:16px;
-
-  box-shadow:
-    0 4px 12px var(--shadow);
-}
-
-.drug-header{
-  display:flex;
-
-  align-items:center;
-
-  gap:10px;
-
-  margin-bottom:13px;
-}
-
-.drug-icon{
-  width:39px;
-  height:39px;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  background:var(--primarySoft);
-
-  border-radius:10px;
-
-  font-size:19px;
-}
-
-.drug-header h3{
-  margin:0;
-
-  font-size:15px;
-}
-
-.drug-header small{
-  color:var(--muted2);
-
-  font-size:10px;
-}
-
-.drug-info{
-  display:grid;
-
-  gap:8px;
-}
-
-.drug-row{
-  padding:8px 9px;
-
-  background:var(--surface2);
-
-  border-radius:8px;
-}
-
-.drug-row strong{
-  display:block;
-
-  font-size:10px;
-
-  color:var(--primary);
-
-  text-transform:uppercase;
-
-  margin-bottom:3px;
-}
-
-.drug-row span{
-  color:var(--muted);
-
-  font-size:12px;
-
-  line-height:1.4;
-}
-
-/* =========================================================
-   PATIENT CASES
-========================================================= */
-
-.case-grid{
-  display:grid;
-
-  grid-template-columns:
-    repeat(auto-fit,minmax(300px,1fr));
-
-  gap:14px;
-}
-
-.case-card{
-  background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
-  border-radius:14px;
-
-  padding:16px;
-
-  box-shadow:
-    0 4px 12px var(--shadow);
-}
-
-.case-top{
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  gap:10px;
-
-  margin-bottom:13px;
-}
-
-.patient-code{
-  color:var(--primary);
-
-  font-weight:bold;
-}
-
-.case-badge{
-  background:var(--surface2);
-
-  color:var(--muted);
-
-  border-radius:6px;
-
-  padding:4px 7px;
-
-  font-size:10px;
-}
-
-.case-info{
-  display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
-  gap:8px;
-}
-
-.case-info div{
-  background:var(--surface2);
-
-  padding:9px;
-
-  border-radius:8px;
-}
-
-.case-info strong{
-  display:block;
-
-  color:var(--muted2);
-
-  font-size:9px;
-
-  text-transform:uppercase;
-
-  margin-bottom:3px;
-}
-
-.case-info span{
-  font-size:12px;
-}
-
-.case-notes{
-  margin-top:10px;
-
-  color:var(--muted);
-
-  font-size:12px;
-
-  line-height:1.5;
-}
-
-/* =========================================================
-   REQUIREMENTS
-========================================================= */
+/* ================= REQUIREMENTS ================= */
 
 .requirements{
   display:grid;
-
-  grid-template-columns:
-    repeat(auto-fit,minmax(260px,1fr));
-
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:13px;
 }
 
 .requirement{
   background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:13px;
-
   padding:15px;
+  box-shadow:0 4px 12px var(--shadow);
 }
 
 .requirement-top{
   display:flex;
-
   gap:10px;
-
   align-items:flex-start;
 }
 
@@ -1143,23 +514,103 @@ select:focus{
 
 .requirement h3{
   margin:0;
-
   font-size:14px;
 }
 
 .requirement p{
   margin:6px 0 0;
-
   color:var(--muted);
-
   font-size:11px;
-
   line-height:1.5;
 }
 
-/* =========================================================
-   CHAT
-========================================================= */
+/* ================= SCHEDULE ================= */
+
+.schedule-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:13px;
+}
+
+.schedule-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:15px;
+  box-shadow:0 4px 12px var(--shadow);
+}
+
+.schedule-day{
+  color:var(--primary);
+  font-size:12px;
+  font-weight:bold;
+  text-transform:uppercase;
+}
+
+.schedule-area{
+  font-size:18px;
+  font-weight:bold;
+  margin:5px 0;
+}
+
+.schedule-time{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.schedule-ci{
+  margin-top:9px;
+  color:var(--muted2);
+  font-size:11px;
+}
+
+/* ================= MEMBERS ================= */
+
+.members-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+
+.member{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:14px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.member-avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:var(--primarySoft);
+  color:var(--primary);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
+.member-info{
+  min-width:0;
+  flex:1;
+}
+
+.member-info strong{
+  display:block;
+  font-size:13px;
+}
+
+.member-info span{
+  color:var(--muted2);
+  font-size:10px;
+}
+
+/* ================= CHAT ================= */
 
 .chat{
   max-width:900px;
@@ -1167,61 +618,40 @@ select:focus{
 
 .chatlog{
   background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:14px;
-
   padding:15px;
-
   height:55vh;
-
   overflow-y:auto;
 }
 
 .msg{
-  padding:
-    10px 13px;
-
+  padding:10px 13px;
   margin:8px 0;
-
   border-radius:12px;
-
   max-width:85%;
-
   background:var(--surface2);
-
   white-space:pre-wrap;
-
   overflow-wrap:anywhere;
-
   line-height:1.5;
 }
 
 .msg.me{
   margin-left:auto;
-
   background:var(--primarySoft);
 }
 
 .msg-name{
   display:block;
-
   font-size:10px;
-
   font-weight:bold;
-
   color:var(--primary);
-
   margin-bottom:3px;
 }
 
 .chatrow{
   display:flex;
-
   gap:8px;
-
   margin-top:10px;
 }
 
@@ -1229,223 +659,65 @@ select:focus{
   flex:1;
 }
 
-/* =========================================================
-   FILES
-========================================================= */
+/* ================= FILES ================= */
 
 .files-grid{
   display:grid;
-
-  grid-template-columns:
-    repeat(auto-fit,minmax(240px,1fr));
-
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
   gap:13px;
 }
 
 .file-card{
   background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:13px;
-
   padding:15px;
-
-  box-shadow:
-    0 4px 12px var(--shadow);
+  box-shadow:0 4px 12px var(--shadow);
 }
 
 .file-icon{
   width:38px;
   height:38px;
-
   background:var(--primarySoft);
-
   border-radius:9px;
-
   display:flex;
-
   align-items:center;
   justify-content:center;
-
   font-size:19px;
-
   margin-bottom:10px;
 }
 
 .file-card h3{
   margin:0 0 5px;
-
   font-size:14px;
 }
 
 .file-card p{
   margin:0;
-
   color:var(--muted);
-
   font-size:11px;
-
   line-height:1.5;
 }
 
 .file-card a{
   display:inline-block;
-
   margin-top:10px;
-
   color:var(--primary);
-
   text-decoration:none;
-
   font-weight:bold;
-
   font-size:12px;
 }
 
-/* =========================================================
-   SCHEDULE
-========================================================= */
-
-.schedule-grid{
-  display:grid;
-
-  grid-template-columns:
-    repeat(auto-fit,minmax(250px,1fr));
-
-  gap:13px;
-}
-
-.schedule-card{
-  background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
-  border-radius:13px;
-
-  padding:15px;
-}
-
-.schedule-day{
-  color:var(--primary);
-
-  font-size:12px;
-
-  font-weight:bold;
-
-  text-transform:uppercase;
-
-  letter-spacing:.5px;
-}
-
-.schedule-area{
-  font-size:18px;
-
-  font-weight:bold;
-
-  margin:5px 0;
-}
-
-.schedule-time{
-  color:var(--muted);
-
-  font-size:12px;
-}
-
-.schedule-ci{
-  margin-top:9px;
-
-  color:var(--muted2);
-
-  font-size:11px;
-}
-
-/* =========================================================
-   MEMBERS
-========================================================= */
-
-.members-grid{
-  display:grid;
-
-  grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-
-  gap:12px;
-}
-
-.member{
-  background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
-  border-radius:13px;
-
-  padding:14px;
-
-  display:flex;
-
-  align-items:center;
-
-  gap:11px;
-}
-
-.member-avatar{
-  width:40px;
-  height:40px;
-
-  border-radius:50%;
-
-  background:var(--primarySoft);
-
-  color:var(--primary);
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  font-weight:bold;
-}
-
-.member-info{
-  min-width:0;
-}
-
-.member-info strong{
-  display:block;
-
-  font-size:13px;
-}
-
-.member-info span{
-  color:var(--muted2);
-
-  font-size:10px;
-}
-
-/* =========================================================
-   ABOUT
-========================================================= */
+/* ================= ABOUT ================= */
 
 .about-box{
   background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:14px;
-
   padding:20px;
-
   max-width:850px;
-
   line-height:1.65;
-
-  box-shadow:
-    0 4px 12px var(--shadow);
+  box-shadow:0 4px 12px var(--shadow);
 }
 
 .about-box h2{
@@ -1456,37 +728,24 @@ select:focus{
   color:var(--muted);
 }
 
-/* =========================================================
-   EMPTY
-========================================================= */
+/* ================= EMPTY ================= */
 
 .empty{
   text-align:center;
-
   color:var(--muted2);
-
   padding:35px 10px;
 }
 
-/* =========================================================
-   MODAL
-========================================================= */
+/* ================= MODAL ================= */
 
 .modal{
   position:fixed;
-
   inset:0;
-
   background:#0008;
-
   display:none;
-
   align-items:center;
-
   justify-content:center;
-
   z-index:500;
-
   padding:20px;
 }
 
@@ -1495,19 +754,12 @@ select:focus{
 }
 
 .modal-box{
-  width:min(520px,100%);
-
+  width:min(500px,100%);
   background:var(--surface);
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:15px;
-
   padding:20px;
-
-  box-shadow:
-    0 20px 50px #0005;
+  box-shadow:0 20px 50px #0005;
 }
 
 .modal-box h3{
@@ -1516,24 +768,14 @@ select:focus{
 
 .modal-buttons{
   display:flex;
-
   justify-content:flex-end;
-
   gap:8px;
-
   margin-top:12px;
 }
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* ================= RESPONSIVE ================= */
 
-@media(max-width:1000px){
-
-  .stats{
-    grid-template-columns:
-      repeat(2,1fr);
-  }
+@media(max-width:900px){
 
   .dashboard-grid{
     grid-template-columns:1fr;
@@ -1541,49 +783,24 @@ select:focus{
 
 }
 
-@media(max-width:850px){
-
-  .side{
-    width:205px;
-  }
-
-  .main{
-    margin-left:205px;
-
-    padding:18px;
-  }
-
-}
-
-@media(max-width:650px){
+@media(max-width:700px){
 
   .side{
     position:relative;
-
     width:100%;
-
     height:auto;
-
     border-right:0;
-
-    border-bottom:
-      1px solid var(--border);
+    border-bottom:1px solid var(--border);
   }
 
   .main{
     margin-left:0;
-
-    padding:15px;
+    padding:16px;
   }
 
   .topbar{
     align-items:flex-start;
-
     flex-direction:column;
-  }
-
-  .stats{
-    grid-template-columns:1fr 1fr;
   }
 
   .form-grid{
@@ -1595,35 +812,14 @@ select:focus{
   }
 
 }
-
-@media(max-width:430px){
-
-  .stats{
-    grid-template-columns:1fr;
-  }
-
-  .stats .stat{
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-  }
-
-  .stat-icon{
-    margin:0;
-  }
-
-}
 </style>
 </head>
 
-
 <body>
 
-<!-- =========================================================
+<!-- =====================================================
      SIDEBAR
-========================================================= -->
+===================================================== -->
 
 <aside class="side">
 
@@ -1633,7 +829,9 @@ select:focus{
       🩺
     </div>
 
-    <h1>Nursing Duty Hub</h1>
+    <h1>
+      Nursing Duty Hub
+    </h1>
 
     <p>
       BSN 2A • Clinical Duty Group
@@ -1658,34 +856,10 @@ select:focus{
 
 
     <button
-      onclick="show('tasks',this)"
-    >
-      <span class="nav-icon">📋</span>
-      <span>Duty Tasks</span>
-    </button>
-
-
-    <button
-      onclick="show('cases',this)"
-    >
-      <span class="nav-icon">🩺</span>
-      <span>Patient Cases</span>
-    </button>
-
-
-    <button
       onclick="show('notes',this)"
     >
       <span class="nav-icon">📚</span>
       <span>Nursing Notes</span>
-    </button>
-
-
-    <button
-      onclick="show('drugs',this)"
-    >
-      <span class="nav-icon">💊</span>
-      <span>Drug Study</span>
     </button>
 
 
@@ -1739,7 +913,8 @@ select:focus{
     </div>
 
 
-    <!-- THEME ICON ONLY -->
+    <!-- ICON ONLY THEME BUTTON -->
+
     <button
       id="themeToggle"
       onclick="toggleTheme()"
@@ -1773,9 +948,9 @@ select:focus{
 </aside>
 
 
-<!-- =========================================================
+<!-- =====================================================
      MAIN
-========================================================= -->
+===================================================== -->
 
 <main class="main">
 
@@ -1815,17 +990,15 @@ select:focus{
   </div>
 
 
-  <!-- ANNOUNCEMENT -->
-
   <div
     id="announcement"
     class="announcement"
   ></div>
 
 
-  <!-- =======================================================
+  <!-- ===================================================
        DASHBOARD
-  ======================================================== -->
+  ==================================================== -->
 
   <section
     id="dashboard"
@@ -1839,85 +1012,9 @@ select:focus{
       </h2>
 
       <p>
-        Keep your duty tasks, patient cases,
-        requirements, and group information organized.
+        Keep your nursing notes, requirements,
+        duty schedule, group members, and files organized.
       </p>
-
-    </div>
-
-
-    <div class="stats">
-
-      <div class="stat">
-
-        <div class="stat-icon">
-          📋
-        </div>
-
-        <div class="stat-number"
-             id="statTasks">
-          0
-        </div>
-
-        <div class="stat-label">
-          Duty Tasks
-        </div>
-
-      </div>
-
-
-      <div class="stat">
-
-        <div class="stat-icon">
-          🩺
-        </div>
-
-        <div class="stat-number"
-             id="statCases">
-          0
-        </div>
-
-        <div class="stat-label">
-          Patient Cases
-        </div>
-
-      </div>
-
-
-      <div class="stat">
-
-        <div class="stat-icon">
-          💊
-        </div>
-
-        <div class="stat-number"
-             id="statDrugs">
-          0
-        </div>
-
-        <div class="stat-label">
-          Drug Studies
-        </div>
-
-      </div>
-
-
-      <div class="stat">
-
-        <div class="stat-icon">
-          👥
-        </div>
-
-        <div class="stat-number"
-             id="statMembers">
-          0
-        </div>
-
-        <div class="stat-label">
-          Group Members
-        </div>
-
-      </div>
 
     </div>
 
@@ -1932,77 +1029,97 @@ select:focus{
 
         <div class="quick-list">
 
-          <div class="quick-item">
+          <div
+            class="quick-item"
+            onclick="goToSection('notes')"
+          >
 
             <div class="quick-item-icon">
-              📋
+              📚
             </div>
 
             <div>
+
               <strong>
-                Duty Tasks
+                Nursing Notes
               </strong>
 
               <small>
-                Check your clinical responsibilities
+                Review shared nursing notes
               </small>
+
             </div>
 
           </div>
 
 
-          <div class="quick-item">
+          <div
+            class="quick-item"
+            onclick="goToSection('requirements')"
+          >
 
             <div class="quick-item-icon">
-              🩺
+              📝
             </div>
 
             <div>
+
               <strong>
-                Patient Cases
+                Requirements
               </strong>
 
               <small>
-                Review assigned patient information
+                Check school and duty requirements
               </small>
+
             </div>
 
           </div>
 
 
-          <div class="quick-item">
+          <div
+            class="quick-item"
+            onclick="goToSection('schedule')"
+          >
 
             <div class="quick-item-icon">
-              💊
+              📅
             </div>
 
             <div>
+
               <strong>
-                Drug Study
+                Duty Schedule
               </strong>
 
               <small>
-                Review medications before duty
+                View your group's clinical schedule
               </small>
+
             </div>
 
           </div>
 
 
-          <div class="quick-item">
+          <div
+            class="quick-item"
+            onclick="goToSection('files')"
+          >
 
             <div class="quick-item-icon">
               📁
             </div>
 
             <div>
+
               <strong>
                 Files
               </strong>
 
               <small>
-                Access shared clinical resources
+                Access shared class resources
               </small>
+
             </div>
 
           </div>
@@ -2041,163 +1158,9 @@ select:focus{
   </section>
 
 
-  <!-- =======================================================
-       DUTY TASKS
-  ======================================================== -->
-
-  <section
-    id="tasks"
-    class="section"
-  >
-
-    <div
-      id="adminTasksPanel"
-      class="admin-panel"
-      style="display:none;"
-    >
-
-      <h3 id="taskFormTitle">
-        Add Duty Task
-      </h3>
-
-      <div class="form-grid">
-
-        <input
-          id="taskTitle"
-          type="text"
-          placeholder="Task title"
-        >
-
-        <input
-          id="taskDue"
-          type="text"
-          placeholder="Due date / time"
-        >
-
-        <textarea
-          id="taskDescription"
-          class="full"
-          placeholder="Task description"
-        ></textarea>
-
-      </div>
-
-      <div class="form-buttons">
-
-        <button
-          class="btn primary"
-          id="taskSaveBtn"
-          onclick="saveTask()"
-        >
-          Add Task
-        </button>
-
-        <button
-          class="btn"
-          id="taskCancelBtn"
-          onclick="cancelTaskEdit()"
-          style="display:none;"
-        >
-          Cancel
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div
-      id="tasksList"
-      class="tasks-list"
-    ></div>
-
-  </section>
-
-
-  <!-- =======================================================
-       PATIENT CASES
-  ======================================================== -->
-
-  <section
-    id="cases"
-    class="section"
-  >
-
-    <div
-      id="adminCasesPanel"
-      class="admin-panel"
-      style="display:none;"
-    >
-
-      <h3>
-        Add Patient Case
-      </h3>
-
-      <div class="form-grid">
-
-        <input
-          id="caseCode"
-          placeholder="Patient code"
-        >
-
-        <input
-          id="caseDiagnosis"
-          placeholder="Diagnosis"
-        >
-
-        <input
-          id="caseAge"
-          placeholder="Age / Sex"
-        >
-
-        <input
-          id="caseAssigned"
-          placeholder="Assigned student"
-        >
-
-        <input
-          id="caseArea"
-          placeholder="Ward / Area"
-        >
-
-        <input
-          id="caseStatus"
-          placeholder="Status"
-        >
-
-        <textarea
-          id="caseNotes"
-          class="full"
-          placeholder="Assessment / notes"
-        ></textarea>
-
-      </div>
-
-      <div class="form-buttons">
-
-        <button
-          class="btn primary"
-          onclick="addCase()"
-        >
-          Add Case
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div
-      id="casesList"
-      class="case-grid"
-    ></div>
-
-  </section>
-
-
-  <!-- =======================================================
+  <!-- ===================================================
        NURSING NOTES
-  ======================================================== -->
+  ==================================================== -->
 
   <section
     id="notes"
@@ -2256,95 +1219,9 @@ select:focus{
   </section>
 
 
-  <!-- =======================================================
-       DRUG STUDY
-  ======================================================== -->
-
-  <section
-    id="drugs"
-    class="section"
-  >
-
-    <div
-      id="adminDrugsPanel"
-      class="admin-panel"
-      style="display:none;"
-    >
-
-      <h3>
-        Add Drug Study
-      </h3>
-
-      <div class="form-grid">
-
-        <input
-          id="drugName"
-          placeholder="Drug name"
-        >
-
-        <input
-          id="drugClass"
-          placeholder="Drug class"
-        >
-
-        <input
-          id="drugDose"
-          placeholder="Dose"
-        >
-
-        <input
-          id="drugRoute"
-          placeholder="Route / Frequency"
-        >
-
-        <input
-          id="drugIndication"
-          placeholder="Indication"
-        >
-
-        <input
-          id="drugContra"
-          placeholder="Contraindications"
-        >
-
-        <input
-          id="drugSide"
-          placeholder="Side effects"
-        >
-
-        <textarea
-          id="drugNursing"
-          class="full"
-          placeholder="Nursing responsibilities"
-        ></textarea>
-
-      </div>
-
-      <div class="form-buttons">
-
-        <button
-          class="btn primary"
-          onclick="addDrug()"
-        >
-          Add Drug
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div
-      id="drugsList"
-      class="drug-grid"
-    ></div>
-
-  </section>
-
-
-  <!-- =======================================================
+  <!-- ===================================================
        REQUIREMENTS
-  ======================================================== -->
+  ==================================================== -->
 
   <section
     id="requirements"
@@ -2403,9 +1280,9 @@ select:focus{
   </section>
 
 
-  <!-- =======================================================
+  <!-- ===================================================
        DUTY SCHEDULE
-  ======================================================== -->
+  ==================================================== -->
 
   <section
     id="schedule"
@@ -2474,9 +1351,9 @@ select:focus{
   </section>
 
 
-  <!-- =======================================================
+  <!-- ===================================================
        GROUP MEMBERS
-  ======================================================== -->
+  ==================================================== -->
 
   <section
     id="members"
@@ -2529,9 +1406,9 @@ select:focus{
   </section>
 
 
-  <!-- =======================================================
+  <!-- ===================================================
        CHAT
-  ======================================================== -->
+  ==================================================== -->
 
   <section
     id="chat"
@@ -2568,9 +1445,9 @@ select:focus{
   </section>
 
 
-  <!-- =======================================================
+  <!-- ===================================================
        FILES
-  ======================================================== -->
+  ==================================================== -->
 
   <section
     id="files"
@@ -2629,9 +1506,9 @@ select:focus{
   </section>
 
 
-  <!-- =======================================================
+  <!-- ===================================================
        ABOUT
-  ======================================================== -->
+  ==================================================== -->
 
   <section
     id="about"
@@ -2646,21 +1523,19 @@ select:focus{
 
       <p>
         A shared digital workspace for our nursing
-        duty group. It keeps clinical tasks, schedules,
-        patient cases, drug studies, requirements,
-        files, and group communication in one place.
+        duty group. It keeps clinical notes,
+        requirements, schedules, files, and
+        group communication in one place.
       </p>
 
       <p>
-        This system is designed for educational and
-        organizational purposes during nursing clinical
-        activities.
+        This system is designed for educational
+        and organizational purposes during nursing
+        school and clinical duty activities.
       </p>
 
       <p>
-        <strong>
-          Privacy reminder:
-        </strong>
+        <strong>Privacy reminder:</strong>
         Do not place real patient names, hospital
         numbers, addresses, or other identifying
         information in the shared system.
@@ -2673,9 +1548,9 @@ select:focus{
 </main>
 
 
-<!-- =========================================================
-     ADMIN LOGIN
-========================================================= -->
+<!-- =====================================================
+     ADMIN LOGIN MODAL
+===================================================== -->
 
 <div
   id="adminModal"
@@ -2720,9 +1595,9 @@ select:focus{
 
 <script type="module">
 
-/* =========================================================
-   FIREBASE IMPORTS
-========================================================= */
+/* =====================================================
+   FIREBASE
+===================================================== */
 
 import {
   initializeApp
@@ -2739,10 +1614,6 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-
-/* =========================================================
-   FIREBASE CONFIG
-========================================================= */
 
 const firebaseConfig = {
 
@@ -2769,6 +1640,7 @@ const firebaseConfig = {
 
 };
 
+
 const app =
   initializeApp(firebaseConfig);
 
@@ -2776,14 +1648,11 @@ const db =
   getDatabase(app);
 
 
-/* =========================================================
-   STATE
-========================================================= */
+/* =====================================================
+   DATA
+===================================================== */
 
-let tasksData = {};
-let casesData = {};
 let notesData = {};
-let drugsData = {};
 let requirementsData = {};
 let scheduleData = {};
 let membersData = {};
@@ -2792,14 +1661,10 @@ let filesData = {};
 
 let isAdmin = false;
 
-let editingTaskId = null;
 
-let draggedTaskId = null;
-
-
-/* =========================================================
+/* =====================================================
    USER
-========================================================= */
+===================================================== */
 
 let userName =
   localStorage.getItem(
@@ -2810,9 +1675,7 @@ let userName =
 if(!userName){
 
   userName =
-    prompt(
-      "Enter your name:"
-    ) ||
+    prompt("Enter your name:") ||
     "Student";
 
   userName =
@@ -2833,12 +1696,6 @@ document.getElementById(
   userName;
 
 
-document.getElementById(
-  "welcomeText"
-).textContent =
-  `Welcome, ${userName} 👋`;
-
-
 const initials =
   userName
     .split(/\s+/)
@@ -2854,9 +1711,15 @@ document.getElementById(
   initials || "S";
 
 
-/* =========================================================
+document.getElementById(
+  "welcomeText"
+).textContent =
+  `Welcome, ${userName} 👋`;
+
+
+/* =====================================================
    HELPERS
-========================================================= */
+===================================================== */
 
 function cleanText(value){
 
@@ -2879,107 +1742,46 @@ function esc(value){
 }
 
 
-function saveLocal(
-  key,
-  value
-){
-
-  localStorage.setItem(
-    key,
-    JSON.stringify(value)
-  );
-
-}
-
-
-function loadLocal(key){
-
-  try{
-
-    return JSON.parse(
-      localStorage.getItem(key)
-    );
-
-  }catch{
-
-    return null;
-
-  }
-
-}
-
-
-/* =========================================================
+/* =====================================================
    NAVIGATION
-========================================================= */
+===================================================== */
 
 window.show =
-function(
-  section,
-  button
-){
+function(section,button){
 
   document
     .querySelectorAll(".section")
     .forEach(
       x =>
-        x.classList.remove(
-          "active"
-        )
+        x.classList.remove("active")
     );
 
 
   const target =
-    document.getElementById(
-      section
-    );
+    document.getElementById(section);
 
 
-  if(target){
-
-    target.classList.add(
-      "active"
-    );
-
-  }
+  if(target)
+    target.classList.add("active");
 
 
   document
-    .querySelectorAll(
-      ".nav button"
-    )
+    .querySelectorAll(".nav button")
     .forEach(
       x =>
-        x.classList.remove(
-          "on"
-        )
+        x.classList.remove("on")
     );
 
 
-  if(button){
-
-    button.classList.add(
-      "on"
-    );
-
-  }
+  if(button)
+    button.classList.add("on");
 
 
   const titles = {
 
     dashboard:[
       "Dashboard",
-      "Clinical duty overview"
-    ],
-
-    tasks:[
-      "Duty Tasks",
-      "Clinical responsibilities"
-    ],
-
-    cases:[
-      "Patient Cases",
-      "Educational case information"
+      "Clinical duty management for your nursing group"
     ],
 
     notes:[
@@ -2987,14 +1789,9 @@ function(
       "Study and clinical reference notes"
     ],
 
-    drugs:[
-      "Drug Study",
-      "Medication reference"
-    ],
-
     requirements:[
       "Requirements",
-      "Duty and school requirements"
+      "School and duty requirements"
     ],
 
     schedule:[
@@ -3027,10 +1824,7 @@ function(
 
   const data =
     titles[section] ||
-    [
-      "Nursing Duty Hub",
-      ""
-    ];
+    ["Nursing Duty Hub",""];
 
 
   document.getElementById(
@@ -3047,27 +1841,52 @@ function(
 };
 
 
-/* =========================================================
-   THEME
-========================================================= */
+window.goToSection =
+function(section){
 
-function applyTheme(
-  dark
-){
-
-  document.body
-    .classList
-    .toggle(
-      "dark",
-      dark
+  const buttons =
+    document.querySelectorAll(
+      ".nav button"
     );
+
+
+  const map = {
+
+    dashboard:0,
+    notes:1,
+    requirements:2,
+    schedule:3,
+    members:4,
+    chat:5,
+    files:6,
+    about:8
+
+  };
+
+
+  show(
+    section,
+    buttons[map[section]]
+  );
+
+};
+
+
+/* =====================================================
+   THEME
+===================================================== */
+
+function applyTheme(dark){
+
+  document.body.classList.toggle(
+    "dark",
+    dark
+  );
 
 
   localStorage.setItem(
     "nursingDark",
-    dark
-      ? "true"
-      : "false"
+    dark ? "true" : "false"
   );
 
 
@@ -3080,9 +1899,7 @@ function applyTheme(
   if(icon){
 
     icon.textContent =
-      dark
-        ? "☀️"
-        : "◐";
+      dark ? "☀️" : "◐";
 
   }
 
@@ -3142,9 +1959,9 @@ applyTheme(
 );
 
 
-/* =========================================================
+/* =====================================================
    ADMIN
-========================================================= */
+===================================================== */
 
 window.adminLogin =
 function(){
@@ -3170,8 +1987,7 @@ function(){
   document.getElementById(
     "adminModal"
   )
-  .classList
-  .add("show");
+  .classList.add("show");
 
 
   document.getElementById(
@@ -3180,13 +1996,10 @@ function(){
 
 
   setTimeout(
-    () => {
-
+    () =>
       document.getElementById(
         "adminPassword"
-      ).focus();
-
-    },
+      ).focus(),
     100
   );
 
@@ -3199,8 +2012,7 @@ function(){
   document.getElementById(
     "adminModal"
   )
-  .classList
-  .remove("show");
+  .classList.remove("show");
 
 };
 
@@ -3213,12 +2025,6 @@ function(){
       "adminPassword"
     ).value;
 
-
-  /*
-    Frontend password only.
-    Use Firebase Authentication and
-    database rules for real security.
-  */
 
   if(
     password ===
@@ -3253,10 +2059,7 @@ function updateAdminUI(){
 
   const panels = [
 
-    "adminTasksPanel",
-    "adminCasesPanel",
     "adminNotesPanel",
-    "adminDrugsPanel",
     "adminRequirementsPanel",
     "adminSchedulePanel",
     "adminMembersPanel",
@@ -3265,920 +2068,35 @@ function updateAdminUI(){
   ];
 
 
-  panels.forEach(
-    id => {
+  panels.forEach(id => {
 
-      const el =
-        document.getElementById(
-          id
-        );
+    const el =
+      document.getElementById(id);
 
-      if(el){
+    if(el){
 
-        el.style.display =
-          isAdmin
-            ? "block"
-            : "none";
-
-      }
+      el.style.display =
+        isAdmin
+          ? "block"
+          : "none";
 
     }
-  );
+
+  });
 
 }
 
 
-/* =========================================================
-   TASKS
-========================================================= */
-
-onValue(
-  ref(db,"tasks"),
-  snap => {
-
-    tasksData =
-      snap.val() || {};
-
-    renderTasks();
-
-    updateDashboard();
-
-  }
-);
-
-
-function orderedTasks(){
-
-  return Object.entries(
-    tasksData
-  ).sort(
-    ([,a],[,b]) =>
-      (a.order ?? 999999) -
-      (b.order ?? 999999)
-  );
-
-}
-
-
-function renderTasks(){
-
-  const box =
-    document.getElementById(
-      "tasksList"
-    );
-
-
-  box.innerHTML = "";
-
-
-  const entries =
-    orderedTasks();
-
-
-  if(!entries.length){
-
-    box.innerHTML =
-      `<div class="empty">
-        No duty tasks have been added yet.
-      </div>`;
-
-    return;
-
-  }
-
-
-  entries.forEach(
-    ([id,t]) => {
-
-      const el =
-        document.createElement(
-          "div"
-        );
-
-
-      const checked =
-        loadLocal(
-          "dutyTask_" + id
-        ) === true;
-
-
-      el.className =
-        "task";
-
-
-      el.draggable =
-        isAdmin;
-
-
-      const title =
-        String(
-          t.title ||
-          "Duty Task"
-        ).trim();
-
-
-      const due =
-        String(
-          t.due ||
-          ""
-        ).trim();
-
-
-      const description =
-        cleanText(
-          t.description
-        );
-
-
-      el.innerHTML = `
-
-        <input
-          class="task-check"
-          type="checkbox"
-          ${checked ? "checked" : ""}
-        >
-
-        <div class="task-content">
-
-          <span
-            class="task-title ${
-              checked
-                ? "done"
-                : ""
-            }"
-          >
-            ${esc(title)}
-          </span>
-
-          ${
-            due
-            ? `
-              <div class="task-due">
-                Due: ${esc(due)}
-              </div>
-            `
-            : ""
-          }
-
-          ${
-            description
-            ? `
-              <div class="task-description">
-                ${esc(description)}
-              </div>
-            `
-            : ""
-          }
-
-        </div>
-
-        ${
-          isAdmin
-          ? `
-            <div class="task-actions">
-
-              <button
-                class="task-admin-btn"
-                onclick="editTask('${id}')"
-              >
-                Edit
-              </button>
-
-              <button
-                class="task-admin-delete"
-                onclick="deleteTask('${id}')"
-              >
-                Delete
-              </button>
-
-            </div>
-          `
-          : ""
-        }
-
-      `;
-
-
-      const checkbox =
-        el.querySelector(
-          ".task-check"
-        );
-
-
-      checkbox.addEventListener(
-        "change",
-        () => {
-
-          saveLocal(
-            "dutyTask_" + id,
-            checkbox.checked
-          );
-
-          renderTasks();
-
-        }
-      );
-
-
-      if(isAdmin){
-
-        el.addEventListener(
-          "dragstart",
-          () => {
-
-            draggedTaskId =
-              id;
-
-            el.classList.add(
-              "dragging"
-            );
-
-          }
-        );
-
-
-        el.addEventListener(
-          "dragend",
-          () => {
-
-            draggedTaskId =
-              null;
-
-            el.classList.remove(
-              "dragging"
-            );
-
-          }
-        );
-
-
-        el.addEventListener(
-          "dragover",
-          e => {
-
-            e.preventDefault();
-
-            el.classList.add(
-              "drag-over"
-            );
-
-          }
-        );
-
-
-        el.addEventListener(
-          "dragleave",
-          () => {
-
-            el.classList.remove(
-              "drag-over"
-            );
-
-          }
-        );
-
-
-        el.addEventListener(
-          "drop",
-          async e => {
-
-            e.preventDefault();
-
-            el.classList.remove(
-              "drag-over"
-            );
-
-
-            if(
-              draggedTaskId &&
-              draggedTaskId !== id
-            ){
-
-              await reorderTasks(
-                draggedTaskId,
-                id
-              );
-
-            }
-
-          }
-        );
-
-      }
-
-
-      box.appendChild(el);
-
-    }
-  );
-
-}
-
-
-window.saveTask =
-async function(){
-
-  if(!isAdmin)
-    return;
-
-
-  const title =
-    document.getElementById(
-      "taskTitle"
-    ).value.trim();
-
-
-  const due =
-    document.getElementById(
-      "taskDue"
-    ).value.trim();
-
-
-  const description =
-    cleanText(
-      document.getElementById(
-        "taskDescription"
-      ).value
-    );
-
-
-  if(!title){
-
-    alert(
-      "Please enter a task title."
-    );
-
-    return;
-
-  }
-
-
-  if(editingTaskId){
-
-    await update(
-      ref(
-        db,
-        "tasks/" +
-        editingTaskId
-      ),
-      {
-        title,
-        due,
-        description
-      }
-    );
-
-
-    cancelTaskEdit();
-
-    return;
-
-  }
-
-
-  const orders =
-    orderedTasks()
-      .map(
-        ([,t]) =>
-          Number(
-            t.order ?? 0
-          )
-      );
-
-
-  const nextOrder =
-    orders.length
-      ? Math.max(...orders)+1
-      : 0;
-
-
-  const newRef =
-    push(
-      ref(db,"tasks")
-    );
-
-
-  await set(
-    newRef,
-    {
-      title,
-      due,
-      description,
-      order:nextOrder,
-      createdAt:
-        serverTimestamp()
-    }
-  );
-
-
-  cancelTaskEdit();
-
-};
-
-
-window.editTask =
-function(id){
-
-  if(!isAdmin)
-    return;
-
-
-  const task =
-    tasksData[id];
-
-
-  if(!task)
-    return;
-
-
-  editingTaskId =
-    id;
-
-
-  document.getElementById(
-    "taskFormTitle"
-  ).textContent =
-    "Edit Duty Task";
-
-
-  document.getElementById(
-    "taskSaveBtn"
-  ).textContent =
-    "Save Changes";
-
-
-  document.getElementById(
-    "taskCancelBtn"
-  ).style.display =
-    "inline-block";
-
-
-  document.getElementById(
-    "taskTitle"
-  ).value =
-    task.title || "";
-
-
-  document.getElementById(
-    "taskDue"
-  ).value =
-    task.due || "";
-
-
-  document.getElementById(
-    "taskDescription"
-  ).value =
-    task.description || "";
-
-};
-
-
-window.cancelTaskEdit =
-function(){
-
-  editingTaskId =
-    null;
-
-
-  document.getElementById(
-    "taskFormTitle"
-  ).textContent =
-    "Add Duty Task";
-
-
-  document.getElementById(
-    "taskSaveBtn"
-  ).textContent =
-    "Add Task";
-
-
-  document.getElementById(
-    "taskCancelBtn"
-  ).style.display =
-    "none";
-
-
-  document.getElementById(
-    "taskTitle"
-  ).value = "";
-
-
-  document.getElementById(
-    "taskDue"
-  ).value = "";
-
-
-  document.getElementById(
-    "taskDescription"
-  ).value = "";
-
-};
-
-
-window.deleteTask =
-async function(id){
-
-  if(!isAdmin)
-    return;
-
-
-  if(
-    !confirm(
-      "Delete this duty task?"
-    )
-  )
-    return;
-
-
-  await remove(
-    ref(
-      db,
-      "tasks/" + id
-    )
-  );
-
-
-  localStorage.removeItem(
-    "dutyTask_" + id
-  );
-
-};
-
-
-async function reorderTasks(
-  draggedId,
-  targetId
-){
-
-  const ids =
-    orderedTasks()
-      .map(
-        ([id]) => id
-      );
-
-
-  const from =
-    ids.indexOf(
-      draggedId
-    );
-
-
-  const to =
-    ids.indexOf(
-      targetId
-    );
-
-
-  if(
-    from < 0 ||
-    to < 0
-  )
-    return;
-
-
-  ids.splice(
-    from,
-    1
-  );
-
-
-  ids.splice(
-    to,
-    0,
-    draggedId
-  );
-
-
-  const changes = {};
-
-
-  ids.forEach(
-    (id,index) => {
-
-      changes[
-        "tasks/" +
-        id +
-        "/order"
-      ] = index;
-
-    }
-  );
-
-
-  await update(
-    ref(db),
-    changes
-  );
-
-}
-
-
-/* =========================================================
-   PATIENT CASES
-========================================================= */
-
-onValue(
-  ref(db,"cases"),
-  snap => {
-
-    casesData =
-      snap.val() || {};
-
-    renderCases();
-
-    updateDashboard();
-
-  }
-);
-
-
-function renderCases(){
-
-  const box =
-    document.getElementById(
-      "casesList"
-    );
-
-
-  box.innerHTML = "";
-
-
-  const entries =
-    Object.entries(
-      casesData
-    );
-
-
-  if(!entries.length){
-
-    box.innerHTML =
-      `<div class="empty">
-        No patient cases added yet.
-      </div>`;
-
-    return;
-
-  }
-
-
-  entries.forEach(
-    ([id,c]) => {
-
-      const el =
-        document.createElement(
-          "div"
-        );
-
-
-      el.className =
-        "case-card";
-
-
-      el.innerHTML = `
-
-        <div class="case-top">
-
-          <div class="patient-code">
-            ${esc(
-              c.code ||
-              "Patient Case"
-            )}
-          </div>
-
-          <div class="case-badge">
-            ${esc(
-              c.status ||
-              "Active"
-            )}
-          </div>
-
-        </div>
-
-
-        <div class="case-info">
-
-          <div>
-            <strong>
-              Diagnosis
-            </strong>
-
-            <span>
-              ${esc(
-                c.diagnosis ||
-                "—"
-              )}
-            </span>
-          </div>
-
-
-          <div>
-            <strong>
-              Age / Sex
-            </strong>
-
-            <span>
-              ${esc(
-                c.age ||
-                "—"
-              )}
-            </span>
-          </div>
-
-
-          <div>
-            <strong>
-              Assigned
-            </strong>
-
-            <span>
-              ${esc(
-                c.assigned ||
-                "—"
-              )}
-            </span>
-          </div>
-
-
-          <div>
-            <strong>
-              Area
-            </strong>
-
-            <span>
-              ${esc(
-                c.area ||
-                "—"
-              )}
-            </span>
-          </div>
-
-        </div>
-
-
-        ${
-          c.notes
-          ? `
-            <div class="case-notes">
-              ${esc(
-                cleanText(c.notes)
-              )}
-            </div>
-          `
-          : ""
-        }
-
-
-        ${
-          isAdmin
-          ? `
-            <div class="note-actions">
-
-              <button
-                class="btn danger"
-                onclick="deleteCase('${id}')"
-              >
-                Delete
-              </button>
-
-            </div>
-          `
-          : ""
-        }
-
-      `;
-
-
-      box.appendChild(el);
-
-    }
-  );
-
-}
-
-
-window.addCase =
-async function(){
-
-  if(!isAdmin)
-    return;
-
-
-  const data = {
-
-    code:
-      document.getElementById(
-        "caseCode"
-      ).value.trim(),
-
-    diagnosis:
-      document.getElementById(
-        "caseDiagnosis"
-      ).value.trim(),
-
-    age:
-      document.getElementById(
-        "caseAge"
-      ).value.trim(),
-
-    assigned:
-      document.getElementById(
-        "caseAssigned"
-      ).value.trim(),
-
-    area:
-      document.getElementById(
-        "caseArea"
-      ).value.trim(),
-
-    status:
-      document.getElementById(
-        "caseStatus"
-      ).value.trim(),
-
-    notes:
-      cleanText(
-        document.getElementById(
-          "caseNotes"
-        ).value
-      )
-
-  };
-
-
-  if(!data.code){
-
-    alert(
-      "Please enter a patient code."
-    );
-
-    return;
-
-  }
-
-
-  const newRef =
-    push(
-      ref(db,"cases")
-    );
-
-
-  await set(
-    newRef,
-    data
-  );
-
-
-  [
-    "caseCode",
-    "caseDiagnosis",
-    "caseAge",
-    "caseAssigned",
-    "caseArea",
-    "caseStatus",
-    "caseNotes"
-  ]
-  .forEach(
-    id =>
-      document.getElementById(
-        id
-      ).value = ""
-  );
-
-};
-
-
-window.deleteCase =
-async function(id){
-
-  if(
-    !isAdmin ||
-    !confirm(
-      "Delete this case?"
-    )
-  )
-    return;
-
-
-  await remove(
-    ref(
-      db,
-      "cases/" + id
-    )
-  );
-
-};
-
-
-/* =========================================================
-   NURSING NOTES
-========================================================= */
+/* =====================================================
+   NOTES
+===================================================== */
 
 onValue(
   ref(db,"notes"),
-  snap => {
+  snapshot => {
 
     notesData =
-      snap.val() || {};
+      snapshot.val() || {};
 
     renderNotes();
 
@@ -4219,9 +2137,7 @@ function renderNotes(){
     ([id,n]) => {
 
       const el =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
 
       el.className =
@@ -4234,29 +2150,26 @@ function renderNotes(){
           n.category
           ? `
             <span class="note-category">
-              ${esc(
-                n.category
-              )}
+              ${esc(n.category)}
             </span>
           `
           : ""
         }
 
-
         <h3>
           ${esc(
-            n.title ||
-            "Nursing Note"
+            String(
+              n.title ||
+              "Nursing Note"
+            ).trim()
           )}
         </h3>
-
 
         <div class="note-text">
           ${esc(
             cleanText(n.text)
           )}
         </div>
-
 
         ${
           isAdmin
@@ -4346,8 +2259,7 @@ async function(){
     "noteTitle",
     "noteCategory",
     "noteText"
-  ]
-  .forEach(
+  ].forEach(
     id =>
       document.getElementById(
         id
@@ -4379,343 +2291,16 @@ async function(id){
 };
 
 
-/* =========================================================
-   DRUG STUDY
-========================================================= */
-
-onValue(
-  ref(db,"drugs"),
-  snap => {
-
-    drugsData =
-      snap.val() || {};
-
-    renderDrugs();
-
-    updateDashboard();
-
-  }
-);
-
-
-function renderDrugs(){
-
-  const box =
-    document.getElementById(
-      "drugsList"
-    );
-
-
-  box.innerHTML = "";
-
-
-  const entries =
-    Object.entries(
-      drugsData
-    );
-
-
-  if(!entries.length){
-
-    box.innerHTML =
-      `<div class="empty">
-        No drug studies added yet.
-      </div>`;
-
-    return;
-
-  }
-
-
-  entries.forEach(
-    ([id,d]) => {
-
-      const el =
-        document.createElement(
-          "div"
-        );
-
-
-      el.className =
-        "drug-card";
-
-
-      el.innerHTML = `
-
-        <div class="drug-header">
-
-          <div class="drug-icon">
-            💊
-          </div>
-
-          <div>
-
-            <h3>
-              ${esc(
-                d.name ||
-                "Medication"
-              )}
-            </h3>
-
-            <small>
-              ${esc(
-                d.class ||
-                "Drug study"
-              )}
-            </small>
-
-          </div>
-
-        </div>
-
-
-        <div class="drug-info">
-
-          <div class="drug-row">
-            <strong>
-              Dose
-            </strong>
-
-            <span>
-              ${esc(
-                d.dose ||
-                "—"
-              )}
-            </span>
-          </div>
-
-
-          <div class="drug-row">
-            <strong>
-              Route / Frequency
-            </strong>
-
-            <span>
-              ${esc(
-                d.route ||
-                "—"
-              )}
-            </span>
-          </div>
-
-
-          <div class="drug-row">
-            <strong>
-              Indication
-            </strong>
-
-            <span>
-              ${esc(
-                d.indication ||
-                "—"
-              )}
-            </span>
-          </div>
-
-
-          <div class="drug-row">
-            <strong>
-              Contraindications
-            </strong>
-
-            <span>
-              ${esc(
-                d.contra ||
-                "—"
-              )}
-            </span>
-          </div>
-
-
-          <div class="drug-row">
-            <strong>
-              Side Effects
-            </strong>
-
-            <span>
-              ${esc(
-                d.side ||
-                "—"
-              )}
-            </span>
-          </div>
-
-
-          <div class="drug-row">
-            <strong>
-              Nursing Responsibilities
-            </strong>
-
-            <span>
-              ${esc(
-                cleanText(
-                  d.nursing
-                ) ||
-                "—"
-              )}
-            </span>
-          </div>
-
-        </div>
-
-
-        ${
-          isAdmin
-          ? `
-            <div class="note-actions">
-
-              <button
-                class="btn danger"
-                onclick="deleteDrug('${id}')"
-              >
-                Delete
-              </button>
-
-            </div>
-          `
-          : ""
-        }
-
-      `;
-
-
-      box.appendChild(el);
-
-    }
-  );
-
-}
-
-
-window.addDrug =
-async function(){
-
-  if(!isAdmin)
-    return;
-
-
-  const data = {
-
-    name:
-      document.getElementById(
-        "drugName"
-      ).value.trim(),
-
-    class:
-      document.getElementById(
-        "drugClass"
-      ).value.trim(),
-
-    dose:
-      document.getElementById(
-        "drugDose"
-      ).value.trim(),
-
-    route:
-      document.getElementById(
-        "drugRoute"
-      ).value.trim(),
-
-    indication:
-      document.getElementById(
-        "drugIndication"
-      ).value.trim(),
-
-    contra:
-      document.getElementById(
-        "drugContra"
-      ).value.trim(),
-
-    side:
-      document.getElementById(
-        "drugSide"
-      ).value.trim(),
-
-    nursing:
-      cleanText(
-        document.getElementById(
-          "drugNursing"
-        ).value
-      )
-
-  };
-
-
-  if(!data.name){
-
-    alert(
-      "Please enter the drug name."
-    );
-
-    return;
-
-  }
-
-
-  const newRef =
-    push(
-      ref(db,"drugs")
-    );
-
-
-  await set(
-    newRef,
-    data
-  );
-
-
-  [
-    "drugName",
-    "drugClass",
-    "drugDose",
-    "drugRoute",
-    "drugIndication",
-    "drugContra",
-    "drugSide",
-    "drugNursing"
-  ]
-  .forEach(
-    id =>
-      document.getElementById(
-        id
-      ).value = ""
-  );
-
-};
-
-
-window.deleteDrug =
-async function(id){
-
-  if(
-    !isAdmin ||
-    !confirm(
-      "Delete this drug study?"
-    )
-  )
-    return;
-
-
-  await remove(
-    ref(
-      db,
-      "drugs/" + id
-    )
-  );
-
-};
-
-
-/* =========================================================
+/* =====================================================
    REQUIREMENTS
-========================================================= */
+===================================================== */
 
 onValue(
   ref(db,"requirements"),
-  snap => {
+  snapshot => {
 
     requirementsData =
-      snap.val() || {};
+      snapshot.val() || {};
 
     renderRequirements();
 
@@ -4756,9 +2341,7 @@ function renderRequirements(){
     ([id,r]) => {
 
       const el =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
 
       el.className =
@@ -4897,8 +2480,7 @@ async function(){
     "reqTitle",
     "reqType",
     "reqDescription"
-  ]
-  .forEach(
+  ].forEach(
     id =>
       document.getElementById(
         id
@@ -4930,20 +2512,20 @@ async function(id){
 };
 
 
-/* =========================================================
+/* =====================================================
    SCHEDULE
-========================================================= */
+===================================================== */
 
 onValue(
   ref(db,"schedule"),
-  snap => {
+  snapshot => {
 
     scheduleData =
-      snap.val() || {};
+      snapshot.val() || {};
 
     renderSchedule();
 
-    updateDashboard();
+    updateNextDuty();
 
   }
 );
@@ -4973,6 +2555,8 @@ function renderSchedule(){
         No duty schedule added yet.
       </div>`;
 
+    updateNextDuty();
+
     return;
 
   }
@@ -4982,9 +2566,7 @@ function renderSchedule(){
     ([id,s]) => {
 
       const el =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
 
       el.className =
@@ -5099,10 +2681,7 @@ async function(){
   };
 
 
-  if(
-    !data.day ||
-    !data.area
-  ){
+  if(!data.day || !data.area){
 
     alert(
       "Please enter the day and area."
@@ -5131,8 +2710,7 @@ async function(){
     "scheduleTime",
     "scheduleGroup",
     "scheduleCI"
-  ]
-  .forEach(
+  ].forEach(
     id =>
       document.getElementById(
         id
@@ -5234,20 +2812,18 @@ function updateNextDuty(){
 }
 
 
-/* =========================================================
+/* =====================================================
    MEMBERS
-========================================================= */
+===================================================== */
 
 onValue(
   ref(db,"members"),
-  snap => {
+  snapshot => {
 
     membersData =
-      snap.val() || {};
+      snapshot.val() || {};
 
     renderMembers();
-
-    updateDashboard();
 
   }
 );
@@ -5286,9 +2862,7 @@ function renderMembers(){
     ([id,m]) => {
 
       const el =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
 
       el.className =
@@ -5301,9 +2875,7 @@ function renderMembers(){
           "Student"
         )
         .split(/\s+/)
-        .map(
-          x => x[0]
-        )
+        .map(x => x[0])
         .join("")
         .slice(0,2)
         .toUpperCase();
@@ -5332,7 +2904,6 @@ function renderMembers(){
           </span>
 
         </div>
-
 
         ${
           isAdmin
@@ -5439,16 +3010,16 @@ async function(id){
 };
 
 
-/* =========================================================
+/* =====================================================
    CHAT
-========================================================= */
+===================================================== */
 
 onValue(
   ref(db,"chat"),
-  snap => {
+  snapshot => {
 
     chatData =
-      snap.val() || {};
+      snapshot.val() || {};
 
     renderChat();
 
@@ -5486,18 +3057,16 @@ function renderChat(){
 
 
   messages.forEach(
-    m => {
+    message => {
 
       const el =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
 
       el.className =
         "msg" +
         (
-          m.author ===
+          message.author ===
           userName
             ? " me"
             : ""
@@ -5508,14 +3077,14 @@ function renderChat(){
 
         <span class="msg-name">
           ${esc(
-            m.author ||
+            message.author ||
             "Student"
           )}
         </span>
 
         ${esc(
           cleanText(
-            m.text
+            message.text
           )
         )}
 
@@ -5575,16 +3144,16 @@ async function(){
 };
 
 
-/* =========================================================
+/* =====================================================
    FILES
-========================================================= */
+===================================================== */
 
 onValue(
   ref(db,"files"),
-  snap => {
+  snapshot => {
 
     filesData =
-      snap.val() || {};
+      snapshot.val() || {};
 
     renderFiles();
 
@@ -5625,9 +3194,7 @@ function renderFiles(){
     ([id,f]) => {
 
       const el =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
 
       el.className =
@@ -5674,7 +3241,6 @@ function renderFiles(){
           `
           : ""
         }
-
 
         ${
           isAdmin
@@ -5760,8 +3326,7 @@ async function(){
     "fileTitle",
     "fileUrl",
     "fileDescription"
-  ]
-  .forEach(
+  ].forEach(
     id =>
       document.getElementById(
         id
@@ -5793,16 +3358,16 @@ async function(id){
 };
 
 
-/* =========================================================
+/* =====================================================
    ANNOUNCEMENT
-========================================================= */
+===================================================== */
 
 onValue(
   ref(db,"announcement"),
-  snap => {
+  snapshot => {
 
     const data =
-      snap.val();
+      snapshot.val();
 
 
     const box =
@@ -5813,9 +3378,7 @@ onValue(
 
     if(
       data &&
-      cleanText(
-        data.text
-      )
+      cleanText(data.text)
     ){
 
       box.innerHTML = `
@@ -5827,9 +3390,7 @@ onValue(
         <br>
 
         ${esc(
-          cleanText(
-            data.text
-          )
+          cleanText(data.text)
         )}
 
       `;
@@ -5848,81 +3409,31 @@ onValue(
 );
 
 
-/* =========================================================
-   DASHBOARD
-========================================================= */
+/* =====================================================
+   INITIALIZE
+===================================================== */
 
-function updateDashboard(){
+function renderAll(){
 
-  document.getElementById(
-    "statTasks"
-  ).textContent =
-    Object.keys(
-      tasksData
-    ).length;
-
-
-  document.getElementById(
-    "statCases"
-  ).textContent =
-    Object.keys(
-      casesData
-    ).length;
-
-
-  document.getElementById(
-    "statDrugs"
-  ).textContent =
-    Object.keys(
-      drugsData
-    ).length;
-
-
-  document.getElementById(
-    "statMembers"
-  ).textContent =
-    Object.keys(
-      membersData
-    ).length;
-
-
+  renderNotes();
+  renderRequirements();
+  renderSchedule();
+  renderMembers();
+  renderChat();
+  renderFiles();
   updateNextDuty();
 
 }
 
 
-/* =========================================================
-   RENDER EVERYTHING
-========================================================= */
+updateAdminUI();
 
-function renderAll(){
-
-  renderTasks();
-
-  renderCases();
-
-  renderNotes();
-
-  renderDrugs();
-
-  renderRequirements();
-
-  renderSchedule();
-
-  renderMembers();
-
-  renderChat();
-
-  renderFiles();
-
-  updateDashboard();
-
-}
+renderAll();
 
 
-/* =========================================================
-   MODAL CLICK OUTSIDE
-========================================================= */
+/* =====================================================
+   MODAL
+===================================================== */
 
 document.getElementById(
   "adminModal"
@@ -5942,15 +3453,6 @@ document.getElementById(
 
   }
 );
-
-
-/* =========================================================
-   INITIAL
-========================================================= */
-
-updateAdminUI();
-
-renderAll();
 
 </script>
 
