@@ -1737,6 +1737,24 @@ select:focus{
   border-radius:7px;
   background:var(--surface);
 }
+.rich-note-editor img{
+  display:block;
+  max-width:100%;
+  height:auto;
+  margin:10px 0;
+  border-radius:8px;
+  cursor:default;
+}
+
+.notes-card img,
+.note-content img{
+  display:block;
+  max-width:100%;
+  height:auto;
+  margin:10px 0;
+  border-radius:8px;
+}
+
 .rich-note-editor{
   min-height:300px;
   max-height:48vh;
@@ -2105,7 +2123,7 @@ and (orientation:landscape){
       </span>
 
       <button
-        class="group-toggle"
+        class="group-toggle active"
         id="mainToggle"
         onclick="toggleNavSection('mainNav','mainToggle','mainArrow','mainCollapsed')"
         title="Toggle main navigation"
@@ -2162,7 +2180,7 @@ and (orientation:landscape){
       </span>
 
       <button
-        class="group-toggle"
+        class="group-toggle active"
         id="groupToggle"
         onclick="toggleGroup()"
         title="Collapse group navigation"
@@ -2271,7 +2289,7 @@ and (orientation:landscape){
       </span>
 
       <button
-        class="group-toggle"
+        class="group-toggle active"
         id="systemToggle"
         onclick="toggleNavSection('systemNav','systemToggle','systemArrow','systemCollapsed')"
         title="Toggle system navigation"
@@ -2978,7 +2996,7 @@ and (orientation:landscape){
       <label title="Highlight">🖍 <input type="color" value="#fff59d" onchange="highlightSelection(this.value)"></label>
     </div>
 
-    <div id="richNoteEditor" class="rich-note-editor" contenteditable="true" spellcheck="true"></div>
+    <div id="richNoteEditor" class="rich-note-editor" contenteditable="true" spellcheck="true" onpaste="handleNotePaste(event)"></div>
 
     <div class="modal-buttons">
       <button class="btn" onclick="closeNoteEditor()">Cancel</button>
@@ -3431,6 +3449,9 @@ function(){
       "collapsed"
     );
 
+  toggle.classList.toggle("active", !collapsed);
+  toggle.setAttribute("aria-checked", String(!collapsed));
+
 
   if(collapsed){
 
@@ -3496,6 +3517,14 @@ if(
     )
     .textContent =
       "⌄";
+
+  const groupToggle =
+    document.getElementById("groupToggle");
+
+  if(groupToggle){
+    groupToggle.classList.remove("active");
+    groupToggle.setAttribute("aria-checked","false");
+  }
 
 }
 
@@ -4040,6 +4069,73 @@ window.highlightSelection = function(color){
   if(!document.execCommand("hiliteColor",false,color)){
     document.execCommand("backColor",false,color);
   }
+};
+
+window.handleNotePaste = async function(event){
+  const clipboard = event.clipboardData;
+  if(!clipboard || !clipboard.items) return;
+
+  const imageItems = Array.from(clipboard.items)
+    .filter(item => item.kind === "file" && item.type.startsWith("image/"));
+
+  if(!imageItems.length) return;
+
+  event.preventDefault();
+  focusRichEditor();
+
+  for(const item of imageItems){
+    const file = item.getAsFile();
+    if(!file) continue;
+
+    try{
+      const dataUrl = await resizePastedImage(file, 1600, 0.82);
+      document.execCommand(
+        "insertHTML",
+        false,
+        '<img src="' + dataUrl + '" alt="Pasted image">'
+      );
+      document.execCommand("insertHTML", false, "<p><br></p>");
+    }catch(error){
+      console.error("Could not paste image:", error);
+      alert("The image could not be pasted into the note.");
+    }
+  }
+};
+
+window.resizePastedImage = function(file, maxSize=1600, quality=0.82){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+
+    reader.onerror = reject;
+
+    reader.onload = function(){
+      const image = new Image();
+
+      image.onerror = reject;
+
+      image.onload = function(){
+        let width = image.naturalWidth || image.width;
+        let height = image.naturalHeight || image.height;
+
+        const scale = Math.min(1, maxSize / Math.max(width,height));
+        width = Math.max(1, Math.round(width * scale));
+        height = Math.max(1, Math.round(height * scale));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(image, 0, 0, width, height);
+
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+
+      image.src = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  });
 };
 
 window.insertChecklist = function(){
