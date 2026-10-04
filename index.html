@@ -1221,6 +1221,28 @@ select:focus{
   overflow:hidden;
 }
 
+
+.memo-dropzone{
+  margin-top:12px;
+  border:2px dashed var(--border);
+  border-radius:14px;
+  padding:22px 16px;
+  text-align:center;
+  background:var(--surface);
+  transition:.15s ease;
+  cursor:pointer;
+}
+.memo-dropzone.dragover{
+  border-color:var(--accent);
+  background:color-mix(in srgb, var(--accent) 10%, var(--surface));
+  transform:scale(1.01);
+}
+.memo-dropzone strong{display:block;font-size:16px;margin-bottom:5px;}
+.memo-dropzone small{display:block;opacity:.72;}
+.memo-drop-progress{margin-top:8px;min-height:20px;font-size:13px;}
+.memo-file-chip{margin-top:10px;padding:9px 11px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2,var(--surface));display:flex;gap:8px;align-items:center;justify-content:space-between;}
+.memo-file-chip a{word-break:break-word;}
+
 .memo-top{
   display:flex;
 
@@ -2756,6 +2778,13 @@ and (orientation:landscape){
         <button class="btn primary" onclick="openMemoEditor()">➕ Add Study Material</button>
       </div>
       <p class="muted" style="margin-top:8px;">Paste slides, screenshots, text, and study material directly into the editor. Admin edits are shared with the group.</p>
+    </div>
+
+    <div id="memoFileDropZone" class="memo-dropzone" role="button" tabindex="0" aria-label="Drop files here to add to Things to Memorize">
+      <strong>📥 Drag & Drop a file here</strong>
+      <small>Drop PDF, PPT, PPTX, DOC, DOCX, images, TXT, CSV, or other files. Click to choose a file instead.</small>
+      <input id="memoDropInput" type="file" multiple hidden accept=".pdf,.ppt,.pptx,.doc,.docx,.txt,.csv,.jpg,.jpeg,.png,.gif,.webp,.svg,*/*">
+      <div id="memoDropStatus" class="memo-drop-progress" aria-live="polite"></div>
     </div>
 
     <div id="memorizeList" class="memo-grid"></div>
@@ -5162,6 +5191,7 @@ function renderMemorize(){
         </div>
       </div>
       <div class="note-text memo-content">${m.html || esc(cleanText(m.text||'')).replace(/\n/g,'<br>')}</div>
+      ${m.fileURL ? `<div class="memo-file-chip"><span>📎 ${esc(m.fileName || 'Attached file')}</span><a class="btn small" href="${esc(m.fileURL)}" target="_blank" rel="noopener">Open file</a></div>` : ''}
       ${isAdmin ? `<div class="note-actions"><button class="btn small" onclick="openMemoEditor('${id}')">✏️ Edit</button><button class="btn danger small" onclick="deleteMemo('${id}')">Delete</button></div>` : ''}
     `;
     box.appendChild(card);
@@ -5234,6 +5264,89 @@ window.handleMemoFileSelection=async function(event){
   alert('For slide decks/PDFs, paste the slide images into the editor. This keeps the material editable inside the website.');
 };
 
+function setupMemoDropZone(){
+  const zone=document.getElementById('memoFileDropZone');
+  const input=document.getElementById('memoDropInput');
+  if(!zone || zone.dataset.ready==='1') return;
+  zone.dataset.ready='1';
+  zone.addEventListener('click',()=>{ if(isAdmin) input?.click(); });
+  zone.addEventListener('keydown',e=>{ if(isAdmin && (e.key==='Enter'||e.key===' ')){e.preventDefault();input?.click();} });
+  ['dragenter','dragover'].forEach(type=>zone.addEventListener(type,e=>{
+    e.preventDefault(); e.stopPropagation();
+    if(isAdmin) zone.classList.add('dragover');
+  }));
+  ['dragleave','drop'].forEach(type=>zone.addEventListener(type,e=>{
+    e.preventDefault(); e.stopPropagation(); zone.classList.remove('dragover');
+  }));
+  zone.addEventListener('drop',async e=>{
+    if(!isAdmin) return;
+    const files=Array.from(e.dataTransfer?.files||[]);
+    if(files.length) await addDroppedMemoFiles(files);
+  });
+  input?.addEventListener('change',async e=>{
+    const files=Array.from(e.target.files||[]); e.target.value='';
+    if(files.length) await addDroppedMemoFiles(files);
+  });
+}
+
+function formatDroppedFileSize(bytes){
+  if(!Number.isFinite(bytes) || bytes < 0) return '';
+  if(bytes < 1024) return `${bytes} B`;
+  if(bytes < 1024*1024) return `${(bytes/1024).toFixed(1)} KB`;
+  if(bytes < 1024*1024*1024) return `${(bytes/(1024*1024)).toFixed(1)} MB`;
+  return `${(bytes/(1024*1024*1024)).toFixed(1)} GB`;
+}
+
+function getDroppedFileKind(file){
+  const name=(file?.name||'').toLowerCase();
+  const type=(file?.type||'').toLowerCase();
+  if(type==='application/pdf' || name.endsWith('.pdf')) return 'PDF';
+  if(type.includes('presentation') || /\.(ppt|pptx)$/.test(name)) return 'PowerPoint';
+  if(type.includes('word') || /\.(doc|docx)$/.test(name)) return 'Word';
+  if(type.startsWith('image/') || /\.(jpg|jpeg|png|gif|webp|svg)$/.test(name)) return 'Image';
+  if(type==='text/plain' || name.endsWith('.txt')) return 'Text';
+  if(type==='text/csv' || name.endsWith('.csv')) return 'CSV';
+  return type || 'File';
+}
+
+function showDetectedMemoFiles(files){
+  const status=document.getElementById('memoDropStatus');
+  if(!status) return;
+  status.innerHTML='';
+  const heading=document.createElement('div');
+  heading.textContent=`Detected ${files.length} file${files.length===1?'':'s'} — drag/drop is working.`;
+  heading.style.fontWeight='700';
+  status.appendChild(heading);
+  files.forEach(file=>{
+    const chip=document.createElement('div');
+    chip.className='memo-file-chip';
+    const left=document.createElement('span');
+    left.textContent=`📎 ${file.name}`;
+    const right=document.createElement('small');
+    right.textContent=`${getDroppedFileKind(file)} • ${formatDroppedFileSize(file.size)}`;
+    chip.append(left,right);
+    status.appendChild(chip);
+  });
+}
+
+function addDroppedMemoFiles(files){
+  if(!isAdmin) return;
+  const valid=Array.from(files||{}).filter(Boolean);
+  if(!valid.length) return;
+  console.log('Things to Memorize drag/drop detected files:',valid);
+  showDetectedMemoFiles(valid);
+}
+window.addDroppedMemoFiles=addDroppedMemoFiles;
+
+// Never let a dropped PDF/PPT/etc. replace the whole webpage.
+// Only file drags are intercepted; normal text dragging remains untouched.
+document.addEventListener('dragover',e=>{
+  if(e.dataTransfer?.types?.includes('Files')) e.preventDefault();
+});
+document.addEventListener('drop',e=>{
+  if(e.dataTransfer?.types?.includes('Files')) e.preventDefault();
+});
+
 window.openMemoEditor=function(id=null){
   if(!isAdmin){ alert('Only administrators can edit Things to Memorize.'); return; }
   editingMemoId=id;
@@ -5283,6 +5396,7 @@ function enableMemoImageViewer(){
   });
 }
 window.renderMemorize=renderMemorize;
+setTimeout(setupMemoDropZone,0);
 
 /* =========================================================
    DUTY SCHEDULE
