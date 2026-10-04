@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="offline-v4">
+  <meta name="bsn2a-build" content="offline-v5">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -1034,101 +1034,6 @@ select:focus{
 
 
 /* =========================================================
-   FIREBASE STORAGE HELPERS
-========================================================= */
-
-function safeStorageName(name){
-  return String(name || "file")
-    .replace(/[^a-zA-Z0-9._-]+/g,"_")
-    .slice(-120);
-}
-
-async function uploadToStorage(file, folder){
-  if(!file) throw new Error("No file selected.");
-  if(!navigator.onLine) throw new Error("Device is offline. Connect to the internet to upload a file.");
-
-  const stamp = Date.now();
-  const random = Math.random().toString(36).slice(2,9);
-  const path = `${folder}/${stamp}_${random}_${safeStorageName(file.name)}`;
-  const target = storageRef(storage,path);
-  const snapshot = await uploadBytes(target,file,{
-    contentType:file.type || "application/octet-stream",
-    cacheControl:"public,max-age=31536000"
-  });
-  return await getDownloadURL(snapshot.ref);
-}
-
-function fileKind(fileOrName,type){
-  const t=String(type||"").toLowerCase();
-  const n=String(fileOrName||"").toLowerCase();
-  if(t.startsWith("image/") || /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(n)) return "image";
-  if(t === "application/pdf" || /\.pdf$/i.test(n)) return "pdf";
-  if(t.startsWith("video/") || /\.(mp4|webm|ogg|mov)$/i.test(n)) return "video";
-  if(t.startsWith("audio/") || /\.(mp3|wav|ogg|m4a)$/i.test(n)) return "audio";
-  if(t.startsWith("text/") || /\.(txt|csv|md)$/i.test(n)) return "text";
-  return "other";
-}
-
-async function imageFileToBlob(file,maxSize=1800,quality=.84){
-  return new Promise((resolve,reject)=>{
-    const reader=new FileReader();
-    reader.onerror=()=>reject(reader.error||new Error("Could not read image."));
-    reader.onload=()=>{
-      const img=new Image();
-      img.onerror=()=>reject(new Error("Could not decode image."));
-      img.onload=()=>{
-        let w=img.naturalWidth||img.width;
-        let h=img.naturalHeight||img.height;
-        const scale=Math.min(1,maxSize/Math.max(w,h));
-        w=Math.max(1,Math.round(w*scale));
-        h=Math.max(1,Math.round(h*scale));
-        const canvas=document.createElement("canvas");
-        canvas.width=w; canvas.height=h;
-        canvas.getContext("2d").drawImage(img,0,0,w,h);
-        canvas.toBlob(blob=>blob?resolve(blob):reject(new Error("Could not prepare image.")),"image/jpeg",quality);
-      };
-      img.src=reader.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function insertImageUrl(url,alt="Uploaded image"){
-  focusRichEditor();
-  document.execCommand("insertHTML",false,`<img src="${esc(url)}" alt="${esc(alt)}" style="max-width:100%;height:auto;display:block;margin:10px 0;border-radius:8px;">`);
-  document.execCommand("insertHTML",false,"<p><br></p>");
-}
-
-window.chooseNoteImage=function(){
-  if(!requireAdmin()) return;
-  document.getElementById("noteImageInput").click();
-};
-
-window.handleNoteImageFiles=async function(files){
-  if(!requireAdmin()) return;
-  const list=Array.from(files||[]);
-  if(!list.length) return;
-  for(const file of list){
-    try{
-      let url;
-      if(navigator.onLine){
-        const blob=await imageFileToBlob(file);
-        const upload=new File([blob],file.name.replace(/\.[^.]+$/i,".jpg"),{type:"image/jpeg"});
-        url=await uploadToStorage(upload,"note-images");
-      }else{
-        const blob=await imageFileToBlob(file);
-        url=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(blob);});
-      }
-      insertImageUrl(url,file.name);
-    }catch(error){
-      console.error(error);
-      alert(error.message||"Could not upload image.");
-    }
-  }
-  document.getElementById("noteImageInput").value="";
-};
-
-/* =========================================================
    NOTES
 ========================================================= */
 
@@ -1224,6 +1129,19 @@ window.handleNoteImageFiles=async function(files){
 .note-text input.note-check{
   pointer-events:auto;
 }
+.note-text img{display:block;width:100%;max-width:100%;height:auto;max-height:none;object-fit:contain;border-radius:10px;margin:10px 0;box-sizing:border-box;}
+.note-text .note-image-wrap{display:block;width:100%;max-width:100%;margin:10px 0;overflow:hidden;border-radius:10px;box-sizing:border-box;}
+.note-text .note-image-wrap img{display:block;width:100%;max-width:100%;height:auto;margin:0;border-radius:10px;object-fit:contain;}
+.note-text p:has(> img),.note-text div:has(> img){max-width:100%;box-sizing:border-box;overflow:hidden;}
+.note-text video,.note-text audio,.note-text iframe,.note-text object{display:block;max-width:100%;width:100%;box-sizing:border-box;border-radius:10px;margin:10px 0;}
+.note-text table{width:100%;max-width:100%;border-collapse:collapse;display:block;overflow-x:auto;}
+.note-text pre,.note-text code{white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;}
+.note-upload-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;padding:8px;border:1px dashed var(--border);border-radius:10px;background:var(--surface2);}
+.note-upload-status{font-size:11px;color:var(--muted);}
+.file-preview{width:100%;min-height:180px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.file-preview img,.file-preview video,.file-preview iframe,.file-preview object{width:100%;max-width:100%;height:60vh;border:0;object-fit:contain;}
+.file-preview audio{width:90%;}
+.file-meta{margin-top:8px;font-size:11px;color:var(--muted);overflow-wrap:anywhere;}
 
 .note-text{
   display:block;
@@ -1868,44 +1786,6 @@ window.handleNoteImageFiles=async function(files){
   cursor:default;
 }
 
-/* Uploaded note images always stay inside the note layout. */
-.note-text{
-  min-width:0;
-  overflow-wrap:anywhere;
-  word-break:break-word;
-}
-.note-text img{
-  display:block;
-  width:auto;
-  max-width:100%;
-  height:auto;
-  object-fit:contain;
-  box-sizing:border-box;
-  margin:10px 0;
-  border-radius:8px;
-}
-.note-text video,.note-text iframe,.note-text embed{
-  display:block;
-  width:100%;
-  max-width:100%;
-  border:0;
-  border-radius:8px;
-  margin:10px 0;
-}
-.note-text table{max-width:100%;display:block;overflow-x:auto;}
-.file-preview{
-  margin-top:12px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  overflow:hidden;
-  background:var(--input);
-}
-.file-preview img,.file-preview video{display:block;width:100%;max-height:420px;object-fit:contain;}
-.file-preview iframe{display:block;width:100%;height:420px;border:0;}
-.file-preview audio{display:block;width:100%;padding:10px;box-sizing:border-box;}
-.file-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
-.file-upload-status{font-size:11px;color:var(--muted);margin-top:8px;}
-
 .notes-card img,
 .note-content img{
   display:block;
@@ -1915,6 +1795,9 @@ window.handleNoteImageFiles=async function(files){
   border-radius:8px;
 }
 
+.rich-note-editor img{display:block;width:100%;max-width:100%;height:auto;max-height:none;object-fit:contain;border-radius:10px;margin:10px 0;box-sizing:border-box;}
+.rich-note-editor .note-image-wrap{display:block;width:100%;max-width:100%;overflow:hidden;border-radius:10px;margin:10px 0;box-sizing:border-box;}
+.rich-note-editor .note-image-wrap img{display:block;width:100%;max-width:100%;height:auto;margin:0;}
 .rich-note-editor{
   min-height:300px;
   max-height:48vh;
@@ -3084,8 +2967,15 @@ and (orientation:landscape){
 
         <input
           id="fileUrl"
-          placeholder="File URL"
+          placeholder="File URL (optional if uploading from storage)"
         >
+
+        <label class="file-upload-control full">
+          <span>📁 Upload from phone / PC</span>
+          <input id="fileStorageInput" type="file" onchange="handleFileStorageSelection(event)">
+        </label>
+
+        <div id="fileUploadStatus" class="file-meta full">You can use a normal external link, upload a local file, or both.</div>
 
         <input
           id="fileDescription"
@@ -3095,25 +2985,17 @@ and (orientation:landscape){
 
       </div>
 
-      <input id="localFileInput" type="file" multiple hidden onchange="handleLocalFiles(this.files)">
+
       <div class="form-buttons">
 
         <button
           class="btn primary"
           onclick="addFile()"
         >
-          Add File Link
-        </button>
-
-        <button
-          class="btn"
-          onclick="chooseLocalFiles()"
-        >
-          📤 Upload From Device
+          Add File
         </button>
 
       </div>
-      <div id="fileUploadStatus" class="file-upload-status"></div>
 
     </div>
 
@@ -3181,20 +3063,6 @@ and (orientation:landscape){
 
 
 <!-- =======================================================
-     FILE PREVIEW MODAL
-======================================================= -->
-<div id="filePreviewModal" class="modal">
-  <div class="modal-box" style="max-width:900px;width:min(94vw,900px);">
-    <h3 id="filePreviewTitle">File Preview</h3>
-    <div id="filePreviewBody"></div>
-    <div class="modal-buttons">
-      <button class="btn" onclick="closeFilePreview()">Close</button>
-      <a id="filePreviewDownload" class="btn primary" href="#" target="_blank" rel="noopener">Open / Download</a>
-    </div>
-  </div>
-</div>
-
-<!-- =======================================================
      NURSING NOTE EDITOR
 ======================================================= -->
 <div id="noteEditorModal" class="modal">
@@ -3219,15 +3087,34 @@ and (orientation:landscape){
       <button type="button" title="Redo" onclick="editorCommand('redo')">↷</button>
       <label title="Text color">A <input type="color" value="#176b4d" onchange="editorCommand('foreColor',this.value)"></label>
       <label title="Highlight">🖍 <input type="color" value="#fff59d" onchange="highlightSelection(this.value)"></label>
-      <button type="button" title="Add image from phone or PC" onclick="chooseNoteImage()">🖼️ Image</button>
-      <input id="noteImageInput" type="file" accept="image/*" multiple hidden onchange="handleNoteImageFiles(this.files)">
     </div>
 
     <div id="richNoteEditor" class="rich-note-editor" contenteditable="true" spellcheck="true" onpaste="handleNotePaste(event)"></div>
 
+    <div class="note-upload-row">
+      <button type="button" class="btn" onclick="document.getElementById('noteImageInput').click()">🖼️ Add Image from Device</button>
+      <input id="noteImageInput" type="file" accept="image/*" style="display:none" onchange="handleNoteImageSelection(event)">
+      <span id="noteImageUploadStatus" class="note-upload-status">Images are inserted into the note layout.</span>
+    </div>
+
     <div class="modal-buttons">
       <button class="btn" onclick="closeNoteEditor()">Cancel</button>
       <button class="btn primary" onclick="saveNoteEditor()">Save Note</button>
+    </div>
+  </div>
+</div>
+
+<!-- =======================================================
+     FILE PREVIEW MODAL
+======================================================= -->
+<div id="filePreviewModal" class="modal">
+  <div class="modal-box" style="max-width:1000px;width:95%;">
+    <h3 id="filePreviewTitle">File Preview</h3>
+    <div id="filePreviewContent" class="file-preview"></div>
+    <div id="filePreviewMeta" class="file-meta"></div>
+    <div class="modal-buttons">
+      <button class="btn" onclick="closeFilePreview()">Close</button>
+      <a id="filePreviewDownload" class="btn primary" href="#" target="_blank" rel="noopener">Open / Download</a>
     </div>
   </div>
 </div>
@@ -3381,13 +3268,7 @@ import {
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-import {
-  getStorage,
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL
-}
-from
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 
@@ -3426,8 +3307,7 @@ const app =
 const db =
   getDatabase(app);
 
-const storage =
-  getStorage(app);
+const storage = getStorage(app);
 
 
 
@@ -3711,6 +3591,16 @@ async function offlineOnValue(collection,callback){
         });
 
         pending.forEach(op=>{
+          // Shared note layout uses last-write-wins timestamps so a stale
+          // queue entry from another login on this device cannot overwrite
+          // the current Firebase layout after a refresh.
+          if(collection === "noteLayout" && remote && typeof remote === "object" && remote.updatedAt != null){
+            const pendingUpdatedAt = Number(op?.data?.updatedAt || 0);
+            const remoteUpdatedAt = Number(remote.updatedAt || 0);
+            if(pendingUpdatedAt && remoteUpdatedAt && pendingUpdatedAt < remoteUpdatedAt){
+              return;
+            }
+          }
           remote = applyQueuedOperation(remote,op);
         });
 
@@ -3816,6 +3706,7 @@ openOfflineDB()
 ========================================================= */
 
 let notesData = {};
+let noteLayoutOrder = [];
 let requirementsData = {};
 let scheduleData = {};
 let membersData = {};
@@ -4582,25 +4473,39 @@ function updateAdminUI(){
    NOTES
 ========================================================= */
 
+/* The note order is stored separately as one shared/global layout.
+   This prevents different logins on the same device from getting different
+   local orderings and makes the admin's layout authoritative for everyone. */
+offlineOnValue("noteLayout", snapshot => {
+  const value = snapshot.val() || {};
+  noteLayoutOrder = Array.isArray(value.order) ? value.order.map(String) : [];
+  renderNotes();
+});
+
 offlineOnValue("notes",
   snapshot => {
-
-    notesData =
-      snapshot.val() ||
-      {};
-
+    notesData = snapshot.val() || {};
     renderNotes();
-
   }
 );
 
+function getOrderedNoteEntries(){
+  const all = Object.entries(notesData || {});
+  const byId = new Map(all.map(([id,n]) => [String(id), [id,n]]));
+  const ordered = [];
+  const used = new Set();
 
-function renderNotes(){
+  // Global Firebase layout is authoritative.
+  for(const id of noteLayoutOrder){
+    const entry = byId.get(String(id));
+    if(entry){
+      ordered.push(entry);
+      used.add(String(id));
+    }
+  }
 
-  const box = document.getElementById("notesList");
-  box.innerHTML = "";
-
-  const entries = Object.entries(notesData).sort((a,b)=>{
+  // Backward compatibility for notes created before the shared layout existed.
+  const remaining = all.filter(([id]) => !used.has(String(id))).sort((a,b)=>{
     const ao = Number.isFinite(Number(a[1]?.order)) ? Number(a[1].order) : Number.MAX_SAFE_INTEGER;
     const bo = Number.isFinite(Number(b[1]?.order)) ? Number(b[1].order) : Number.MAX_SAFE_INTEGER;
     if(ao !== bo) return ao - bo;
@@ -4609,6 +4514,22 @@ function renderNotes(){
     if(ac !== bc) return ac - bc;
     return String(a[0]).localeCompare(String(b[0]));
   });
+  return ordered.concat(remaining);
+}
+
+function renderNotes(){
+
+  const box = document.getElementById("notesList");
+  box.innerHTML = "";
+
+  const entries = getOrderedNoteEntries();
+
+  // Migrate the old per-note order into the shared layout once. Only the admin writes it.
+  if(!noteLayoutOrder.length && entries.length && isAdmin && navigator.onLine){
+    const migrated = entries.map(([id]) => String(id));
+    noteLayoutOrder = migrated.slice();
+    offlineSet("noteLayout", {order:migrated, updatedAt:Date.now()}).catch(err => console.warn("Could not initialize shared note layout", err));
+  }
 
   if(!entries.length){
     box.innerHTML = `<div class="empty">No nursing notes yet.</div>`;
@@ -4729,18 +4650,18 @@ function setupNoteDragAndDrop(box){
 async function saveNoteOrder(box){
   if(!isAdmin) return;
   const cards = Array.from(box.querySelectorAll(".card[data-note-id]"));
-  const updates = [];
-  cards.forEach((card,index) => {
-    const id = card.dataset.noteId;
-    if(!id || !notesData[id]) return;
-    notesData[id].order = index;
-    updates.push(offlineUpdate(`notes/${id}`, {order:index, updatedAt:Date.now()}));
-  });
+  const order = cards.map(card => String(card.dataset.noteId || "")).filter(Boolean);
+  noteLayoutOrder = order.slice();
   try{
+    // One shared layout for every login/device.
+    await offlineSet("noteLayout", {order:order.slice(), updatedAt:Date.now()});
+    // Keep legacy per-note order fields synchronized for older app versions.
+    const updates = order.map((id,index)=> notesData[id] ? offlineUpdate(`notes/${id}`, {order:index, updatedAt:Date.now()}) : Promise.resolve());
     await Promise.all(updates);
+    renderNotes();
   }catch(error){
     console.error("Could not save note order", error);
-    alert("The note position changed on this device, but could not be synced yet.");
+    alert("The note position could not be synced yet. Your change will retry when online.");
   }
 }
 
@@ -4771,28 +4692,91 @@ window.highlightSelection = function(color){
   }
 };
 
-window.handleNotePaste = async function(event){
-  const clipboard=event.clipboardData;
-  if(!clipboard || !clipboard.items) return;
-  const imageItems=Array.from(clipboard.items).filter(item=>item.kind==="file" && item.type.startsWith("image/"));
-  if(!imageItems.length) return;
-  event.preventDefault();
-  for(const item of imageItems){
-    const file=item.getAsFile();
-    if(!file) continue;
-    try{
-      if(navigator.onLine){
-        const blob=await imageFileToBlob(file);
-        const upload=new File([blob],"pasted-image.jpg",{type:"image/jpeg"});
-        const url=await uploadToStorage(upload,"note-images");
-        insertImageUrl(url,"Pasted image");
-      }else{
-        const dataUrl=await resizePastedImage(file,1600,.82);
-        insertImageUrl(dataUrl,"Pasted image");
+function insertNoteImageHtml(src, alt="Image"){
+  const safeAlt = esc(alt || "Image");
+  const html = `<div class="note-image-wrap"><img src="${src}" alt="${safeAlt}"></div><p><br></p>`;
+  document.execCommand("insertHTML", false, html);
+}
+
+function dataUrlToBlob(dataUrl){
+  const parts = String(dataUrl).split(",");
+  if(parts.length < 2) throw new Error("Invalid image data.");
+  const match = parts[0].match(/data:([^;]+);base64/i);
+  const mime = match ? match[1] : "image/jpeg";
+  const binary = atob(parts[1]);
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+  return new Blob([bytes], {type:mime});
+}
+
+// Compatibility helper used by older versions of the editor.
+window.imageFileToBlob = async function(file, maxSize=1600, quality=0.82){
+  const dataUrl = await resizePastedImage(file, maxSize, quality);
+  return dataUrlToBlob(dataUrl);
+};
+
+async function insertImageFileIntoEditor(file, sourceLabel="Pasted image"){
+  if(!file) return;
+  const status = document.getElementById("noteImageUploadStatus");
+  const editor = document.getElementById("richNoteEditor");
+
+  try{
+    if(status) status.textContent = `${sourceLabel}: preparing image…`;
+
+    // Resize first so clipboard images don't create enormous HTML records.
+    const dataUrl = await resizePastedImage(file, 1600, 0.82);
+    let src = dataUrl;
+
+    // Prefer Firebase Storage so the image is shared with every account.
+    if(navigator.onLine && typeof uploadFileToStorage === "function"){
+      try{
+        const blob = dataUrlToBlob(dataUrl);
+        const imageFile = new File([blob], file.name || `note-image-${Date.now()}.jpg`, {type:blob.type || "image/jpeg"});
+        const uploaded = await uploadFileToStorage(imageFile, "group4-note-images");
+        src = uploaded.downloadURL;
+      }catch(uploadError){
+        console.warn("Image upload failed; using embedded image temporarily.", uploadError);
       }
-    }catch(error){
-      console.error("Could not paste image:",error);
-      alert(error.message||"The image could not be pasted into the note.");
+    }
+
+    editor.focus();
+    insertNoteImageHtml(src, file.name || sourceLabel);
+    if(status) status.textContent = src === dataUrl
+      ? "Image added. It will remain in the note and can sync when online."
+      : `Added ${file.name || sourceLabel}`;
+  }catch(error){
+    console.error("Could not insert image:", error);
+    if(status) status.textContent = "Image could not be inserted.";
+    alert("The image could not be added to the note.");
+  }
+}
+
+window.handleNotePaste = async function(event){
+  const clipboard = event.clipboardData;
+  if(!clipboard) return;
+
+  // First handle real image files from screenshots, Snipping Tool, Photos, etc.
+  const imageItems = Array.from(clipboard.items || [])
+    .filter(item => item.kind === "file" && /^image\//i.test(item.type || ""));
+
+  if(imageItems.length){
+    event.preventDefault();
+    for(const item of imageItems){
+      const file = item.getAsFile();
+      if(file) await insertImageFileIntoEditor(file, "Pasted image");
+    }
+    return;
+  }
+
+  // Some browsers/apps expose copied images as HTML instead of a file.
+  const html = clipboard.getData ? clipboard.getData("text/html") : "";
+  const imageMatch = html && html.match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
+  if(imageMatch){
+    const src = imageMatch[1];
+    if(/^data:image\//i.test(src) || /^https?:\/\//i.test(src)){
+      event.preventDefault();
+      focusRichEditor();
+      insertNoteImageHtml(src, "Pasted image");
     }
   }
 };
@@ -4800,35 +4784,25 @@ window.handleNotePaste = async function(event){
 window.resizePastedImage = function(file, maxSize=1600, quality=0.82){
   return new Promise((resolve,reject)=>{
     const reader = new FileReader();
-
     reader.onerror = reject;
-
     reader.onload = function(){
       const image = new Image();
-
       image.onerror = reject;
-
       image.onload = function(){
         let width = image.naturalWidth || image.width;
         let height = image.naturalHeight || image.height;
-
         const scale = Math.min(1, maxSize / Math.max(width,height));
         width = Math.max(1, Math.round(width * scale));
         height = Math.max(1, Math.round(height * scale));
-
         const canvas = document.createElement("canvas");
         canvas.width = width;
         canvas.height = height;
-
         const ctx = canvas.getContext("2d");
         ctx.drawImage(image, 0, 0, width, height);
-
         resolve(canvas.toDataURL("image/jpeg", quality));
       };
-
       image.src = reader.result;
     };
-
     reader.readAsDataURL(file);
   });
 };
@@ -4837,22 +4811,31 @@ window.insertChecklist = function(){
   focusRichEditor();
   const selection = window.getSelection();
   if(!selection || !selection.rangeCount) return;
-
   const range = selection.getRangeAt(0);
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.className = "note-check";
   checkbox.style.marginRight = "8px";
   checkbox.addEventListener("click", e => e.stopPropagation());
-
   range.insertNode(checkbox);
-
   const spacer = document.createTextNode(" ");
   checkbox.after(spacer);
   range.setStartAfter(spacer);
   range.collapse(true);
   selection.removeAllRanges();
   selection.addRange(range);
+};
+
+window.handleNoteImageSelection=async function(event){
+  if(!requireAdmin()) return;
+  const file=event.target.files?.[0];
+  event.target.value="";
+  if(!file) return;
+  if(!file.type.startsWith("image/")){
+    alert("Please choose an image file.");
+    return;
+  }
+  await insertImageFileIntoEditor(file,"Device image");
 };
 
 window.openNoteEditor = function(id=null){
@@ -4900,6 +4883,8 @@ window.closeNoteEditor = function(){
   document.getElementById("editorNoteTitle").value = "";
   document.getElementById("editorNoteCategory").value = "";
   document.getElementById("richNoteEditor").innerHTML = "";
+  const imageStatus = document.getElementById("noteImageUploadStatus");
+  if(imageStatus) imageStatus.textContent = "Images are inserted into the note layout.";
 };
 
 window.saveNoteEditor = async function(){
@@ -4925,6 +4910,11 @@ window.saveNoteEditor = async function(){
         html:htmlContent,
         updatedAt:Date.now()
       });
+      // Editing content never changes the shared layout.
+      if(!noteLayoutOrder.includes(String(editingNoteId))){
+        noteLayoutOrder.push(String(editingNoteId));
+        await offlineSet("noteLayout", {order:noteLayoutOrder.slice(), updatedAt:Date.now()});
+      }
 
     }else{
 
@@ -4933,13 +4923,17 @@ window.saveNoteEditor = async function(){
         .filter(Number.isFinite);
       const nextOrder = existingOrders.length ? Math.max(...existingOrders) + 1 : Object.keys(notesData || {}).length;
 
-      await offlinePush("notes",{
+      const newNoteId = await offlinePush("notes",{
         title,
         category,
         html:htmlContent,
         order:nextOrder,
         createdAt:Date.now()
       });
+      const currentOrder = getOrderedNoteEntries().map(([id]) => String(id));
+      noteLayoutOrder = currentOrder.filter(id => id !== String(newNoteId));
+      noteLayoutOrder.push(String(newNoteId));
+      await offlineSet("noteLayout", {order:noteLayoutOrder.slice(), updatedAt:Date.now()});
 
     }
 
@@ -4971,6 +4965,8 @@ async function(id){
 
 
   await offlineRemove("notes/" + id);
+  noteLayoutOrder = noteLayoutOrder.filter(noteId => String(noteId) !== String(id));
+  await offlineSet("noteLayout", {order: noteLayoutOrder.slice(), updatedAt: Date.now()});
 
 };
 
@@ -6330,101 +6326,19 @@ offlineOnValue("files",
 );
 
 
-function renderFiles(){
-  const box=document.getElementById("filesList");
-  box.innerHTML="";
-  const entries=Object.entries(filesData||{}).sort((a,b)=>Number(b[1]?.createdAt||0)-Number(a[1]?.createdAt||0));
-  if(!entries.length){box.innerHTML=`<div class="empty">No clinical files added yet.</div>`;return;}
+function fileTypeIcon(mime,name){const t=String(mime||"").toLowerCase(),n=String(name||"").toLowerCase();if(t.startsWith("image/"))return "🖼️";if(t.startsWith("video/"))return "🎬";if(t.startsWith("audio/"))return "🎵";if(t.includes("pdf")||n.endsWith(".pdf"))return "📕";if(t.includes("word")||/\.docx?$/.test(n))return "📝";if(t.includes("sheet")||/\.(xlsx?|csv)$/.test(n))return "📊";if(t.includes("presentation")||/\.pptx?$/.test(n))return "📽️";return "📄";}
+function formatFileSize(bytes){const n=Number(bytes||0);if(!n)return "";const u=["B","KB","MB","GB"];let i=0,v=n;while(v>=1024&&i<u.length-1){v/=1024;i++;}return `${v.toFixed(i?1:0)} ${u[i]}`;}
+function safeFileUrl(url){try{return new URL(url,location.href).href;}catch{return "";}}
+window.previewFile=function(id){const f=filesData[id];if(!f)return;const url=safeFileUrl(f.downloadURL||f.url||"");if(!url){alert("This file has no viewable source.");return;}const modal=document.getElementById("filePreviewModal"),content=document.getElementById("filePreviewContent"),title=document.getElementById("filePreviewTitle"),meta=document.getElementById("filePreviewMeta"),download=document.getElementById("filePreviewDownload"),mime=String(f.mimeType||"").toLowerCase(),name=String(f.name||f.title||"File");title.textContent=f.title||name;meta.textContent=[name,formatFileSize(f.size),f.description||""].filter(Boolean).join(" • ");download.href=url;content.innerHTML="";if(mime.startsWith("image/")){const e=document.createElement("img");e.src=url;e.alt=name;content.appendChild(e);}else if(mime.startsWith("video/")){const e=document.createElement("video");e.src=url;e.controls=true;content.appendChild(e);}else if(mime.startsWith("audio/")){const e=document.createElement("audio");e.src=url;e.controls=true;content.appendChild(e);}else if(mime.includes("pdf")||/\.pdf($|\?)/i.test(url)){const e=document.createElement("iframe");e.src=url;e.title=name;content.appendChild(e);}else if(mime.startsWith("text/")||/\.(txt|html|css|js|json|xml|csv)($|\?)/i.test(url)){const e=document.createElement("iframe");e.src=url;e.title=name;content.appendChild(e);}else{content.innerHTML=`<div style="padding:25px;text-align:center;color:var(--muted)">${esc(fileTypeIcon(mime,name))}<br><br>This file type cannot be previewed directly by the browser.<br>You can still open or download it below.</div>`;}modal.classList.add("show");};
+window.closeFilePreview=function(){document.getElementById("filePreviewModal")?.classList.remove("show");document.getElementById("filePreviewContent").innerHTML="";};
+function renderFiles(){const box=document.getElementById("filesList");box.innerHTML="";const entries=Object.entries(filesData||{}).sort((a,b)=>Number(a[1]?.createdAt||0)-Number(b[1]?.createdAt||0));if(!entries.length){box.innerHTML=`<div class="empty">No clinical files added yet.</div>`;return;}entries.forEach(([id,f])=>{const e=document.createElement("div");e.className="file-card";const source=f.downloadURL||f.url||"";e.innerHTML=`<div class="file-icon">${fileTypeIcon(f.mimeType,f.name||f.title)}</div><h3>${esc(f.title||f.name||"Clinical File")}</h3>${f.description?`<p>${esc(cleanText(f.description))}</p>`:""}${f.name?`<p class="file-meta">${esc(f.name)}${f.size?` • ${esc(formatFileSize(f.size))}`:""}</p>`:""}${source?`<div class="form-buttons" style="margin-top:10px;"><button class="btn primary" onclick="previewFile('${id}')">👁️ View in Website</button><a class="btn" href="${esc(safeFileUrl(source))}" target="_blank" rel="noopener">${f.downloadURL?"Open / Download":"Open Link"}</a></div>`:""}${isAdmin?`<div class="note-actions"><button class="btn danger" onclick="deleteFile('${id}')">Delete</button></div>`:""}`;box.appendChild(e);});}
+let selectedStorageFile=null;
+window.handleFileStorageSelection=function(event){selectedStorageFile=event.target.files?.[0]||null;const s=document.getElementById("fileUploadStatus");if(s)s.textContent=selectedStorageFile?`Selected: ${selectedStorageFile.name} • ${formatFileSize(selectedStorageFile.size)}`:"No local file selected.";};
+async function uploadFileToStorage(file,folder){const cleanName=String(file.name||"file").replace(/[^a-zA-Z0-9._-]+/g,"_");const path=`${folder}/${Date.now()}_${Math.random().toString(36).slice(2,9)}_${cleanName}`;const target=storageRef(storage,path);const result=await uploadBytes(target,file,{contentType:file.type||"application/octet-stream"});const url=await getDownloadURL(result.ref);return {downloadURL:url,storagePath:path,mimeType:file.type||"application/octet-stream",name:file.name||cleanName,size:file.size||0};}
 
-  entries.forEach(([id,f])=>{
-    const element=document.createElement("div");
-    element.className="file-card";
-    const url=f.url||"";
-    const kind=fileKind(f.name||f.title,url?f.mimeType:"",f.mimeType);
-    let preview="";
-    if(url){
-      if(kind==="image") preview=`<div class="file-preview"><img src="${esc(url)}" alt="${esc(f.title||f.name||"Clinical file")}"></div>`;
-      else if(kind==="video") preview=`<div class="file-preview"><video controls preload="metadata" src="${esc(url)}"></video></div>`;
-      else if(kind==="audio") preview=`<div class="file-preview"><audio controls src="${esc(url)}"></audio></div>`;
-      else if(kind==="pdf") preview=`<div class="file-preview"><iframe src="${esc(url)}" title="${esc(f.title||"PDF preview")}"></iframe></div>`;
-    }
-    element.innerHTML=`
-      <div class="file-icon">${kind==="image"?"🖼️":kind==="pdf"?"📕":kind==="video"?"🎬":kind==="audio"?"🎵":"📄"}</div>
-      <h3>${esc(f.title||f.name||"Clinical File")}</h3>
-      ${f.description?`<p>${esc(cleanText(f.description))}</p>`:""}
-      ${f.name?`<p><small>${esc(f.name)}</small></p>`:""}
-      ${preview}
-      ${url?`<div class="file-actions"><button class="btn primary small" onclick="previewFile('${id}')">👁️ View</button><a class="btn small" href="${esc(url)}" target="_blank" rel="noopener">Open / Download</a></div>`:""}
-      ${isAdmin?`<div class="note-actions"><button class="btn danger" onclick="deleteFile('${id}')">Delete</button></div>`:""}
-    `;
-    box.appendChild(element);
-  });
-}
 
-window.previewFile=function(id){
-  const f=filesData[id];
-  if(!f || !f.url) return;
-  const body=document.getElementById("filePreviewBody");
-  const kind=fileKind(f.name||f.title,f.mimeType);
-  document.getElementById("filePreviewTitle").textContent=f.title||f.name||"File Preview";
-  document.getElementById("filePreviewDownload").href=f.url;
-  if(kind==="image") body.innerHTML=`<div class="file-preview"><img src="${esc(f.url)}" alt="${esc(f.title||f.name||"")}"></div>`;
-  else if(kind==="video") body.innerHTML=`<div class="file-preview"><video controls autoplay src="${esc(f.url)}"></video></div>`;
-  else if(kind==="audio") body.innerHTML=`<div class="file-preview"><audio controls autoplay src="${esc(f.url)}"></audio></div>`;
-  else if(kind==="pdf") body.innerHTML=`<div class="file-preview"><iframe src="${esc(f.url)}" title="PDF preview"></iframe></div>`;
-  else body.innerHTML=`<div class="file-preview" style="padding:18px"><p>This file type cannot be embedded by the browser. Use Open / Download to view it.</p></div>`;
-  document.getElementById("filePreviewModal").classList.add("show");
-};
+window.addFile = async function(){if(!isAdmin)return;const title=document.getElementById("fileTitle").value.trim(),url=document.getElementById("fileUrl").value.trim(),description=document.getElementById("fileDescription").value.trim(),file=selectedStorageFile,status=document.getElementById("fileUploadStatus");if(!title&&!file){alert("Please enter a file title or select a file.");return;}if(!url&&!file){alert("Add a file from your device or enter a file URL.");return;}try{let uploaded={};if(file){if(status)status.textContent="Uploading file…";uploaded=await uploadFileToStorage(file,"group4-files");}await offlinePush("files",{title:title||file.name,url:url||"",description,...uploaded,createdAt:Date.now()});["fileTitle","fileUrl","fileDescription"].forEach(id=>document.getElementById(id).value="");const input=document.getElementById("fileStorageInput");if(input)input.value="";selectedStorageFile=null;if(status)status.textContent="File added successfully.";}catch(error){console.error(error);if(status)status.textContent="Upload failed.";alert("The file could not be uploaded. Check your internet connection and Firebase Storage permissions.");}};
 
-window.closeFilePreview=function(){
-  document.getElementById("filePreviewModal").classList.remove("show");
-  document.getElementById("filePreviewBody").innerHTML="";
-};
-
-window.chooseLocalFiles=function(){
-  if(!isAdmin) return;
-  document.getElementById("localFileInput").click();
-};
-
-window.handleLocalFiles=async function(files){
-  if(!isAdmin) return;
-  const list=Array.from(files||[]);
-  if(!list.length) return;
-  const status=document.getElementById("fileUploadStatus");
-  for(const file of list){
-    try{
-      if(!navigator.onLine) throw new Error("Connect to the internet before uploading a file.");
-      status.textContent=`Uploading ${file.name}…`;
-      const url=await uploadToStorage(file,"clinical-files");
-      await offlinePush("files",{
-        title:file.name.replace(/\.[^.]+$/,""),
-        name:file.name,
-        mimeType:file.type||"application/octet-stream",
-        size:file.size||0,
-        url,
-        source:"firebase-storage",
-        description:"",
-        createdAt:Date.now()
-      });
-    }catch(error){
-      console.error(error);
-      alert(`Could not upload ${file.name}: ${error.message||"Unknown error"}`);
-    }
-  }
-  status.textContent=list.length===1?"Upload complete.":`${list.length} files processed.`;
-  document.getElementById("localFileInput").value="";
-  setTimeout(()=>{status.textContent="";},4000);
-};
-
-window.addFile=async function(){
-  if(!isAdmin) return;
-  const title=document.getElementById("fileTitle").value.trim();
-  const url=document.getElementById("fileUrl").value.trim();
-  const description=document.getElementById("fileDescription").value.trim();
-  if(!title || !url){alert("Please enter a title and URL.");return;}
-  await offlinePush("files",{title,url,description,mimeType:"",source:"external-link",createdAt:Date.now()});
-  ["fileTitle","fileUrl","fileDescription"].forEach(id=>document.getElementById(id).value="");
-};
 
 window.deleteFile =
 async function(id){
@@ -6510,16 +6424,16 @@ document.getElementById(
 );
 
 
-document.getElementById("filePreviewModal")
-.addEventListener("click", event => {
-  if(event.target.id === "filePreviewModal") closeFilePreview();
-});
-
 document.getElementById("noteEditorModal")
 .addEventListener("click", event => {
   if(event.target.id === "noteEditorModal"){
     closeNoteEditor();
   }
+});
+
+document.getElementById("filePreviewModal")
+.addEventListener("click", event => {
+  if(event.target.id === "filePreviewModal") closeFilePreview();
 });
 
 
