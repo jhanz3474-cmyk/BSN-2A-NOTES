@@ -1034,6 +1034,101 @@ select:focus{
 
 
 /* =========================================================
+   FIREBASE STORAGE HELPERS
+========================================================= */
+
+function safeStorageName(name){
+  return String(name || "file")
+    .replace(/[^a-zA-Z0-9._-]+/g,"_")
+    .slice(-120);
+}
+
+async function uploadToStorage(file, folder){
+  if(!file) throw new Error("No file selected.");
+  if(!navigator.onLine) throw new Error("Device is offline. Connect to the internet to upload a file.");
+
+  const stamp = Date.now();
+  const random = Math.random().toString(36).slice(2,9);
+  const path = `${folder}/${stamp}_${random}_${safeStorageName(file.name)}`;
+  const target = storageRef(storage,path);
+  const snapshot = await uploadBytes(target,file,{
+    contentType:file.type || "application/octet-stream",
+    cacheControl:"public,max-age=31536000"
+  });
+  return await getDownloadURL(snapshot.ref);
+}
+
+function fileKind(fileOrName,type){
+  const t=String(type||"").toLowerCase();
+  const n=String(fileOrName||"").toLowerCase();
+  if(t.startsWith("image/") || /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(n)) return "image";
+  if(t === "application/pdf" || /\.pdf$/i.test(n)) return "pdf";
+  if(t.startsWith("video/") || /\.(mp4|webm|ogg|mov)$/i.test(n)) return "video";
+  if(t.startsWith("audio/") || /\.(mp3|wav|ogg|m4a)$/i.test(n)) return "audio";
+  if(t.startsWith("text/") || /\.(txt|csv|md)$/i.test(n)) return "text";
+  return "other";
+}
+
+async function imageFileToBlob(file,maxSize=1800,quality=.84){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=()=>reject(reader.error||new Error("Could not read image."));
+    reader.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>reject(new Error("Could not decode image."));
+      img.onload=()=>{
+        let w=img.naturalWidth||img.width;
+        let h=img.naturalHeight||img.height;
+        const scale=Math.min(1,maxSize/Math.max(w,h));
+        w=Math.max(1,Math.round(w*scale));
+        h=Math.max(1,Math.round(h*scale));
+        const canvas=document.createElement("canvas");
+        canvas.width=w; canvas.height=h;
+        canvas.getContext("2d").drawImage(img,0,0,w,h);
+        canvas.toBlob(blob=>blob?resolve(blob):reject(new Error("Could not prepare image.")),"image/jpeg",quality);
+      };
+      img.src=reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function insertImageUrl(url,alt="Uploaded image"){
+  focusRichEditor();
+  document.execCommand("insertHTML",false,`<img src="${esc(url)}" alt="${esc(alt)}" style="max-width:100%;height:auto;display:block;margin:10px 0;border-radius:8px;">`);
+  document.execCommand("insertHTML",false,"<p><br></p>");
+}
+
+window.chooseNoteImage=function(){
+  if(!requireAdmin()) return;
+  document.getElementById("noteImageInput").click();
+};
+
+window.handleNoteImageFiles=async function(files){
+  if(!requireAdmin()) return;
+  const list=Array.from(files||[]);
+  if(!list.length) return;
+  for(const file of list){
+    try{
+      let url;
+      if(navigator.onLine){
+        const blob=await imageFileToBlob(file);
+        const upload=new File([blob],file.name.replace(/\.[^.]+$/i,".jpg"),{type:"image/jpeg"});
+        url=await uploadToStorage(upload,"note-images");
+      }else{
+        const blob=await imageFileToBlob(file);
+        url=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(blob);});
+      }
+      insertImageUrl(url,file.name);
+    }catch(error){
+      console.error(error);
+      alert(error.message||"Could not upload image.");
+    }
+  }
+  document.getElementById("noteImageInput").value="";
+};
+
+/* =========================================================
    NOTES
 ========================================================= */
 
@@ -1772,6 +1867,44 @@ select:focus{
   border-radius:8px;
   cursor:default;
 }
+
+/* Uploaded note images always stay inside the note layout. */
+.note-text{
+  min-width:0;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+.note-text img{
+  display:block;
+  width:auto;
+  max-width:100%;
+  height:auto;
+  object-fit:contain;
+  box-sizing:border-box;
+  margin:10px 0;
+  border-radius:8px;
+}
+.note-text video,.note-text iframe,.note-text embed{
+  display:block;
+  width:100%;
+  max-width:100%;
+  border:0;
+  border-radius:8px;
+  margin:10px 0;
+}
+.note-text table{max-width:100%;display:block;overflow-x:auto;}
+.file-preview{
+  margin-top:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  background:var(--input);
+}
+.file-preview img,.file-preview video{display:block;width:100%;max-height:420px;object-fit:contain;}
+.file-preview iframe{display:block;width:100%;height:420px;border:0;}
+.file-preview audio{display:block;width:100%;padding:10px;box-sizing:border-box;}
+.file-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.file-upload-status{font-size:11px;color:var(--muted);margin-top:8px;}
 
 .notes-card img,
 .note-content img{
@@ -2962,17 +3095,25 @@ and (orientation:landscape){
 
       </div>
 
-
+      <input id="localFileInput" type="file" multiple hidden onchange="handleLocalFiles(this.files)">
       <div class="form-buttons">
 
         <button
           class="btn primary"
           onclick="addFile()"
         >
-          Add File
+          Add File Link
+        </button>
+
+        <button
+          class="btn"
+          onclick="chooseLocalFiles()"
+        >
+          📤 Upload From Device
         </button>
 
       </div>
+      <div id="fileUploadStatus" class="file-upload-status"></div>
 
     </div>
 
@@ -3040,6 +3181,20 @@ and (orientation:landscape){
 
 
 <!-- =======================================================
+     FILE PREVIEW MODAL
+======================================================= -->
+<div id="filePreviewModal" class="modal">
+  <div class="modal-box" style="max-width:900px;width:min(94vw,900px);">
+    <h3 id="filePreviewTitle">File Preview</h3>
+    <div id="filePreviewBody"></div>
+    <div class="modal-buttons">
+      <button class="btn" onclick="closeFilePreview()">Close</button>
+      <a id="filePreviewDownload" class="btn primary" href="#" target="_blank" rel="noopener">Open / Download</a>
+    </div>
+  </div>
+</div>
+
+<!-- =======================================================
      NURSING NOTE EDITOR
 ======================================================= -->
 <div id="noteEditorModal" class="modal">
@@ -3064,6 +3219,8 @@ and (orientation:landscape){
       <button type="button" title="Redo" onclick="editorCommand('redo')">↷</button>
       <label title="Text color">A <input type="color" value="#176b4d" onchange="editorCommand('foreColor',this.value)"></label>
       <label title="Highlight">🖍 <input type="color" value="#fff59d" onchange="highlightSelection(this.value)"></label>
+      <button type="button" title="Add image from phone or PC" onclick="chooseNoteImage()">🖼️ Image</button>
+      <input id="noteImageInput" type="file" accept="image/*" multiple hidden onchange="handleNoteImageFiles(this.files)">
     </div>
 
     <div id="richNoteEditor" class="rich-note-editor" contenteditable="true" spellcheck="true" onpaste="handleNotePaste(event)"></div>
@@ -3224,6 +3381,15 @@ import {
 from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
 
 const firebaseConfig = {
 
@@ -3259,6 +3425,9 @@ const app =
 
 const db =
   getDatabase(app);
+
+const storage =
+  getStorage(app);
 
 
 
@@ -4603,32 +4772,27 @@ window.highlightSelection = function(color){
 };
 
 window.handleNotePaste = async function(event){
-  const clipboard = event.clipboardData;
+  const clipboard=event.clipboardData;
   if(!clipboard || !clipboard.items) return;
-
-  const imageItems = Array.from(clipboard.items)
-    .filter(item => item.kind === "file" && item.type.startsWith("image/"));
-
+  const imageItems=Array.from(clipboard.items).filter(item=>item.kind==="file" && item.type.startsWith("image/"));
   if(!imageItems.length) return;
-
   event.preventDefault();
-  focusRichEditor();
-
   for(const item of imageItems){
-    const file = item.getAsFile();
+    const file=item.getAsFile();
     if(!file) continue;
-
     try{
-      const dataUrl = await resizePastedImage(file, 1600, 0.82);
-      document.execCommand(
-        "insertHTML",
-        false,
-        '<img src="' + dataUrl + '" alt="Pasted image">'
-      );
-      document.execCommand("insertHTML", false, "<p><br></p>");
+      if(navigator.onLine){
+        const blob=await imageFileToBlob(file);
+        const upload=new File([blob],"pasted-image.jpg",{type:"image/jpeg"});
+        const url=await uploadToStorage(upload,"note-images");
+        insertImageUrl(url,"Pasted image");
+      }else{
+        const dataUrl=await resizePastedImage(file,1600,.82);
+        insertImageUrl(dataUrl,"Pasted image");
+      }
     }catch(error){
-      console.error("Could not paste image:", error);
-      alert("The image could not be pasted into the note.");
+      console.error("Could not paste image:",error);
+      alert(error.message||"The image could not be pasted into the note.");
     }
   }
 };
@@ -6167,184 +6331,100 @@ offlineOnValue("files",
 
 
 function renderFiles(){
+  const box=document.getElementById("filesList");
+  box.innerHTML="";
+  const entries=Object.entries(filesData||{}).sort((a,b)=>Number(b[1]?.createdAt||0)-Number(a[1]?.createdAt||0));
+  if(!entries.length){box.innerHTML=`<div class="empty">No clinical files added yet.</div>`;return;}
 
-  const box =
-    document.getElementById(
-      "filesList"
-    );
-
-
-  box.innerHTML =
-    "";
-
-
-  const entries =
-    Object.entries(
-      filesData
-    );
-
-
-  if(!entries.length){
-
-    box.innerHTML =
-      `
-      <div class="empty">
-        No clinical files added yet.
-      </div>
-      `;
-
-    return;
-
-  }
-
-
-  entries.forEach(
-    ([id,f]) => {
-
-      const element =
-        document.createElement(
-          "div"
-        );
-
-
-      element.className =
-        "file-card";
-
-
-      element.innerHTML = `
-
-        <div class="file-icon">
-          📄
-        </div>
-
-        <h3>
-          ${esc(
-            f.title ||
-            "Clinical File"
-          )}
-        </h3>
-
-        ${
-          f.description
-            ? `
-              <p>
-                ${esc(
-                  cleanText(
-                    f.description
-                  )
-                )}
-              </p>
-            `
-            : ""
-        }
-
-        ${
-          f.url
-            ? `
-              <a
-                href="${esc(f.url)}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open File →
-              </a>
-            `
-            : ""
-        }
-
-        ${
-          isAdmin
-            ? `
-              <div class="note-actions">
-
-                <button
-                  class="btn danger"
-                  onclick="
-                    deleteFile('${id}')
-                  "
-                >
-                  Delete
-                </button>
-
-              </div>
-            `
-            : ""
-        }
-
-      `;
-
-
-      box.appendChild(
-        element
-      );
-
+  entries.forEach(([id,f])=>{
+    const element=document.createElement("div");
+    element.className="file-card";
+    const url=f.url||"";
+    const kind=fileKind(f.name||f.title,url?f.mimeType:"",f.mimeType);
+    let preview="";
+    if(url){
+      if(kind==="image") preview=`<div class="file-preview"><img src="${esc(url)}" alt="${esc(f.title||f.name||"Clinical file")}"></div>`;
+      else if(kind==="video") preview=`<div class="file-preview"><video controls preload="metadata" src="${esc(url)}"></video></div>`;
+      else if(kind==="audio") preview=`<div class="file-preview"><audio controls src="${esc(url)}"></audio></div>`;
+      else if(kind==="pdf") preview=`<div class="file-preview"><iframe src="${esc(url)}" title="${esc(f.title||"PDF preview")}"></iframe></div>`;
     }
-  );
-
+    element.innerHTML=`
+      <div class="file-icon">${kind==="image"?"🖼️":kind==="pdf"?"📕":kind==="video"?"🎬":kind==="audio"?"🎵":"📄"}</div>
+      <h3>${esc(f.title||f.name||"Clinical File")}</h3>
+      ${f.description?`<p>${esc(cleanText(f.description))}</p>`:""}
+      ${f.name?`<p><small>${esc(f.name)}</small></p>`:""}
+      ${preview}
+      ${url?`<div class="file-actions"><button class="btn primary small" onclick="previewFile('${id}')">👁️ View</button><a class="btn small" href="${esc(url)}" target="_blank" rel="noopener">Open / Download</a></div>`:""}
+      ${isAdmin?`<div class="note-actions"><button class="btn danger" onclick="deleteFile('${id}')">Delete</button></div>`:""}
+    `;
+    box.appendChild(element);
+  });
 }
 
-
-window.addFile =
-async function(){
-
-  if(!isAdmin)
-    return;
-
-
-  const title =
-    document.getElementById(
-      "fileTitle"
-    ).value.trim();
-
-
-  const url =
-    document.getElementById(
-      "fileUrl"
-    ).value.trim();
-
-
-  const description =
-    document.getElementById(
-      "fileDescription"
-    ).value.trim();
-
-
-  if(
-    !title ||
-    !url
-  ){
-
-    alert(
-      "Please enter a title and URL."
-    );
-
-    return;
-
-  }
-
-
-  await offlinePush("files",{
-    title,
-    url,
-    description
-  });
-
-
-  [
-    "fileTitle",
-    "fileUrl",
-    "fileDescription"
-  ]
-  .forEach(
-    id =>
-      document.getElementById(
-        id
-      ).value =
-        ""
-  );
-
+window.previewFile=function(id){
+  const f=filesData[id];
+  if(!f || !f.url) return;
+  const body=document.getElementById("filePreviewBody");
+  const kind=fileKind(f.name||f.title,f.mimeType);
+  document.getElementById("filePreviewTitle").textContent=f.title||f.name||"File Preview";
+  document.getElementById("filePreviewDownload").href=f.url;
+  if(kind==="image") body.innerHTML=`<div class="file-preview"><img src="${esc(f.url)}" alt="${esc(f.title||f.name||"")}"></div>`;
+  else if(kind==="video") body.innerHTML=`<div class="file-preview"><video controls autoplay src="${esc(f.url)}"></video></div>`;
+  else if(kind==="audio") body.innerHTML=`<div class="file-preview"><audio controls autoplay src="${esc(f.url)}"></audio></div>`;
+  else if(kind==="pdf") body.innerHTML=`<div class="file-preview"><iframe src="${esc(f.url)}" title="PDF preview"></iframe></div>`;
+  else body.innerHTML=`<div class="file-preview" style="padding:18px"><p>This file type cannot be embedded by the browser. Use Open / Download to view it.</p></div>`;
+  document.getElementById("filePreviewModal").classList.add("show");
 };
 
+window.closeFilePreview=function(){
+  document.getElementById("filePreviewModal").classList.remove("show");
+  document.getElementById("filePreviewBody").innerHTML="";
+};
+
+window.chooseLocalFiles=function(){
+  if(!isAdmin) return;
+  document.getElementById("localFileInput").click();
+};
+
+window.handleLocalFiles=async function(files){
+  if(!isAdmin) return;
+  const list=Array.from(files||[]);
+  if(!list.length) return;
+  const status=document.getElementById("fileUploadStatus");
+  for(const file of list){
+    try{
+      if(!navigator.onLine) throw new Error("Connect to the internet before uploading a file.");
+      status.textContent=`Uploading ${file.name}…`;
+      const url=await uploadToStorage(file,"clinical-files");
+      await offlinePush("files",{
+        title:file.name.replace(/\.[^.]+$/,""),
+        name:file.name,
+        mimeType:file.type||"application/octet-stream",
+        size:file.size||0,
+        url,
+        source:"firebase-storage",
+        description:"",
+        createdAt:Date.now()
+      });
+    }catch(error){
+      console.error(error);
+      alert(`Could not upload ${file.name}: ${error.message||"Unknown error"}`);
+    }
+  }
+  status.textContent=list.length===1?"Upload complete.":`${list.length} files processed.`;
+  document.getElementById("localFileInput").value="";
+  setTimeout(()=>{status.textContent="";},4000);
+};
+
+window.addFile=async function(){
+  if(!isAdmin) return;
+  const title=document.getElementById("fileTitle").value.trim();
+  const url=document.getElementById("fileUrl").value.trim();
+  const description=document.getElementById("fileDescription").value.trim();
+  if(!title || !url){alert("Please enter a title and URL.");return;}
+  await offlinePush("files",{title,url,description,mimeType:"",source:"external-link",createdAt:Date.now()});
+  ["fileTitle","fileUrl","fileDescription"].forEach(id=>document.getElementById(id).value="");
+};
 
 window.deleteFile =
 async function(id){
@@ -6429,6 +6509,11 @@ document.getElementById(
   }
 );
 
+
+document.getElementById("filePreviewModal")
+.addEventListener("click", event => {
+  if(event.target.id === "filePreviewModal") closeFilePreview();
+});
 
 document.getElementById("noteEditorModal")
 .addEventListener("click", event => {
