@@ -1172,10 +1172,10 @@ select:focus{
 
 
 /* =========================================================
-   REQUIREMENTS
+   THINGS TO MEMORIZE
 ========================================================= */
 
-.requirements{
+.memo-grid{
   display:grid;
 
   grid-template-columns:
@@ -1187,7 +1187,7 @@ select:focus{
   gap:13px;
 }
 
-.requirement{
+.memo-card{
   background:
     var(--surface);
 
@@ -1202,7 +1202,26 @@ select:focus{
     0 4px 12px var(--shadow);
 }
 
-.requirement-top{
+.memo-card .memo-content{
+  margin-top:10px;
+  line-height:1.65;
+  overflow-wrap:anywhere;
+}
+.memo-card .memo-content img{
+  max-width:100%;
+  height:auto;
+  display:block;
+  margin:10px auto;
+  border-radius:10px;
+  cursor:zoom-in;
+}
+.memo-slide-image{
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
+}
+
+.memo-top{
   display:flex;
 
   gap:10px;
@@ -2032,7 +2051,7 @@ and (max-width:700px){
     grid-template-columns:1fr;
   }
 
-  .requirements{
+  .memo-grid{
     grid-template-columns:1fr;
   }
 
@@ -2304,7 +2323,7 @@ and (orientation:landscape){
 
 
       <button
-        onclick="show('requirements',this)"
+        onclick="show('memorize',this)"
       >
 
         <span class="nav-icon">
@@ -2312,7 +2331,7 @@ and (orientation:landscape){
         </span>
 
         <span>
-          Requirements
+          Things to Memorize
         </span>
 
       </button>
@@ -2601,7 +2620,7 @@ and (orientation:landscape){
 
           <div
             class="dashboard-link"
-            onclick="goToSection('requirements')"
+            onclick="goToSection('memorize')"
           >
 
             <div class="dashboard-link-icon">
@@ -2609,11 +2628,11 @@ and (orientation:landscape){
             </div>
 
             <strong>
-              Requirements
+              Things to Memorize
             </strong>
 
             <small>
-              Keep track of school and duty requirements.
+              Paste, edit, and review slides and study material.
             </small>
 
           </div>
@@ -2726,66 +2745,20 @@ and (orientation:landscape){
 
 
   <!-- =====================================================
-       REQUIREMENTS
+       THINGS TO MEMORIZE
   ====================================================== -->
 
-  <section
-    id="requirements"
-    class="section"
-  >
+  <section id="memorize" class="section">
 
-
-    <div
-      id="adminRequirementsPanel"
-      class="admin-panel"
-      style="display:none;"
-    >
-
-      <h3>
-        ➕ Add Requirement
-      </h3>
-
-
-      <div class="form-grid">
-
-        <input
-          id="reqTitle"
-          placeholder="Requirement"
-        >
-
-        <input
-          id="reqType"
-          placeholder="Type / Deadline"
-        >
-
-        <textarea
-          id="reqDescription"
-          class="full"
-          placeholder="Description"
-        ></textarea>
-
-      </div>
-
-
+    <div id="adminMemorizePanel" class="admin-panel" style="display:none;">
+      <h3>🧠 Manage Things to Memorize</h3>
       <div class="form-buttons">
-
-        <button
-          class="btn primary"
-          onclick="addRequirement()"
-        >
-          Add Requirement
-        </button>
-
+        <button class="btn primary" onclick="openMemoEditor()">➕ Add Study Material</button>
       </div>
-
+      <p class="muted" style="margin-top:8px;">Paste slides, screenshots, text, and study material directly into the editor. Admin edits are shared with the group.</p>
     </div>
 
-
-    <div
-      id="requirementsList"
-      class="requirements"
-    ></div>
-
+    <div id="memorizeList" class="memo-grid"></div>
 
   </section>
 
@@ -3044,7 +3017,7 @@ and (orientation:landscape){
       <p>
         A shared digital workspace for our nursing
         duty group. It keeps clinical notes,
-        requirements, schedules, files, and group
+        study material, schedules, files, and group
         communication in one place.
       </p>
 
@@ -3115,6 +3088,43 @@ and (orientation:landscape){
     <div class="modal-buttons">
       <button class="btn" onclick="closeNoteEditor()">Cancel</button>
       <button class="btn primary" onclick="saveNoteEditor()">Save Note</button>
+    </div>
+  </div>
+</div>
+
+<!-- =======================================================
+     THINGS TO MEMORIZE EDITOR
+======================================================= -->
+<div id="memoEditorModal" class="modal">
+  <div class="modal-box note-editor-box">
+    <h3 id="memoEditorTitle">Add Study Material</h3>
+    <input id="editorMemoTitle" type="text" placeholder="Title / subject">
+    <input id="editorMemoCategory" type="text" placeholder="Category (optional)">
+
+    <div class="editor-toolbar" onmousedown="event.preventDefault()">
+      <button type="button" onclick="memoCommand('bold')"><strong>B</strong></button>
+      <button type="button" onclick="memoCommand('italic')"><em>I</em></button>
+      <button type="button" onclick="memoCommand('underline')"><u>U</u></button>
+      <button type="button" onclick="memoCommand('insertUnorderedList')">• List</button>
+      <button type="button" onclick="memoCommand('insertOrderedList')">1. List</button>
+      <button type="button" onclick="memoCommand('justifyLeft')">≡</button>
+      <button type="button" onclick="memoCommand('justifyCenter')">≡</button>
+      <button type="button" onclick="memoCommand('justifyRight')">≡</button>
+      <button type="button" onclick="memoCommand('undo')">↶</button>
+      <button type="button" onclick="memoCommand('redo')">↷</button>
+    </div>
+
+    <div id="richMemoEditor" class="rich-note-editor" contenteditable="true" spellcheck="true" onpaste="handleMemoPaste(event)"></div>
+
+    <div class="note-upload-row">
+      <button type="button" class="btn" onclick="document.getElementById('memoImageInput').click()">🖼️ Add Image / Slide</button>
+      <input id="memoImageInput" type="file" accept="image/*,.pdf,.txt,.csv" style="display:none" onchange="handleMemoFileSelection(event)">
+      <span id="memoUploadStatus" class="note-upload-status">Paste slides or add them from your device.</span>
+    </div>
+
+    <div class="modal-buttons">
+      <button class="btn" onclick="closeMemoEditor()">Cancel</button>
+      <button class="btn primary" onclick="saveMemoEditor()">Save</button>
     </div>
   </div>
 </div>
@@ -3501,14 +3511,14 @@ function setGlobalCollection(collection,data){
   const value = cloneOffline(data || {});
 
   if(collection === "notes") notesData = value;
-  if(collection === "requirements") requirementsData = value;
+  if(collection === "memorize") memorizeData = value;
   if(collection === "schedule") scheduleData = value;
   if(collection === "members") membersData = value;
   if(collection === "chat") chatData = value;
   if(collection === "files") filesData = value;
 
   if(collection === "notes") renderNotes?.();
-  if(collection === "requirements") renderRequirements?.();
+  if(collection === "memorize") renderMemorize?.();
   if(collection === "schedule") renderSchedule?.();
   if(collection === "members"){
     renderMembers?.();
@@ -3612,6 +3622,11 @@ async function offlineOnValue(collection,callback){
       async snapshot=>{
         let remote = snapshot.val() || {};
 
+        // Old builds could leave queued note-order updates in IndexedDB.
+        // Those stale operations must never override Firebase's current layout.
+        if(collection === "notes" && navigator.onLine){
+          await purgeQueuedNoteOrderOperations();
+        }
         const queue = await idbAll("queue");
         const pending = queue.filter(op=>{
           return splitOfflinePath(op.path).collection === collection;
@@ -3694,7 +3709,7 @@ window.addEventListener("offline",()=>{
 
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{
-    navigator.serviceWorker.register("./sw.js?v=bsn2a-v5", {updateViaCache:"none"}).then(reg=>{
+    navigator.serviceWorker.register("./sw.js?v=bsn2a-v6-memorize", {updateViaCache:"none"}).then(reg=>{
       reg.update().catch(()=>{});
     }).catch(error=>{
       console.warn("Offline app cache could not be registered:",error);
@@ -3734,7 +3749,7 @@ openOfflineDB()
 
 let notesData = {};
 let noteLayoutOrder = [];
-let requirementsData = {};
+let memorizeData = {};
 let scheduleData = {};
 let membersData = {};
 let chatData = {};
@@ -4134,9 +4149,9 @@ function(section,button){
       "Study and clinical reference notes"
     ],
 
-    requirements:[
-      "Requirements",
-      "School and duty requirements"
+    memorize:[
+      "Things to Memorize",
+      "Paste, edit, and review slides and study material"
     ],
 
     schedule:[
@@ -4221,7 +4236,7 @@ function(section){
 
     dashboard:0,
     notes:1,
-    requirements:2,
+    memorize:2,
     schedule:3,
     members:4,
     chat:5,
@@ -4457,7 +4472,7 @@ function updateAdminUI(){
   const panels = [
 
     "adminNotesPanel",
-    "adminRequirementsPanel",
+    "adminMemorizePanel",
     "adminSchedulePanel",
     "adminFilesPanel"
 
@@ -4528,30 +4543,22 @@ offlineOnValue("notes",
 
 function getOrderedNoteEntries(){
   const all = Object.entries(notesData || {});
-  const byId = new Map(all.map(([id,n]) => [String(id), [id,n]]));
-  const ordered = [];
-  const used = new Set();
 
-  // Global Firebase layout is authoritative.
-  for(const id of noteLayoutOrder){
-    const entry = byId.get(String(id));
-    if(entry){
-      ordered.push(entry);
-      used.add(String(id));
-    }
-  }
-
-  // Backward compatibility for notes created before the shared layout existed.
-  const remaining = all.filter(([id]) => !used.has(String(id))).sort((a,b)=>{
+  // SINGLE SOURCE OF TRUTH FOR NOTE POSITION:
+  // The numeric `order` field lives inside each Firebase note record.
+  // This is deliberately used before the browser's IndexedDB/local layout so
+  // every account and every device receives the same arrangement.
+  return all.sort((a,b)=>{
     const ao = Number.isFinite(Number(a[1]?.order)) ? Number(a[1].order) : Number.MAX_SAFE_INTEGER;
     const bo = Number.isFinite(Number(b[1]?.order)) ? Number(b[1].order) : Number.MAX_SAFE_INTEGER;
     if(ao !== bo) return ao - bo;
+
     const ac = Number(a[1]?.createdAt || 0);
     const bc = Number(b[1]?.createdAt || 0);
     if(ac !== bc) return ac - bc;
+
     return String(a[0]).localeCompare(String(b[0]));
   });
-  return ordered.concat(remaining);
 }
 
 function renderNotes(){
@@ -4560,13 +4567,6 @@ function renderNotes(){
   box.innerHTML = "";
 
   const entries = getOrderedNoteEntries();
-
-  // Migrate the old per-note order into the shared layout once. Only the admin writes it.
-  if(!noteLayoutOrder.length && entries.length && isAdmin && navigator.onLine){
-    const migrated = entries.map(([id]) => String(id));
-    noteLayoutOrder = migrated.slice();
-    offlineSet("noteLayout", {order:migrated, updatedAt:Date.now()}).catch(err => console.warn("Could not initialize shared note layout", err));
-  }
 
   if(!entries.length){
     box.innerHTML = `<div class="empty">No nursing notes yet.</div>`;
@@ -4685,6 +4685,23 @@ function setupNoteDragAndDrop(box){
   });
 }
 
+async function purgeQueuedNoteOrderOperations(){
+  try{
+    const queue = await idbAll("queue");
+    for(const op of queue){
+      const parts = splitOfflinePath(op.path);
+      if(parts.collection !== "notes" || op.type !== "update") continue;
+      const keys = Object.keys(op.data || {});
+      const isOnlyOrderUpdate = keys.length > 0 && keys.every(k => k === "order" || k === "updatedAt");
+      if(isOnlyOrderUpdate){
+        await idbDelete("queue", op.id);
+      }
+    }
+  }catch(error){
+    console.warn("Could not clean old queued note-order operations", error);
+  }
+}
+
 async function saveNoteOrder(box){
   if(!isAdmin) return;
 
@@ -4693,43 +4710,50 @@ async function saveNoteOrder(box){
   if(!order.length) return;
 
   const updatedAt = Date.now();
-  const payload = {order:order.slice(), updatedAt, version:2};
+  const payload = {order:order.slice(), updatedAt, version:3};
   noteLayoutOrder = order.slice();
 
-  // Update the UI immediately, then make Firebase the authoritative shared
-  // source. This is intentionally a direct Firebase write while online so a
-  // second account/device cannot get stuck with its old IndexedDB layout.
   try{
     if(navigator.onLine){
-      await set(ref(db,"noteLayout"), payload);
-      await saveOfflineCollection("noteLayout", payload);
+      // Firebase note records are the authoritative shared layout. Update all
+      // positions directly in one root update so another account/device sees
+      // the exact same order. No local queue is involved while online.
+      const updates = {};
+      order.forEach((id,index)=>{
+        updates[`notes/${id}/order`] = index;
+        updates[`notes/${id}/layoutUpdatedAt`] = updatedAt;
+      });
+      await update(ref(db), updates);
+
+      // Keep the legacy shared layout record only as a compatibility marker.
+      // Rendering does NOT depend on it anymore.
+      await set(ref(db,"noteLayout"), {order:order.slice(), updatedAt, version:3});
+
+      await saveOfflineCollection("noteLayout", {order:order.slice(), updatedAt, version:3});
+      await purgeQueuedNoteOrderOperations();
+
+      // Refresh from the authoritative local mirror immediately.
+      notesData = Object.fromEntries(order.map((id,index)=>{
+        const note = {...(notesData[id] || {})};
+        note.order = index;
+        note.layoutUpdatedAt = updatedAt;
+        return [id,note];
+      }));
+      noteLayoutOrder = order.slice();
+      renderNotes();
     }else{
+      // Offline: queue each note's order. When the connection returns, these
+      // updates are sent to Firebase and then become the shared layout.
+      for(let index=0; index<order.length; index++){
+        const id = order[index];
+        await offlineUpdate(`notes/${id}`, {order:index, layoutUpdatedAt:updatedAt});
+      }
       await offlineSet("noteLayout", payload);
+      renderNotes();
     }
-
-    // Keep legacy per-note order fields synchronized for older app versions.
-    if(navigator.onLine){
-      await Promise.all(order.map((id,index)=>
-        notesData[id] ? update(ref(db,`notes/${id}`), {order:index}) : Promise.resolve()
-      ));
-    }else{
-      await Promise.all(order.map((id,index)=>
-        notesData[id] ? offlineUpdate(`notes/${id}`, {order:index, updatedAt}) : Promise.resolve()
-      ));
-    }
-
-    renderNotes();
   }catch(error){
     console.error("Could not save note order", error);
-    // If the direct online write failed, queue the exact layout for the next
-    // successful connection instead of silently losing the admin's change.
-    try{
-      await offlineSet("noteLayout", payload);
-      alert("The new note position was saved locally and will sync when the connection is available.");
-    }catch(queueError){
-      console.error("Could not queue note order", queueError);
-      alert("The note position could not be saved.");
-    }
+    alert("The note position could not be saved. Please check your Firebase connection/permissions.");
   }
 }
 
@@ -5103,221 +5127,162 @@ async function(id){
 
 
 /* =========================================================
-   REQUIREMENTS
+   THINGS TO MEMORIZE
 ========================================================= */
 
-offlineOnValue("requirements",
-  snapshot => {
+offlineOnValue("memorize", snapshot => {
+  memorizeData = snapshot.val() || {};
+  renderMemorize();
+});
 
-    requirementsData =
-      snapshot.val() ||
-      {};
-
-    renderRequirements();
-
-  }
-);
-
-
-function renderRequirements(){
-
-  const box =
-    document.getElementById(
-      "requirementsList"
-    );
-
-
-  box.innerHTML =
-    "";
-
-
-  const entries =
-    Object.entries(
-      requirementsData
-    );
-
-
+function renderMemorize(){
+  const box = document.getElementById("memorizeList");
+  if(!box) return;
+  box.innerHTML = "";
+  const entries = Object.entries(memorizeData || {}).sort((a,b)=>{
+    const ao = Number(a[1]?.order);
+    const bo = Number(b[1]?.order);
+    if(Number.isFinite(ao) && Number.isFinite(bo) && ao !== bo) return ao-bo;
+    if(Number.isFinite(ao) && !Number.isFinite(bo)) return -1;
+    if(!Number.isFinite(ao) && Number.isFinite(bo)) return 1;
+    return Number(a[1]?.createdAt||0)-Number(b[1]?.createdAt||0);
+  });
   if(!entries.length){
-
-    box.innerHTML =
-      `
-      <div class="empty">
-        No requirements added yet.
-      </div>
-      `;
-
+    box.innerHTML = '<div class="empty">No study material added yet.</div>';
     return;
-
   }
-
-
-  entries.forEach(
-    ([id,r]) => {
-
-      const element =
-        document.createElement(
-          "div"
-        );
-
-
-      element.className =
-        "requirement";
-
-
-      element.innerHTML = `
-
-        <div class="requirement-top">
-
-          <div class="requirement-icon">
-            📝
-          </div>
-
-          <div>
-
-            <h3>
-              ${esc(
-                r.title ||
-                "Requirement"
-              )}
-            </h3>
-
-            ${
-              r.type
-                ? `
-                  <p>
-                    ${esc(r.type)}
-                  </p>
-                `
-                : ""
-            }
-
-            ${
-              r.description
-                ? `
-                  <p>
-                    ${esc(
-                      cleanText(
-                        r.description
-                      )
-                    )}
-                  </p>
-                `
-                : ""
-            }
-
-          </div>
-
+  entries.forEach(([id,m])=>{
+    const card=document.createElement('article');
+    card.className='memo-card';
+    card.innerHTML=`
+      <div class="memo-top">
+        <div>
+          ${m.category ? `<span class="note-category">${esc(m.category)}</span>` : ''}
+          <h3>${esc(m.title || 'Study Material')}</h3>
         </div>
-
-        ${
-          isAdmin
-            ? `
-              <div class="note-actions">
-
-                <button
-                  class="btn danger"
-                  onclick="
-                    deleteRequirement('${id}')
-                  "
-                >
-                  Delete
-                </button>
-
-              </div>
-            `
-            : ""
-        }
-
-      `;
-
-
-      box.appendChild(
-        element
-      );
-
-    }
-  );
-
+      </div>
+      <div class="note-text memo-content">${m.html || esc(cleanText(m.text||'')).replace(/\n/g,'<br>')}</div>
+      ${isAdmin ? `<div class="note-actions"><button class="btn small" onclick="openMemoEditor('${id}')">✏️ Edit</button><button class="btn danger small" onclick="deleteMemo('${id}')">Delete</button></div>` : ''}
+    `;
+    box.appendChild(card);
+  });
+  enableMemoImageViewer();
 }
 
+let editingMemoId=null;
+function memoCommand(command,value=null){
+  const editor=document.getElementById('richMemoEditor');
+  editor?.focus();
+  document.execCommand(command,false,value);
+}
+window.memoCommand=memoCommand;
 
-window.addRequirement =
-async function(){
+function insertMemoImageHtml(src,alt='Slide'){
+  const editor=document.getElementById('richMemoEditor');
+  if(!editor) return;
+  const safeAlt=esc(alt);
+  document.execCommand('insertHTML',false,`<div class="note-image-wrap memo-slide-image"><img src="${src}" alt="${safeAlt}"></div><p><br></p>`);
+}
 
-  if(!isAdmin)
-    return;
-
-
-  const title =
-    document.getElementById(
-      "reqTitle"
-    ).value.trim();
-
-
-  const type =
-    document.getElementById(
-      "reqType"
-    ).value.trim();
-
-
-  const description =
-    cleanText(
-      document.getElementById(
-        "reqDescription"
-      ).value
-    );
-
-
-  if(!title){
-
-    alert(
-      "Please enter the requirement."
-    );
-
-    return;
-
+async function insertMemoImageFile(file){
+  if(!file) return;
+  const status=document.getElementById('memoUploadStatus');
+  try{
+    if(status) status.textContent='Preparing slide image…';
+    const dataUrl=await resizePastedImage(file,1800,0.86);
+    insertMemoImageHtml(dataUrl,file.name||'Slide');
+    if(status) status.textContent='Slide added. Saving with the material…';
+    if(navigator.onLine && typeof uploadFileToStorage==='function'){
+      try{
+        const blob=dataUrlToBlob(dataUrl);
+        const imageFile=new File([blob],file.name||`slide-${Date.now()}.jpg`,{type:blob.type||'image/jpeg'});
+        const uploaded=await Promise.race([uploadFileToStorage(imageFile,'group4-memorize-images'),new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),12000))]);
+        const editor=document.getElementById('richMemoEditor');
+        const imgs=Array.from(editor.querySelectorAll('.memo-slide-image img'));
+        const target=imgs[imgs.length-1];
+        if(target && uploaded?.downloadURL) target.src=uploaded.downloadURL;
+      }catch(err){ console.warn('Memo image upload failed; keeping embedded image.',err); }
+    }
+    if(status) status.textContent='Slide added.';
+  }catch(err){
+    console.error(err);
+    alert('Could not add that image.');
   }
+}
 
-
-  await offlinePush("requirements",{
-    title,
-    type,
-    description
-  });
-
-
-  [
-    "reqTitle",
-    "reqType",
-    "reqDescription"
-  ]
-  .forEach(
-    id =>
-      document.getElementById(
-        id
-      ).value =
-        ""
-  );
-
+window.handleMemoPaste=async function(event){
+  const items=Array.from(event.clipboardData?.items||[]);
+  const images=items.filter(i=>i.kind==='file' && /^image\//i.test(i.type||''));
+  if(images.length){
+    event.preventDefault();
+    for(const item of images){ const f=item.getAsFile(); if(f) await insertMemoImageFile(f); }
+  }
 };
 
-
-window.deleteRequirement =
-async function(id){
-
-  if(
-    !isAdmin ||
-    !confirm(
-      "Delete this requirement?"
-    )
-  )
+window.handleMemoFileSelection=async function(event){
+  if(!isAdmin) return;
+  const file=event.target.files?.[0];
+  event.target.value='';
+  if(!file) return;
+  if(file.type.startsWith('image/')){ await insertMemoImageFile(file); return; }
+  if(file.type==='text/plain' || file.type==='text/csv'){
+    const text=await file.text();
+    document.getElementById('richMemoEditor').focus();
+    document.execCommand('insertText',false,text);
     return;
-
-
-  await offlineRemove("requirements/" + id);
-
+  }
+  alert('For slide decks/PDFs, paste the slide images into the editor. This keeps the material editable inside the website.');
 };
 
+window.openMemoEditor=function(id=null){
+  if(!isAdmin){ alert('Only administrators can edit Things to Memorize.'); return; }
+  editingMemoId=id;
+  const m=id ? memorizeData[id] : null;
+  document.getElementById('memoEditorTitle').textContent=id?'Edit Study Material':'Add Study Material';
+  document.getElementById('editorMemoTitle').value=m?.title||'';
+  document.getElementById('editorMemoCategory').value=m?.category||'';
+  document.getElementById('richMemoEditor').innerHTML=m?.html || esc(cleanText(m?.text||'' )).replace(/\n/g,'<br>');
+  document.getElementById('memoEditorModal').classList.add('show');
+};
+
+window.closeMemoEditor=function(){
+  editingMemoId=null;
+  document.getElementById('memoEditorModal').classList.remove('show');
+  document.getElementById('editorMemoTitle').value='';
+  document.getElementById('editorMemoCategory').value='';
+  document.getElementById('richMemoEditor').innerHTML='';
+};
+
+window.saveMemoEditor=async function(){
+  if(!isAdmin) return;
+  const title=document.getElementById('editorMemoTitle').value.trim();
+  const category=document.getElementById('editorMemoCategory').value.trim();
+  const html=document.getElementById('richMemoEditor').innerHTML.trim();
+  if(!title){ alert('Please enter a title.'); return; }
+  try{
+    if(editingMemoId){
+      await offlineUpdate('memorize/'+editingMemoId,{title,category,html,updatedAt:Date.now()});
+    }else{
+      const orders=Object.values(memorizeData||{}).map(x=>Number(x?.order)).filter(Number.isFinite);
+      const order=orders.length?Math.max(...orders)+1:Object.keys(memorizeData||{}).length;
+      await offlinePush('memorize',{title,category,html,order,createdAt:Date.now()});
+    }
+    closeMemoEditor();
+  }catch(err){ console.error(err); alert('Could not save study material.'); }
+};
+
+window.deleteMemo=async function(id){
+  if(!isAdmin || !confirm('Delete this study material?')) return;
+  await offlineRemove('memorize/'+id);
+};
+
+function enableMemoImageViewer(){
+  document.querySelectorAll('#memorizeList .memo-content img').forEach(img=>{
+    img.style.cursor='zoom-in';
+    img.onclick=()=>openNoteImageViewer(img.src,img.alt||'Study slide');
+  });
+}
+window.renderMemorize=renderMemorize;
 
 /* =========================================================
    DUTY SCHEDULE
@@ -6542,7 +6507,7 @@ function renderAll(){
 
   renderNotes();
 
-  renderRequirements();
+  renderMemorize();
 
   renderSchedule();
 
@@ -6600,6 +6565,10 @@ document.getElementById(
   }
 );
 
+
+document.getElementById("memoEditorModal")?.addEventListener("click", event=>{
+  if(event.target.id === "memoEditorModal") closeMemoEditor();
+});
 
 document.getElementById("noteEditorModal")
 .addEventListener("click", event => {
