@@ -4679,6 +4679,7 @@ function requireAdmin(){
 function focusRichEditor(){
   document.getElementById("richNoteEditor").focus();
 }
+window.focusRichEditor = focusRichEditor;
 
 window.editorCommand = function(command,value=null){
   focusRichEditor();
@@ -4697,6 +4698,8 @@ function insertNoteImageHtml(src, alt="Image"){
   const html = `<div class="note-image-wrap"><img src="${src}" alt="${safeAlt}"></div><p><br></p>`;
   document.execCommand("insertHTML", false, html);
 }
+
+window.insertNoteImageHtml = insertNoteImageHtml;
 
 function dataUrlToBlob(dataUrl){
   const parts = String(dataUrl).split(",");
@@ -4723,27 +4726,40 @@ async function insertImageFileIntoEditor(file, sourceLabel="Pasted image"){
   try{
     if(status) status.textContent = `${sourceLabel}: preparing image…`;
 
-    // Resize first so clipboard images don't create enormous HTML records.
+    // IMPORTANT: insert the image locally FIRST. Do not wait for Firebase Storage.
+    // A slow/blocked Storage request must never make the clipboard paste appear stuck.
     const dataUrl = await resizePastedImage(file, 1600, 0.82);
-    let src = dataUrl;
+    editor.focus();
+    insertNoteImageHtml(dataUrl, file.name || sourceLabel);
+    if(status) status.textContent = "Image pasted. Uploading a shared copy…";
 
-    // Prefer Firebase Storage so the image is shared with every account.
+    // Upload in the background. If Storage is unavailable, the embedded image
+    // remains in the editor and will still be saved with the note.
     if(navigator.onLine && typeof uploadFileToStorage === "function"){
       try{
         const blob = dataUrlToBlob(dataUrl);
         const imageFile = new File([blob], file.name || `note-image-${Date.now()}.jpg`, {type:blob.type || "image/jpeg"});
-        const uploaded = await uploadFileToStorage(imageFile, "group4-note-images");
-        src = uploaded.downloadURL;
-      }catch(uploadError){
-        console.warn("Image upload failed; using embedded image temporarily.", uploadError);
-      }
-    }
+        const uploadPromise = uploadFileToStorage(imageFile, "group4-note-images");
+        const timeoutPromise = new Promise((_,reject)=>setTimeout(()=>reject(new Error("Storage upload timeout")),12000));
+        const uploaded = await Promise.race([uploadPromise, timeoutPromise]);
 
-    editor.focus();
-    insertNoteImageHtml(src, file.name || sourceLabel);
-    if(status) status.textContent = src === dataUrl
-      ? "Image added. It will remain in the note and can sync when online."
-      : `Added ${file.name || sourceLabel}`;
+        // Replace ONLY the image we just inserted. The wrapper keeps the image
+        // constrained to the note layout on every device.
+        const images = Array.from(editor.querySelectorAll(".note-image-wrap img"));
+        const target = images[images.length - 1];
+        if(target && uploaded?.downloadURL){
+          target.src = uploaded.downloadURL;
+          target.dataset.storagePath = uploaded.storagePath || "";
+          target.dataset.sharedImage = "true";
+        }
+        if(status) status.textContent = `Added ${file.name || sourceLabel} • shared with the group`;
+      }catch(uploadError){
+        console.warn("Image Storage upload failed; keeping the embedded image.", uploadError);
+        if(status) status.textContent = "Image pasted. Shared upload unavailable, but the image is still in the note.";
+      }
+    }else{
+      if(status) status.textContent = "Image pasted. It will be saved in the note.";
+    }
   }catch(error){
     console.error("Could not insert image:", error);
     if(status) status.textContent = "Image could not be inserted.";
@@ -4755,7 +4771,7 @@ window.handleNotePaste = async function(event){
   const clipboard = event.clipboardData;
   if(!clipboard) return;
 
-  // First handle real image files from screenshots, Snipping Tool, Photos, etc.
+  // Clipboard screenshots / copied images normally arrive as image files.
   const imageItems = Array.from(clipboard.items || [])
     .filter(item => item.kind === "file" && /^image\//i.test(item.type || ""));
 
@@ -4768,17 +4784,46 @@ window.handleNotePaste = async function(event){
     return;
   }
 
-  // Some browsers/apps expose copied images as HTML instead of a file.
+  // Some apps/browser combinations expose the copied picture as HTML.
   const html = clipboard.getData ? clipboard.getData("text/html") : "";
   const imageMatch = html && html.match(/<img[^>]+src=["']([^"']+)["'][^>]*>/i);
   if(imageMatch){
     const src = imageMatch[1];
-    if(/^data:image\//i.test(src) || /^https?:\/\//i.test(src)){
+    if(/^data:image\//i.test(src)){
       event.preventDefault();
-      focusRichEditor();
+      editor.focus();
       insertNoteImageHtml(src, "Pasted image");
+      const status = document.getElementById("noteImageUploadStatus");
+      if(status) status.textContent = "Image pasted.";
+      return;
+    }
+
+    // If the clipboard provides a normal image URL, try to turn it into a Blob
+    // so it gets the same responsive note treatment as a local image.
+    if(/^https?:\/\//i.test(src)){
+      event.preventDefault();
+      try{
+        const response = await fetch(src, {mode:"cors"});
+        if(!response.ok) throw new Error("Could not fetch clipboard image");
+        const blob = await response.blob();
+        if(/^image\//i.test(blob.type)){
+          const file = new File([blob], "pasted-image.jpg", {type:blob.type});
+          await insertImageFileIntoEditor(file, "Pasted image");
+          return;
+        }
+      }catch(error){
+        console.warn("Could not import clipboard image URL:", error);
+      }
+      // Last fallback: keep the image in the editor even when CORS blocks import.
+      editor.focus();
+      insertNoteImageHtml(src, "Pasted image");
+      const status = document.getElementById("noteImageUploadStatus");
+      if(status) status.textContent = "Image pasted.";
+      return;
     }
   }
+
+  // Otherwise let normal text/HTML pasting continue.
 };
 
 window.resizePastedImage = function(file, maxSize=1600, quality=0.82){
