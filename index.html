@@ -2193,6 +2193,10 @@ and (orientation:landscape){
   50%{transform:scale(1.35)}
 }
 
+
+.memo-link-hint{margin:10px 0 14px;padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--surface2);color:var(--muted);font-size:13px;}
+.memo-link-card{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.memo-link-card span{flex:1;min-width:180px;}
 </style>
 </head>
 
@@ -2780,12 +2784,7 @@ and (orientation:landscape){
       <p class="muted" style="margin-top:8px;">Paste slides, screenshots, text, and study material directly into the editor. Admin edits are shared with the group.</p>
     </div>
 
-    <div id="memoFileDropZone" class="memo-dropzone" role="button" tabindex="0" aria-label="Drop files here to add to Things to Memorize">
-      <strong>📥 Drag & Drop a file here</strong>
-      <small>Drop PDF, PPT, PPTX, DOC, DOCX, images, TXT, CSV, or other files. Click to choose a file instead.</small>
-      <input id="memoDropInput" type="file" multiple hidden accept=".pdf,.ppt,.pptx,.doc,.docx,.txt,.csv,.jpg,.jpeg,.png,.gif,.webp,.svg,*/*">
-      <div id="memoDropStatus" class="memo-drop-progress" aria-live="polite"></div>
-    </div>
+    <div class="memo-link-hint">🔗 Add study materials using links. Google Drive, Google Slides, Google Docs, Canva, OneDrive, Dropbox, PDFs, and other web links are supported.</div>
 
     <div id="memorizeList" class="memo-grid"></div>
 
@@ -3129,6 +3128,7 @@ and (orientation:landscape){
     <h3 id="memoEditorTitle">Add Study Material</h3>
     <input id="editorMemoTitle" type="text" placeholder="Title / subject">
     <input id="editorMemoCategory" type="text" placeholder="Category (optional)">
+    <input id="editorMemoLink" type="url" placeholder="Study material link (Google Drive, Slides, Docs, Canva, PDF, etc.)">
 
     <div class="editor-toolbar" onmousedown="event.preventDefault()">
       <button type="button" onclick="memoCommand('bold')"><strong>B</strong></button>
@@ -3146,9 +3146,7 @@ and (orientation:landscape){
     <div id="richMemoEditor" class="rich-note-editor" contenteditable="true" spellcheck="true" onpaste="handleMemoPaste(event)"></div>
 
     <div class="note-upload-row">
-      <button type="button" class="btn" onclick="document.getElementById('memoImageInput').click()">🖼️ Add Image / Slide</button>
-      <input id="memoImageInput" type="file" accept="image/*,.pdf,.txt,.csv" style="display:none" onchange="handleMemoFileSelection(event)">
-      <span id="memoUploadStatus" class="note-upload-status">Paste slides or add them from your device.</span>
+      <span id="memoUploadStatus" class="note-upload-status">Use the link field above for slides, PDFs, documents, or other online study materials.</span>
     </div>
 
     <div class="modal-buttons">
@@ -5191,7 +5189,7 @@ function renderMemorize(){
         </div>
       </div>
       <div class="note-text memo-content">${m.html || esc(cleanText(m.text||'')).replace(/\n/g,'<br>')}</div>
-      ${m.fileURL ? `<div class="memo-file-chip"><span>📎 ${esc(m.fileName || 'Attached file')}</span><a class="btn small" href="${esc(m.fileURL)}" target="_blank" rel="noopener">Open file</a></div>` : ''}
+      ${m.link ? `<div class="memo-file-chip memo-link-card"><span>🔗 ${esc(m.linkLabel || 'Study material link')}</span><a class="btn small primary" href="${esc(m.link)}" target="_blank" rel="noopener noreferrer">Open material</a><button class="btn small" type="button" onclick="copyMemoLink('${esc(m.link).replace(/'/g,"\\'")}')">Copy link</button></div>` : ''}
       ${isAdmin ? `<div class="note-actions"><button class="btn small" onclick="openMemoEditor('${id}')">✏️ Edit</button><button class="btn danger small" onclick="deleteMemo('${id}')">Delete</button></div>` : ''}
     `;
     box.appendChild(card);
@@ -5354,6 +5352,7 @@ window.openMemoEditor=function(id=null){
   document.getElementById('memoEditorTitle').textContent=id?'Edit Study Material':'Add Study Material';
   document.getElementById('editorMemoTitle').value=m?.title||'';
   document.getElementById('editorMemoCategory').value=m?.category||'';
+  document.getElementById('editorMemoLink').value=m?.link||'';
   document.getElementById('richMemoEditor').innerHTML=m?.html || esc(cleanText(m?.text||'' )).replace(/\n/g,'<br>');
   document.getElementById('memoEditorModal').classList.add('show');
 };
@@ -5363,6 +5362,7 @@ window.closeMemoEditor=function(){
   document.getElementById('memoEditorModal').classList.remove('show');
   document.getElementById('editorMemoTitle').value='';
   document.getElementById('editorMemoCategory').value='';
+  document.getElementById('editorMemoLink').value='';
   document.getElementById('richMemoEditor').innerHTML='';
 };
 
@@ -5370,15 +5370,16 @@ window.saveMemoEditor=async function(){
   if(!isAdmin) return;
   const title=document.getElementById('editorMemoTitle').value.trim();
   const category=document.getElementById('editorMemoCategory').value.trim();
+  const link=document.getElementById('editorMemoLink').value.trim();
   const html=document.getElementById('richMemoEditor').innerHTML.trim();
   if(!title){ alert('Please enter a title.'); return; }
   try{
     if(editingMemoId){
-      await offlineUpdate('memorize/'+editingMemoId,{title,category,html,updatedAt:Date.now()});
+      await offlineUpdate('memorize/'+editingMemoId,{title,category,link,html,updatedAt:Date.now()});
     }else{
       const orders=Object.values(memorizeData||{}).map(x=>Number(x?.order)).filter(Number.isFinite);
       const order=orders.length?Math.max(...orders)+1:Object.keys(memorizeData||{}).length;
-      await offlinePush('memorize',{title,category,html,order,createdAt:Date.now()});
+      await offlinePush('memorize',{title,category,link,html,order,createdAt:Date.now()});
     }
     closeMemoEditor();
   }catch(err){ console.error(err); alert('Could not save study material.'); }
@@ -5396,7 +5397,16 @@ function enableMemoImageViewer(){
   });
 }
 window.renderMemorize=renderMemorize;
-setTimeout(setupMemoDropZone,0);
+
+window.copyMemoLink=async function(link){
+  try{
+    await navigator.clipboard.writeText(link);
+    alert('Link copied.');
+  }catch(e){
+    window.prompt('Copy this link:',link);
+  }
+};
+
 
 /* =========================================================
    DUTY SCHEDULE
