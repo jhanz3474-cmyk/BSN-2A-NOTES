@@ -3683,10 +3683,16 @@ async function offlineOnValue(collection,callback){
   offlineListeners[collection].push(callback);
 
   const local = await getOfflineCollection(collection);
-  callback({
-    val:()=>cloneOffline(local),
-    exists:()=>Object.keys(local || {}).length > 0
-  });
+  const onlineAuthoritativeCollections = new Set(["notes","memorize","noteLayout","memorizeLayout"]);
+
+  // While online, Firebase is authoritative for shared notes and their layout.
+  // IndexedDB is used as the fallback only when the app is actually offline.
+  if(!navigator.onLine || !onlineAuthoritativeCollections.has(collection)){
+    callback({
+      val:()=>cloneOffline(local),
+      exists:()=>Object.keys(local || {}).length > 0
+    });
+  }
 
   try{
     onValue(
@@ -3709,16 +3715,42 @@ async function offlineOnValue(collection,callback){
         });
 
         pending.forEach(op=>{
-          // Shared note layout uses last-write-wins timestamps so a stale
-          // queue entry from another login on this device cannot overwrite
-          // the current Firebase layout after a refresh.
-          if(collection === "noteLayout" && remote && typeof remote === "object" && remote.updatedAt != null){
-            const pendingUpdatedAt = Number(op?.data?.updatedAt || 0);
-            const remoteUpdatedAt = Number(remote.updatedAt || 0);
-            if(pendingUpdatedAt && remoteUpdatedAt && pendingUpdatedAt < remoteUpdatedAt){
+          const opData = op?.data || {};
+
+          // Never allow an older queued layout write from IndexedDB to beat
+          // the newer Firebase layout. This is the key protection against
+          // "resetting" to the old position after refresh/device changes.
+          const isItemLayoutOp =
+            (collection === "notes" || collection === "memorize") &&
+            (Object.prototype.hasOwnProperty.call(opData,"order") ||
+             Object.prototype.hasOwnProperty.call(opData,"layoutUpdatedAt"));
+
+          if(isItemLayoutOp){
+            const pendingUpdatedAt = Number(opData.layoutUpdatedAt || opData.updatedAt || op?.queuedAt || 0);
+            const remoteUpdatedAt = Object.values(remote || {}).reduce(
+              (max,item)=>Math.max(max,Number(item?.layoutUpdatedAt || 0)),0
+            );
+            if(pendingUpdatedAt && remoteUpdatedAt && pendingUpdatedAt <= remoteUpdatedAt){
               return;
             }
           }
+
+          if(collection === "noteLayout" && remote && typeof remote === "object"){
+            const pendingUpdatedAt = Number(opData.updatedAt || op?.queuedAt || 0);
+            const remoteUpdatedAt = Number(remote.updatedAt || 0);
+            if(pendingUpdatedAt && remoteUpdatedAt && pendingUpdatedAt <= remoteUpdatedAt){
+              return;
+            }
+          }
+
+          if(collection === "memorizeLayout" && remote && typeof remote === "object"){
+            const pendingUpdatedAt = Number(opData.updatedAt || op?.queuedAt || 0);
+            const remoteUpdatedAt = Number(remote.updatedAt || 0);
+            if(pendingUpdatedAt && remoteUpdatedAt && pendingUpdatedAt <= remoteUpdatedAt){
+              return;
+            }
+          }
+
           remote = applyQueuedOperation(remote,op);
         });
 
@@ -3825,6 +3857,7 @@ openOfflineDB()
 
 let notesData = {};
 let noteLayoutOrder = [];
+let memorizeLayoutOrder = [];
 let memorizeData = {};
 let scheduleData = {};
 let membersData = {};
@@ -4597,17 +4630,29 @@ function updateAdminUI(){
 offlineOnValue("noteLayout", snapshot => {
   const value = snapshot.val() || {};
   const remoteOrder = Array.isArray(value.order) ? value.order.map(String) : [];
-
-  // Firebase is the source of truth for the shared note layout. The local
-  // IndexedDB copy is only a fast/offline fallback and must never permanently
-  // override the layout received from Firebase.
   noteLayoutOrder = remoteOrder.slice();
+
   saveOfflineCollection("noteLayout", {
+    order: remoteOrder.slice(),
+    updatedAt: Number(value.updatedAt || 0),
+    version: Number(value.version || 4)
+  }).catch(()=>{});
+
+  renderNotes();
+});
+
+offlineOnValue("memorizeLayout", snapshot => {
+  const value = snapshot.val() || {};
+  const remoteOrder = Array.isArray(value.order) ? value.order.map(String) : [];
+  memorizeLayoutOrder = remoteOrder.slice();
+
+  saveOfflineCollection("memorizeLayout", {
     order: remoteOrder.slice(),
     updatedAt: Number(value.updatedAt || 0),
     version: Number(value.version || 1)
   }).catch(()=>{});
-  renderNotes();
+
+  renderMemorize();
 });
 
 offlineOnValue("notes",
@@ -4617,24 +4662,31 @@ offlineOnValue("notes",
   }
 );
 
-function getOrderedNoteEntries(){
-  const all = Object.entries(notesData || {});
+function orderEntriesFromSharedLayout(data, layoutOrder){
+  const all = Object.entries(data || {});
+  const byId = new Map(all.map(([id,item])=>[String(id),[id,item]]));
+  const ordered = [];
 
-  // SINGLE SOURCE OF TRUTH FOR NOTE POSITION:
-  // The numeric `order` field lives inside each Firebase note record.
-  // This is deliberately used before the browser's IndexedDB/local layout so
-  // every account and every device receives the same arrangement.
-  return all.sort((a,b)=>{
-    const ao = Number.isFinite(Number(a[1]?.order)) ? Number(a[1].order) : Number.MAX_SAFE_INTEGER;
-    const bo = Number.isFinite(Number(b[1]?.order)) ? Number(b[1].order) : Number.MAX_SAFE_INTEGER;
-    if(ao !== bo) return ao - bo;
+  (Array.isArray(layoutOrder) ? layoutOrder : []).forEach(id=>{
+    const key = String(id);
+    if(byId.has(key)){
+      ordered.push(byId.get(key));
+      byId.delete(key);
+    }
+  });
 
+  const remaining = Array.from(byId.values()).sort((a,b)=>{
     const ac = Number(a[1]?.createdAt || 0);
     const bc = Number(b[1]?.createdAt || 0);
     if(ac !== bc) return ac - bc;
-
     return String(a[0]).localeCompare(String(b[0]));
   });
+
+  return ordered.concat(remaining);
+}
+
+function getOrderedNoteEntries(){
+  return orderEntriesFromSharedLayout(notesData, noteLayoutOrder);
 }
 
 function renderNotes(){
@@ -4788,45 +4840,41 @@ async function saveNoteOrder(box){
   if(!order.length) return;
 
   const updatedAt = Date.now();
-  const payload = {order:order.slice(), updatedAt, version:3};
+  const payload = {order:order.slice(), updatedAt, version:4};
   noteLayoutOrder = order.slice();
 
   try{
     if(navigator.onLine){
-      // Firebase note records are the authoritative shared layout. Update all
-      // positions directly in one root update so another account/device sees
-      // the exact same order. No local queue is involved while online.
-      const updates = {};
+      const updates = {noteLayout:payload};
+
       order.forEach((id,index)=>{
         updates[`notes/${id}/order`] = index;
         updates[`notes/${id}/layoutUpdatedAt`] = updatedAt;
       });
+
       await update(ref(db), updates);
+      await saveOfflineCollection("noteLayout", payload);
 
-      // Keep the legacy shared layout record only as a compatibility marker.
-      // Rendering does NOT depend on it anymore.
-      await set(ref(db,"noteLayout"), {order:order.slice(), updatedAt, version:3});
+      // Clear only layout queue entries that are now older than the
+      // authoritative Firebase write.
+      const queue = await idbAll("queue");
+      for(const op of queue){
+        const parts = splitOfflinePath(op.path);
+        const data = op?.data || {};
+        if(parts.collection !== "notes" && parts.collection !== "noteLayout") continue;
+        const t = Number(data.layoutUpdatedAt || data.updatedAt || op?.queuedAt || 0);
+        if(t && t <= updatedAt) await idbDelete("queue",op.id);
+      }
 
-      await saveOfflineCollection("noteLayout", {order:order.slice(), updatedAt, version:3});
-      await purgeQueuedNoteOrderOperations();
-
-      // Refresh from the authoritative local mirror immediately.
-      notesData = Object.fromEntries(order.map((id,index)=>{
-        const note = {...(notesData[id] || {})};
-        note.order = index;
-        note.layoutUpdatedAt = updatedAt;
-        return [id,note];
-      }));
-      noteLayoutOrder = order.slice();
       renderNotes();
     }else{
-      // Offline: queue each note's order. When the connection returns, these
-      // updates are sent to Firebase and then become the shared layout.
-      for(let index=0; index<order.length; index++){
-        const id = order[index];
-        await offlineUpdate(`notes/${id}`, {order:index, layoutUpdatedAt:updatedAt});
-      }
       await offlineSet("noteLayout", payload);
+      for(let index=0; index<order.length; index++){
+        await offlineUpdate(`notes/${order[index]}`, {
+          order:index,
+          layoutUpdatedAt:updatedAt
+        });
+      }
       renderNotes();
     }
   }catch(error){
@@ -4834,8 +4882,6 @@ async function saveNoteOrder(box){
     alert("The note position could not be saved. Please check your Firebase connection/permissions.");
   }
 }
-
-
 
 let editingNoteId = null;
 
@@ -5120,17 +5166,24 @@ window.saveNoteEditor = async function(){
 
     if(editingNoteId){
 
-      await offlineUpdate("notes/"+editingNoteId,{
+      const notePayload = {
         title,
         category,
         html:htmlContent,
         updatedAt:Date.now()
-      });
-      // Editing content never changes the shared layout.
+      };
+      if(navigator.onLine){
+        await update(ref(db,"notes/"+editingNoteId),notePayload);
+      }else{
+        await offlineUpdate("notes/"+editingNoteId,notePayload);
+      }
+      // Editing content never changes the shared layout. Append legacy notes
+      // only if they are missing from the canonical shared layout.
       if(!noteLayoutOrder.includes(String(editingNoteId))){
-        const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:2};
+        noteLayoutOrder.push(String(editingNoteId));
+        const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:4};
         if(navigator.onLine){
-          await set(ref(db,"noteLayout"), layoutPayload);
+          await update(ref(db,"noteLayout"), layoutPayload);
           await saveOfflineCollection("noteLayout", layoutPayload);
         }else{
           await offlineSet("noteLayout", layoutPayload);
@@ -5144,19 +5197,36 @@ window.saveNoteEditor = async function(){
         .filter(Number.isFinite);
       const nextOrder = existingOrders.length ? Math.max(...existingOrders) + 1 : Object.keys(notesData || {}).length;
 
-      const newNoteId = await offlinePush("notes",{
-        title,
-        category,
-        html:htmlContent,
-        order:nextOrder,
-        createdAt:Date.now()
-      });
+      let newNoteId;
+      const createdAt = Date.now();
+
+      if(navigator.onLine){
+        const newRef = push(ref(db,"notes"));
+        newNoteId = newRef.key;
+        await set(newRef,{
+          title,
+          category,
+          html:htmlContent,
+          order:nextOrder,
+          createdAt
+        });
+      }else{
+        newNoteId = await offlinePush("notes",{
+          title,
+          category,
+          html:htmlContent,
+          order:nextOrder,
+          createdAt
+        });
+      }
+
       const currentOrder = getOrderedNoteEntries().map(([id]) => String(id));
       noteLayoutOrder = currentOrder.filter(id => id !== String(newNoteId));
       noteLayoutOrder.push(String(newNoteId));
-      const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:2};
+      const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:4};
+
       if(navigator.onLine){
-        await set(ref(db,"noteLayout"), layoutPayload);
+        await update(ref(db), {noteLayout:layoutPayload});
         await saveOfflineCollection("noteLayout", layoutPayload);
       }else{
         await offlineSet("noteLayout", layoutPayload);
@@ -5191,13 +5261,17 @@ async function(id){
     return;
 
 
-  await offlineRemove("notes/" + id);
   noteLayoutOrder = noteLayoutOrder.filter(noteId => String(noteId) !== String(id));
-  const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:2};
+  const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:4};
+
   if(navigator.onLine){
-    await set(ref(db,"noteLayout"), layoutPayload);
+    await update(ref(db), {
+      [`notes/${id}`]: null,
+      noteLayout: layoutPayload
+    });
     await saveOfflineCollection("noteLayout", layoutPayload);
   }else{
+    await offlineRemove("notes/" + id);
     await offlineSet("noteLayout", layoutPayload);
   }
 
@@ -5214,16 +5288,7 @@ offlineOnValue("memorize", snapshot => {
 });
 
 function getOrderedMemoEntries(){
-  return Object.entries(memorizeData || {}).sort((a,b)=>{
-    const ao=Number(a[1]?.order), bo=Number(b[1]?.order);
-    const af=Number.isFinite(ao), bf=Number.isFinite(bo);
-    if(af && bf && ao!==bo) return ao-bo;
-    if(af && !bf) return -1;
-    if(!af && bf) return 1;
-    const ac=Number(a[1]?.createdAt||0), bc=Number(b[1]?.createdAt||0);
-    if(ac!==bc) return ac-bc;
-    return String(a[0]).localeCompare(String(b[0]));
-  });
+  return orderEntriesFromSharedLayout(memorizeData, memorizeLayoutOrder);
 }
 
 function renderMemorize(){
@@ -5313,29 +5378,39 @@ function setupMemoDragAndDrop(box){
 
 async function saveMemoOrder(box){
   if(!isAdmin) return;
+
   const cards=Array.from(box.querySelectorAll('.memo-card[data-memo-id]'));
   const order=cards.map(card=>String(card.dataset.memoId||'')).filter(Boolean);
   if(!order.length) return;
+
   const updatedAt=Date.now();
+  const payload={order:order.slice(),updatedAt,version:1};
+  memorizeLayoutOrder=order.slice();
+
   try{
     if(navigator.onLine){
-      const updates={};
+      const updates={memorizeLayout:payload};
+
       order.forEach((id,index)=>{
         updates[`memorize/${id}/order`]=index;
         updates[`memorize/${id}/layoutUpdatedAt`]=updatedAt;
       });
+
       await update(ref(db),updates);
-      // Remove only stale order operations; never use a local account's old
-      // order as the online source of truth.
-      await purgeStaleLayoutQueue('memorize', Object.fromEntries(order.map((id,index)=>[id,{order:index,layoutUpdatedAt:updatedAt}])));
-      memorizeData=Object.fromEntries(order.map((id,index)=>{
-        const item={...(memorizeData[id]||{})};
-        item.order=index;
-        item.layoutUpdatedAt=updatedAt;
-        return [id,item];
-      }));
+      await saveOfflineCollection("memorizeLayout",payload);
+
+      const queue=await idbAll("queue");
+      for(const op of queue){
+        const parts=splitOfflinePath(op.path);
+        const data=op?.data||{};
+        if(parts.collection!=="memorize" && parts.collection!=="memorizeLayout") continue;
+        const t=Number(data.layoutUpdatedAt||data.updatedAt||op?.queuedAt||0);
+        if(t && t<=updatedAt) await idbDelete("queue",op.id);
+      }
+
       renderMemorize();
     }else{
+      await offlineSet("memorizeLayout",payload);
       for(let i=0;i<order.length;i++){
         await offlineUpdate(`memorize/${order[i]}`,{order:i,layoutUpdatedAt:updatedAt});
       }
@@ -5557,14 +5632,36 @@ window.saveMemoEditor=async function(){
       if(navigator.onLine) await update(ref(db,`memorize/${editingMemoId}`),payload);
       else await offlineUpdate(`memorize/${editingMemoId}`,payload);
     }else{
-      const orders=Object.values(memorizeData||{}).map(x=>Number(x?.order)).filter(Number.isFinite);
-      const order=orders.length?Math.max(...orders)+1:Object.keys(memorizeData||{}).length;
-      const payload={title,category,link,html,order,createdAt:updatedAt,updatedAt};
+      const currentOrder = getOrderedMemoEntries().map(([id])=>String(id));
+      let newId;
+
       if(navigator.onLine){
         const newRef=push(ref(db,'memorize'));
-        await set(newRef,payload);
+        newId=newRef.key;
+        await set(newRef,{
+          title,category,link,html,
+          order:currentOrder.length,
+          createdAt:updatedAt,
+          updatedAt
+        });
       }else{
-        await offlinePush('memorize',payload);
+        newId=await offlinePush('memorize',{
+          title,category,link,html,
+          order:currentOrder.length,
+          createdAt:updatedAt,
+          updatedAt
+        });
+      }
+
+      memorizeLayoutOrder=currentOrder.filter(id=>id!==String(newId));
+      memorizeLayoutOrder.push(String(newId));
+
+      const layoutPayload={order:memorizeLayoutOrder.slice(),updatedAt:Date.now(),version:1};
+      if(navigator.onLine){
+        await update(ref(db),{memorizeLayout:layoutPayload});
+        await saveOfflineCollection("memorizeLayout",layoutPayload);
+      }else{
+        await offlineSet("memorizeLayout",layoutPayload);
       }
     }
     closeMemoEditor();
@@ -5576,20 +5673,31 @@ window.deleteMemo=async function(id){
   try{
     if(navigator.onLine){
       await remove(ref(db,`memorize/${id}`));
-      const remaining=Object.entries(memorizeData||{})
-        .filter(([memoId])=>String(memoId)!==String(id))
-        .sort((a,b)=>{
-          const ao=Number(a[1]?.order),bo=Number(b[1]?.order);
-          if(Number.isFinite(ao)&&Number.isFinite(bo)&&ao!==bo) return ao-bo;
-          return Number(a[1]?.createdAt||0)-Number(b[1]?.createdAt||0);
-        });
-      const updates={};
+
+      const remainingOrder=(memorizeLayoutOrder||[])
+        .map(String)
+        .filter(memoId=>memoId!==String(id));
+
+      Object.keys(memorizeData||{}).forEach(memoId=>{
+        if(String(memoId)!==String(id) && !remainingOrder.includes(String(memoId))){
+          remainingOrder.push(String(memoId));
+        }
+      });
+
       const updatedAt=Date.now();
-      remaining.forEach(([memoId],index)=>{
+      memorizeLayoutOrder=remainingOrder.slice();
+
+      const updates={memorizeLayout:{
+        order:remainingOrder.slice(),
+        updatedAt,
+        version:1
+      }};
+      remainingOrder.forEach((memoId,index)=>{
         updates[`memorize/${memoId}/order`]=index;
         updates[`memorize/${memoId}/layoutUpdatedAt`]=updatedAt;
       });
-      if(Object.keys(updates).length) await update(ref(db),updates);
+
+      await update(ref(db),updates);
     }else{
       await offlineRemove(`memorize/${id}`);
     }
