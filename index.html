@@ -1181,7 +1181,7 @@ select:focus{
 
 
 /* =========================================================
-   THINGS TO MEMORIZE
+   SCHOOL NOTES
 ========================================================= */
 
 .memo-grid{
@@ -1196,6 +1196,19 @@ select:focus{
   gap:13px;
 }
 
+.memo-card.memo-draggable{cursor:grab;}
+.memo-card.memo-draggable:active{cursor:grabbing;}
+.memo-card.note-drag-over{outline:2px dashed var(--primary);outline-offset:2px;}
+
+.memo-grid .memo-card.memo-draggable{cursor:grab;user-select:none;transition:transform .15s ease,opacity .15s ease,box-shadow .15s ease;}
+.memo-grid .memo-card.memo-draggable:active{cursor:grabbing;}
+.memo-grid .memo-card.memo-dragging{opacity:.45;transform:scale(.985);}
+.memo-grid .memo-card.memo-drag-over{box-shadow:0 0 0 2px var(--primary),0 8px 20px var(--shadow);}
+.memo-drag-hint{display:inline-flex;align-items:center;margin-left:8px;font-size:10px;font-weight:600;color:var(--muted);opacity:.8;}
+.memo-card .memo-content input.note-check{width:16px;height:16px;accent-color:var(--primary);vertical-align:middle;cursor:pointer;margin-right:8px;}
+.memo-card .memo-content img{display:block;width:100%;max-width:100%;height:auto;box-sizing:border-box;object-fit:contain;}
+.memo-card .memo-content .note-image-wrap{display:block;width:100%;max-width:100%;overflow:hidden;border-radius:10px;margin:10px 0;box-sizing:border-box;}
+.memo-card .memo-content .note-image-wrap img{display:block;width:100%;max-width:100%;height:auto;margin:0;}
 .memo-card{
   background:
     var(--surface);
@@ -2780,7 +2793,7 @@ and (orientation:landscape){
 
 
   <!-- =====================================================
-       THINGS TO MEMORIZE
+       SCHOOL NOTES
   ====================================================== -->
 
   <section id="memorize" class="section">
@@ -2790,7 +2803,7 @@ and (orientation:landscape){
       <div class="form-buttons">
         <button class="btn primary" onclick="openMemoEditor()">➕ Add Study Material</button>
       </div>
-      <p class="muted" style="margin-top:8px;">Paste slides, screenshots, text, and study material directly into the editor. Admin edits are shared with the group.</p>
+      <p class="muted" style="margin-top:8px;">Use rich school notes with checkboxes, lists, colors, highlights, images, links, and shared drag-and-drop ordering. Admin edits are shared with the group.</p>
     </div>
 
     <div class="memo-link-hint">🔗 Add school materials using links. Google Drive, Google Slides, Google Docs, Canva, OneDrive, Dropbox, PDFs, and other web links are supported.</div>
@@ -3130,7 +3143,7 @@ and (orientation:landscape){
 </div>
 
 <!-- =======================================================
-     THINGS TO MEMORIZE EDITOR
+     SCHOOL NOTES EDITOR
 ======================================================= -->
 <div id="memoEditorModal" class="modal">
   <div class="modal-box note-editor-box">
@@ -3140,16 +3153,20 @@ and (orientation:landscape){
     <input id="editorMemoLink" type="url" placeholder="Study material link (Google Drive, Slides, Docs, Canva, PDF, etc.)">
 
     <div class="editor-toolbar" onmousedown="event.preventDefault()">
-      <button type="button" onclick="memoCommand('bold')"><strong>B</strong></button>
-      <button type="button" onclick="memoCommand('italic')"><em>I</em></button>
-      <button type="button" onclick="memoCommand('underline')"><u>U</u></button>
-      <button type="button" onclick="memoCommand('insertUnorderedList')">• List</button>
-      <button type="button" onclick="memoCommand('insertOrderedList')">1. List</button>
-      <button type="button" onclick="memoCommand('justifyLeft')">≡</button>
-      <button type="button" onclick="memoCommand('justifyCenter')">≡</button>
-      <button type="button" onclick="memoCommand('justifyRight')">≡</button>
-      <button type="button" onclick="memoCommand('undo')">↶</button>
-      <button type="button" onclick="memoCommand('redo')">↷</button>
+      <button type="button" title="Bold" onclick="memoCommand('bold')"><strong>B</strong></button>
+      <button type="button" title="Italic" onclick="memoCommand('italic')"><em>I</em></button>
+      <button type="button" title="Underline" onclick="memoCommand('underline')"><u>U</u></button>
+      <button type="button" title="Strikethrough" onclick="memoCommand('strikeThrough')"><s>S</s></button>
+      <button type="button" title="Bulleted list" onclick="memoCommand('insertUnorderedList')">• List</button>
+      <button type="button" title="Numbered list" onclick="memoCommand('insertOrderedList')">1. List</button>
+      <button type="button" title="Checkbox" onclick="insertMemoChecklist()">☐</button>
+      <button type="button" title="Align left" onclick="memoCommand('justifyLeft')">≡</button>
+      <button type="button" title="Align center" onclick="memoCommand('justifyCenter')">≡</button>
+      <button type="button" title="Align right" onclick="memoCommand('justifyRight')">≡</button>
+      <button type="button" title="Undo" onclick="memoCommand('undo')">↶</button>
+      <button type="button" title="Redo" onclick="memoCommand('redo')">↷</button>
+      <label title="Text color">A <input type="color" value="#176b4d" onchange="memoCommand('foreColor',this.value)"></label>
+      <label title="Highlight">🖍 <input type="color" value="#fff59d" onchange="highlightMemoSelection(this.value)"></label>
     </div>
 
     <div id="richMemoEditor" class="rich-note-editor" contenteditable="true" spellcheck="true" onpaste="handleMemoPaste(event)"></div>
@@ -3640,6 +3657,25 @@ async function offlinePush(collection,data){
   return key;
 }
 
+async function purgeStaleLayoutQueue(collection, remote){
+  if(!navigator.onLine || !['notes','memorize'].includes(collection)) return;
+  try{
+    const remoteEntries=Object.values(remote||{});
+    const remoteLayoutTime=remoteEntries.reduce((max,item)=>Math.max(max,Number(item?.layoutUpdatedAt||0)),0);
+    const queue=await idbAll('queue');
+    for(const op of queue){
+      const parts=splitOfflinePath(op.path);
+      if(parts.collection!==collection || op.type!=='update') continue;
+      const keys=Object.keys(op.data||{});
+      if(!(keys.includes('order') || keys.includes('layoutUpdatedAt'))) continue;
+      const queuedTime=Number(op?.data?.layoutUpdatedAt || op?.queuedAt || 0);
+      if(!queuedTime || (remoteLayoutTime && queuedTime < remoteLayoutTime)){
+        await idbDelete('queue',op.id);
+      }
+    }
+  }catch(error){ console.warn('Could not clean stale layout queue',error); }
+}
+
 async function offlineOnValue(collection,callback){
   if(!offlineListeners[collection]){
     offlineListeners[collection] = [];
@@ -3662,6 +3698,10 @@ async function offlineOnValue(collection,callback){
         // Those stale operations must never override Firebase's current layout.
         if(collection === "notes" && navigator.onLine){
           await purgeQueuedNoteOrderOperations();
+          await purgeStaleLayoutQueue("notes", remote);
+        }
+        if(collection === "memorize" && navigator.onLine){
+          await purgeStaleLayoutQueue("memorize", remote);
         }
         const queue = await idbAll("queue");
         const pending = queue.filter(op=>{
@@ -4661,7 +4701,9 @@ function renderNotes(){
         const updated = noteCard.querySelector(".note-text").innerHTML;
         notesData[noteId].html = updated;
         try{
-          await offlineUpdate(`notes/${noteId}`, {html:updated, updatedAt:Date.now()});
+          const payload={html:updated,updatedAt:Date.now()};
+          if(navigator.onLine) await update(ref(db),{[`notes/${noteId}/html`]:updated,[`notes/${noteId}/updatedAt`]:payload.updatedAt});
+          else await offlineUpdate(`notes/${noteId}`, payload);
         }catch(err){
           console.error("Could not save checkbox state", err);
         }
@@ -5163,7 +5205,7 @@ async function(id){
 
 
 /* =========================================================
-   THINGS TO MEMORIZE
+   SCHOOL NOTES
 ========================================================= */
 
 offlineOnValue("memorize", snapshot => {
@@ -5171,39 +5213,138 @@ offlineOnValue("memorize", snapshot => {
   renderMemorize();
 });
 
-function renderMemorize(){
-  const box = document.getElementById("memorizeList");
-  if(!box) return;
-  box.innerHTML = "";
-  const entries = Object.entries(memorizeData || {}).sort((a,b)=>{
-    const ao = Number(a[1]?.order);
-    const bo = Number(b[1]?.order);
-    if(Number.isFinite(ao) && Number.isFinite(bo) && ao !== bo) return ao-bo;
-    if(Number.isFinite(ao) && !Number.isFinite(bo)) return -1;
-    if(!Number.isFinite(ao) && Number.isFinite(bo)) return 1;
-    return Number(a[1]?.createdAt||0)-Number(b[1]?.createdAt||0);
+function getOrderedMemoEntries(){
+  return Object.entries(memorizeData || {}).sort((a,b)=>{
+    const ao=Number(a[1]?.order), bo=Number(b[1]?.order);
+    const af=Number.isFinite(ao), bf=Number.isFinite(bo);
+    if(af && bf && ao!==bo) return ao-bo;
+    if(af && !bf) return -1;
+    if(!af && bf) return 1;
+    const ac=Number(a[1]?.createdAt||0), bc=Number(b[1]?.createdAt||0);
+    if(ac!==bc) return ac-bc;
+    return String(a[0]).localeCompare(String(b[0]));
   });
+}
+
+function renderMemorize(){
+  const box=document.getElementById('memorizeList');
+  if(!box) return;
+  box.innerHTML='';
+  const entries=getOrderedMemoEntries();
   if(!entries.length){
-    box.innerHTML = '<div class="empty">No study material added yet.</div>';
+    box.innerHTML='<div class="empty">No school notes added yet.</div>';
     return;
   }
   entries.forEach(([id,m])=>{
     const card=document.createElement('article');
-    card.className='memo-card';
+    card.className='memo-card' + (isAdmin ? ' memo-draggable' : '');
+    card.dataset.memoId=id;
+    if(isAdmin){ card.draggable=true; card.title='Drag to change this School Note position'; }
+    const content=m.html || esc(cleanText(m.text||'')).replace(/\n/g,'<br>');
     card.innerHTML=`
       <div class="memo-top">
         <div>
           ${m.category ? `<span class="note-category">${esc(m.category)}</span>` : ''}
-          <h3>${esc(m.title || 'Study Material')}</h3>
+          <h3>${esc(m.title || 'School Note')}${isAdmin ? '<span class="note-drag-hint">↕ drag</span>' : ''}</h3>
         </div>
       </div>
-      <div class="note-text memo-content">${m.html || esc(cleanText(m.text||'')).replace(/\n/g,'<br>')}</div>
+      <div class="note-text memo-content">${content}</div>
       ${m.link ? `<div class="memo-file-chip memo-link-card"><span>🔗 ${esc(m.linkLabel || 'Study material link')}</span><a class="btn small primary" href="${esc(m.link)}" target="_blank" rel="noopener noreferrer">Open material</a><button class="btn small" type="button" onclick="copyMemoLink('${esc(m.link).replace(/'/g,"\\'")}')">Copy link</button></div>` : ''}
       ${isAdmin ? `<div class="note-actions"><button class="btn small" onclick="openMemoEditor('${id}')">✏️ Edit</button><button class="btn danger small" onclick="deleteMemo('${id}')">Delete</button></div>` : ''}
     `;
     box.appendChild(card);
   });
+
+  if(isAdmin) setupMemoDragAndDrop(box);
+
+  box.querySelectorAll('input.note-check').forEach(input=>{
+    input.addEventListener('click',e=>e.stopPropagation());
+    input.addEventListener('change',async()=>{
+      if(input.checked) input.setAttribute('checked',''); else input.removeAttribute('checked');
+      const card=input.closest('.memo-card');
+      const id=card?.dataset.memoId;
+      if(!id || !memorizeData[id]) return;
+      const updated=card.querySelector('.memo-content')?.innerHTML || '';
+      memorizeData[id].html=updated;
+      try{
+        const payload={html:updated,updatedAt:Date.now()};
+        if(navigator.onLine) await update(ref(db,`memorize/${id}`),payload);
+        else await offlineUpdate(`memorize/${id}`,payload);
+      }catch(err){ console.error('Could not save School Note checkbox state',err); }
+    });
+  });
   enableMemoImageViewer();
+}
+
+let draggedMemoId=null;
+function setupMemoDragAndDrop(box){
+  const cards=Array.from(box.querySelectorAll('.memo-draggable'));
+  cards.forEach(card=>{
+    card.addEventListener('dragstart',event=>{
+      const interactive=event.target.closest('button,input,textarea,select,a');
+      if(interactive){ event.preventDefault(); return; }
+      draggedMemoId=card.dataset.memoId;
+      card.classList.add('note-dragging');
+      if(event.dataTransfer){ event.dataTransfer.effectAllowed='move'; event.dataTransfer.setData('text/plain',draggedMemoId); }
+    });
+    card.addEventListener('dragend',()=>{
+      draggedMemoId=null;
+      cards.forEach(c=>c.classList.remove('note-drag-over','note-dragging'));
+    });
+    card.addEventListener('dragover',event=>{
+      if(!draggedMemoId || draggedMemoId===card.dataset.memoId) return;
+      event.preventDefault();
+      if(event.dataTransfer) event.dataTransfer.dropEffect='move';
+      cards.forEach(c=>c.classList.remove('note-drag-over'));
+      card.classList.add('note-drag-over');
+      const rect=card.getBoundingClientRect();
+      const before=event.clientY < rect.top + rect.height/2;
+      const dragged=box.querySelector(`.memo-card[data-memo-id="${CSS.escape(draggedMemoId)}"]`);
+      if(!dragged) return;
+      if(before) box.insertBefore(dragged,card); else box.insertBefore(dragged,card.nextSibling);
+    });
+    card.addEventListener('drop',async event=>{
+      event.preventDefault();
+      cards.forEach(c=>c.classList.remove('note-drag-over'));
+      if(draggedMemoId) await saveMemoOrder(box);
+    });
+  });
+}
+
+async function saveMemoOrder(box){
+  if(!isAdmin) return;
+  const cards=Array.from(box.querySelectorAll('.memo-card[data-memo-id]'));
+  const order=cards.map(card=>String(card.dataset.memoId||'')).filter(Boolean);
+  if(!order.length) return;
+  const updatedAt=Date.now();
+  try{
+    if(navigator.onLine){
+      const updates={};
+      order.forEach((id,index)=>{
+        updates[`memorize/${id}/order`]=index;
+        updates[`memorize/${id}/layoutUpdatedAt`]=updatedAt;
+      });
+      await update(ref(db),updates);
+      // Remove only stale order operations; never use a local account's old
+      // order as the online source of truth.
+      await purgeStaleLayoutQueue('memorize', Object.fromEntries(order.map((id,index)=>[id,{order:index,layoutUpdatedAt:updatedAt}])));
+      memorizeData=Object.fromEntries(order.map((id,index)=>{
+        const item={...(memorizeData[id]||{})};
+        item.order=index;
+        item.layoutUpdatedAt=updatedAt;
+        return [id,item];
+      }));
+      renderMemorize();
+    }else{
+      for(let i=0;i<order.length;i++){
+        await offlineUpdate(`memorize/${order[i]}`,{order:i,layoutUpdatedAt:updatedAt});
+      }
+      renderMemorize();
+    }
+  }catch(error){
+    console.error('Could not save School Notes order',error);
+    alert('The School Notes position could not be saved. Please check your Firebase connection/permissions.');
+  }
 }
 
 let editingMemoId=null;
@@ -5213,6 +5354,31 @@ function memoCommand(command,value=null){
   document.execCommand(command,false,value);
 }
 window.memoCommand=memoCommand;
+
+function highlightMemoSelection(color){
+  const editor=document.getElementById('richMemoEditor');
+  editor?.focus();
+  if(!document.execCommand('hiliteColor',false,color)) document.execCommand('backColor',false,color);
+}
+window.highlightMemoSelection=highlightMemoSelection;
+
+function insertMemoChecklist(){
+  const editor=document.getElementById('richMemoEditor');
+  if(!editor) return;
+  editor.focus();
+  const range=window.getSelection()?.rangeCount ? window.getSelection().getRangeAt(0) : null;
+  const checkbox=document.createElement('input');
+  checkbox.type='checkbox';
+  checkbox.className='note-check';
+  checkbox.style.marginRight='8px';
+  checkbox.addEventListener('click',e=>e.stopPropagation());
+  checkbox.addEventListener('change',()=>{
+    if(checkbox.checked) checkbox.setAttribute('checked',''); else checkbox.removeAttribute('checked');
+  });
+  if(range){ range.deleteContents(); range.insertNode(checkbox); checkbox.after(document.createTextNode(' ')); }
+  else editor.append(checkbox,document.createTextNode(' '));
+}
+window.insertMemoChecklist=insertMemoChecklist;
 
 function insertMemoImageHtml(src,alt='Slide'){
   const editor=document.getElementById('richMemoEditor');
@@ -5383,21 +5549,53 @@ window.saveMemoEditor=async function(){
   const html=document.getElementById('richMemoEditor').innerHTML.trim();
   if(!title){ alert('Please enter a title.'); return; }
   try{
+    const updatedAt=Date.now();
     if(editingMemoId){
-      await offlineUpdate('memorize/'+editingMemoId,{title,category,link,html,updatedAt:Date.now()});
+      const existing=memorizeData[editingMemoId] || {};
+      const payload={title,category,link,html,updatedAt};
+      // Never touch `order` when editing. Position is shared and independent.
+      if(navigator.onLine) await update(ref(db,`memorize/${editingMemoId}`),payload);
+      else await offlineUpdate(`memorize/${editingMemoId}`,payload);
     }else{
       const orders=Object.values(memorizeData||{}).map(x=>Number(x?.order)).filter(Number.isFinite);
       const order=orders.length?Math.max(...orders)+1:Object.keys(memorizeData||{}).length;
-      await offlinePush('memorize',{title,category,link,html,order,createdAt:Date.now()});
+      const payload={title,category,link,html,order,createdAt:updatedAt,updatedAt};
+      if(navigator.onLine){
+        const newRef=push(ref(db,'memorize'));
+        await set(newRef,payload);
+      }else{
+        await offlinePush('memorize',payload);
+      }
     }
     closeMemoEditor();
-  }catch(err){ console.error(err); alert('Could not save study material.'); }
+  }catch(err){ console.error(err); alert('Could not save School Note.'); }
 };
 
 window.deleteMemo=async function(id){
-  if(!isAdmin || !confirm('Delete this study material?')) return;
-  await offlineRemove('memorize/'+id);
+  if(!isAdmin || !confirm('Delete this School Note?')) return;
+  try{
+    if(navigator.onLine){
+      await remove(ref(db,`memorize/${id}`));
+      const remaining=Object.entries(memorizeData||{})
+        .filter(([memoId])=>String(memoId)!==String(id))
+        .sort((a,b)=>{
+          const ao=Number(a[1]?.order),bo=Number(b[1]?.order);
+          if(Number.isFinite(ao)&&Number.isFinite(bo)&&ao!==bo) return ao-bo;
+          return Number(a[1]?.createdAt||0)-Number(b[1]?.createdAt||0);
+        });
+      const updates={};
+      const updatedAt=Date.now();
+      remaining.forEach(([memoId],index)=>{
+        updates[`memorize/${memoId}/order`]=index;
+        updates[`memorize/${memoId}/layoutUpdatedAt`]=updatedAt;
+      });
+      if(Object.keys(updates).length) await update(ref(db),updates);
+    }else{
+      await offlineRemove(`memorize/${id}`);
+    }
+  }catch(error){ console.error(error); alert('Could not delete School Note.'); }
 };
+
 
 function enableMemoImageViewer(){
   document.querySelectorAll('#memorizeList .memo-content img').forEach(img=>{
