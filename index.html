@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v9">
+  <meta name="bsn2a-build" content="shared-layout-v11">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -1145,7 +1145,16 @@ select:focus{
 .note-text video,.note-text audio,.note-text iframe,.note-text object{display:block;max-width:100%;width:100%;box-sizing:border-box;border-radius:10px;margin:10px 0;}
 .note-text table{width:100%;max-width:100%;border-collapse:collapse;display:block;overflow-x:auto;}
 .note-text pre,.note-text code{white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;}
-.note-upload-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;padding:8px;border:1px dashed var(--border);border-radius:10px;background:var(--surface2);}
+.note-upload-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;padding:8px;border:1px dashed var(--border);border-radius:10px;background:var(--surface2);}.note-upload-row.dragover{border-color:var(--primary);background:var(--primarySoft);box-shadow:0 0 0 2px var(--primarySoft);}
+.note-dropzone{margin-top:8px;width:100%;padding:16px;border:2px dashed var(--border);border-radius:12px;text-align:center;color:var(--muted);background:var(--surface);transition:.15s ease;}
+.note-dropzone.dragover{border-color:var(--primary);background:var(--primarySoft);color:var(--primary);transform:scale(1.01);}
+.note-file-attachment{display:flex;align-items:center;gap:10px;margin:10px 0;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);overflow-wrap:anywhere;}
+.note-file-attachment .file-attachment-icon{font-size:22px;flex:0 0 auto;}
+.note-file-attachment .file-attachment-meta{min-width:0;flex:1;}
+.note-file-attachment .file-attachment-meta strong{display:block;color:var(--text);font-size:13px;}
+.note-file-attachment .file-attachment-meta small{display:block;color:var(--muted);font-size:11px;margin-top:2px;}
+.note-file-attachment a{color:var(--primary);font-weight:700;text-decoration:none;font-size:12px;}
+
 .note-upload-row.dragover{
   border-color:var(--primary);
   background:var(--primarySoft);
