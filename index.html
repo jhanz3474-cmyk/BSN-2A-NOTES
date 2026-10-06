@@ -3335,129 +3335,187 @@ and (orientation:landscape){
 <script type="module">
 
 /* =========================================================
-   FIREBASE
+   FIREBASE / ONLINE REST BRIDGE
+   The app uses Firebase Realtime Database REST calls instead of
+   browser-loaded Firebase SDK modules. This keeps the HTML itself
+   executable offline. Firebase Storage is loaded lazily only when
+   an admin actually uploads a file/image while online.
 ========================================================= */
 
-let firebaseReady = false;
-let initializeApp;
-let getDatabase;
-let ref;
-let push;
-let set;
-let update;
-let remove;
-let onValue;
-let serverTimestamp;
-let getStorage;
-let storageRef;
-let uploadBytes;
-let getDownloadURL;
-
-const firebaseFallback = {
-  initializeApp: config => ({offline:true, config}),
-  getDatabase: () => ({offline:true}),
-  ref: (db, path="") => ({db, path}),
-  push: () => ({key:"offline_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,8)}),
-  set: async () => {},
-  update: async () => {},
-  remove: async () => {},
-  onValue: () => () => {},
-  serverTimestamp: () => Date.now(),
-  getStorage: () => ({offline:true}),
-  storageRef: (storage, path="") => ({storage, path}),
-  uploadBytes: async () => { throw new Error("Firebase Storage is unavailable while offline."); },
-  getDownloadURL: async () => { throw new Error("Firebase Storage is unavailable while offline."); }
+const firebaseConfig = {
+  apiKey:"AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
+  authDomain:"bsn-2a-notes.firebaseapp.com",
+  databaseURL:"https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"bsn-2a-notes",
+  storageBucket:"bsn-2a-notes.firebasestorage.app",
+  messagingSenderId:"991210260962",
+  appId:"1:991210260962:web:8f6a886c7478be096991bb"
 };
 
-function applyFirebaseModules(appModule, databaseModule, storageModule){
-  initializeApp = appModule.initializeApp;
-  getDatabase = databaseModule.getDatabase;
-  ref = databaseModule.ref;
-  push = databaseModule.push;
-  set = databaseModule.set;
-  update = databaseModule.update;
-  remove = databaseModule.remove;
-  onValue = databaseModule.onValue;
-  serverTimestamp = databaseModule.serverTimestamp;
-  getStorage = storageModule.getStorage;
-  storageRef = storageModule.ref;
-  uploadBytes = storageModule.uploadBytes;
-  getDownloadURL = storageModule.getDownloadURL;
-  firebaseReady = true;
+let firebaseReady = true;
+
+function initializeApp(config){
+  return {config};
 }
 
-function applyFirebaseFallback(){
-  initializeApp = firebaseFallback.initializeApp;
-  getDatabase = firebaseFallback.getDatabase;
-  ref = firebaseFallback.ref;
-  push = firebaseFallback.push;
-  set = firebaseFallback.set;
-  update = firebaseFallback.update;
-  remove = firebaseFallback.remove;
-  onValue = firebaseFallback.onValue;
-  serverTimestamp = firebaseFallback.serverTimestamp;
-  getStorage = firebaseFallback.getStorage;
-  storageRef = firebaseFallback.storageRef;
-  uploadBytes = firebaseFallback.uploadBytes;
-  getDownloadURL = firebaseFallback.getDownloadURL;
-  firebaseReady = false;
+function getDatabase(app){
+  return {databaseURL:app?.config?.databaseURL || firebaseConfig.databaseURL};
 }
 
-async function loadFirebaseModules(){
+function ref(db,path=""){
+  return {db,path:String(path||"")};
+}
+
+function restUrl(target){
+  const base=String(firebaseConfig.databaseURL).replace(/\\/$/,"");
+  const clean=String(target?.path||"").split("/").filter(Boolean).map(encodeURIComponent).join("/");
+  return clean ? base + "/" + clean + ".json" : base + "/.json";
+}
+
+async function restRequest(method,target,body){
+  const options={
+    method,
+    headers:{"Content-Type":"application/json"},
+    cache:"no-store"
+  };
+  if(body!==undefined) options.body=JSON.stringify(body);
+
+  const response=await fetch(restUrl(target),options);
+  if(!response.ok){
+    throw new Error(`Firebase REST ${method} failed: ${response.status}`);
+  }
+
+  const text=await response.text();
+  return text ? JSON.parse(text) : null;
+}
+
+function set(target,value){
+  return restRequest("PUT",target,value);
+}
+
+function update(target,value){
+  return restRequest("PATCH",target,value);
+}
+
+function remove(target){
+  return restRequest("DELETE",target);
+}
+
+function push(target){
+  const key =
+    "p_" +
+    Date.now().toString(36) +
+    "_" +
+    Math.random().toString(36).slice(2,11);
+
+  return {
+    db:target?.db,
+    path:String(target?.path||"").replace(/\\/$/,"") + "/" + key,
+    key
+  };
+}
+
+function serverTimestamp(){
+  return Date.now();
+}
+
+function snapshotFrom(value){
+  return {
+    val:()=>value,
+    exists:()=>value!==null && value!==undefined
+  };
+}
+
+function onValue(target,callback,errorCallback,options={}){
+  let stopped=false;
+  let timer=null;
+
+  const poll=async()=>{
+    if(stopped) return;
+
+    try{
+      const value=await restRequest("GET",target);
+      if(stopped) return;
+      callback(snapshotFrom(value));
+
+      if(options?.onlyOnce){
+        stopped=true;
+        return;
+      }
+    }catch(error){
+      if(stopped) return;
+      try{ errorCallback?.(error); }catch(_){}
+    }
+
+    if(!stopped){
+      timer=setTimeout(poll,3000);
+    }
+  };
+
+  poll();
+
+  return ()=>{
+    stopped=true;
+    if(timer) clearTimeout(timer);
+  };
+}
+
+/* Firebase Storage SDK is lazy-loaded only for actual online uploads. */
+let storageSdkPromise=null;
+let storage=null;
+
+async function ensureStorageSdk(){
+  if(storageSdkPromise) return storageSdkPromise;
+
+  storageSdkPromise=(async()=>{
+    if(!navigator.onLine){
+      throw new Error("Firebase Storage is unavailable while offline.");
+    }
+
+    const module=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js");
+    const getStorageFn=module.getStorage;
+    const refFn=module.ref;
+    const uploadBytesFn=module.uploadBytes;
+    const getDownloadURLFn=module.getDownloadURL;
+
+    const app=initializeApp(firebaseConfig);
+    storage=getStorageFn(app);
+
+    return {
+      storage,
+      ref:refFn,
+      uploadBytes:uploadBytesFn,
+      getDownloadURL:getDownloadURLFn
+    };
+  })();
+
   try{
-    const [appModule, databaseModule, storageModule] = await Promise.all([
-      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),
-      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"),
-      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js")
-    ]);
-    applyFirebaseModules(appModule, databaseModule, storageModule);
-    return true;
+    return await storageSdkPromise;
   }catch(error){
-    applyFirebaseFallback();
-    console.warn("Firebase modules are unavailable. Running from the local offline store.", error);
-    return false;
+    storageSdkPromise=null;
+    throw error;
   }
 }
 
-await loadFirebaseModules();
+function getStorage(){
+  return {lazy:true};
+}
 
-const firebaseConfig = {
+function storageRef(){
+  throw new Error("Use uploadFileToStorage() for Firebase Storage uploads.");
+}
 
-  apiKey:
-    "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
+async function uploadBytes(){
+  throw new Error("Use uploadFileToStorage() for Firebase Storage uploads.");
+}
 
-  authDomain:
-    "bsn-2a-notes.firebaseapp.com",
+async function getDownloadURL(){
+  throw new Error("Use uploadFileToStorage() for Firebase Storage uploads.");
+}
 
-  databaseURL:
-    "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-  projectId:
-    "bsn-2a-notes",
-
-  storageBucket:
-    "bsn-2a-notes.firebasestorage.app",
-
-  messagingSenderId:
-    "991210260962",
-
-  appId:
-    "1:991210260962:web:8f6a886c7478be096991bb"
-
-};
-
-
-const app =
-  initializeApp(
-    firebaseConfig
-  );
-
-
-const db =
-  getDatabase(app);
-
-const storage = getStorage(app);
-
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
+storage=getStorage();
 
 
 /* =========================================================
@@ -3681,7 +3739,7 @@ async function queueOfflineOperation(type,path,data){
   await saveOfflineCollection(collection,local);
   await notifyOfflineChange(collection);
 
-  if(navigator.onLine && firebaseReady){
+  if(navigator.onLine){
     flushOfflineQueue();
   }
 
@@ -3827,7 +3885,7 @@ async function offlineOnValue(collection,callback){
           exists:()=>Object.keys(remote || {}).length > 0
         });
 
-        if(navigator.onLine && firebaseReady){
+        if(navigator.onLine){
           flushOfflineQueue();
         }
       },
@@ -3841,7 +3899,7 @@ async function offlineOnValue(collection,callback){
 }
 
 async function flushOfflineQueue(){
-  if(offlineSyncing || !navigator.onLine || !firebaseReady) return;
+  if(offlineSyncing || !navigator.onLine) return;
 
   offlineSyncing = true;
 
@@ -3874,10 +3932,6 @@ async function flushOfflineQueue(){
 }
 
 window.addEventListener("online",()=>{
-  if(!firebaseReady){
-    location.reload();
-    return;
-  }
   flushOfflineQueue();
 });
 
@@ -3909,7 +3963,7 @@ function updateOfflineStatus(){
   const text = document.getElementById("offlineStatusText");
   if(!box || !text) return;
 
-  if(navigator.onLine && firebaseReady){
+  if(navigator.onLine){
     box.classList.remove("offline");
     box.classList.remove("syncing");
     text.textContent = "Online";
@@ -4907,7 +4961,7 @@ async function saveNoteOrder(order){
   const payload={order:order.slice(),updatedAt:Date.now(),version:9};
   noteLayoutOrder=order.slice();
   try{
-    if(navigator.onLine && firebaseReady){
+    if(navigator.onLine){
       await set(ref(db,"noteLayout"),payload);
       await clearQueuedLayoutOps("notes");
       const legacyUpdates={};
@@ -5219,7 +5273,7 @@ window.saveNoteEditor = async function(){
         html:htmlContent,
         updatedAt:Date.now()
       };
-      if(navigator.onLine && firebaseReady){
+      if(navigator.onLine){
         await update(ref(db,"notes/"+editingNoteId),notePayload);
       }else{
         await offlineUpdate("notes/"+editingNoteId,notePayload);
@@ -5229,7 +5283,7 @@ window.saveNoteEditor = async function(){
       if(!noteLayoutOrder.includes(String(editingNoteId))){
         noteLayoutOrder.push(String(editingNoteId));
         const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:4};
-        if(navigator.onLine && firebaseReady){
+        if(navigator.onLine){
           await update(ref(db,"noteLayout"), layoutPayload);
           await saveOfflineCollection("noteLayout", layoutPayload);
         }else{
@@ -5247,7 +5301,7 @@ window.saveNoteEditor = async function(){
       let newNoteId;
       const createdAt = Date.now();
 
-      if(navigator.onLine && firebaseReady){
+      if(navigator.onLine){
         const newRef = push(ref(db,"notes"));
         newNoteId = newRef.key;
         await set(newRef,{
@@ -5272,7 +5326,7 @@ window.saveNoteEditor = async function(){
       noteLayoutOrder.push(String(newNoteId));
       const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:4};
 
-      if(navigator.onLine && firebaseReady){
+      if(navigator.onLine){
         await update(ref(db), {noteLayout:layoutPayload});
         await saveOfflineCollection("noteLayout", layoutPayload);
       }else{
@@ -5311,7 +5365,7 @@ async function(id){
   noteLayoutOrder = noteLayoutOrder.filter(noteId => String(noteId) !== String(id));
   const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:4};
 
-  if(navigator.onLine && firebaseReady){
+  if(navigator.onLine){
     await update(ref(db), {
       [`notes/${id}`]: null,
       noteLayout: layoutPayload
@@ -5434,7 +5488,7 @@ async function saveMemoOrder(order){
   const payload={order:order.slice(),updatedAt:Date.now(),version:9};
   memorizeLayoutOrder=order.slice();
   try{
-    if(navigator.onLine && firebaseReady){
+    if(navigator.onLine){
       await set(ref(db,'memorizeLayout'),payload);
       await clearQueuedLayoutOps('memorize');
       const legacyUpdates={};
@@ -5668,7 +5722,7 @@ window.saveMemoEditor=async function(){
       const currentOrder = getOrderedMemoEntries().map(([id])=>String(id));
       let newId;
 
-      if(navigator.onLine && firebaseReady){
+      if(navigator.onLine){
         const newRef=push(ref(db,'memorize'));
         newId=newRef.key;
         await set(newRef,{
@@ -5690,7 +5744,7 @@ window.saveMemoEditor=async function(){
       memorizeLayoutOrder.push(String(newId));
 
       const layoutPayload={order:memorizeLayoutOrder.slice(),updatedAt:Date.now(),version:1};
-      if(navigator.onLine && firebaseReady){
+      if(navigator.onLine){
         await update(ref(db),{memorizeLayout:layoutPayload});
         await saveOfflineCollection("memorizeLayout",layoutPayload);
       }else{
@@ -5704,7 +5758,7 @@ window.saveMemoEditor=async function(){
 window.deleteMemo=async function(id){
   if(!isAdmin || !confirm('Delete this School Note?')) return;
   try{
-    if(navigator.onLine && firebaseReady){
+    if(navigator.onLine){
       await remove(ref(db,`memorize/${id}`));
 
       const remainingOrder=(memorizeLayoutOrder||[])
@@ -6949,7 +7003,21 @@ window.enableNoteImageViewer=enableNoteImageViewer;
 function renderFiles(){const box=document.getElementById("filesList");box.innerHTML="";const entries=Object.entries(filesData||{}).sort((a,b)=>Number(a[1]?.createdAt||0)-Number(b[1]?.createdAt||0));if(!entries.length){box.innerHTML=`<div class="empty">No clinical files added yet.</div>`;return;}entries.forEach(([id,f])=>{const e=document.createElement("div");e.className="file-card";const source=f.downloadURL||f.url||"";e.innerHTML=`<div class="file-icon">${fileTypeIcon(f.mimeType,f.name||f.title)}</div><h3>${esc(f.title||f.name||"Clinical File")}</h3>${f.description?`<p>${esc(cleanText(f.description))}</p>`:""}${f.name?`<p class="file-meta">${esc(f.name)}${f.size?` • ${esc(formatFileSize(f.size))}`:""}</p>`:""}${source?`<div class="form-buttons" style="margin-top:10px;"><button class="btn primary" onclick="previewFile('${id}')">📖 View in Website</button><a class="btn" href="${esc(safeFileUrl(source))}" target="_blank" rel="noopener">${f.downloadURL?"Open / Download":"Open Link"}</a></div>`:""}${isAdmin?`<div class="note-actions"><button class="btn danger" onclick="deleteFile('${id}')">Delete</button></div>`:""}`;box.appendChild(e);});}
 let selectedStorageFile=null;
 window.handleFileStorageSelection=function(event){selectedStorageFile=event.target.files?.[0]||null;const s=document.getElementById("fileUploadStatus");if(s)s.textContent=selectedStorageFile?`Selected: ${selectedStorageFile.name} • ${formatFileSize(selectedStorageFile.size)}`:"No local file selected.";};
-async function uploadFileToStorage(file,folder){const cleanName=String(file.name||"file").replace(/[^a-zA-Z0-9._-]+/g,"_");const path=`${folder}/${Date.now()}_${Math.random().toString(36).slice(2,9)}_${cleanName}`;const target=storageRef(storage,path);const result=await uploadBytes(target,file,{contentType:file.type||"application/octet-stream"});const url=await getDownloadURL(result.ref);return {downloadURL:url,storagePath:path,mimeType:file.type||"application/octet-stream",name:file.name||cleanName,size:file.size||0};}
+async function uploadFileToStorage(file,folder){
+  const sdk=await ensureStorageSdk();
+  const cleanName=String(file.name||"file").replace(/[^a-zA-Z0-9._-]+/g,"_");
+  const path=`${folder}/${Date.now()}_${Math.random().toString(36).slice(2,9)}_${cleanName}`;
+  const target=sdk.ref(sdk.storage,path);
+  const result=await sdk.uploadBytes(target,file,{contentType:file.type||"application/octet-stream"});
+  const url=await sdk.getDownloadURL(result.ref);
+  return {
+    downloadURL:url,
+    storagePath:path,
+    mimeType:file.type||"application/octet-stream",
+    name:file.name||cleanName,
+    size:file.size||0
+  };
+}
 
 
 window.addFile = async function(){if(!isAdmin)return;const title=document.getElementById("fileTitle").value.trim(),url=document.getElementById("fileUrl").value.trim(),description=document.getElementById("fileDescription").value.trim(),file=selectedStorageFile,status=document.getElementById("fileUploadStatus");if(!title&&!file){alert("Please enter a file title or select a file.");return;}if(!url&&!file){alert("Add a file from your device or enter a file URL.");return;}try{let uploaded={};if(file){if(status)status.textContent="Uploading file…";uploaded=await uploadFileToStorage(file,"group4-files");}await offlinePush("files",{title:title||file.name,url:url||"",description,...uploaded,createdAt:Date.now()});["fileTitle","fileUrl","fileDescription"].forEach(id=>document.getElementById(id).value="");const input=document.getElementById("fileStorageInput");if(input)input.value="";selectedStorageFile=null;if(status)status.textContent="File added successfully.";}catch(error){console.error(error);if(status)status.textContent="Upload failed.";alert("The file could not be uploaded. Check your internet connection and Firebase Storage permissions.");}};
