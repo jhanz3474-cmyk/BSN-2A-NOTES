@@ -3338,29 +3338,88 @@ and (orientation:landscape){
    FIREBASE
 ========================================================= */
 
-import {
-  initializeApp
+let firebaseReady = false;
+let initializeApp;
+let getDatabase;
+let ref;
+let push;
+let set;
+let update;
+let remove;
+let onValue;
+let serverTimestamp;
+let getStorage;
+let storageRef;
+let uploadBytes;
+let getDownloadURL;
+
+const firebaseFallback = {
+  initializeApp: config => ({offline:true, config}),
+  getDatabase: () => ({offline:true}),
+  ref: (db, path="") => ({db, path}),
+  push: () => ({key:"offline_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,8)}),
+  set: async () => {},
+  update: async () => {},
+  remove: async () => {},
+  onValue: () => () => {},
+  serverTimestamp: () => Date.now(),
+  getStorage: () => ({offline:true}),
+  storageRef: (storage, path="") => ({storage, path}),
+  uploadBytes: async () => { throw new Error("Firebase Storage is unavailable while offline."); },
+  getDownloadURL: async () => { throw new Error("Firebase Storage is unavailable while offline."); }
+};
+
+function applyFirebaseModules(appModule, databaseModule, storageModule){
+  initializeApp = appModule.initializeApp;
+  getDatabase = databaseModule.getDatabase;
+  ref = databaseModule.ref;
+  push = databaseModule.push;
+  set = databaseModule.set;
+  update = databaseModule.update;
+  remove = databaseModule.remove;
+  onValue = databaseModule.onValue;
+  serverTimestamp = databaseModule.serverTimestamp;
+  getStorage = storageModule.getStorage;
+  storageRef = storageModule.ref;
+  uploadBytes = storageModule.uploadBytes;
+  getDownloadURL = storageModule.getDownloadURL;
+  firebaseReady = true;
 }
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-
-import {
-  getDatabase,
-  ref,
-  push,
-  set,
-  update,
-  remove,
-  onValue,
-  serverTimestamp
+function applyFirebaseFallback(){
+  initializeApp = firebaseFallback.initializeApp;
+  getDatabase = firebaseFallback.getDatabase;
+  ref = firebaseFallback.ref;
+  push = firebaseFallback.push;
+  set = firebaseFallback.set;
+  update = firebaseFallback.update;
+  remove = firebaseFallback.remove;
+  onValue = firebaseFallback.onValue;
+  serverTimestamp = firebaseFallback.serverTimestamp;
+  getStorage = firebaseFallback.getStorage;
+  storageRef = firebaseFallback.storageRef;
+  uploadBytes = firebaseFallback.uploadBytes;
+  getDownloadURL = firebaseFallback.getDownloadURL;
+  firebaseReady = false;
 }
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+async function loadFirebaseModules(){
+  try{
+    const [appModule, databaseModule, storageModule] = await Promise.all([
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js")
+    ]);
+    applyFirebaseModules(appModule, databaseModule, storageModule);
+    return true;
+  }catch(error){
+    applyFirebaseFallback();
+    console.warn("Firebase modules are unavailable. Running from the local offline store.", error);
+    return false;
+  }
+}
 
+await loadFirebaseModules();
 
 const firebaseConfig = {
 
@@ -3387,17 +3446,6 @@ const firebaseConfig = {
 
 };
 
-
-// Disable the old experimental service worker/cache. The shared layout must come
-// from Firebase and the current GitHub Pages HTML, not a stale browser cache.
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.getRegistrations().then(registrations=>{
-    registrations.forEach(registration=>registration.unregister().catch(()=>{}));
-  }).catch(()=>{});
-}
-if("caches" in window){
-  caches.keys().then(keys=>Promise.all(keys.map(key=>caches.delete(key)))).catch(()=>{});
-}
 
 const app =
   initializeApp(
@@ -3633,7 +3681,7 @@ async function queueOfflineOperation(type,path,data){
   await saveOfflineCollection(collection,local);
   await notifyOfflineChange(collection);
 
-  if(navigator.onLine){
+  if(navigator.onLine && firebaseReady){
     flushOfflineQueue();
   }
 
@@ -3779,7 +3827,7 @@ async function offlineOnValue(collection,callback){
           exists:()=>Object.keys(remote || {}).length > 0
         });
 
-        if(navigator.onLine){
+        if(navigator.onLine && firebaseReady){
           flushOfflineQueue();
         }
       },
@@ -3793,7 +3841,7 @@ async function offlineOnValue(collection,callback){
 }
 
 async function flushOfflineQueue(){
-  if(offlineSyncing || !navigator.onLine) return;
+  if(offlineSyncing || !navigator.onLine || !firebaseReady) return;
 
   offlineSyncing = true;
 
@@ -3826,12 +3874,24 @@ async function flushOfflineQueue(){
 }
 
 window.addEventListener("online",()=>{
+  if(!firebaseReady){
+    location.reload();
+    return;
+  }
   flushOfflineQueue();
 });
 
 window.addEventListener("offline",()=>{
   console.log("BSN 2A Group 4 is now offline. Changes will be stored on this device.");
 });
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("./sw.js?build=offline-v10",{updateViaCache:"none"})
+      .then(reg=>reg.update().catch(()=>{}))
+      .catch(error=>console.warn("Offline app shell could not be registered:",error));
+  });
+}
 
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{
@@ -3849,7 +3909,7 @@ function updateOfflineStatus(){
   const text = document.getElementById("offlineStatusText");
   if(!box || !text) return;
 
-  if(navigator.onLine){
+  if(navigator.onLine && firebaseReady){
     box.classList.remove("offline");
     box.classList.remove("syncing");
     text.textContent = "Online";
@@ -4847,7 +4907,7 @@ async function saveNoteOrder(order){
   const payload={order:order.slice(),updatedAt:Date.now(),version:9};
   noteLayoutOrder=order.slice();
   try{
-    if(navigator.onLine){
+    if(navigator.onLine && firebaseReady){
       await set(ref(db,"noteLayout"),payload);
       await clearQueuedLayoutOps("notes");
       const legacyUpdates={};
@@ -5159,7 +5219,7 @@ window.saveNoteEditor = async function(){
         html:htmlContent,
         updatedAt:Date.now()
       };
-      if(navigator.onLine){
+      if(navigator.onLine && firebaseReady){
         await update(ref(db,"notes/"+editingNoteId),notePayload);
       }else{
         await offlineUpdate("notes/"+editingNoteId,notePayload);
@@ -5169,7 +5229,7 @@ window.saveNoteEditor = async function(){
       if(!noteLayoutOrder.includes(String(editingNoteId))){
         noteLayoutOrder.push(String(editingNoteId));
         const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:4};
-        if(navigator.onLine){
+        if(navigator.onLine && firebaseReady){
           await update(ref(db,"noteLayout"), layoutPayload);
           await saveOfflineCollection("noteLayout", layoutPayload);
         }else{
@@ -5187,7 +5247,7 @@ window.saveNoteEditor = async function(){
       let newNoteId;
       const createdAt = Date.now();
 
-      if(navigator.onLine){
+      if(navigator.onLine && firebaseReady){
         const newRef = push(ref(db,"notes"));
         newNoteId = newRef.key;
         await set(newRef,{
@@ -5212,7 +5272,7 @@ window.saveNoteEditor = async function(){
       noteLayoutOrder.push(String(newNoteId));
       const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:4};
 
-      if(navigator.onLine){
+      if(navigator.onLine && firebaseReady){
         await update(ref(db), {noteLayout:layoutPayload});
         await saveOfflineCollection("noteLayout", layoutPayload);
       }else{
@@ -5251,7 +5311,7 @@ async function(id){
   noteLayoutOrder = noteLayoutOrder.filter(noteId => String(noteId) !== String(id));
   const layoutPayload = {order:noteLayoutOrder.slice(), updatedAt:Date.now(), version:4};
 
-  if(navigator.onLine){
+  if(navigator.onLine && firebaseReady){
     await update(ref(db), {
       [`notes/${id}`]: null,
       noteLayout: layoutPayload
@@ -5374,7 +5434,7 @@ async function saveMemoOrder(order){
   const payload={order:order.slice(),updatedAt:Date.now(),version:9};
   memorizeLayoutOrder=order.slice();
   try{
-    if(navigator.onLine){
+    if(navigator.onLine && firebaseReady){
       await set(ref(db,'memorizeLayout'),payload);
       await clearQueuedLayoutOps('memorize');
       const legacyUpdates={};
@@ -5608,7 +5668,7 @@ window.saveMemoEditor=async function(){
       const currentOrder = getOrderedMemoEntries().map(([id])=>String(id));
       let newId;
 
-      if(navigator.onLine){
+      if(navigator.onLine && firebaseReady){
         const newRef=push(ref(db,'memorize'));
         newId=newRef.key;
         await set(newRef,{
@@ -5630,7 +5690,7 @@ window.saveMemoEditor=async function(){
       memorizeLayoutOrder.push(String(newId));
 
       const layoutPayload={order:memorizeLayoutOrder.slice(),updatedAt:Date.now(),version:1};
-      if(navigator.onLine){
+      if(navigator.onLine && firebaseReady){
         await update(ref(db),{memorizeLayout:layoutPayload});
         await saveOfflineCollection("memorizeLayout",layoutPayload);
       }else{
@@ -5644,7 +5704,7 @@ window.saveMemoEditor=async function(){
 window.deleteMemo=async function(id){
   if(!isAdmin || !confirm('Delete this School Note?')) return;
   try{
-    if(navigator.onLine){
+    if(navigator.onLine && firebaseReady){
       await remove(ref(db,`memorize/${id}`));
 
       const remainingOrder=(memorizeLayoutOrder||[])
