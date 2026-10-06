@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="offline-v5">
+  <meta name="bsn2a-build" content="shared-layout-v9">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -3711,7 +3711,14 @@ async function offlineOnValue(collection,callback){
         }
         const queue = await idbAll("queue");
         const pending = queue.filter(op=>{
-          return splitOfflinePath(op.path).collection === collection;
+          const parts = splitOfflinePath(op.path);
+          if(collection === "notes" || collection === "memorize"){
+            const data = op?.data || {};
+            const keys = Object.keys(data);
+            if(parts.collection === collection && (keys.includes("order") || keys.includes("layoutUpdatedAt"))) return false;
+            if(parts.collection === (collection === "notes" ? "noteLayout" : "memorizeLayout")) return false;
+          }
+          return parts.collection === collection;
         });
 
         pending.forEach(op=>{
@@ -4767,121 +4774,90 @@ function renderNotes(){
 
 
 let draggedNoteId = null;
+let draggedNoteCard = null;
 
 function setupNoteDragAndDrop(box){
   const cards = Array.from(box.querySelectorAll(".note-draggable"));
-
   cards.forEach(card => {
+    card.draggable = true;
     card.addEventListener("dragstart", event => {
       const interactive = event.target.closest("button, input, textarea, select, a");
-      if(interactive){
-        event.preventDefault();
-        return;
-      }
-      draggedNoteId = card.dataset.noteId;
+      if(interactive){ event.preventDefault(); return; }
+      draggedNoteId = String(card.dataset.noteId || "");
+      draggedNoteCard = card;
       card.classList.add("note-dragging");
       if(event.dataTransfer){
         event.dataTransfer.effectAllowed = "move";
         event.dataTransfer.setData("text/plain", draggedNoteId);
       }
     });
-
-    card.addEventListener("dragend", () => {
-      draggedNoteId = null;
-      cards.forEach(c => c.classList.remove("note-dragging","note-drag-over"));
-    });
-
     card.addEventListener("dragover", event => {
-      if(!draggedNoteId || draggedNoteId === card.dataset.noteId) return;
+      if(!draggedNoteCard || !draggedNoteId || draggedNoteId === String(card.dataset.noteId || "")) return;
       event.preventDefault();
-      if(event.dataTransfer) event.dataTransfer.dropEffect = "move";
-      cards.forEach(c => c.classList.remove("note-drag-over"));
-      card.classList.add("note-drag-over");
-
+      event.stopPropagation();
       const rect = card.getBoundingClientRect();
-      const before = event.clientY < rect.top + rect.height / 2;
-      const dragged = box.querySelector(`.card[data-note-id="${CSS.escape(draggedNoteId)}"]`);
-      if(!dragged) return;
-      if(before) box.insertBefore(dragged, card);
-      else box.insertBefore(dragged, card.nextSibling);
+      const before = event.clientY < rect.top + rect.height/2;
+      if(before) box.insertBefore(draggedNoteCard, card);
+      else box.insertBefore(draggedNoteCard, card.nextSibling);
+      card.classList.add("note-drag-over");
     });
-
-    card.addEventListener("drop", async event => {
+    card.addEventListener("dragleave", () => card.classList.remove("note-drag-over"));
+    card.addEventListener("drop", event => {
       event.preventDefault();
-      cards.forEach(c => c.classList.remove("note-drag-over"));
-      if(!draggedNoteId) return;
-      await saveNoteOrder(box);
+      event.stopPropagation();
+      card.classList.remove("note-drag-over");
+    });
+    card.addEventListener("dragend", async () => {
+      cards.forEach(c => c.classList.remove("note-drag-over","note-dragging"));
+      if(!draggedNoteCard) return;
+      const order = Array.from(box.querySelectorAll(".card[data-note-id]")).map(c=>String(c.dataset.noteId||"")).filter(Boolean);
+      draggedNoteCard=null;
+      draggedNoteId=null;
+      await saveNoteOrder(order);
     });
   });
 }
 
-async function purgeQueuedNoteOrderOperations(){
+async function clearQueuedLayoutOps(collection){
   try{
-    const queue = await idbAll("queue");
+    const queue=await idbAll("queue");
+    const layoutCollection=collection==="notes"?"noteLayout":"memorizeLayout";
     for(const op of queue){
-      const parts = splitOfflinePath(op.path);
-      if(parts.collection !== "notes" || op.type !== "update") continue;
-      const keys = Object.keys(op.data || {});
-      const isOnlyOrderUpdate = keys.length > 0 && keys.every(k => k === "order" || k === "updatedAt");
-      if(isOnlyOrderUpdate){
-        await idbDelete("queue", op.id);
-      }
+      const parts=splitOfflinePath(op.path);
+      if(parts.collection!==collection && parts.collection!==layoutCollection) continue;
+      const keys=Object.keys(op?.data||{});
+      if(keys.includes("order") || keys.includes("layoutUpdatedAt")) await idbDelete("queue",op.id);
     }
-  }catch(error){
-    console.warn("Could not clean old queued note-order operations", error);
-  }
+  }catch(error){ console.warn("Could not clear stale layout queue:",error); }
 }
 
-async function saveNoteOrder(box){
-  if(!isAdmin) return;
-
-  const cards = Array.from(box.querySelectorAll(".card[data-note-id]"));
-  const order = cards.map(card => String(card.dataset.noteId || "")).filter(Boolean);
-  if(!order.length) return;
-
-  const updatedAt = Date.now();
-  const payload = {order:order.slice(), updatedAt, version:4};
-  noteLayoutOrder = order.slice();
-
+async function saveNoteOrder(order){
+  if(!isAdmin || !Array.isArray(order) || !order.length) return;
+  const payload={order:order.slice(),updatedAt:Date.now(),version:9};
+  noteLayoutOrder=order.slice();
   try{
     if(navigator.onLine){
-      const updates = {noteLayout:payload};
-
+      await set(ref(db,"noteLayout"),payload);
+      await clearQueuedLayoutOps("notes");
+      const legacyUpdates={};
       order.forEach((id,index)=>{
-        updates[`notes/${id}/order`] = index;
-        updates[`notes/${id}/layoutUpdatedAt`] = updatedAt;
+        legacyUpdates["notes/"+id+"/order"]=index;
+        legacyUpdates["notes/"+id+"/layoutUpdatedAt"]=payload.updatedAt;
       });
-
-      await update(ref(db), updates);
-      await saveOfflineCollection("noteLayout", payload);
-
-      // Clear only layout queue entries that are now older than the
-      // authoritative Firebase write.
-      const queue = await idbAll("queue");
-      for(const op of queue){
-        const parts = splitOfflinePath(op.path);
-        const data = op?.data || {};
-        if(parts.collection !== "notes" && parts.collection !== "noteLayout") continue;
-        const t = Number(data.layoutUpdatedAt || data.updatedAt || op?.queuedAt || 0);
-        if(t && t <= updatedAt) await idbDelete("queue",op.id);
-      }
-
+      await update(ref(db),legacyUpdates);
+      await saveOfflineCollection("noteLayout",payload);
       renderNotes();
     }else{
-      await offlineSet("noteLayout", payload);
-      for(let index=0; index<order.length; index++){
-        await offlineUpdate(`notes/${order[index]}`, {
-          order:index,
-          layoutUpdatedAt:updatedAt
-        });
-      }
+      await offlineSet("noteLayout",payload);
       renderNotes();
     }
   }catch(error){
-    console.error("Could not save note order", error);
+    console.error("Could not save note order",error);
     alert("The note position could not be saved. Please check your Firebase connection/permissions.");
   }
 }
+
+async function purgeQueuedNoteOrderOperations(){ await clearQueuedLayoutOps("notes"); }
 
 let editingNoteId = null;
 
@@ -5342,78 +5318,64 @@ function renderMemorize(){
 }
 
 let draggedMemoId=null;
+let draggedMemoCard=null;
+
 function setupMemoDragAndDrop(box){
   const cards=Array.from(box.querySelectorAll('.memo-draggable'));
   cards.forEach(card=>{
+    card.draggable=true;
     card.addEventListener('dragstart',event=>{
       const interactive=event.target.closest('button,input,textarea,select,a');
-      if(interactive){ event.preventDefault(); return; }
-      draggedMemoId=card.dataset.memoId;
-      card.classList.add('note-dragging');
-      if(event.dataTransfer){ event.dataTransfer.effectAllowed='move'; event.dataTransfer.setData('text/plain',draggedMemoId); }
-    });
-    card.addEventListener('dragend',()=>{
-      draggedMemoId=null;
-      cards.forEach(c=>c.classList.remove('note-drag-over','note-dragging'));
+      if(interactive){event.preventDefault();return;}
+      draggedMemoId=String(card.dataset.memoId||'');
+      draggedMemoCard=card;
+      card.classList.add('memo-dragging');
+      if(event.dataTransfer){
+        event.dataTransfer.effectAllowed='move';
+        event.dataTransfer.setData('text/plain',draggedMemoId);
+      }
     });
     card.addEventListener('dragover',event=>{
-      if(!draggedMemoId || draggedMemoId===card.dataset.memoId) return;
+      if(!draggedMemoCard || !draggedMemoId || draggedMemoId===String(card.dataset.memoId||'')) return;
       event.preventDefault();
-      if(event.dataTransfer) event.dataTransfer.dropEffect='move';
-      cards.forEach(c=>c.classList.remove('note-drag-over'));
-      card.classList.add('note-drag-over');
+      event.stopPropagation();
       const rect=card.getBoundingClientRect();
       const before=event.clientY < rect.top + rect.height/2;
-      const dragged=box.querySelector(`.memo-card[data-memo-id="${CSS.escape(draggedMemoId)}"]`);
-      if(!dragged) return;
-      if(before) box.insertBefore(dragged,card); else box.insertBefore(dragged,card.nextSibling);
+      if(before) box.insertBefore(draggedMemoCard,card);
+      else box.insertBefore(draggedMemoCard,card.nextSibling);
+      card.classList.add('memo-drag-over');
     });
-    card.addEventListener('drop',async event=>{
-      event.preventDefault();
-      cards.forEach(c=>c.classList.remove('note-drag-over'));
-      if(draggedMemoId) await saveMemoOrder(box);
+    card.addEventListener('dragleave',()=>card.classList.remove('memo-drag-over'));
+    card.addEventListener('drop',event=>{event.preventDefault();event.stopPropagation();card.classList.remove('memo-drag-over');});
+    card.addEventListener('dragend',async()=>{
+      cards.forEach(c=>c.classList.remove('memo-drag-over','memo-dragging'));
+      if(!draggedMemoCard) return;
+      const order=Array.from(box.querySelectorAll('.memo-card[data-memo-id]')).map(c=>String(c.dataset.memoId||'')).filter(Boolean);
+      draggedMemoCard=null;
+      draggedMemoId=null;
+      await saveMemoOrder(order);
     });
   });
 }
 
-async function saveMemoOrder(box){
-  if(!isAdmin) return;
-
-  const cards=Array.from(box.querySelectorAll('.memo-card[data-memo-id]'));
-  const order=cards.map(card=>String(card.dataset.memoId||'')).filter(Boolean);
-  if(!order.length) return;
-
-  const updatedAt=Date.now();
-  const payload={order:order.slice(),updatedAt,version:1};
+async function saveMemoOrder(order){
+  if(!isAdmin || !Array.isArray(order) || !order.length) return;
+  const payload={order:order.slice(),updatedAt:Date.now(),version:9};
   memorizeLayoutOrder=order.slice();
-
   try{
     if(navigator.onLine){
-      const updates={memorizeLayout:payload};
-
+      await set(ref(db,'memorizeLayout'),payload);
+      await clearQueuedLayoutOps('memorize');
+      const legacyUpdates={};
       order.forEach((id,index)=>{
-        updates[`memorize/${id}/order`]=index;
-        updates[`memorize/${id}/layoutUpdatedAt`]=updatedAt;
+        legacyUpdates["memorize/"+id+"/order"]=index;
+        legacyUpdates["memorize/"+id+"/layoutUpdatedAt"]=payload.updatedAt;
       });
-
-      await update(ref(db),updates);
+      await update(ref(db),legacyUpdates);
       await saveOfflineCollection("memorizeLayout",payload);
-
-      const queue=await idbAll("queue");
-      for(const op of queue){
-        const parts=splitOfflinePath(op.path);
-        const data=op?.data||{};
-        if(parts.collection!=="memorize" && parts.collection!=="memorizeLayout") continue;
-        const t=Number(data.layoutUpdatedAt||data.updatedAt||op?.queuedAt||0);
-        if(t && t<=updatedAt) await idbDelete("queue",op.id);
-      }
-
       renderMemorize();
     }else{
       await offlineSet("memorizeLayout",payload);
-      for(let i=0;i<order.length;i++){
-        await offlineUpdate(`memorize/${order[i]}`,{order:i,layoutUpdatedAt:updatedAt});
-      }
       renderMemorize();
     }
   }catch(error){
@@ -5708,7 +5670,7 @@ window.deleteMemo=async function(id){
 function enableMemoImageViewer(){
   document.querySelectorAll('#memorizeList .memo-content img').forEach(img=>{
     img.style.cursor='zoom-in';
-    img.onclick=()=>openNoteImageViewer(img.src,img.alt||'Study slide');
+    img.onclick=()=>openNoteImageViewer(img);
   });
 }
 window.renderMemorize=renderMemorize;
@@ -6871,6 +6833,7 @@ window.closeFilePreview=function(){document.getElementById("filePreviewModal")?.
    NOTE IMAGE VIEWER / FULLSCREEN
 ========================================================= */
 function openNoteImageViewer(img){
+  if(typeof img === "string"){ img = {src:img,currentSrc:img,alt:"Expanded image"}; }
   if(!img || !img.src) return;
   const modal=document.getElementById("noteImageViewer");
   const viewerImg=document.getElementById("noteImageViewerImage");
@@ -7055,6 +7018,38 @@ updateAdminUI();
 renderAll();
 
 updateChatNotification();
+
+async function migrateLegacyLayoutsOnce(){
+  if(!navigator.onLine) return;
+  try{
+    const once=path=>new Promise(resolve=>onValue(ref(db,path),snap=>resolve(snap),{onlyOnce:true}));
+    const ns=await once("noteLayout"); const nv=ns.val();
+    if(!Array.isArray(nv?.order) || !nv.order.length){
+      const ids=Object.entries(notesData||{}).sort((a,b)=>{
+        const ao=Number(a[1]?.order),bo=Number(b[1]?.order);
+        if(Number.isFinite(ao)&&Number.isFinite(bo)&&ao!==bo) return ao-bo;
+        const ac=Number(a[1]?.createdAt||0),bc=Number(b[1]?.createdAt||0);
+        if(ac!==bc) return ac-bc;
+        return String(a[0]).localeCompare(String(b[0]));
+      }).map(([id])=>String(id));
+      if(ids.length){const p={order:ids,updatedAt:Date.now(),version:9};await set(ref(db,"noteLayout"),p);noteLayoutOrder=ids.slice();}
+    }
+    const ms=await once("memorizeLayout"); const mv=ms.val();
+    if(!Array.isArray(mv?.order) || !mv.order.length){
+      const ids=Object.entries(memorizeData||{}).sort((a,b)=>{
+        const ao=Number(a[1]?.order),bo=Number(b[1]?.order);
+        if(Number.isFinite(ao)&&Number.isFinite(bo)&&ao!==bo) return ao-bo;
+        const ac=Number(a[1]?.createdAt||0),bc=Number(b[1]?.createdAt||0);
+        if(ac!==bc) return ac-bc;
+        return String(a[0]).localeCompare(String(b[0]));
+      }).map(([id])=>String(id));
+      if(ids.length){const p={order:ids,updatedAt:Date.now(),version:9};await set(ref(db,"memorizeLayout"),p);memorizeLayoutOrder=ids.slice();}
+    }
+    renderNotes();renderMemorize();
+  }catch(error){console.warn("Layout migration unavailable:",error);}
+}
+
+migrateLegacyLayoutsOnce();
 
 </script>
 
