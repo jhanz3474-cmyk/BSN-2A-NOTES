@@ -1155,45 +1155,6 @@ select:focus{
 .note-file-attachment .file-attachment-meta small{display:block;color:var(--muted);font-size:11px;margin-top:2px;}
 .note-file-attachment a{color:var(--primary);font-weight:700;text-decoration:none;font-size:12px;}
 
-.note-upload-row.dragover{
-  border-color:var(--primary);
-  background:var(--primarySoft);
-  box-shadow:0 0 0 2px var(--primarySoft);
-}
-.note-dropzone{
-  margin-top:8px;
-  width:100%;
-  padding:16px;
-  border:2px dashed var(--border);
-  border-radius:12px;
-  text-align:center;
-  color:var(--muted);
-  background:var(--surface);
-  transition:.15s ease;
-}
-.note-dropzone.dragover{
-  border-color:var(--primary);
-  background:var(--primarySoft);
-  color:var(--primary);
-  transform:scale(1.01);
-}
-.note-file-attachment{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin:10px 0;
-  padding:10px 12px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--surface2);
-  overflow-wrap:anywhere;
-}
-.note-file-attachment .file-attachment-icon{font-size:22px;flex:0 0 auto;}
-.note-file-attachment .file-attachment-meta{min-width:0;flex:1;}
-.note-file-attachment .file-attachment-meta strong{display:block;color:var(--text);font-size:13px;}
-.note-file-attachment .file-attachment-meta small{display:block;color:var(--muted);font-size:11px;margin-top:2px;}
-.note-file-attachment a{color:var(--primary);font-weight:700;text-decoration:none;font-size:12px;}
-
 .note-upload-status{font-size:11px;color:var(--muted);}
 .file-preview{width:100%;min-height:180px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .file-preview img,.file-preview video,.file-preview iframe,.file-preview object{width:100%;max-width:100%;height:60vh;border:0;object-fit:contain;}
@@ -3180,9 +3141,7 @@ and (orientation:landscape){
     <div id="noteFileDropZone" class="note-upload-row">
       <div class="note-dropzone" id="noteFileDropInner">
         <strong>📥 Drag & Drop Files Here</strong>
-        <div style="font-size:12px;margin-top:5px;">
-          Images, PDF, PPT/PPTX, DOC/DOCX, XLS/XLSX, TXT, CSV, ZIP and other files are accepted.
-        </div>
+        <div style="font-size:12px;margin-top:5px;">Images, PDF, PPT/PPTX, DOC/DOCX, XLS/XLSX, TXT, CSV, ZIP and other files are accepted.</div>
         <div class="form-buttons" style="justify-content:center;margin-top:10px;">
           <button type="button" class="btn" onclick="document.getElementById('noteFileInput').click()">📂 Choose File</button>
           <button type="button" class="btn" onclick="document.getElementById('noteImageInput').click()">🖼️ Add Image</button>
@@ -3393,187 +3352,70 @@ and (orientation:landscape){
 <script type="module">
 
 /* =========================================================
-   FIREBASE / ONLINE REST BRIDGE
-   The app uses Firebase Realtime Database REST calls instead of
-   browser-loaded Firebase SDK modules. This keeps the HTML itself
-   executable offline. Firebase Storage is loaded lazily only when
-   an admin actually uploads a file/image while online.
+   FIREBASE
 ========================================================= */
 
+import {
+  initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+  getDatabase,
+  ref,
+  push,
+  set,
+  update,
+  remove,
+  onValue,
+  serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+
 const firebaseConfig = {
-  apiKey:"AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
-  authDomain:"bsn-2a-notes.firebaseapp.com",
-  databaseURL:"https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:"bsn-2a-notes",
-  storageBucket:"bsn-2a-notes.firebasestorage.app",
-  messagingSenderId:"991210260962",
-  appId:"1:991210260962:web:8f6a886c7478be096991bb"
+
+  apiKey:
+    "AIzaSyA3IzXz0upKaOBSszJiMRBaKYGB4ajt24A",
+
+  authDomain:
+    "bsn-2a-notes.firebaseapp.com",
+
+  databaseURL:
+    "https://bsn-2a-notes-default-rtdb.asia-southeast1.firebasedatabase.app",
+
+  projectId:
+    "bsn-2a-notes",
+
+  storageBucket:
+    "bsn-2a-notes.firebasestorage.app",
+
+  messagingSenderId:
+    "991210260962",
+
+  appId:
+    "1:991210260962:web:8f6a886c7478be096991bb"
+
 };
 
-let firebaseReady = true;
 
-function initializeApp(config){
-  return {config};
-}
+const app =
+  initializeApp(
+    firebaseConfig
+  );
 
-function getDatabase(app){
-  return {databaseURL:app?.config?.databaseURL || firebaseConfig.databaseURL};
-}
 
-function ref(db,path=""){
-  return {db,path:String(path||"")};
-}
+const db =
+  getDatabase(app);
 
-function restUrl(target){
-  const base=String(firebaseConfig.databaseURL).replace(/\\/$/,"");
-  const clean=String(target?.path||"").split("/").filter(Boolean).map(encodeURIComponent).join("/");
-  return clean ? base + "/" + clean + ".json" : base + "/.json";
-}
+const storage = getStorage(app);
 
-async function restRequest(method,target,body){
-  const options={
-    method,
-    headers:{"Content-Type":"application/json"},
-    cache:"no-store"
-  };
-  if(body!==undefined) options.body=JSON.stringify(body);
-
-  const response=await fetch(restUrl(target),options);
-  if(!response.ok){
-    throw new Error(`Firebase REST ${method} failed: ${response.status}`);
-  }
-
-  const text=await response.text();
-  return text ? JSON.parse(text) : null;
-}
-
-function set(target,value){
-  return restRequest("PUT",target,value);
-}
-
-function update(target,value){
-  return restRequest("PATCH",target,value);
-}
-
-function remove(target){
-  return restRequest("DELETE",target);
-}
-
-function push(target){
-  const key =
-    "p_" +
-    Date.now().toString(36) +
-    "_" +
-    Math.random().toString(36).slice(2,11);
-
-  return {
-    db:target?.db,
-    path:String(target?.path||"").replace(/\\/$/,"") + "/" + key,
-    key
-  };
-}
-
-function serverTimestamp(){
-  return Date.now();
-}
-
-function snapshotFrom(value){
-  return {
-    val:()=>value,
-    exists:()=>value!==null && value!==undefined
-  };
-}
-
-function onValue(target,callback,errorCallback,options={}){
-  let stopped=false;
-  let timer=null;
-
-  const poll=async()=>{
-    if(stopped) return;
-
-    try{
-      const value=await restRequest("GET",target);
-      if(stopped) return;
-      callback(snapshotFrom(value));
-
-      if(options?.onlyOnce){
-        stopped=true;
-        return;
-      }
-    }catch(error){
-      if(stopped) return;
-      try{ errorCallback?.(error); }catch(_){}
-    }
-
-    if(!stopped){
-      timer=setTimeout(poll,3000);
-    }
-  };
-
-  poll();
-
-  return ()=>{
-    stopped=true;
-    if(timer) clearTimeout(timer);
-  };
-}
-
-/* Firebase Storage SDK is lazy-loaded only for actual online uploads. */
-let storageSdkPromise=null;
-let storage=null;
-
-async function ensureStorageSdk(){
-  if(storageSdkPromise) return storageSdkPromise;
-
-  storageSdkPromise=(async()=>{
-    if(!navigator.onLine){
-      throw new Error("Firebase Storage is unavailable while offline.");
-    }
-
-    const module=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js");
-    const getStorageFn=module.getStorage;
-    const refFn=module.ref;
-    const uploadBytesFn=module.uploadBytes;
-    const getDownloadURLFn=module.getDownloadURL;
-
-    const app=initializeApp(firebaseConfig);
-    storage=getStorageFn(app);
-
-    return {
-      storage,
-      ref:refFn,
-      uploadBytes:uploadBytesFn,
-      getDownloadURL:getDownloadURLFn
-    };
-  })();
-
-  try{
-    return await storageSdkPromise;
-  }catch(error){
-    storageSdkPromise=null;
-    throw error;
-  }
-}
-
-function getStorage(){
-  return {lazy:true};
-}
-
-function storageRef(){
-  throw new Error("Use uploadFileToStorage() for Firebase Storage uploads.");
-}
-
-async function uploadBytes(){
-  throw new Error("Use uploadFileToStorage() for Firebase Storage uploads.");
-}
-
-async function getDownloadURL(){
-  throw new Error("Use uploadFileToStorage() for Firebase Storage uploads.");
-}
-
-const app=initializeApp(firebaseConfig);
-const db=getDatabase(app);
-storage=getStorage();
 
 
 /* =========================================================
@@ -3999,11 +3841,12 @@ window.addEventListener("offline",()=>{
 
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{
-    navigator.serviceWorker.register("./sw.js?build=offline-v10",{updateViaCache:"none"})
+    navigator.serviceWorker.register("./sw.js?build=offline-v11",{updateViaCache:"none"})
       .then(reg=>reg.update().catch(()=>{}))
       .catch(error=>console.warn("Offline app shell could not be registered:",error));
   });
 }
+
 
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{
@@ -5260,8 +5103,7 @@ window.handleNoteImageSelection=async function(event){
 };
 
 function noteAttachmentIcon(file){
-  const name=String(file?.name||"").toLowerCase();
-  const type=String(file?.type||"").toLowerCase();
+  const name=String(file?.name||"").toLowerCase(), type=String(file?.type||"").toLowerCase();
   if(type.startsWith("image/")) return "🖼️";
   if(type.includes("pdf") || name.endsWith(".pdf")) return "📕";
   if(type.includes("presentation") || /\.pptx?$/.test(name)) return "📽️";
@@ -5271,127 +5113,42 @@ function noteAttachmentIcon(file){
   if(/\.(zip|rar|7z)$/.test(name)) return "🗜️";
   return "📎";
 }
-
-function noteFileSize(bytes){
-  const n=Number(bytes||0);
-  if(!n) return "";
-  const units=["B","KB","MB","GB"];
-  let i=0,v=n;
-  while(v>=1024 && i<units.length-1){v/=1024;i++;}
-  return v.toFixed(i?1:0)+" "+units[i];
-}
-
+function noteFileSize(bytes){const n=Number(bytes||0);if(!n)return "";const u=["B","KB","MB","GB"];let i=0,v=n;while(v>=1024&&i<u.length-1){v/=1024;i++;}return v.toFixed(i?1:0)+" "+u[i];}
 function insertNoteFileAttachmentHtml(url,fileName,fileType,fileSize){
-  const editor=document.getElementById("richNoteEditor");
-  if(!editor || !url) return;
-  const safeName=esc(fileName||"Attachment");
-  const safeUrl=esc(url);
-  const icon=noteAttachmentIcon({name:fileName,type:fileType});
-  const sizeText=fileSize ? " • "+esc(noteFileSize(fileSize)) : "";
-  const html =
-    '<div class="note-file-attachment" data-file-attachment="true">' +
-      '<div class="file-attachment-icon">'+icon+'</div>' +
-      '<div class="file-attachment-meta">' +
-        '<strong>'+safeName+'</strong>' +
-        '<small>'+esc(fileType||"File")+sizeText+'</small>' +
-      '</div>' +
-      '<a href="'+safeUrl+'" target="_blank" rel="noopener noreferrer">Open</a>' +
-    '</div><p><br></p>';
-  editor.focus();
-  document.execCommand("insertHTML",false,html);
+  const editor=document.getElementById("richNoteEditor"); if(!editor||!url)return;
+  const html='<div class="note-file-attachment" data-file-attachment="true"><div class="file-attachment-icon">'+noteAttachmentIcon({name:fileName,type:fileType})+'</div><div class="file-attachment-meta"><strong>'+esc(fileName||"Attachment")+'</strong><small>'+esc(fileType||"File")+(fileSize?" • "+esc(noteFileSize(fileSize)):"")+'</small></div><a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Open</a></div><p><br></p>';
+  editor.focus(); document.execCommand("insertHTML",false,html);
 }
-
 async function insertNoteDroppedFile(file){
-  if(!file) return;
-
-  const status=document.getElementById("noteImageUploadStatus");
-  const editor=document.getElementById("richNoteEditor");
-  if(!editor) return;
-
-  // Images use the existing responsive image pipeline.
-  if(/^image\//i.test(file.type||"")){
-    await insertImageFileIntoEditor(file,"Dropped image");
-    return;
-  }
-
-  if(!navigator.onLine){
-    if(status) status.textContent="You are offline. Image files can be embedded, but other file types need internet to upload.";
-    alert("PDFs and other attachments need internet access to upload. Please reconnect and drop the file again.");
-    return;
-  }
-
+  if(!file)return;
+  const status=document.getElementById("noteImageUploadStatus"), editor=document.getElementById("richNoteEditor");
+  if(!editor)return;
+  if(/^image\//i.test(file.type||"")){await insertImageFileIntoEditor(file,"Dropped image");return;}
+  if(!navigator.onLine){if(status)status.textContent="PDFs and other attachments need internet access to upload.";alert("PDFs and other attachments need internet access to upload. Please reconnect and drop the file again.");return;}
   try{
-    if(status) status.textContent="Uploading "+(file.name||"file")+"…";
+    if(status)status.textContent="Uploading "+(file.name||"file")+"…";
     const uploaded=await uploadFileToStorage(file,"group4-note-files");
-    if(uploaded?.downloadURL){
-      insertNoteFileAttachmentHtml(
-        uploaded.downloadURL,
-        uploaded.name || file.name,
-        uploaded.mimeType || file.type,
-        uploaded.size || file.size || 0
-      );
-      if(status) status.textContent="Added "+(file.name||"file")+" to the note.";
-    }else{
-      throw new Error("No download URL returned.");
-    }
+    if(!uploaded?.downloadURL)throw new Error("No download URL returned.");
+    insertNoteFileAttachmentHtml(uploaded.downloadURL,uploaded.name||file.name,uploaded.mimeType||file.type,uploaded.size||file.size||0);
+    if(status)status.textContent="Added "+(file.name||"file")+" to the note.";
   }catch(error){
     console.error("Could not upload note attachment:",error);
-    if(status) status.textContent="Attachment upload failed.";
+    if(status)status.textContent="Attachment upload failed.";
     alert("Could not upload "+(file.name||"that file")+". Check your internet connection and Firebase Storage permissions.");
   }
 }
-
 window.handleNoteFileSelection=async function(event){
-  if(!requireAdmin()) return;
+  if(!requireAdmin())return;
   const files=Array.from(event.target.files||[]);
   event.target.value="";
-  for(const file of files){
-    await insertNoteDroppedFile(file);
-  }
+  for(const file of files)await insertNoteDroppedFile(file);
 };
-
 function setupNoteFileDropZone(){
-  const zone=document.getElementById("noteFileDropInner");
-  if(!zone || zone.dataset.bound==="1") return;
-  zone.dataset.bound="1";
-
-  ["dragenter","dragover"].forEach(type=>{
-    zone.addEventListener(type,event=>{
-      event.preventDefault();
-      event.stopPropagation();
-      zone.classList.add("dragover");
-      const row=document.getElementById("noteFileDropZone");
-      row?.classList.add("dragover");
-      if(event.dataTransfer) event.dataTransfer.dropEffect="copy";
-    });
-  });
-
-  ["dragleave","dragend"].forEach(type=>{
-    zone.addEventListener(type,event=>{
-      event.preventDefault();
-      event.stopPropagation();
-      zone.classList.remove("dragover");
-      document.getElementById("noteFileDropZone")?.classList.remove("dragover");
-    });
-  });
-
-  zone.addEventListener("drop",async event=>{
-    event.preventDefault();
-    event.stopPropagation();
-    zone.classList.remove("dragover");
-    document.getElementById("noteFileDropZone")?.classList.remove("dragover");
-
-    if(!requireAdmin()) return;
-
-    const files=Array.from(event.dataTransfer?.files||[]);
-    if(!files.length) return;
-
-    for(const file of files){
-      await insertNoteDroppedFile(file);
-    }
-  });
+  const zone=document.getElementById("noteFileDropInner"); if(!zone||zone.dataset.bound==="1")return; zone.dataset.bound="1";
+  ["dragenter","dragover"].forEach(type=>zone.addEventListener(type,event=>{event.preventDefault();event.stopPropagation();zone.classList.add("dragover");document.getElementById("noteFileDropZone")?.classList.add("dragover");if(event.dataTransfer)event.dataTransfer.dropEffect="copy";}));
+  ["dragleave","dragend"].forEach(type=>zone.addEventListener(type,event=>{event.preventDefault();event.stopPropagation();zone.classList.remove("dragover");document.getElementById("noteFileDropZone")?.classList.remove("dragover");}));
+  zone.addEventListener("drop",async event=>{event.preventDefault();event.stopPropagation();zone.classList.remove("dragover");document.getElementById("noteFileDropZone")?.classList.remove("dragover");if(!requireAdmin())return;for(const file of Array.from(event.dataTransfer?.files||[]))await insertNoteDroppedFile(file);});
 }
-
 window.openNoteEditor = function(id=null){
 
   if(!requireAdmin()) return;
@@ -7195,21 +6952,7 @@ window.enableNoteImageViewer=enableNoteImageViewer;
 function renderFiles(){const box=document.getElementById("filesList");box.innerHTML="";const entries=Object.entries(filesData||{}).sort((a,b)=>Number(a[1]?.createdAt||0)-Number(b[1]?.createdAt||0));if(!entries.length){box.innerHTML=`<div class="empty">No clinical files added yet.</div>`;return;}entries.forEach(([id,f])=>{const e=document.createElement("div");e.className="file-card";const source=f.downloadURL||f.url||"";e.innerHTML=`<div class="file-icon">${fileTypeIcon(f.mimeType,f.name||f.title)}</div><h3>${esc(f.title||f.name||"Clinical File")}</h3>${f.description?`<p>${esc(cleanText(f.description))}</p>`:""}${f.name?`<p class="file-meta">${esc(f.name)}${f.size?` • ${esc(formatFileSize(f.size))}`:""}</p>`:""}${source?`<div class="form-buttons" style="margin-top:10px;"><button class="btn primary" onclick="previewFile('${id}')">📖 View in Website</button><a class="btn" href="${esc(safeFileUrl(source))}" target="_blank" rel="noopener">${f.downloadURL?"Open / Download":"Open Link"}</a></div>`:""}${isAdmin?`<div class="note-actions"><button class="btn danger" onclick="deleteFile('${id}')">Delete</button></div>`:""}`;box.appendChild(e);});}
 let selectedStorageFile=null;
 window.handleFileStorageSelection=function(event){selectedStorageFile=event.target.files?.[0]||null;const s=document.getElementById("fileUploadStatus");if(s)s.textContent=selectedStorageFile?`Selected: ${selectedStorageFile.name} • ${formatFileSize(selectedStorageFile.size)}`:"No local file selected.";};
-async function uploadFileToStorage(file,folder){
-  const sdk=await ensureStorageSdk();
-  const cleanName=String(file.name||"file").replace(/[^a-zA-Z0-9._-]+/g,"_");
-  const path=`${folder}/${Date.now()}_${Math.random().toString(36).slice(2,9)}_${cleanName}`;
-  const target=sdk.ref(sdk.storage,path);
-  const result=await sdk.uploadBytes(target,file,{contentType:file.type||"application/octet-stream"});
-  const url=await sdk.getDownloadURL(result.ref);
-  return {
-    downloadURL:url,
-    storagePath:path,
-    mimeType:file.type||"application/octet-stream",
-    name:file.name||cleanName,
-    size:file.size||0
-  };
-}
+async function uploadFileToStorage(file,folder){const cleanName=String(file.name||"file").replace(/[^a-zA-Z0-9._-]+/g,"_");const path=`${folder}/${Date.now()}_${Math.random().toString(36).slice(2,9)}_${cleanName}`;const target=storageRef(storage,path);const result=await uploadBytes(target,file,{contentType:file.type||"application/octet-stream"});const url=await getDownloadURL(result.ref);return {downloadURL:url,storagePath:path,mimeType:file.type||"application/octet-stream",name:file.name||cleanName,size:file.size||0};}
 
 
 window.addFile = async function(){if(!isAdmin)return;const title=document.getElementById("fileTitle").value.trim(),url=document.getElementById("fileUrl").value.trim(),description=document.getElementById("fileDescription").value.trim(),file=selectedStorageFile,status=document.getElementById("fileUploadStatus");if(!title&&!file){alert("Please enter a file title or select a file.");return;}if(!url&&!file){alert("Add a file from your device or enter a file URL.");return;}try{let uploaded={};if(file){if(status)status.textContent="Uploading file…";uploaded=await uploadFileToStorage(file,"group4-files");}await offlinePush("files",{title:title||file.name,url:url||"",description,...uploaded,createdAt:Date.now()});["fileTitle","fileUrl","fileDescription"].forEach(id=>document.getElementById(id).value="");const input=document.getElementById("fileStorageInput");if(input)input.value="";selectedStorageFile=null;if(status)status.textContent="File added successfully.";}catch(error){console.error(error);if(status)status.textContent="Upload failed.";alert("The file could not be uploaded. Check your internet connection and Firebase Storage permissions.");}};
