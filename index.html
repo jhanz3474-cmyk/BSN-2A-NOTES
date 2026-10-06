@@ -1146,6 +1146,45 @@ select:focus{
 .note-text table{width:100%;max-width:100%;border-collapse:collapse;display:block;overflow-x:auto;}
 .note-text pre,.note-text code{white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;}
 .note-upload-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;padding:8px;border:1px dashed var(--border);border-radius:10px;background:var(--surface2);}
+.note-upload-row.dragover{
+  border-color:var(--primary);
+  background:var(--primarySoft);
+  box-shadow:0 0 0 2px var(--primarySoft);
+}
+.note-dropzone{
+  margin-top:8px;
+  width:100%;
+  padding:16px;
+  border:2px dashed var(--border);
+  border-radius:12px;
+  text-align:center;
+  color:var(--muted);
+  background:var(--surface);
+  transition:.15s ease;
+}
+.note-dropzone.dragover{
+  border-color:var(--primary);
+  background:var(--primarySoft);
+  color:var(--primary);
+  transform:scale(1.01);
+}
+.note-file-attachment{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:10px 0;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface2);
+  overflow-wrap:anywhere;
+}
+.note-file-attachment .file-attachment-icon{font-size:22px;flex:0 0 auto;}
+.note-file-attachment .file-attachment-meta{min-width:0;flex:1;}
+.note-file-attachment .file-attachment-meta strong{display:block;color:var(--text);font-size:13px;}
+.note-file-attachment .file-attachment-meta small{display:block;color:var(--muted);font-size:11px;margin-top:2px;}
+.note-file-attachment a{color:var(--primary);font-weight:700;text-decoration:none;font-size:12px;}
+
 .note-upload-status{font-size:11px;color:var(--muted);}
 .file-preview{width:100%;min-height:180px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .file-preview img,.file-preview video,.file-preview iframe,.file-preview object{width:100%;max-width:100%;height:60vh;border:0;object-fit:contain;}
@@ -3129,10 +3168,20 @@ and (orientation:landscape){
 
     <div id="richNoteEditor" class="rich-note-editor" contenteditable="true" spellcheck="true" onpaste="handleNotePaste(event)"></div>
 
-    <div class="note-upload-row">
-      <button type="button" class="btn" onclick="document.getElementById('noteImageInput').click()">🖼️ Add Image from Device</button>
-      <input id="noteImageInput" type="file" accept="image/*" style="display:none" onchange="handleNoteImageSelection(event)">
-      <span id="noteImageUploadStatus" class="note-upload-status">Images are inserted into the note layout.</span>
+    <div id="noteFileDropZone" class="note-upload-row">
+      <div class="note-dropzone" id="noteFileDropInner">
+        <strong>📥 Drag & Drop Files Here</strong>
+        <div style="font-size:12px;margin-top:5px;">
+          Images, PDF, PPT/PPTX, DOC/DOCX, XLS/XLSX, TXT, CSV, ZIP and other files are accepted.
+        </div>
+        <div class="form-buttons" style="justify-content:center;margin-top:10px;">
+          <button type="button" class="btn" onclick="document.getElementById('noteFileInput').click()">📂 Choose File</button>
+          <button type="button" class="btn" onclick="document.getElementById('noteImageInput').click()">🖼️ Add Image</button>
+        </div>
+        <input id="noteFileInput" type="file" style="display:none" multiple onchange="handleNoteFileSelection(event)">
+        <input id="noteImageInput" type="file" accept="image/*" style="display:none" onchange="handleNoteImageSelection(event)">
+        <span id="noteImageUploadStatus" class="note-upload-status">Drop a file here or choose one from your device.</span>
+      </div>
     </div>
 
     <div class="modal-buttons">
@@ -5201,6 +5250,139 @@ window.handleNoteImageSelection=async function(event){
   await insertImageFileIntoEditor(file,"Device image");
 };
 
+function noteAttachmentIcon(file){
+  const name=String(file?.name||"").toLowerCase();
+  const type=String(file?.type||"").toLowerCase();
+  if(type.startsWith("image/")) return "🖼️";
+  if(type.includes("pdf") || name.endsWith(".pdf")) return "📕";
+  if(type.includes("presentation") || /\.pptx?$/.test(name)) return "📽️";
+  if(type.includes("word") || /\.docx?$/.test(name)) return "📝";
+  if(type.includes("sheet") || /\.xlsx?$/.test(name)) return "📊";
+  if(type.startsWith("text/") || /\.(txt|csv)$/.test(name)) return "📄";
+  if(/\.(zip|rar|7z)$/.test(name)) return "🗜️";
+  return "📎";
+}
+
+function noteFileSize(bytes){
+  const n=Number(bytes||0);
+  if(!n) return "";
+  const units=["B","KB","MB","GB"];
+  let i=0,v=n;
+  while(v>=1024 && i<units.length-1){v/=1024;i++;}
+  return v.toFixed(i?1:0)+" "+units[i];
+}
+
+function insertNoteFileAttachmentHtml(url,fileName,fileType,fileSize){
+  const editor=document.getElementById("richNoteEditor");
+  if(!editor || !url) return;
+  const safeName=esc(fileName||"Attachment");
+  const safeUrl=esc(url);
+  const icon=noteAttachmentIcon({name:fileName,type:fileType});
+  const sizeText=fileSize ? " • "+esc(noteFileSize(fileSize)) : "";
+  const html =
+    '<div class="note-file-attachment" data-file-attachment="true">' +
+      '<div class="file-attachment-icon">'+icon+'</div>' +
+      '<div class="file-attachment-meta">' +
+        '<strong>'+safeName+'</strong>' +
+        '<small>'+esc(fileType||"File")+sizeText+'</small>' +
+      '</div>' +
+      '<a href="'+safeUrl+'" target="_blank" rel="noopener noreferrer">Open</a>' +
+    '</div><p><br></p>';
+  editor.focus();
+  document.execCommand("insertHTML",false,html);
+}
+
+async function insertNoteDroppedFile(file){
+  if(!file) return;
+
+  const status=document.getElementById("noteImageUploadStatus");
+  const editor=document.getElementById("richNoteEditor");
+  if(!editor) return;
+
+  // Images use the existing responsive image pipeline.
+  if(/^image\//i.test(file.type||"")){
+    await insertImageFileIntoEditor(file,"Dropped image");
+    return;
+  }
+
+  if(!navigator.onLine){
+    if(status) status.textContent="You are offline. Image files can be embedded, but other file types need internet to upload.";
+    alert("PDFs and other attachments need internet access to upload. Please reconnect and drop the file again.");
+    return;
+  }
+
+  try{
+    if(status) status.textContent="Uploading "+(file.name||"file")+"…";
+    const uploaded=await uploadFileToStorage(file,"group4-note-files");
+    if(uploaded?.downloadURL){
+      insertNoteFileAttachmentHtml(
+        uploaded.downloadURL,
+        uploaded.name || file.name,
+        uploaded.mimeType || file.type,
+        uploaded.size || file.size || 0
+      );
+      if(status) status.textContent="Added "+(file.name||"file")+" to the note.";
+    }else{
+      throw new Error("No download URL returned.");
+    }
+  }catch(error){
+    console.error("Could not upload note attachment:",error);
+    if(status) status.textContent="Attachment upload failed.";
+    alert("Could not upload "+(file.name||"that file")+". Check your internet connection and Firebase Storage permissions.");
+  }
+}
+
+window.handleNoteFileSelection=async function(event){
+  if(!requireAdmin()) return;
+  const files=Array.from(event.target.files||[]);
+  event.target.value="";
+  for(const file of files){
+    await insertNoteDroppedFile(file);
+  }
+};
+
+function setupNoteFileDropZone(){
+  const zone=document.getElementById("noteFileDropInner");
+  if(!zone || zone.dataset.bound==="1") return;
+  zone.dataset.bound="1";
+
+  ["dragenter","dragover"].forEach(type=>{
+    zone.addEventListener(type,event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      zone.classList.add("dragover");
+      const row=document.getElementById("noteFileDropZone");
+      row?.classList.add("dragover");
+      if(event.dataTransfer) event.dataTransfer.dropEffect="copy";
+    });
+  });
+
+  ["dragleave","dragend"].forEach(type=>{
+    zone.addEventListener(type,event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      zone.classList.remove("dragover");
+      document.getElementById("noteFileDropZone")?.classList.remove("dragover");
+    });
+  });
+
+  zone.addEventListener("drop",async event=>{
+    event.preventDefault();
+    event.stopPropagation();
+    zone.classList.remove("dragover");
+    document.getElementById("noteFileDropZone")?.classList.remove("dragover");
+
+    if(!requireAdmin()) return;
+
+    const files=Array.from(event.dataTransfer?.files||[]);
+    if(!files.length) return;
+
+    for(const file of files){
+      await insertNoteDroppedFile(file);
+    }
+  });
+}
+
 window.openNoteEditor = function(id=null){
 
   if(!requireAdmin()) return;
@@ -5236,6 +5418,7 @@ window.openNoteEditor = function(id=null){
   }
 
   document.getElementById("noteEditorModal").classList.add("show");
+  setupNoteFileDropZone();
   setTimeout(()=>title.focus(),50);
 };
 
