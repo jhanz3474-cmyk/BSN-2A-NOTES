@@ -2185,6 +2185,22 @@ and (orientation:landscape){
 
 
 .memo-link-hint{margin:10px 0 14px;padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--surface2);color:var(--muted);font-size:13px;}
+.profile-button{cursor:pointer;text-align:left;}
+.profile-button:focus-visible{outline:2px solid var(--primary);outline-offset:2px;}
+.user-name-wrap{display:flex;flex-direction:column;min-width:0;}
+.user-detail{display:block;margin-top:2px;color:var(--muted2);font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;}
+.profile-note{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--muted);font-size:11px;line-height:1.5;}
+.profile-modal-box{width:min(460px,100%);}
+.visitor-actions{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.login-visitor{margin-top:8px;}
+.visitor-access-note{margin-top:8px;font-size:11px;color:var(--muted2);text-align:center;}
+body.visitor-mode .nav > .group-header{display:none !important;}
+body.visitor-mode #mainNav,body.visitor-mode #systemNav{display:none !important;}
+body.visitor-mode #groupNav{display:flex !important;}
+body.visitor-mode #groupNav button{display:none !important;}
+body.visitor-mode #groupNav button[onclick*="memorize"]{display:flex !important;}
+body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
+
 .memo-link-card{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .memo-link-card span{flex:1;min-width:180px;}
 </style>
@@ -2203,6 +2219,8 @@ and (orientation:landscape){
     <input id="loginName" type="text" placeholder="Your name" autocomplete="name">
     <input id="loginPassword" type="password" placeholder="Group password" autocomplete="current-password" onkeydown="if(event.key==='Enter') loginUser()">
     <button class="btn primary" style="width:100%;" onclick="loginUser()">Enter Group 4</button>
+    <button class="btn login-visitor" style="width:100%;" onclick="visitSiteOnly()">👀 Visit Site Only</button>
+    <div class="visitor-access-note">Visitor mode gives access to School Notes only and does not require the group password.</div>
     <div id="loginError" class="login-error"></div>
   </div>
 </div>
@@ -2508,22 +2526,20 @@ and (orientation:landscape){
 
       <!-- USER -->
 
-      <div class="userbox">
-
-        <div
-          class="user-avatar"
-          id="userAvatar"
-        >
-          S
-        </div>
-
-        <span
-          class="user-name"
-          id="currentUser"
-        >
-          Student
+      <div
+        class="userbox profile-button"
+        role="button"
+        tabindex="0"
+        title="Open profile"
+        aria-label="Open profile"
+        onclick="openProfileModal()"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openProfileModal();}"
+      >
+        <div class="user-avatar" id="userAvatar">S</div>
+        <span class="user-name-wrap">
+          <span class="user-name" id="currentUser">Student</span>
+          <small class="user-detail" id="currentUserDetail">Group 4</small>
         </span>
-
       </div>
 
 
@@ -3171,6 +3187,27 @@ and (orientation:landscape){
 
 
 <!-- =======================================================
+     PROFILE MODAL
+======================================================= -->
+<div id="profileModal" class="modal">
+  <div class="modal-box profile-modal-box">
+    <h3>👤 My Profile</h3>
+    <div class="profile-note">Change the name and profile detail shown on this device.</div>
+    <div style="height:10px;"></div>
+    <input id="profileName" placeholder="Display name" autocomplete="name">
+    <div style="height:9px;"></div>
+    <input id="profileDetail" placeholder="Profile detail (e.g. BSN 2A • Group 4)">
+    <div class="modal-buttons">
+      <button class="btn" onclick="closeProfileModal()">Cancel</button>
+      <button class="btn primary" onclick="saveProfile()">Save Changes</button>
+    </div>
+    <div id="visitorProfileActions" class="visitor-actions" style="display:none;">
+      <button class="btn" style="width:100%;" onclick="returnToGroupLogin()">🔐 Return to Group Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- =======================================================
      MEMBER MODAL
 ======================================================= -->
 
@@ -3796,22 +3833,53 @@ let editingMemberId = null;
 const GROUP_PASSWORD = "supboi";
 
 let userName = localStorage.getItem("nursingDutyName") || "";
+let userDetail = localStorage.getItem("nursingDutyDetail") || "Group 4";
 
-function initializeUserDisplay(name){
+function isVisitorMode(){
+  return localStorage.getItem("nursingDutyVisitor") === "true";
+}
 
+function setVisitorMode(enabled){
+  if(enabled){
+    localStorage.setItem("nursingDutyVisitor","true");
+    localStorage.removeItem("nursingDutyLoggedIn");
+  }else{
+    localStorage.removeItem("nursingDutyVisitor");
+  }
+  document.body.classList.toggle("visitor-mode", Boolean(enabled));
+}
+
+function focusSchoolNotes(){
+  const button = document.querySelector('#groupNav button[onclick*="memorize"]');
+  if(button) show("memorize",button);
+}
+
+function applyAccessMode(){
+  const visitor = isVisitorMode();
+  document.body.classList.toggle("visitor-mode", visitor);
+  if(visitor){
+    isAdmin = false;
+    const adminButton = document.getElementById("admBtn");
+    if(adminButton) adminButton.textContent = "Admin";
+    if(typeof updateAdminUI === "function") updateAdminUI();
+  }
+}
+
+function initializeUserDisplay(name, detail){
   userName = String(name || "").trim() || "Student";
+  userDetail = String(detail ?? userDetail ?? "Group 4").trim() || "Group 4";
 
   document.getElementById("currentUser").textContent = userName;
+  const detailNode = document.getElementById("currentUserDetail");
+  if(detailNode) detailNode.textContent = userDetail;
 
-  const initials = userName
-    .split(/\s+/)
-    .map(x => x[0])
-    .join("")
-    .slice(0,2)
-    .toUpperCase();
-
+  const initials = userName.split(/\s+/).map(x => x[0]).join("").slice(0,2).toUpperCase();
   document.getElementById("userAvatar").textContent = initials || "S";
-  document.getElementById("welcomeText").textContent = `Welcome, ${userName} 👋`;
+  document.getElementById("welcomeText").textContent = isVisitorMode()
+    ? "Welcome to School Notes 👀"
+    : `Welcome, ${userName} 👋`;
+
+  applyAccessMode();
 }
 
 function showLogin(){
@@ -3824,8 +3892,18 @@ function hideLogin(){
   if(screen) screen.style.display = "none";
 }
 
-window.loginUser = function(){
+window.visitSiteOnly = function(){
+  setVisitorMode(true);
+  localStorage.setItem("nursingDutyName","Visitor");
+  localStorage.setItem("nursingDutyDetail","School Notes Visitor");
+  const error = document.getElementById("loginError");
+  if(error) error.style.display = "none";
+  hideLogin();
+  initializeUserDisplay("Visitor","School Notes Visitor");
+  focusSchoolNotes();
+};
 
+window.loginUser = function(){
   const name = document.getElementById("loginName").value.trim();
   const password = document.getElementById("loginPassword").value;
   const error = document.getElementById("loginError");
@@ -3842,29 +3920,78 @@ window.loginUser = function(){
     return;
   }
 
+  setVisitorMode(false);
   localStorage.setItem("nursingDutyName", name);
+  localStorage.setItem("nursingDutyDetail", "Group 4");
   localStorage.setItem("nursingDutyLoggedIn", "true");
-
   error.style.display = "none";
   hideLogin();
-  initializeUserDisplay(name);
+  initializeUserDisplay(name,"Group 4");
+};
+
+window.openProfileModal = function(){
+  const modal = document.getElementById("profileModal");
+  if(!modal) return;
+  document.getElementById("profileName").value = userName || "Student";
+  document.getElementById("profileDetail").value = userDetail || (isVisitorMode() ? "School Notes Visitor" : "Group 4");
+  const visitorActions = document.getElementById("visitorProfileActions");
+  if(visitorActions) visitorActions.style.display = isVisitorMode() ? "block" : "none";
+  modal.classList.add("show");
+};
+
+window.closeProfileModal = function(){
+  document.getElementById("profileModal")?.classList.remove("show");
+};
+
+window.saveProfile = function(){
+  const name = document.getElementById("profileName").value.trim();
+  const detail = document.getElementById("profileDetail").value.trim();
+  if(!name){
+    alert("Please enter a display name.");
+    return;
+  }
+  userName = name;
+  userDetail = detail || (isVisitorMode() ? "School Notes Visitor" : "Group 4");
+  localStorage.setItem("nursingDutyName", userName);
+  localStorage.setItem("nursingDutyDetail", userDetail);
+  if(!isVisitorMode()) localStorage.setItem("nursingDutyLoggedIn","true");
+  initializeUserDisplay(userName,userDetail);
+  closeProfileModal();
+};
+
+window.returnToGroupLogin = function(){
+  setVisitorMode(false);
+  localStorage.removeItem("nursingDutyName");
+  localStorage.removeItem("nursingDutyDetail");
+  closeProfileModal();
+  showLogin();
+  document.getElementById("loginName").value = "";
+  document.getElementById("loginPassword").value = "";
 };
 
 function ensureGroupLogin(){
-
   const loggedIn = localStorage.getItem("nursingDutyLoggedIn") === "true";
+  const visitor = isVisitorMode();
   const savedName = localStorage.getItem("nursingDutyName");
+  const savedDetail = localStorage.getItem("nursingDutyDetail") || (visitor ? "School Notes Visitor" : "Group 4");
+
+  if(visitor){
+    hideLogin();
+    initializeUserDisplay(savedName || "Visitor", savedDetail);
+    focusSchoolNotes();
+    return;
+  }
 
   if(loggedIn && savedName){
     hideLogin();
-    initializeUserDisplay(savedName);
+    initializeUserDisplay(savedName, savedDetail);
   }else{
     showLogin();
   }
 }
 
 if(userName){
-  initializeUserDisplay(userName);
+  initializeUserDisplay(userName, userDetail);
 }
 
 
@@ -4108,6 +4235,11 @@ if(
 window.show =
 function(section,button){
 
+  if(isVisitorMode() && section !== "memorize"){
+    focusSchoolNotes();
+    return;
+  }
+
   document
     .querySelectorAll(
       ".section"
@@ -4225,31 +4357,17 @@ function(section,button){
 window.goToSection =
 function(section){
 
-  const buttons =
-    document.querySelectorAll(
-      ".nav button"
-    );
+  if(isVisitorMode()){
+    if(section === "memorize") focusSchoolNotes();
+    else focusSchoolNotes();
+    return;
+  }
 
-
-  const map = {
-
-    dashboard:0,
-    notes:1,
-    memorize:2,
-    schedule:3,
-    members:4,
-    chat:5,
-    files:6,
-    about:7
-
-  };
-
-
-  show(
-    section,
-    buttons[map[section]]
+  const button = Array.from(document.querySelectorAll(".nav button")).find(
+    element => (element.getAttribute("onclick") || "").includes(`show('${section}',this)`)
   );
 
+  show(section,button);
 };
 
 
@@ -4361,6 +4479,11 @@ applyTheme(
 
 window.adminLogin =
 function(){
+
+  if(isVisitorMode()){
+    focusSchoolNotes();
+    return;
+  }
 
   if(isAdmin){
 
@@ -6544,6 +6667,10 @@ function renderAll(){
 /* =========================================================
    MODAL CLICK OUTSIDE
 ========================================================= */
+
+document.getElementById("profileModal")?.addEventListener("click", event => {
+  if(event.target.id === "profileModal") closeProfileModal();
+});
 
 document.getElementById(
   "adminModal"
