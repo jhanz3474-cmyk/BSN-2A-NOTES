@@ -2186,6 +2186,30 @@ and (orientation:landscape){
 }
 
 
+
+
+/* Mobile interaction hardening */
+@media(max-width:700px){
+  button,
+  .btn,
+  .nav button,
+  .dashboard-link,
+  .member,
+  .member-preview-item{
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+
+  .nav button,
+  .btn{
+    min-height:42px;
+  }
+
+  .dashboard-link{
+    min-height:90px;
+  }
+}
+
 /* =========================================================
    REDUCED MOTION
 ========================================================= */
@@ -3873,22 +3897,21 @@ window.addEventListener("offline",()=>{
   console.log("BSN 2A Group 4 is now offline. Changes will be stored on this device.");
 });
 
+/* Legacy service worker cleanup.
+   The app now runs directly from GitHub Pages. This removes stale mobile
+   caches that could otherwise serve an old, non-interactive build. */
 if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>{
-    navigator.serviceWorker.register("./sw.js?build=offline-v11",{updateViaCache:"none"})
-      .then(reg=>reg.update().catch(()=>{}))
-      .catch(error=>console.warn("Offline app shell could not be registered:",error));
-  });
-}
-
-
-if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>{
-    navigator.serviceWorker.register("./sw.js?v=bsn2a-v6-memorize", {updateViaCache:"none"}).then(reg=>{
-      reg.update().catch(()=>{});
-    }).catch(error=>{
-      console.warn("Offline app cache could not be registered:",error);
-    });
+  window.addEventListener("load",async()=>{
+    try{
+      const registrations=await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map(reg=>reg.unregister()));
+      if("caches" in window){
+        const keys=await caches.keys();
+        await Promise.all(keys.map(key=>caches.delete(key)));
+      }
+    }catch(error){
+      console.warn("Could not clear legacy offline cache:",error);
+    }
   });
 }
 
