@@ -3192,11 +3192,9 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
 <div id="profileModal" class="modal">
   <div class="modal-box profile-modal-box">
     <h3>👤 My Profile</h3>
-    <div class="profile-note">Change the name and profile detail shown on this device.</div>
+    <div class="profile-note">You can change your display name. Group details are fixed.</div>
     <div style="height:10px;"></div>
     <input id="profileName" placeholder="Display name" autocomplete="name">
-    <div style="height:9px;"></div>
-    <input id="profileDetail" placeholder="Profile detail (e.g. BSN 2A • Group 4)">
     <div class="modal-buttons">
       <button class="btn" onclick="closeProfileModal()">Cancel</button>
       <button class="btn primary" onclick="saveProfile()">Save Changes</button>
@@ -3895,7 +3893,6 @@ function hideLogin(){
 window.visitSiteOnly = function(){
   setVisitorMode(true);
   localStorage.setItem("nursingDutyName","Visitor");
-  localStorage.setItem("nursingDutyDetail","School Notes Visitor");
   const error = document.getElementById("loginError");
   if(error) error.style.display = "none";
   hideLogin();
@@ -3922,7 +3919,6 @@ window.loginUser = function(){
 
   setVisitorMode(false);
   localStorage.setItem("nursingDutyName", name);
-  localStorage.setItem("nursingDutyDetail", "Group 4");
   localStorage.setItem("nursingDutyLoggedIn", "true");
   error.style.display = "none";
   hideLogin();
@@ -3933,7 +3929,6 @@ window.openProfileModal = function(){
   const modal = document.getElementById("profileModal");
   if(!modal) return;
   document.getElementById("profileName").value = userName || "Student";
-  document.getElementById("profileDetail").value = userDetail || (isVisitorMode() ? "School Notes Visitor" : "Group 4");
   const visitorActions = document.getElementById("visitorProfileActions");
   if(visitorActions) visitorActions.style.display = isVisitorMode() ? "block" : "none";
   modal.classList.add("show");
@@ -3945,17 +3940,18 @@ window.closeProfileModal = function(){
 
 window.saveProfile = function(){
   const name = document.getElementById("profileName").value.trim();
-  const detail = document.getElementById("profileDetail").value.trim();
+
   if(!name){
     alert("Please enter a display name.");
     return;
   }
+
   userName = name;
-  userDetail = detail || (isVisitorMode() ? "School Notes Visitor" : "Group 4");
   localStorage.setItem("nursingDutyName", userName);
-  localStorage.setItem("nursingDutyDetail", userDetail);
+
   if(!isVisitorMode()) localStorage.setItem("nursingDutyLoggedIn","true");
-  initializeUserDisplay(userName,userDetail);
+
+  initializeUserDisplay(userName, userDetail);
   closeProfileModal();
 };
 
