@@ -1507,84 +1507,6 @@ select:focus{
 
 
 /* =========================================================
-   CHAT
-========================================================= */
-
-.chat{
-  max-width:900px;
-}
-
-.chatlog{
-  background:
-    var(--surface);
-
-  border:
-    1px solid var(--border);
-
-  border-radius:14px;
-
-  padding:15px;
-
-  height:55vh;
-
-  overflow-y:auto;
-}
-
-.msg{
-  padding:
-    10px 13px;
-
-  margin:
-    8px 0;
-
-  border-radius:12px;
-
-  max-width:85%;
-
-  background:
-    var(--surface2);
-
-  white-space:pre-wrap;
-
-  overflow-wrap:anywhere;
-
-  line-height:1.5;
-}
-
-.msg.me{
-  margin-left:auto;
-
-  background:
-    var(--primarySoft);
-}
-
-.msg-name{
-  display:block;
-
-  font-size:10px;
-
-  font-weight:bold;
-
-  color:
-    var(--primary);
-
-  margin-bottom:3px;
-}
-
-.chatrow{
-  display:flex;
-
-  gap:8px;
-
-  margin-top:10px;
-}
-
-.chatrow input{
-  flex:1;
-}
-
-
-/* =========================================================
    FILES
 ========================================================= */
 
@@ -2459,24 +2381,7 @@ and (orientation:landscape){
         </span>
 
       </button>
-
-
-      <button
-        onclick="show('chat',this)"
-      >
-
-        <span class="nav-icon">
-          💬
-        </span>
-
-        <span>
-          Group Chat
-        </span>
-
-      </button>
-
-
-      <button
+<button
         onclick="show('files',this)"
       >
 
@@ -2584,26 +2489,7 @@ and (orientation:landscape){
 
 
       <!-- NOTIFICATION -->
-
-      <button
-        id="notificationButton"
-        class="theme-toggle notification-button"
-        onclick="openNotifications()"
-        title="No new messages"
-        aria-label="Chat notifications"
-      >
-
-        🔔
-
-        <span
-          id="notificationDot"
-          class="notification-dot"
-        ></span>
-
-      </button>
-
-
-      <!-- THEME -->
+<!-- THEME -->
 
       <button
         id="themeToggle"
@@ -2664,8 +2550,7 @@ and (orientation:landscape){
 
       <p>
         Keep your nursing notes, requirements,
-        duty schedule, group members, files,
-        and group communication organized.
+        duty schedule, group members, and shared files organized.
       </p>
 
     </div>
@@ -2830,8 +2715,7 @@ and (orientation:landscape){
 
 
     <div class="content-filter" role="group" aria-label="Nursing Notes filter">
-      <button class="btn small filter-btn active" data-filter="all" onclick="setNoteFilter('all',this)">All</button>
-      <button class="btn small filter-btn" data-filter="note" onclick="setNoteFilter('note',this)">📝 Actual Notes</button>
+      <button class="btn small filter-btn active" data-filter="note" onclick="setNoteFilter('note',this)">📝 Actual Notes</button>
       <button class="btn small filter-btn" data-filter="link" onclick="setNoteFilter('link',this)">🔗 Links / References</button>
     </div>
 
@@ -2861,8 +2745,7 @@ and (orientation:landscape){
     <div class="memo-link-hint">🔗 Add school materials using links. Google Drive, Google Slides, Google Docs, Canva, OneDrive, Dropbox, PDFs, and other web links are supported.</div>
 
     <div class="content-filter" role="group" aria-label="School Notes filter">
-      <button class="btn small filter-btn active" data-filter="all" onclick="setMemoFilter('all',this)">All</button>
-      <button class="btn small filter-btn" data-filter="note" onclick="setMemoFilter('note',this)">📝 Actual Notes</button>
+      <button class="btn small filter-btn active" data-filter="note" onclick="setMemoFilter('note',this)">📝 Actual Notes</button>
       <button class="btn small filter-btn" data-filter="link" onclick="setMemoFilter('link',this)">🔗 Links / References</button>
     </div>
 
@@ -2983,57 +2866,7 @@ and (orientation:landscape){
 
   </section>
 
-
-  <!-- =====================================================
-       GROUP CHAT
-  ====================================================== -->
-
-  <section
-    id="chat"
-    class="section"
-  >
-
-
-    <div class="chat">
-
-
-      <div
-        id="chatlog"
-        class="chatlog"
-      ></div>
-
-
-      <div class="chatrow">
-
-        <input
-          id="chatInput"
-          type="text"
-          placeholder="Message your duty group..."
-          onkeydown="
-            if(event.key==='Enter'){
-              sendChat();
-            }
-          "
-        >
-
-
-        <button
-          class="btn primary"
-          onclick="sendChat()"
-        >
-          Send
-        </button>
-
-      </div>
-
-
-    </div>
-
-
-  </section>
-
-
-  <!-- =====================================================
+<!-- =====================================================
        FILES
   ====================================================== -->
 
@@ -3642,7 +3475,6 @@ function setGlobalCollection(collection,data){
   if(collection === "memorize") memorizeData = value;
   if(collection === "schedule") scheduleData = value;
   if(collection === "members") membersData = value;
-  if(collection === "chat") chatData = value;
   if(collection === "files") filesData = value;
 
   if(collection === "notes") renderNotes?.();
@@ -3652,7 +3484,6 @@ function setGlobalCollection(collection,data){
     renderMembers?.();
     renderMemberPreview?.();
   }
-  if(collection === "chat") renderChat?.();
   if(collection === "files") renderFiles?.();
 }
 
@@ -3951,22 +3782,11 @@ let memorizeLayoutOrder = [];
 let memorizeData = {};
 let scheduleData = {};
 let membersData = {};
-let chatData = {};
 let filesData = {};
 
 let isAdmin = false;
 
 let editingMemberId = null;
-
-
-/* =========================================================
-   CHAT NOTIFICATION STATE
-========================================================= */
-
-let unreadChat = false;
-
-const chatSeenKey =
-  "nursingDutyLastSeenChat";
 
 
 /* =========================================================
@@ -4363,10 +4183,6 @@ function(section,button){
       "Your nursing duty group"
     ],
 
-    chat:[
-      "Group Chat",
-      "Communicate with your group"
-    ],
 
     files:[
       "Files",
@@ -4399,22 +4215,6 @@ function(section,button){
     "pageSubtitle"
   ).textContent =
     data[1];
-
-
-  /*
-
-    If the user opens Group Chat,
-    immediately mark the newest chat
-    as seen.
-
-  */
-
-  if(section === "chat"){
-
-    markChatAsSeen();
-
-  }
-
 };
 
 
@@ -4960,8 +4760,8 @@ async function saveNoteOrder(order){
 async function purgeQueuedNoteOrderOperations(){ await clearQueuedLayoutOps("notes"); }
 
 let editingNoteId = null;
-let nursingNoteFilter = "all";
-let schoolNoteFilter = "all";
+let nursingNoteFilter = "note";
+let schoolNoteFilter = "note";
 
 function isLinkNote(item){
   return String(item?.type || "").toLowerCase() === "link" || Boolean(String(item?.link || "").trim());
@@ -6625,382 +6425,6 @@ async function(id){
 
 
 /* =========================================================
-   CHAT
-========================================================= */
-
-offlineOnValue("chat",
-  snapshot => {
-
-    chatData =
-      snapshot.val() ||
-      {};
-
-    renderChat();
-
-
-    /*
-      Check the newest message.
-    */
-
-    const messages =
-      Object.values(
-        chatData
-      );
-
-
-    let newestTime = 0;
-
-    let newestMessage = null;
-
-
-    messages.forEach(
-      message => {
-
-        const time =
-          Number(
-            message.createdAt ||
-            0
-          );
-
-
-        if(
-          time >
-          newestTime
-        ){
-
-          newestTime =
-            time;
-
-          newestMessage =
-            message;
-
-        }
-
-      }
-    );
-
-
-    const lastSeen =
-      getLastSeenChat();
-
-
-    if(
-      newestMessage &&
-      newestMessage.author !== userName &&
-      newestTime > lastSeen
-    ){
-
-      unreadChat =
-        true;
-
-    }
-
-
-    updateChatNotification();
-
-  }
-);
-
-
-/* =========================================================
-   CHAT LAST SEEN
-========================================================= */
-
-function getLastSeenChat(){
-
-  return Number(
-    localStorage.getItem(
-      chatSeenKey
-    ) || 0
-  );
-
-}
-
-
-function setLastSeenChat(
-  timestamp
-){
-
-  localStorage.setItem(
-    chatSeenKey,
-    String(timestamp)
-  );
-
-}
-
-
-/* =========================================================
-   MARK CHAT SEEN
-========================================================= */
-
-function markChatAsSeen(){
-
-  const messages =
-    Object.values(
-      chatData
-    );
-
-
-  let newestTime = 0;
-
-
-  messages.forEach(
-    message => {
-
-      const time =
-        Number(
-          message.createdAt ||
-          0
-        );
-
-
-      if(
-        time >
-        newestTime
-      ){
-
-        newestTime =
-          time;
-
-      }
-
-    }
-  );
-
-
-  if(newestTime){
-
-    setLastSeenChat(
-      newestTime
-    );
-
-  }
-
-
-  unreadChat =
-    false;
-
-
-  updateChatNotification();
-
-}
-
-
-/* =========================================================
-   NOTIFICATION UI
-========================================================= */
-
-function updateChatNotification(){
-
-  const dot =
-    document.getElementById(
-      "notificationDot"
-    );
-
-
-  const button =
-    document.getElementById(
-      "notificationButton"
-    );
-
-
-  if(unreadChat){
-
-    dot.classList.add(
-      "show"
-    );
-
-    button.classList.add(
-      "has-notification"
-    );
-
-    button.title =
-      "New group chat message";
-
-  }else{
-
-    dot.classList.remove(
-      "show"
-    );
-
-    button.classList.remove(
-      "has-notification"
-    );
-
-    button.title =
-      "No new messages";
-
-  }
-
-}
-
-
-/* =========================================================
-   OPEN NOTIFICATIONS
-========================================================= */
-
-window.openNotifications =
-function(){
-
-  markChatAsSeen();
-
-  goToSection(
-    "chat"
-  );
-
-};
-
-
-/* =========================================================
-   RENDER CHAT
-========================================================= */
-
-function renderChat(){
-
-  const box =
-    document.getElementById(
-      "chatlog"
-    );
-
-
-  box.innerHTML =
-    "";
-
-
-  const messages =
-    Object.values(
-      chatData
-    );
-
-
-  if(!messages.length){
-
-    box.innerHTML =
-      `
-      <div class="empty">
-        No messages yet.
-      </div>
-      `;
-
-    return;
-
-  }
-
-
-  messages.forEach(
-    message => {
-
-      const element =
-        document.createElement(
-          "div"
-        );
-
-
-      element.className =
-        "msg" +
-
-        (
-          message.author ===
-          userName
-            ? " me"
-            : ""
-        );
-
-
-      element.innerHTML = `
-
-        <span class="msg-name">
-          ${esc(
-            message.author ||
-            "Student"
-          )}
-        </span>
-
-        ${esc(
-          cleanText(
-            message.text
-          )
-        )}
-
-      `;
-
-
-      box.appendChild(
-        element
-      );
-
-    }
-  );
-
-
-  box.scrollTop =
-    box.scrollHeight;
-
-
-  /*
-    If the user is currently
-    viewing the chat, clear
-    the unread notification.
-  */
-
-  const chatIsActive =
-    document.getElementById(
-      "chat"
-    ).classList.contains(
-      "active"
-    );
-
-
-  if(chatIsActive){
-
-    markChatAsSeen();
-
-  }
-
-}
-
-
-/* =========================================================
-   SEND CHAT
-========================================================= */
-
-window.sendChat =
-async function(){
-
-  const input =
-    document.getElementById(
-      "chatInput"
-    );
-
-
-  const text =
-    cleanText(
-      input.value
-    );
-
-
-  if(!text)
-    return;
-
-
-  await offlinePush("chat",{
-    author:
-      userName,
-
-    text,
-
-    createdAt:
-      Date.now()
-  });
-
-
-  input.value =
-    "";
-
-};
-
-
-/* =========================================================
    FILES
 ========================================================= */
 
@@ -7111,7 +6535,6 @@ function renderAll(){
 
   renderMemberPreview();
 
-  renderChat();
 
   renderFiles();
 
@@ -7211,7 +6634,6 @@ updateAdminUI();
 
 renderAll();
 
-updateChatNotification();
 
 async function migrateLegacyLayoutsOnce(){
   if(!navigator.onLine) return;
