@@ -2186,6 +2186,18 @@ and (orientation:landscape){
 
 .memo-link-hint{margin:10px 0 14px;padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--surface2);color:var(--muted);font-size:13px;}
 .profile-button{cursor:pointer;text-align:left;}
+.admin-online-panel{margin-bottom:16px;}
+.online-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.online-count{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--primary);}
+.online-dot{width:9px;height:9px;border-radius:50%;background:#2e9b62;box-shadow:0 0 0 3px color-mix(in srgb,#2e9b62 16%,transparent);}
+.online-list{display:flex;flex-direction:column;gap:7px;max-height:220px;overflow-y:auto;}
+.online-person{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);}
+.online-person-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 30px;background:var(--primarySoft);color:var(--primary);font-size:10px;font-weight:800;}
+.online-person-info{min-width:0;flex:1;}
+.online-person-name{font-size:12px;font-weight:700;color:var(--text);overflow-wrap:anywhere;}
+.online-person-status{font-size:10px;color:var(--muted2);margin-top:2px;}
+.online-empty{padding:10px;color:var(--muted);font-size:11px;text-align:center;border:1px dashed var(--border);border-radius:10px;}
+
 .profile-button:focus-visible{outline:2px solid var(--primary);outline-offset:2px;}
 .user-name-wrap{display:flex;flex-direction:column;min-width:0;}
 .user-detail{display:block;margin-top:2px;color:var(--muted2);font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;}
@@ -2855,6 +2867,14 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
   >
 
 
+    <div id="adminOnlinePanel" class="admin-panel admin-online-panel" style="display:none;">
+      <div class="online-summary">
+        <h3 style="margin:0;">🟢 Online Now</h3>
+        <span id="onlineCount" class="online-count"><span class="online-dot"></span>0 online</span>
+      </div>
+      <div id="onlineMembersList" class="online-list"></div>
+    </div>
+
     <div class="members-header">
 
       <h3>
@@ -3296,6 +3316,7 @@ import {
   update,
   remove,
   onValue,
+  onDisconnect,
   serverTimestamp
 }
 from
@@ -3818,6 +3839,7 @@ let memorizeData = {};
 let scheduleData = {};
 let membersData = {};
 let filesData = {};
+let onlinePresenceData = {};
 
 let isAdmin = false;
 
@@ -3863,6 +3885,114 @@ function applyAccessMode(){
   }
 }
 
+function getPresenceId(){
+  let id = localStorage.getItem("nursingDutyPresenceId");
+  if(!id){
+    id = (window.crypto && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : ("presence-" + Date.now() + "-" + Math.random().toString(36).slice(2));
+    localStorage.setItem("nursingDutyPresenceId", id);
+  }
+  return id;
+}
+
+let presenceHeartbeat = null;
+let presenceInitialized = false;
+
+function presenceRef(){
+  return ref(db, "presence/" + getPresenceId());
+}
+
+async function stopPresence(){
+  try{ await remove(presenceRef()); }catch(error){}
+  if(presenceHeartbeat){
+    clearInterval(presenceHeartbeat);
+    presenceHeartbeat = null;
+  }
+}
+
+async function updatePresence(){
+  if(isVisitorMode() || !userName){
+    await stopPresence();
+    return;
+  }
+
+  const target = presenceRef();
+
+  try{
+    await set(target,{
+      name:userName,
+      connected:true,
+      lastSeen:Date.now(),
+      updatedAt:serverTimestamp()
+    });
+
+    if(!presenceInitialized){
+      presenceInitialized = true;
+      try{ onDisconnect(target).remove(); }catch(error){}
+    }
+
+    if(!presenceHeartbeat){
+      presenceHeartbeat = setInterval(()=>{
+        if(!document.hidden){
+          set(target,{
+            name:userName,
+            connected:true,
+            lastSeen:Date.now(),
+            updatedAt:serverTimestamp()
+          }).catch(()=>{});
+        }
+      },20000);
+    }
+  }catch(error){
+    console.warn("Presence unavailable:",error);
+  }
+}
+
+function renderOnlineMembers(){
+  const list = document.getElementById("onlineMembersList");
+  const count = document.getElementById("onlineCount");
+  if(!list || !count) return;
+
+  const now = Date.now();
+  const entries = Object.entries(onlinePresenceData || {})
+    .filter(([,p]) =>
+      p &&
+      p.connected !== false &&
+      String(p.name || "").trim() &&
+      Number(p.lastSeen || 0) > now - 60000
+    )
+    .sort((a,b)=>
+      String(a[1]?.name || "").localeCompare(String(b[1]?.name || ""))
+    );
+
+  count.innerHTML = '<span class="online-dot"></span>' + entries.length + " online";
+
+  if(!entries.length){
+    list.innerHTML = '<div class="online-empty">No group members are currently online.</div>';
+    return;
+  }
+
+  list.innerHTML = "";
+
+  entries.forEach(([,p])=>{
+    const name = String(p.name || "Student").trim();
+    const initials =
+      name.split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase() || "S";
+
+    const row = document.createElement("div");
+    row.className = "online-person";
+    row.innerHTML =
+      '<div class="online-person-avatar">' +
+      esc(initials) +
+      '</div><div class="online-person-info"><div class="online-person-name">' +
+      esc(name) +
+      '</div><div class="online-person-status">Online now</div></div>';
+
+    list.appendChild(row);
+  });
+}
+
 function initializeUserDisplay(name, detail){
   userName = String(name || "").trim() || "Student";
   userDetail = String(detail ?? userDetail ?? "Group 4").trim() || "Group 4";
@@ -3878,6 +4008,7 @@ function initializeUserDisplay(name, detail){
     : `Welcome, ${userName} 👋`;
 
   applyAccessMode();
+  updatePresence();
 }
 
 function showLogin(){
@@ -4592,7 +4723,8 @@ function updateAdminUI(){
     "adminNotesPanel",
     "adminMemorizePanel",
     "adminSchedulePanel",
-    "adminFilesPanel"
+    "adminFilesPanel",
+    "adminOnlinePanel"
 
   ];
 
@@ -4626,6 +4758,10 @@ function updateAdminUI(){
       ? "block"
       : "none";
 
+  const onlinePanel = document.getElementById("adminOnlinePanel");
+  if(onlinePanel) onlinePanel.style.display = isAdmin ? "block" : "none";
+  renderOnlineMembers();
+
 }
 
 
@@ -4636,6 +4772,13 @@ function updateAdminUI(){
 /* The note order is stored separately as one shared/global layout.
    This prevents different logins on the same device from getting different
    local orderings and makes the admin's layout authoritative for everyone. */
+onValue(ref(db, "presence"), snapshot => {
+  onlinePresenceData = snapshot.val() || {};
+  renderOnlineMembers();
+});
+
+setInterval(renderOnlineMembers,15000);
+
 offlineOnValue("noteLayout", snapshot => {
   const value = snapshot.val() || {};
   const remoteOrder = Array.isArray(value.order) ? value.order.map(String) : [];
@@ -6787,6 +6930,8 @@ async function migrateLegacyLayoutsOnce(){
     renderNotes();renderMemorize();
   }catch(error){console.warn("Layout migration unavailable:",error);}
 }
+
+window.addEventListener("pagehide",()=>{ stopPresence(); });
 
 migrateLegacyLayoutsOnce();
 
