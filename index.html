@@ -1106,6 +1106,19 @@ select:focus{
   font-size:17px;
 }
 
+.content-filter{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:0 0 13px;
+  align-items:center;
+}
+.filter-btn.active{
+  background:var(--primarySoft);
+  border-color:var(--primary);
+  color:var(--primary);
+  font-weight:700;
+}
 .note-category{
   display:inline-block;
 
@@ -2792,6 +2805,12 @@ and (orientation:landscape){
     </div>
 
 
+    <div class="content-filter" role="group" aria-label="Nursing Notes filter">
+      <button class="btn small filter-btn active" data-filter="all" onclick="setNoteFilter('all',this)">All</button>
+      <button class="btn small filter-btn" data-filter="note" onclick="setNoteFilter('note',this)">📝 Actual Notes</button>
+      <button class="btn small filter-btn" data-filter="link" onclick="setNoteFilter('link',this)">🔗 Links / References</button>
+    </div>
+
     <div
       id="notesList"
       class="notes-grid"
@@ -2816,6 +2835,12 @@ and (orientation:landscape){
     </div>
 
     <div class="memo-link-hint">🔗 Add school materials using links. Google Drive, Google Slides, Google Docs, Canva, OneDrive, Dropbox, PDFs, and other web links are supported.</div>
+
+    <div class="content-filter" role="group" aria-label="School Notes filter">
+      <button class="btn small filter-btn active" data-filter="all" onclick="setMemoFilter('all',this)">All</button>
+      <button class="btn small filter-btn" data-filter="note" onclick="setMemoFilter('note',this)">📝 Actual Notes</button>
+      <button class="btn small filter-btn" data-filter="link" onclick="setMemoFilter('link',this)">🔗 Links / References</button>
+    </div>
 
     <div id="memorizeList" class="memo-grid"></div>
 
@@ -3118,6 +3143,11 @@ and (orientation:landscape){
 
     <input id="editorNoteTitle" type="text" placeholder="Note title">
     <input id="editorNoteCategory" type="text" placeholder="Category (optional)">
+    <select id="editorNoteType" aria-label="Nursing note type">
+      <option value="note">📝 Actual Note</option>
+      <option value="link">🔗 Link / Reference</option>
+    </select>
+    <input id="editorNoteLink" type="url" placeholder="Reference link (optional)">
 
     <div class="editor-toolbar" onmousedown="event.preventDefault()">
       <button type="button" title="Bold" onclick="editorCommand('bold')"><strong>B</strong></button>
@@ -3167,6 +3197,10 @@ and (orientation:landscape){
     <h3 id="memoEditorTitle">Add Study Material</h3>
     <input id="editorMemoTitle" type="text" placeholder="Title / subject">
     <input id="editorMemoCategory" type="text" placeholder="Category (optional)">
+    <select id="editorMemoType" aria-label="School note type">
+      <option value="note">📝 Actual Note</option>
+      <option value="link">🔗 Link / Reference</option>
+    </select>
     <input id="editorMemoLink" type="url" placeholder="Study material link (Google Drive, Slides, Docs, Canva, PDF, etc.)">
 
     <div class="editor-toolbar" onmousedown="event.preventDefault()">
@@ -4727,10 +4761,14 @@ function renderNotes(){
   const box = document.getElementById("notesList");
   box.innerHTML = "";
 
-  const entries = getOrderedNoteEntries();
+  const entries = getOrderedNoteEntries().filter(([id,n])=>{
+    const isLink = isLinkNote(n);
+    return nursingNoteFilter === "all" || (nursingNoteFilter === "link" && isLink) || (nursingNoteFilter === "note" && !isLink);
+  });
 
   if(!entries.length){
-    box.innerHTML = `<div class="empty">No nursing notes yet.</div>`;
+    const message = nursingNoteFilter === "link" ? "No nursing note links / references yet." : nursingNoteFilter === "note" ? "No actual nursing notes yet." : "No nursing notes yet.";
+    box.innerHTML = `<div class="empty">${message}</div>`;
     return;
   }
 
@@ -4761,6 +4799,17 @@ function renderNotes(){
       ` : ""}
     `;
 
+    const typeBadge = document.createElement("span");
+    typeBadge.className = "note-category";
+    typeBadge.textContent = isLinkNote(n) ? "🔗 Link / Reference" : "📝 Actual Note";
+    element.querySelector("h3")?.before(typeBadge);
+    if(n.link){
+      const linkBox = document.createElement("div");
+      linkBox.className = "memo-file-chip memo-link-card";
+      linkBox.innerHTML = '<span>🔗 '+esc(n.linkLabel || "Reference link")+'</span><a class="btn small primary" href="'+esc(n.link)+'" target="_blank" rel="noopener noreferrer">Open link</a><button class="btn small" type="button">Copy link</button>';
+      linkBox.querySelector("button")?.addEventListener("click",()=>window.copyMemoLink(n.link));
+      element.querySelector(".note-text")?.after(linkBox);
+    }
     box.appendChild(element);
   });
 
@@ -4886,6 +4935,24 @@ async function saveNoteOrder(order){
 async function purgeQueuedNoteOrderOperations(){ await clearQueuedLayoutOps("notes"); }
 
 let editingNoteId = null;
+let nursingNoteFilter = "all";
+let schoolNoteFilter = "all";
+
+function isLinkNote(item){
+  return String(item?.type || "").toLowerCase() === "link" || Boolean(String(item?.link || "").trim());
+}
+
+window.setNoteFilter = function(filter,button){
+  nursingNoteFilter = ["all","note","link"].includes(filter) ? filter : "all";
+  document.querySelectorAll('[aria-label="Nursing Notes filter"] .filter-btn').forEach(btn=>btn.classList.toggle("active",btn.getAttribute("data-filter")===nursingNoteFilter));
+  renderNotes();
+};
+
+window.setMemoFilter = function(filter,button){
+  schoolNoteFilter = ["all","note","link"].includes(filter) ? filter : "all";
+  document.querySelectorAll('[aria-label="School Notes filter"] .filter-btn').forEach(btn=>btn.classList.toggle("active",btn.getAttribute("data-filter")===schoolNoteFilter));
+  renderMemorize();
+};
 
 function requireAdmin(){
   if(!isAdmin){
@@ -5167,6 +5234,8 @@ window.openNoteEditor = function(id=null){
     document.getElementById("noteEditorTitle").textContent = "Edit Nursing Note";
     title.value = note.title || "";
     category.value = note.category || "";
+    document.getElementById("editorNoteType").value = isLinkNote(note) ? "link" : "note";
+    document.getElementById("editorNoteLink").value = note.link || "";
     editor.innerHTML = note.html
       ? note.html
       : cleanText(note.text || "")
@@ -5179,6 +5248,8 @@ window.openNoteEditor = function(id=null){
     document.getElementById("noteEditorTitle").textContent = "Add Nursing Note";
     title.value = "";
     category.value = "";
+    document.getElementById("editorNoteType").value = "note";
+    document.getElementById("editorNoteLink").value = "";
     editor.innerHTML = "";
 
   }
@@ -5194,6 +5265,8 @@ window.closeNoteEditor = function(){
   document.getElementById("noteEditorModal").classList.remove("show");
   document.getElementById("editorNoteTitle").value = "";
   document.getElementById("editorNoteCategory").value = "";
+  document.getElementById("editorNoteType").value = "note";
+  document.getElementById("editorNoteLink").value = "";
   document.getElementById("richNoteEditor").innerHTML = "";
   const imageStatus = document.getElementById("noteImageUploadStatus");
   if(imageStatus) imageStatus.textContent = "Images are inserted into the note layout.";
@@ -5205,10 +5278,12 @@ window.saveNoteEditor = async function(){
 
   const title = document.getElementById("editorNoteTitle").value.trim();
   const category = document.getElementById("editorNoteCategory").value.trim();
+  const type = document.getElementById("editorNoteType").value === "link" ? "link" : "note";
+  const link = document.getElementById("editorNoteLink").value.trim();
   const htmlContent = document.getElementById("richNoteEditor").innerHTML.trim();
 
-  if(!title || !htmlContent){
-    alert("Please enter a title and note.");
+  if(!title || (type === "note" && !htmlContent) || (type === "link" && !link && !htmlContent)){
+    alert(type === "link" ? "Please enter a reference link or description." : "Please enter a title and note.");
     return;
   }
 
@@ -5219,6 +5294,8 @@ window.saveNoteEditor = async function(){
       const notePayload = {
         title,
         category,
+        type,
+        link,
         html:htmlContent,
         updatedAt:Date.now()
       };
@@ -5256,6 +5333,8 @@ window.saveNoteEditor = async function(){
         await set(newRef,{
           title,
           category,
+          type,
+          link,
           html:htmlContent,
           order:nextOrder,
           createdAt
@@ -5264,6 +5343,8 @@ window.saveNoteEditor = async function(){
         newNoteId = await offlinePush("notes",{
           title,
           category,
+          type,
+          link,
           html:htmlContent,
           order:nextOrder,
           createdAt
@@ -5345,9 +5426,13 @@ function renderMemorize(){
   const box=document.getElementById('memorizeList');
   if(!box) return;
   box.innerHTML='';
-  const entries=getOrderedMemoEntries();
+  const entries=getOrderedMemoEntries().filter(([id,m])=>{
+    const isLink=isLinkNote(m);
+    return schoolNoteFilter === "all" || (schoolNoteFilter === "link" && isLink) || (schoolNoteFilter === "note" && !isLink);
+  });
   if(!entries.length){
-    box.innerHTML='<div class="empty">No school notes added yet.</div>';
+    const message=schoolNoteFilter === "link" ? "No school note links / references yet." : schoolNoteFilter === "note" ? "No actual school notes yet." : "No school notes added yet.";
+    box.innerHTML=`<div class="empty">${message}</div>`;
     return;
   }
   entries.forEach(([id,m])=>{
@@ -5367,6 +5452,10 @@ function renderMemorize(){
       ${m.link ? `<div class="memo-file-chip memo-link-card"><span>🔗 ${esc(m.linkLabel || 'Study material link')}</span><a class="btn small primary" href="${esc(m.link)}" target="_blank" rel="noopener noreferrer">Open material</a><button class="btn small" type="button" onclick="copyMemoLink('${esc(m.link).replace(/'/g,"\\'")}')">Copy link</button></div>` : ''}
       ${isAdmin ? `<div class="note-actions"><button class="btn small" onclick="openMemoEditor('${id}')">✏️ Edit</button><button class="btn danger small" onclick="deleteMemo('${id}')">Delete</button></div>` : ''}
     `;
+    const typeBadge=document.createElement('span');
+    typeBadge.className='note-category';
+    typeBadge.textContent=isLinkNote(m) ? '🔗 Link / Reference' : '📝 Actual Note';
+    card.querySelector('h3')?.before(typeBadge);
     box.appendChild(card);
   });
 
@@ -5638,6 +5727,7 @@ window.openMemoEditor=function(id=null){
   document.getElementById('memoEditorTitle').textContent=id?'Edit Study Material':'Add Study Material';
   document.getElementById('editorMemoTitle').value=m?.title||'';
   document.getElementById('editorMemoCategory').value=m?.category||'';
+  document.getElementById('editorMemoType').value=isLinkNote(m) ? 'link' : 'note';
   document.getElementById('editorMemoLink').value=m?.link||'';
   document.getElementById('richMemoEditor').innerHTML=m?.html || esc(cleanText(m?.text||'' )).replace(/\n/g,'<br>');
   document.getElementById('memoEditorModal').classList.add('show');
@@ -5648,6 +5738,7 @@ window.closeMemoEditor=function(){
   document.getElementById('memoEditorModal').classList.remove('show');
   document.getElementById('editorMemoTitle').value='';
   document.getElementById('editorMemoCategory').value='';
+  document.getElementById('editorMemoType').value='note';
   document.getElementById('editorMemoLink').value='';
   document.getElementById('richMemoEditor').innerHTML='';
 };
@@ -5656,14 +5747,18 @@ window.saveMemoEditor=async function(){
   if(!isAdmin) return;
   const title=document.getElementById('editorMemoTitle').value.trim();
   const category=document.getElementById('editorMemoCategory').value.trim();
+  const type=document.getElementById('editorMemoType').value==='link' ? 'link' : 'note';
   const link=document.getElementById('editorMemoLink').value.trim();
   const html=document.getElementById('richMemoEditor').innerHTML.trim();
-  if(!title){ alert('Please enter a title.'); return; }
+  if(!title || (type==='link' && !link && !html) || (type==='note' && !html)){
+    alert(type==='link' ? 'Please enter a reference link or description.' : 'Please enter the note content.');
+    return;
+  }
   try{
     const updatedAt=Date.now();
     if(editingMemoId){
       const existing=memorizeData[editingMemoId] || {};
-      const payload={title,category,link,html,updatedAt};
+      const payload={title,category,type,link,html,updatedAt};
       // Never touch `order` when editing. Position is shared and independent.
       if(navigator.onLine) await update(ref(db,`memorize/${editingMemoId}`),payload);
       else await offlineUpdate(`memorize/${editingMemoId}`,payload);
@@ -5675,7 +5770,7 @@ window.saveMemoEditor=async function(){
         const newRef=push(ref(db,'memorize'));
         newId=newRef.key;
         await set(newRef,{
-          title,category,link,html,
+          title,category,type,link,html,
           order:currentOrder.length,
           createdAt:updatedAt,
           updatedAt
