@@ -4808,12 +4808,14 @@ function renderNotes(){
       linkBox.className = "memo-file-chip memo-link-card";
       linkBox.innerHTML = '<span>🔗 '+esc(n.linkLabel || "Reference link")+'</span><a class="btn small primary" href="'+esc(n.link)+'" target="_blank" rel="noopener noreferrer">Open link</a><button class="btn small" type="button">Copy link</button>';
       linkBox.querySelector("button")?.addEventListener("click",()=>window.copyMemoLink(n.link));
-      element.querySelector(".note-text")?.after(linkBox);
+      const noteText = element.querySelector(".note-text");
+      if(noteText) noteText.after(linkBox);
+      else element.appendChild(linkBox);
     }
     box.appendChild(element);
   });
 
-  if(isAdmin){
+  if(isAdmin && nursingNoteFilter === "all"){
     setupNoteDragAndDrop(box);
   }
 
@@ -5459,7 +5461,7 @@ function renderMemorize(){
     box.appendChild(card);
   });
 
-  if(isAdmin) setupMemoDragAndDrop(box);
+  if(isAdmin && schoolNoteFilter === "all") setupMemoDragAndDrop(box);
 
   box.querySelectorAll('input.note-check').forEach(input=>{
     input.addEventListener('click',e=>e.stopPropagation());
