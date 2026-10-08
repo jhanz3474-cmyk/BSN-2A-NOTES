@@ -3811,20 +3811,27 @@ window.addEventListener("offline",()=>{
   console.log("BSN 2A Group 4 is now offline. Changes will be stored on this device.");
 });
 
-/* Legacy service worker cleanup.
-   The app now runs directly from GitHub Pages. This removes stale mobile
-   caches that could otherwise serve an old, non-interactive build. */
+/* Versioned offline app shell.
+   The newest GitHub Pages build is cached so reopening the browser while
+   offline loads this build instead of falling back to an older page. */
 if("serviceWorker" in navigator){
   window.addEventListener("load",async()=>{
     try{
-      const registrations=await navigator.serviceWorker.getRegistrations();
-      await Promise.all(registrations.map(reg=>reg.unregister()));
-      if("caches" in window){
-        const keys=await caches.keys();
-        await Promise.all(keys.map(key=>caches.delete(key)));
-      }
+      const registration = await navigator.serviceWorker.register("./sw.js",{
+        scope:"./",
+        updateViaCache:"none"
+      });
+
+      await registration.update();
+
+      navigator.serviceWorker.addEventListener("controllerchange",()=>{
+        const key="nursingDutySwReloaded-v13";
+        if(sessionStorage.getItem(key)==="1") return;
+        sessionStorage.setItem(key,"1");
+        window.location.reload();
+      });
     }catch(error){
-      console.warn("Could not clear legacy offline cache:",error);
+      console.warn("Offline app cache is unavailable:",error);
     }
   });
 }
