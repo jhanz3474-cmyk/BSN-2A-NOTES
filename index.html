@@ -1832,11 +1832,11 @@ select:focus{
 .image-viewer-caption{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);max-width:75%;padding:8px 14px;border-radius:999px;background:rgba(20,20,20,.72);color:#fff;font-size:13px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 @media(max-width:600px){
   .image-viewer-modal{padding:8px}
-  .image-viewer-stage img{max-width:calc(100% - 72px);max-height:calc(100% - 90px);}
+  .image-viewer-stage img{max-width:calc(100% - 20px);max-height:calc(100% - 90px);}
   .image-viewer-fullscreen{right:60px}
   .image-viewer-close{right:8px}
-  .image-viewer-prev{left:6px}
-  .image-viewer-next{right:6px}
+  .image-viewer-prev,
+  .image-viewer-next{display:none !important;}
   .note-photo-group-compact .note-photo-cover{height:180px;}
   .note-photo-group-compact .note-photo-cover img{height:180px;}
 }
