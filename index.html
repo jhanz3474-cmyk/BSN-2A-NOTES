@@ -1811,19 +1811,35 @@ select:focus{
 .rich-note-editor .note-image-wrap{display:block;width:100%;max-width:100%;overflow:hidden;border-radius:10px;margin:10px 0;box-sizing:border-box;}
 .rich-note-editor .note-image-wrap img{display:block;width:100%;max-width:100%;height:auto;margin:0;}
 
-/* Fullscreen image viewer */
+/* Photo-group preview + fullscreen viewer */
 .note-image-wrap{cursor:zoom-in;position:relative;}
 .note-image-wrap img{cursor:zoom-in;}
+.note-photo-group-compact .note-photo-cover{display:block;position:relative;width:100%;max-width:100%;height:220px;margin:10px 0;border-radius:10px;overflow:hidden;background:var(--surface2);cursor:zoom-in;}
+.note-photo-group-compact .note-photo-cover img{display:block;width:100%;height:220px;max-width:100%;margin:0;object-fit:contain;border-radius:10px;}
+.note-photo-group-compact .note-photo-cover .photo-count-badge{position:absolute;right:10px;bottom:10px;z-index:3;display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;background:rgba(20,20,20,.78);color:#fff;font-size:11px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none;}
+.note-photo-group-compact .note-image-wrap:not(.note-photo-cover){display:none;}
 .image-viewer-modal{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;}
 .image-viewer-modal.show{display:flex;}
 .image-viewer-stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
-.image-viewer-stage img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.45);}
-.image-viewer-close,.image-viewer-fullscreen{position:absolute;top:14px;border:0;border-radius:999px;background:rgba(20,20,20,.78);color:#fff;width:44px;height:44px;font-size:22px;cursor:pointer;z-index:2;}
+.image-viewer-stage img{max-width:calc(100% - 110px);max-height:calc(100% - 95px);width:auto;height:auto;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.45);}
+.image-viewer-close,.image-viewer-fullscreen,.image-viewer-prev,.image-viewer-next{position:absolute;top:14px;border:0;border-radius:999px;background:rgba(20,20,20,.78);color:#fff;width:44px;height:44px;font-size:22px;cursor:pointer;z-index:2;}
 .image-viewer-close{right:14px;}
 .image-viewer-fullscreen{right:66px;font-size:19px;}
-.image-viewer-close:hover,.image-viewer-fullscreen:hover{background:rgba(255,255,255,.18);}
-.image-viewer-caption{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);max-width:85%;padding:8px 14px;border-radius:999px;background:rgba(20,20,20,.72);color:#fff;font-size:13px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-@media(max-width:600px){.image-viewer-modal{padding:8px}.image-viewer-fullscreen{right:60px}.image-viewer-close{right:8px}}
+.image-viewer-prev{left:14px;top:50%;transform:translateY(-50%);font-size:28px;}
+.image-viewer-next{right:14px;top:50%;transform:translateY(-50%);font-size:28px;}
+.image-viewer-close:hover,.image-viewer-fullscreen:hover,.image-viewer-prev:hover,.image-viewer-next:hover{background:rgba(255,255,255,.18);}
+.image-viewer-count{position:absolute;top:18px;left:50%;transform:translateX(-50%);padding:7px 12px;border-radius:999px;background:rgba(20,20,20,.72);color:#fff;font-size:12px;font-weight:700;z-index:2;}
+.image-viewer-caption{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);max-width:75%;padding:8px 14px;border-radius:999px;background:rgba(20,20,20,.72);color:#fff;font-size:13px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+@media(max-width:600px){
+  .image-viewer-modal{padding:8px}
+  .image-viewer-stage img{max-width:calc(100% - 72px);max-height:calc(100% - 90px);}
+  .image-viewer-fullscreen{right:60px}
+  .image-viewer-close{right:8px}
+  .image-viewer-prev{left:6px}
+  .image-viewer-next{right:6px}
+  .note-photo-group-compact .note-photo-cover{height:180px;}
+  .note-photo-group-compact .note-photo-cover img{height:180px;}
+}
 
 .rich-note-editor{
   min-height:300px;
@@ -3136,6 +3152,9 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
 ======================================================= -->
 <div id="noteImageViewer" class="image-viewer-modal" role="dialog" aria-modal="true" aria-label="Image viewer">
   <div id="noteImageViewerStage" class="image-viewer-stage">
+    <button type="button" class="image-viewer-prev" title="Previous photo" aria-label="Previous photo">‹</button>
+    <button type="button" class="image-viewer-next" title="Next photo" aria-label="Next photo">›</button>
+    <div id="noteImageViewerCount" class="image-viewer-count">1 / 1</div>
     <button type="button" class="image-viewer-fullscreen" title="Fullscreen" aria-label="Fullscreen">⛶</button>
     <button type="button" class="image-viewer-close" title="Close" aria-label="Close">×</button>
     <img id="noteImageViewerImage" src="" alt="Expanded note image">
@@ -6827,20 +6846,65 @@ window.closeFilePreview=function(){document.getElementById("filePreviewModal")?.
 /* =========================================================
    NOTE IMAGE VIEWER / FULLSCREEN
 ========================================================= */
-function openNoteImageViewer(img){
-  if(typeof img === "string"){ img = {src:img,currentSrc:img,alt:"Expanded image"}; }
-  if(!img || !img.src) return;
-  const modal=document.getElementById("noteImageViewer");
+let noteImageGallery=[];
+let noteImageGalleryIndex=0;
+
+function renderNoteImageGallery(index){
   const viewerImg=document.getElementById("noteImageViewerImage");
   const caption=document.getElementById("noteImageViewerCaption");
-  if(!modal || !viewerImg) return;
-  viewerImg.src=img.currentSrc || img.src;
-  viewerImg.alt=img.alt || "Expanded note image";
-  if(caption) caption.textContent=img.alt || "";
+  const count=document.getElementById("noteImageViewerCount");
+  if(!viewerImg || !noteImageGallery.length) return;
+
+  const safeIndex=(index+noteImageGallery.length)%noteImageGallery.length;
+  noteImageGalleryIndex=safeIndex;
+  const item=noteImageGallery[safeIndex];
+  viewerImg.src=item.src;
+  viewerImg.alt=item.alt || "Expanded note image";
+  if(caption) caption.textContent=item.alt || "";
+  if(count) count.textContent=String(safeIndex+1)+" / "+String(noteImageGallery.length);
+
+  const prev=document.querySelector(".image-viewer-prev");
+  const next=document.querySelector(".image-viewer-next");
+  const multiple=noteImageGallery.length>1;
+  if(prev) prev.style.display=multiple ? "block" : "none";
+  if(next) next.style.display=multiple ? "block" : "none";
+}
+
+function openNoteImageViewer(img){
+  if(!img || !img.src) return;
+
+  const text=img.closest(".note-text");
+  const images=text
+    ? Array.from(text.querySelectorAll(".note-image-wrap img"))
+    : [img];
+
+  noteImageGallery=images
+    .filter(image=>image?.src)
+    .map(image=>({
+      src:image.currentSrc || image.src,
+      alt:image.alt || ""
+    }));
+
+  const startIndex=Math.max(0,images.indexOf(img));
+  if(!noteImageGallery.length) return;
+
+  const modal=document.getElementById("noteImageViewer");
+  if(!modal) return;
+
+  renderNoteImageGallery(startIndex);
   modal.classList.add("show");
   document.body.style.overflow="hidden";
 }
 window.openNoteImageViewer=openNoteImageViewer;
+
+function showPreviousNoteImage(){
+  if(noteImageGallery.length<2) return;
+  renderNoteImageGallery(noteImageGalleryIndex-1);
+}
+function showNextNoteImage(){
+  if(noteImageGallery.length<2) return;
+  renderNoteImageGallery(noteImageGalleryIndex+1);
+}
 
 function closeNoteImageViewer(){
   const modal=document.getElementById("noteImageViewer");
@@ -6851,6 +6915,10 @@ function closeNoteImageViewer(){
   if(modal) modal.classList.remove("show");
   const viewerImg=document.getElementById("noteImageViewerImage");
   if(viewerImg) viewerImg.removeAttribute("src");
+  const caption=document.getElementById("noteImageViewerCaption");
+  if(caption) caption.textContent="";
+  noteImageGallery=[];
+  noteImageGalleryIndex=0;
   document.body.style.overflow="";
 }
 window.closeNoteImageViewer=closeNoteImageViewer;
@@ -6858,27 +6926,25 @@ window.closeNoteImageViewer=closeNoteImageViewer;
 function compactNotePhotoGroups(root){
   if(!root) return;
   root.querySelectorAll('.note-text').forEach(text=>{
-    text.querySelectorAll('.note-photo-summary').forEach(el=>el.remove());
-    text.classList.remove('note-images-collapsed','note-images-expanded');
+    text.classList.remove('note-photo-group-compact');
+
     const imageWraps=Array.from(text.querySelectorAll('.note-image-wrap'));
-    if(imageWraps.length<2) return;
-
-    const summary=document.createElement('button');
-    summary.type='button';
-    summary.className='note-photo-summary';
-    summary.setAttribute('aria-expanded','false');
-    summary.innerHTML='<span class="photo-summary-count">📷 '+imageWraps.length+' photos</span><span class="photo-summary-action">Show photos</span>';
-
-    summary.addEventListener('click',()=>{
-      const expanded=text.classList.toggle('note-images-expanded');
-      text.classList.toggle('note-images-collapsed',!expanded);
-      summary.setAttribute('aria-expanded',expanded?'true':'false');
-      const action=summary.querySelector('.photo-summary-action');
-      if(action) action.textContent=expanded?'Hide photos':'Show photos';
+    imageWraps.forEach(wrap=>{
+      wrap.classList.remove('note-photo-cover');
+      wrap.querySelectorAll('.photo-count-badge').forEach(el=>el.remove());
     });
 
-    text.classList.add('note-images-collapsed');
-    text.insertBefore(summary,text.firstChild);
+    if(imageWraps.length<2) return;
+
+    text.classList.add('note-photo-group-compact');
+
+    const cover=imageWraps[0];
+    cover.classList.add('note-photo-cover');
+
+    const badge=document.createElement('span');
+    badge.className='photo-count-badge';
+    badge.textContent="📷 "+imageWraps.length+" photos";
+    cover.appendChild(badge);
   });
 }
 window.compactNotePhotoGroups=compactNotePhotoGroups;
@@ -7009,6 +7075,8 @@ document.getElementById("noteImageViewer")?.addEventListener("click", event=>{
   if(event.target.id === "noteImageViewer") closeNoteImageViewer();
 });
 document.querySelector(".image-viewer-close")?.addEventListener("click", closeNoteImageViewer);
+document.querySelector(".image-viewer-prev")?.addEventListener("click", showPreviousNoteImage);
+document.querySelector(".image-viewer-next")?.addEventListener("click", showNextNoteImage);
 document.querySelector(".image-viewer-fullscreen")?.addEventListener("click", async ()=>{
   const stage=document.getElementById("noteImageViewerStage");
   try{
@@ -7022,8 +7090,16 @@ document.querySelector(".image-viewer-fullscreen")?.addEventListener("click", as
   }
 });
 document.addEventListener("keydown", event=>{
-  if(event.key === "Escape" && document.getElementById("noteImageViewer")?.classList.contains("show")){
+  const viewer=document.getElementById("noteImageViewer");
+  if(!viewer?.classList.contains("show")) return;
+  if(event.key === "Escape"){
     closeNoteImageViewer();
+  }else if(event.key === "ArrowLeft"){
+    event.preventDefault();
+    showPreviousNoteImage();
+  }else if(event.key === "ArrowRight"){
+    event.preventDefault();
+    showNextNoteImage();
   }
 });
 
