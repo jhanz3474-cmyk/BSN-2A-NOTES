@@ -1825,9 +1825,11 @@ select:focus{
 .image-viewer-close,.image-viewer-fullscreen,.image-viewer-prev,.image-viewer-next{position:absolute;top:14px;border:0;border-radius:999px;background:rgba(20,20,20,.78);color:#fff;width:44px;height:44px;font-size:22px;cursor:pointer;z-index:2;}
 .image-viewer-close{right:14px;}
 .image-viewer-fullscreen{right:66px;font-size:19px;}
-.image-viewer-prev{left:14px;top:50%;transform:translateY(-50%);font-size:28px;}
-.image-viewer-next{right:14px;top:50%;transform:translateY(-50%);font-size:28px;}
-.image-viewer-close:hover,.image-viewer-fullscreen:hover,.image-viewer-prev:hover,.image-viewer-next:hover{background:rgba(255,255,255,.18);}
+.image-viewer-prev,.image-viewer-next{width:38px;height:38px;background:rgba(20,20,20,.38);color:rgba(255,255,255,.72);font-size:25px;opacity:.7;box-shadow:0 2px 8px rgba(0,0,0,.18);}
+.image-viewer-prev{left:14px;top:50%;transform:translateY(-50%);}
+.image-viewer-next{right:14px;top:50%;transform:translateY(-50%);}
+.image-viewer-close:hover,.image-viewer-fullscreen:hover{background:rgba(255,255,255,.18);}
+.image-viewer-prev:hover,.image-viewer-next:hover{background:rgba(20,20,20,.58);color:#fff;opacity:.9;}
 .image-viewer-count{position:absolute;top:18px;left:50%;transform:translateX(-50%);padding:7px 12px;border-radius:999px;background:rgba(20,20,20,.72);color:#fff;font-size:12px;font-weight:700;z-index:2;}
 .image-viewer-caption{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);max-width:75%;padding:8px 14px;border-radius:999px;background:rgba(20,20,20,.72);color:#fff;font-size:13px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 @media(max-width:600px){
@@ -1835,8 +1837,9 @@ select:focus{
   .image-viewer-stage img{max-width:calc(100% - 20px);max-height:calc(100% - 90px);}
   .image-viewer-fullscreen{right:60px}
   .image-viewer-close{right:8px}
-  .image-viewer-prev,
-  .image-viewer-next{display:none !important;}
+  .image-viewer-prev,.image-viewer-next{width:34px;height:34px;font-size:22px;opacity:.62;background:rgba(20,20,20,.34);}
+  .image-viewer-prev{left:5px;}
+  .image-viewer-next{right:5px;}
   .note-photo-group-compact .note-photo-cover{height:180px;}
   .note-photo-group-compact .note-photo-cover img{height:180px;}
 }
