@@ -4939,7 +4939,7 @@ function renderNotes(){
     box.appendChild(element);
   });
 
-  if(isAdmin && nursingNoteFilter === "all"){
+  if(isAdmin){
     setupNoteDragAndDrop(box);
   }
 
@@ -4978,6 +4978,21 @@ function renderNotes(){
 let draggedNoteId = null;
 let draggedNoteCard = null;
 
+function mergeVisibleOrder(fullOrder, visibleOrder){
+  const full = Array.isArray(fullOrder) ? fullOrder.map(String) : [];
+  const visible = Array.isArray(visibleOrder) ? visibleOrder.map(String) : [];
+  if(!visible.length) return full.slice();
+
+  const visibleSet = new Set(visible);
+  const replacement = visible.slice();
+  let cursor = 0;
+
+  return full.map(id=>{
+    if(!visibleSet.has(String(id))) return id;
+    return replacement[cursor++] || id;
+  });
+}
+
 function setupNoteDragAndDrop(box){
   const cards = Array.from(box.querySelectorAll(".note-draggable"));
   cards.forEach(card => {
@@ -5012,7 +5027,11 @@ function setupNoteDragAndDrop(box){
     card.addEventListener("dragend", async () => {
       cards.forEach(c => c.classList.remove("note-drag-over","note-dragging"));
       if(!draggedNoteCard) return;
-      const order = Array.from(box.querySelectorAll(".card[data-note-id]")).map(c=>String(c.dataset.noteId||"")).filter(Boolean);
+      const visibleOrder = Array.from(box.querySelectorAll(".card[data-note-id]"))
+        .map(c=>String(c.dataset.noteId||""))
+        .filter(Boolean);
+      const fullOrder = getOrderedNoteEntries().map(([id])=>String(id));
+      const order = mergeVisibleOrder(fullOrder, visibleOrder);
       draggedNoteCard=null;
       draggedNoteId=null;
       await saveNoteOrder(order);
@@ -5596,7 +5615,7 @@ function renderMemorize(){
     box.appendChild(card);
   });
 
-  if(isAdmin && schoolNoteFilter === "all") setupMemoDragAndDrop(box);
+  if(isAdmin) setupMemoDragAndDrop(box);
 
   box.querySelectorAll('input.note-check').forEach(input=>{
     input.addEventListener('click',e=>e.stopPropagation());
@@ -5651,7 +5670,11 @@ function setupMemoDragAndDrop(box){
     card.addEventListener('dragend',async()=>{
       cards.forEach(c=>c.classList.remove('memo-drag-over','memo-dragging'));
       if(!draggedMemoCard) return;
-      const order=Array.from(box.querySelectorAll('.memo-card[data-memo-id]')).map(c=>String(c.dataset.memoId||'')).filter(Boolean);
+      const visibleOrder=Array.from(box.querySelectorAll('.memo-card[data-memo-id]'))
+        .map(c=>String(c.dataset.memoId||''))
+        .filter(Boolean);
+      const fullOrder=getOrderedMemoEntries().map(([id])=>String(id));
+      const order=mergeVisibleOrder(fullOrder,visibleOrder);
       draggedMemoCard=null;
       draggedMemoId=null;
       await saveMemoOrder(order);
