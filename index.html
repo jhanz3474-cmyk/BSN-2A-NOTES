@@ -1820,7 +1820,7 @@ select:focus{
 .note-photo-group-compact .note-image-wrap:not(.note-photo-cover){display:none;}
 .image-viewer-modal{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;}
 .image-viewer-modal.show{display:flex;}
-.image-viewer-stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.image-viewer-stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;touch-action:pan-y;overscroll-behavior:contain;}
 .image-viewer-stage img{max-width:calc(100% - 110px);max-height:calc(100% - 95px);width:auto;height:auto;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.45);}
 .image-viewer-close,.image-viewer-fullscreen,.image-viewer-prev,.image-viewer-next{position:absolute;top:14px;border:0;border-radius:999px;background:rgba(20,20,20,.78);color:#fff;width:44px;height:44px;font-size:22px;cursor:pointer;z-index:2;}
 .image-viewer-close{right:14px;}
@@ -6963,6 +6963,42 @@ function enableNoteImageViewer(){
 }
 window.enableNoteImageViewer=enableNoteImageViewer;
 
+let noteImageSwipeStartX=0;
+let noteImageSwipeStartY=0;
+let noteImageSwipeTracking=false;
+
+function setupNoteImageSwipe(){
+  const stage=document.getElementById("noteImageViewerStage");
+  if(!stage || stage.dataset.swipeBound==="1") return;
+  stage.dataset.swipeBound="1";
+
+  stage.addEventListener("touchstart",event=>{
+    const touch=event.touches?.[0];
+    if(!touch) return;
+    noteImageSwipeStartX=touch.clientX;
+    noteImageSwipeStartY=touch.clientY;
+    noteImageSwipeTracking=true;
+  },{passive:true});
+
+  stage.addEventListener("touchend",event=>{
+    if(!noteImageSwipeTracking) return;
+    noteImageSwipeTracking=false;
+    const touch=event.changedTouches?.[0];
+    if(!touch) return;
+
+    const dx=touch.clientX-noteImageSwipeStartX;
+    const dy=touch.clientY-noteImageSwipeStartY;
+    const distance=Math.abs(dx);
+    const verticalDistance=Math.abs(dy);
+
+    if(noteImageGallery.length>1 && distance>=55 && distance>verticalDistance*1.25){
+      if(dx<0) showNextNoteImage();
+      else showPreviousNoteImage();
+    }
+  },{passive:true});
+}
+window.setupNoteImageSwipe=setupNoteImageSwipe;
+
 
 function renderFiles(){const box=document.getElementById("filesList");box.innerHTML="";const entries=Object.entries(filesData||{}).sort((a,b)=>Number(a[1]?.createdAt||0)-Number(b[1]?.createdAt||0));if(!entries.length){box.innerHTML=`<div class="empty">No clinical files added yet.</div>`;return;}entries.forEach(([id,f])=>{const e=document.createElement("div");e.className="file-card";const source=f.downloadURL||f.url||"";e.innerHTML=`<div class="file-icon">${fileTypeIcon(f.mimeType,f.name||f.title)}</div><h3>${esc(f.title||f.name||"Clinical File")}</h3>${f.description?`<p>${esc(cleanText(f.description))}</p>`:""}${f.name?`<p class="file-meta">${esc(f.name)}${f.size?` • ${esc(formatFileSize(f.size))}`:""}</p>`:""}${source?`<div class="form-buttons" style="margin-top:10px;"><button class="btn primary" onclick="previewFile('${id}')">📖 View in Website</button><a class="btn" href="${esc(safeFileUrl(source))}" target="_blank" rel="noopener">${f.downloadURL?"Open / Download":"Open Link"}</a></div>`:""}${isAdmin?`<div class="note-actions"><button class="btn danger" onclick="deleteFile('${id}')">Delete</button></div>`:""}`;box.appendChild(e);});}
 let selectedStorageFile=null;
@@ -7118,6 +7154,7 @@ ensureGroupLogin();
 updateAdminUI();
 
 renderAll();
+setupNoteImageSwipe();
 
 
 async function migrateLegacyLayoutsOnce(){
