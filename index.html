@@ -1820,7 +1820,7 @@ select:focus{
 .note-photo-group-compact .note-image-wrap:not(.note-photo-cover){display:none;}
 .image-viewer-modal{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;}
 .image-viewer-modal.show{display:flex;}
-.image-viewer-stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;touch-action:pan-y;overscroll-behavior:contain;}
+.image-viewer-stage{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;touch-action:none;overscroll-behavior:contain;overflow:hidden;}
 .image-viewer-stage img{max-width:calc(100% - 110px);max-height:calc(100% - 95px);width:auto;height:auto;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.45);}
 .image-viewer-close,.image-viewer-fullscreen,.image-viewer-prev,.image-viewer-next{position:absolute;top:14px;border:0;border-radius:999px;background:rgba(20,20,20,.78);color:#fff;width:44px;height:44px;font-size:22px;cursor:pointer;z-index:2;}
 .image-viewer-close{right:14px;}
@@ -6848,6 +6848,70 @@ window.closeFilePreview=function(){document.getElementById("filePreviewModal")?.
 ========================================================= */
 let noteImageGallery=[];
 let noteImageGalleryIndex=0;
+let noteImageZoom=1;
+let noteImagePanX=0;
+let noteImagePanY=0;
+let noteImageTouchMode="";
+let noteImageTouchStartX=0;
+let noteImageTouchStartY=0;
+let noteImageTouchStartTime=0;
+let noteImageStartPanX=0;
+let noteImageStartPanY=0;
+let noteImagePinchStartDistance=0;
+let noteImagePinchStartZoom=1;
+let noteImageLastTapTime=0;
+
+function applyNoteImageTransform(){
+  const viewerImg=document.getElementById("noteImageViewerImage");
+  if(!viewerImg) return;
+  viewerImg.style.transform="translate3d("+noteImagePanX+"px,"+noteImagePanY+"px,0) scale("+noteImageZoom+")";
+  viewerImg.style.transformOrigin="center center";
+}
+
+function resetNoteImageZoom(){
+  noteImageZoom=1;
+  noteImagePanX=0;
+  noteImagePanY=0;
+  noteImageTouchMode="";
+  noteImagePinchStartDistance=0;
+  noteImagePinchStartZoom=1;
+  applyNoteImageTransform();
+}
+
+function clampNoteImagePan(){
+  const viewerImg=document.getElementById("noteImageViewerImage");
+  const stage=document.getElementById("noteImageViewerStage");
+  if(!viewerImg || !stage || noteImageZoom<=1){
+    noteImagePanX=0;
+    noteImagePanY=0;
+    return;
+  }
+
+  const baseWidth=Math.max(1,viewerImg.offsetWidth);
+  const baseHeight=Math.max(1,viewerImg.offsetHeight);
+  const maxX=Math.max(0,(baseWidth*noteImageZoom-baseWidth)/2 + 80);
+  const maxY=Math.max(0,(baseHeight*noteImageZoom-baseHeight)/2 + 80);
+
+  noteImagePanX=Math.max(-maxX,Math.min(maxX,noteImagePanX));
+  noteImagePanY=Math.max(-maxY,Math.min(maxY,noteImagePanY));
+}
+
+function setNoteImageZoom(nextZoom){
+  noteImageZoom=Math.max(1,Math.min(4,nextZoom));
+  if(noteImageZoom===1){
+    noteImagePanX=0;
+    noteImagePanY=0;
+  }
+  clampNoteImagePan();
+  applyNoteImageTransform();
+}
+
+function getTouchDistance(touches){
+  if(!touches || touches.length<2) return 0;
+  const dx=touches[0].clientX-touches[1].clientX;
+  const dy=touches[0].clientY-touches[1].clientY;
+  return Math.hypot(dx,dy);
+}
 
 function renderNoteImageGallery(index){
   const viewerImg=document.getElementById("noteImageViewerImage");
@@ -6862,6 +6926,8 @@ function renderNoteImageGallery(index){
   viewerImg.alt=item.alt || "Expanded note image";
   if(caption) caption.textContent=item.alt || "";
   if(count) count.textContent=String(safeIndex+1)+" / "+String(noteImageGallery.length);
+
+  resetNoteImageZoom();
 
   const prev=document.querySelector(".image-viewer-prev");
   const next=document.querySelector(".image-viewer-next");
@@ -6894,6 +6960,7 @@ function openNoteImageViewer(img){
   renderNoteImageGallery(startIndex);
   modal.classList.add("show");
   document.body.style.overflow="hidden";
+  setupNoteImageZoom();
 }
 window.openNoteImageViewer=openNoteImageViewer;
 
@@ -6906,6 +6973,101 @@ function showNextNoteImage(){
   renderNoteImageGallery(noteImageGalleryIndex+1);
 }
 
+function setupNoteImageZoom(){
+  const stage=document.getElementById("noteImageViewerStage");
+  if(!stage || stage.dataset.zoomBound==="1") return;
+  stage.dataset.zoomBound="1";
+
+  stage.addEventListener("touchstart",event=>{
+    if(event.touches.length===2){
+      noteImageTouchMode="pinch";
+      noteImagePinchStartDistance=getTouchDistance(event.touches);
+      noteImagePinchStartZoom=noteImageZoom;
+      return;
+    }
+
+    if(event.touches.length!==1) return;
+
+    const touch=event.touches[0];
+    noteImageTouchStartX=touch.clientX;
+    noteImageTouchStartY=touch.clientY;
+    noteImageTouchStartTime=Date.now();
+    noteImageStartPanX=noteImagePanX;
+    noteImageStartPanY=noteImagePanY;
+    noteImageTouchMode=noteImageZoom>1 ? "pan" : "swipe";
+  },{passive:true});
+
+  stage.addEventListener("touchmove",event=>{
+    if(event.touches.length===2){
+      event.preventDefault();
+      const distance=getTouchDistance(event.touches);
+      if(!distance || !noteImagePinchStartDistance) return;
+      setNoteImageZoom(noteImagePinchStartZoom*(distance/noteImagePinchStartDistance));
+      return;
+    }
+
+    if(event.touches.length!==1) return;
+
+    const touch=event.touches[0];
+    const dx=touch.clientX-noteImageTouchStartX;
+    const dy=touch.clientY-noteImageTouchStartY;
+
+    if(noteImageZoom>1){
+      event.preventDefault();
+      noteImageTouchMode="pan";
+      noteImagePanX=noteImageStartPanX+dx;
+      noteImagePanY=noteImageStartPanY+dy;
+      clampNoteImagePan();
+      applyNoteImageTransform();
+    }else if(Math.abs(dx)>12 && Math.abs(dx)>Math.abs(dy)){
+      event.preventDefault();
+    }
+  },{passive:false});
+
+  stage.addEventListener("touchend",event=>{
+    const duration=Date.now()-noteImageTouchStartTime;
+    const touch=event.changedTouches?.[0];
+    if(!touch){
+      noteImageTouchMode="";
+      return;
+    }
+
+    if(noteImageTouchMode==="pinch"){
+      noteImageTouchMode="";
+      if(noteImageZoom<1.08) setNoteImageZoom(1);
+      return;
+    }
+
+    if(noteImageTouchMode==="pan"){
+      noteImageTouchMode="";
+      return;
+    }
+
+    if(noteImageTouchMode==="swipe"){
+      const dx=touch.clientX-noteImageTouchStartX;
+      const dy=touch.clientY-noteImageTouchStartY;
+      if(noteImageZoom===1 && Math.abs(dx)>=55 && Math.abs(dx)>Math.abs(dy)*1.25 && duration<900){
+        if(dx<0) showNextNoteImage();
+        else showPreviousNoteImage();
+      }
+    }
+
+    noteImageTouchMode="";
+
+    const now=Date.now();
+    if(Math.abs(touch.clientX-noteImageTouchStartX)<12 &&
+       Math.abs(touch.clientY-noteImageTouchStartY)<12 &&
+       now-noteImageLastTapTime<320){
+      setNoteImageZoom(noteImageZoom>1 ? 1 : 2);
+      noteImageLastTapTime=0;
+    }else if(Math.abs(touch.clientX-noteImageTouchStartX)<12 &&
+             Math.abs(touch.clientY-noteImageTouchStartY)<12){
+      noteImageLastTapTime=now;
+    }
+  },{passive:false});
+}
+window.setupNoteImageZoom=setupNoteImageZoom;
+
 function closeNoteImageViewer(){
   const modal=document.getElementById("noteImageViewer");
   const stage=document.getElementById("noteImageViewerStage");
@@ -6914,11 +7076,15 @@ function closeNoteImageViewer(){
   }
   if(modal) modal.classList.remove("show");
   const viewerImg=document.getElementById("noteImageViewerImage");
-  if(viewerImg) viewerImg.removeAttribute("src");
+  if(viewerImg){
+    viewerImg.removeAttribute("src");
+    viewerImg.style.transform="";
+  }
   const caption=document.getElementById("noteImageViewerCaption");
   if(caption) caption.textContent="";
   noteImageGallery=[];
   noteImageGalleryIndex=0;
+  resetNoteImageZoom();
   document.body.style.overflow="";
 }
 window.closeNoteImageViewer=closeNoteImageViewer;
