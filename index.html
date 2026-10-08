@@ -4892,7 +4892,12 @@ function renderNotes(){
       const linkBox = document.createElement("div");
       linkBox.className = "memo-file-chip memo-link-card";
       linkBox.innerHTML = '<span>🔗 '+esc(n.linkLabel || "Reference link")+'</span><a class="btn small primary" href="'+esc(n.link)+'" target="_blank" rel="noopener noreferrer">Open link</a><button class="btn small" type="button">Copy link</button>';
-      linkBox.querySelector("button")?.addEventListener("click",()=>window.copyMemoLink(n.link));
+      addDriveViewerButton(linkBox,n.link,n.title || n.linkLabel || "Reference file");
+      linkBox.querySelectorAll("button").forEach(button=>{
+        if(!button.classList.contains("drive-viewer-button")){
+          button.addEventListener("click",()=>window.copyMemoLink(n.link));
+        }
+      });
       const noteText = element.querySelector(".note-text");
       if(noteText) noteText.after(linkBox);
       else element.appendChild(linkBox);
@@ -5539,6 +5544,16 @@ function renderMemorize(){
       ${m.link ? `<div class="memo-file-chip memo-link-card"><span>🔗 ${esc(m.linkLabel || 'Study material link')}</span><a class="btn small primary" href="${esc(m.link)}" target="_blank" rel="noopener noreferrer">Open material</a><button class="btn small" type="button" onclick="copyMemoLink('${esc(m.link).replace(/'/g,"\\'")}')">Copy link</button></div>` : ''}
       ${isAdmin ? `<div class="note-actions"><button class="btn small" onclick="openMemoEditor('${id}')">✏️ Edit</button><button class="btn danger small" onclick="deleteMemo('${id}')">Delete</button></div>` : ''}
     `;
+    const memoLinkBox = card.querySelector(".memo-link-card");
+    if(memoLinkBox && m.link){
+      addDriveViewerButton(memoLinkBox,m.link,m.title || m.linkLabel || "Study material");
+      memoLinkBox.querySelectorAll("button").forEach(button=>{
+        if(!button.classList.contains("drive-viewer-button")){
+          button.onclick = ()=>copyMemoLink(m.link);
+        }
+      });
+    }
+
     const typeBadge=document.createElement('span');
     typeBadge.className='note-category';
     typeBadge.textContent=isLinkNote(m) ? '🔗 Link / Reference' : '📝 Actual Note';
@@ -6706,7 +6721,100 @@ offlineOnValue("files",
 function fileTypeIcon(mime,name){const t=String(mime||"").toLowerCase(),n=String(name||"").toLowerCase();if(t.startsWith("image/"))return "🖼️";if(t.startsWith("video/"))return "🎬";if(t.startsWith("audio/"))return "🎵";if(t.includes("pdf")||n.endsWith(".pdf"))return "📕";if(t.includes("word")||/\.docx?$/.test(n))return "📝";if(t.includes("sheet")||/\.(xlsx?|csv)$/.test(n))return "📊";if(t.includes("presentation")||/\.pptx?$/.test(n))return "📽️";return "📄";}
 function formatFileSize(bytes){const n=Number(bytes||0);if(!n)return "";const u=["B","KB","MB","GB"];let i=0,v=n;while(v>=1024&&i<u.length-1){v/=1024;i++;}return `${v.toFixed(i?1:0)} ${u[i]}`;}
 function safeFileUrl(url){try{return new URL(url,location.href).href;}catch{return "";}}
-window.previewFile=function(id){const f=filesData[id];if(!f)return;const url=safeFileUrl(f.downloadURL||f.url||"");if(!url){alert("This file has no viewable source.");return;}const modal=document.getElementById("filePreviewModal"),content=document.getElementById("filePreviewContent"),title=document.getElementById("filePreviewTitle"),meta=document.getElementById("filePreviewMeta"),download=document.getElementById("filePreviewDownload"),mime=String(f.mimeType||"").toLowerCase(),name=String(f.name||f.title||"File");title.textContent=f.title||name;meta.textContent=[name,formatFileSize(f.size),f.description||""].filter(Boolean).join(" • ");download.href=url;content.innerHTML="";if(mime.startsWith("image/")){const e=document.createElement("img");e.src=url;e.alt=name;content.appendChild(e);}else if(mime.startsWith("video/")){const e=document.createElement("video");e.src=url;e.controls=true;content.appendChild(e);}else if(mime.startsWith("audio/")){const e=document.createElement("audio");e.src=url;e.controls=true;content.appendChild(e);}else if(mime.includes("pdf")||/\.pdf($|\?)/i.test(url)){const e=document.createElement("iframe");e.src=url;e.title=name;content.appendChild(e);}else if(mime.startsWith("text/")||/\.(txt|html|css|js|json|xml|csv)($|\?)/i.test(url)){const e=document.createElement("iframe");e.src=url;e.title=name;content.appendChild(e);}else{content.innerHTML=`<div style="padding:25px;text-align:center;color:var(--muted)">${esc(fileTypeIcon(mime,name))}<br><br>This file type cannot be previewed directly by the browser.<br>You can still open or download it below.</div>`;}modal.classList.add("show");};
+function googleDriveFileInfo(rawUrl){
+  try{
+    const u = new URL(rawUrl, location.href);
+    const host = u.hostname.toLowerCase();
+    let id = "";
+    let kind = "drive";
+
+    if(host === "drive.google.com" || host.endsWith(".drive.google.com")){
+      const match = u.pathname.match(/\/file\/d\/([^/]+)/i);
+      if(match) id = match[1];
+      if(!id) id = u.searchParams.get("id") || "";
+    }else if(host === "docs.google.com"){
+      const match = u.pathname.match(/\/(document|spreadsheets|presentation)\/d\/([^/]+)/i);
+      if(match){
+        kind = match[1].toLowerCase();
+        id = match[2];
+      }
+    }
+
+    if(!id) return null;
+
+    const previewUrl = kind === "drive"
+      ? "https://drive.google.com/file/d/" + encodeURIComponent(id) + "/preview"
+      : "https://docs.google.com/" + kind + "/d/" + encodeURIComponent(id) + "/preview";
+
+    return {id,kind,previewUrl};
+  }catch(error){
+    return null;
+  }
+}
+
+function isGoogleDriveUrl(rawUrl){
+  return Boolean(googleDriveFileInfo(rawUrl));
+}
+
+window.openDriveViewer=function(rawUrl,title){
+  const info = googleDriveFileInfo(rawUrl);
+  if(!info){
+    alert("This is not a supported Google Drive file link.");
+    return;
+  }
+
+  const modal = document.getElementById("filePreviewModal");
+  const content = document.getElementById("filePreviewContent");
+  const heading = document.getElementById("filePreviewTitle");
+  const meta = document.getElementById("filePreviewMeta");
+  const external = document.getElementById("filePreviewDownload");
+
+  if(!modal || !content || !heading || !meta || !external) return;
+
+  heading.textContent = title || "Google Drive File";
+  meta.textContent = "Viewing inside Nursing Duty Hub • Google Drive";
+  external.href = rawUrl;
+  external.textContent = "Open in Drive";
+  content.innerHTML = "";
+
+  const frame = document.createElement("iframe");
+  frame.src = info.previewUrl;
+  frame.title = title || "Google Drive file";
+  frame.setAttribute("allow","autoplay");
+  frame.setAttribute("allowfullscreen","");
+  frame.style.width = "100%";
+  frame.style.height = "70vh";
+  frame.style.minHeight = "420px";
+  frame.style.border = "0";
+  frame.style.borderRadius = "10px";
+  frame.style.background = "var(--surface2)";
+  content.appendChild(frame);
+
+  modal.classList.add("show");
+};
+
+function addDriveViewerButton(container,rawUrl,title,label){
+  if(!container || !isGoogleDriveUrl(rawUrl)) return;
+
+  const existing = container.querySelector(".drive-viewer-button");
+  if(existing) return;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "btn small primary drive-viewer-button";
+  button.textContent = "📖 " + (label || "View in Website");
+  button.addEventListener("click",event=>{
+    event.preventDefault();
+    event.stopPropagation();
+    openDriveViewer(rawUrl,title);
+  });
+
+  const firstLink = container.querySelector("a");
+  if(firstLink) container.insertBefore(button,firstLink);
+  else container.appendChild(button);
+}
+
+window.previewFile=function(id){const f=filesData[id];if(!f)return;const url=safeFileUrl(f.downloadURL||f.url||"");if(!url){alert("This file has no viewable source.");return;}const drive=googleDriveFileInfo(url);if(drive){openDriveViewer(url,f.title||f.name||"Google Drive File");return;}const modal=document.getElementById("filePreviewModal"),content=document.getElementById("filePreviewContent"),title=document.getElementById("filePreviewTitle"),meta=document.getElementById("filePreviewMeta"),download=document.getElementById("filePreviewDownload"),mime=String(f.mimeType||"").toLowerCase(),name=String(f.name||f.title||"File");title.textContent=f.title||name;meta.textContent=[name,formatFileSize(f.size),f.description||""].filter(Boolean).join(" • ");download.href=url;download.textContent="Open / Download";content.innerHTML="";if(mime.startsWith("image/")){const e=document.createElement("img");e.src=url;e.alt=name;content.appendChild(e);}else if(mime.startsWith("video/")){const e=document.createElement("video");e.src=url;e.controls=true;content.appendChild(e);}else if(mime.startsWith("audio/")){const e=document.createElement("audio");e.src=url;e.controls=true;content.appendChild(e);}else if(mime.includes("pdf")||/\.pdf($|\?)/i.test(url)){const e=document.createElement("iframe");e.src=url;e.title=name;content.appendChild(e);}else if(mime.startsWith("text/")||/\.(txt|html|css|js|json|xml|csv)($|\?)/i.test(url)){const e=document.createElement("iframe");e.src=url;e.title=name;content.appendChild(e);}else{content.innerHTML=`<div style="padding:25px;text-align:center;color:var(--muted)">${esc(fileTypeIcon(mime,name))}<br><br>This file type cannot be previewed directly by the browser.<br>You can still open or download it below.</div>`;}modal.classList.add("show");};
 window.closeFilePreview=function(){document.getElementById("filePreviewModal")?.classList.remove("show");document.getElementById("filePreviewContent").innerHTML="";};
 
 /* =========================================================
