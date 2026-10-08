@@ -1154,6 +1154,11 @@ select:focus{
 .note-text img{display:block;width:100%;max-width:100%;height:auto;max-height:none;object-fit:contain;border-radius:10px;margin:10px 0;box-sizing:border-box;}
 .note-text .note-image-wrap{display:block;width:100%;max-width:100%;margin:10px 0;overflow:hidden;border-radius:10px;box-sizing:border-box;}
 .note-text .note-image-wrap img{display:block;width:100%;max-width:100%;height:auto;margin:0;border-radius:10px;object-fit:contain;}
+.note-text.note-images-collapsed .note-image-wrap{display:none;}
+.note-photo-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin:4px 0 10px;padding:9px 11px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);cursor:pointer;text-align:left;font-size:12px;font-weight:700;}
+.note-photo-summary:hover{background:var(--surface3);}
+.note-photo-summary .photo-summary-count{color:var(--primary);}
+.note-photo-summary .photo-summary-action{color:var(--muted);font-weight:600;font-size:11px;}
 .note-text p:has(> img),.note-text div:has(> img){max-width:100%;box-sizing:border-box;overflow:hidden;}
 .note-text video,.note-text audio,.note-text iframe,.note-text object{display:block;max-width:100%;width:100%;box-sizing:border-box;border-radius:10px;margin:10px 0;}
 .note-text table{width:100%;max-width:100%;border-collapse:collapse;display:block;overflow-x:auto;}
@@ -4936,6 +4941,7 @@ function renderNotes(){
       }
     });
   });
+  compactNotePhotoGroups(box);
   enableNoteImageViewer();
 }
 
@@ -5579,6 +5585,7 @@ function renderMemorize(){
       }catch(err){ console.error('Could not save School Note checkbox state',err); }
     });
   });
+  compactNotePhotoGroups(box);
   enableMemoImageViewer();
 }
 
@@ -6847,6 +6854,34 @@ function closeNoteImageViewer(){
   document.body.style.overflow="";
 }
 window.closeNoteImageViewer=closeNoteImageViewer;
+
+function compactNotePhotoGroups(root){
+  if(!root) return;
+  root.querySelectorAll('.note-text').forEach(text=>{
+    text.querySelectorAll('.note-photo-summary').forEach(el=>el.remove());
+    text.classList.remove('note-images-collapsed','note-images-expanded');
+    const imageWraps=Array.from(text.querySelectorAll('.note-image-wrap'));
+    if(imageWraps.length<2) return;
+
+    const summary=document.createElement('button');
+    summary.type='button';
+    summary.className='note-photo-summary';
+    summary.setAttribute('aria-expanded','false');
+    summary.innerHTML='<span class="photo-summary-count">📷 '+imageWraps.length+' photos</span><span class="photo-summary-action">Show photos</span>';
+
+    summary.addEventListener('click',()=>{
+      const expanded=text.classList.toggle('note-images-expanded');
+      text.classList.toggle('note-images-collapsed',!expanded);
+      summary.setAttribute('aria-expanded',expanded?'true':'false');
+      const action=summary.querySelector('.photo-summary-action');
+      if(action) action.textContent=expanded?'Hide photos':'Show photos';
+    });
+
+    text.classList.add('note-images-collapsed');
+    text.insertBefore(summary,text.firstChild);
+  });
+}
+window.compactNotePhotoGroups=compactNotePhotoGroups;
 
 function enableNoteImageViewer(){
   document.querySelectorAll(".note-text .note-image-wrap img").forEach(img=>{
