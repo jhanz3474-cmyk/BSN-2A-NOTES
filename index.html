@@ -3822,14 +3822,14 @@ if("serviceWorker" in navigator){
         updateViaCache:"none"
       });
 
-      await registration.update();
-
       navigator.serviceWorker.addEventListener("controllerchange",()=>{
         const key="nursingDutySwReloaded-v13";
         if(sessionStorage.getItem(key)==="1") return;
         sessionStorage.setItem(key,"1");
         window.location.reload();
       });
+
+      await registration.update();
     }catch(error){
       console.warn("Offline app cache is unavailable:",error);
     }
