@@ -1,4 +1,4 @@
-const CACHE_VERSION = "nursing-duty-hub-v16-ai-cloudflare";
+const CACHE_VERSION = "nursing-duty-hub-v18-ai";
 const APP_CACHE = CACHE_VERSION + "-app";
 const RUNTIME_CACHE = CACHE_VERSION + "-runtime";
 
