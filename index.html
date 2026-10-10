@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v14-ai-notes-layout-fix">
+  <meta name="bsn2a-build" content="shared-layout-v15-ai-notes-connection-diagnostics">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -3326,6 +3326,7 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
           <input id="aiNoteProxyToken" type="password" placeholder="AI proxy access token">
           <div class="form-buttons" style="margin-top:8px;">
             <button class="btn small" type="button" onclick="saveAINoteSettings()">Save AI Settings</button>
+            <button class="btn small" type="button" onclick="testAINoteConnection()">🔌 Test Connection</button>
             <button class="btn small" type="button" onclick="clearAINoteSettings()">Clear</button>
           </div>
         </div>
@@ -4851,6 +4852,43 @@ window.clearAINoteSettings=function(){
   setAINoteStatus("AI settings cleared.");
 };
 
+window.testAINoteConnection=async function(){
+  if(!isAdmin){
+    alert("Only administrators can test the AI connection.");
+    return;
+  }
+
+  const proxyUrl=getAINoteProxyUrl() || String(document.getElementById("aiNoteProxyUrl")?.value||"").trim();
+  if(!proxyUrl){
+    alert("Please enter the AI proxy URL first.");
+    return;
+  }
+
+  setAINoteStatus("Testing AI backend connection…");
+
+  try{
+    const response=await fetch(proxyUrl,{
+      method:"GET",
+      cache:"no-store",
+      headers:{Accept:"application/json"}
+    });
+
+    const payload=await response.json().catch(()=>({}));
+
+    if(!response.ok){
+      throw new Error(payload?.error || ("Backend responded with HTTP "+response.status));
+    }
+
+    setAINoteStatus("✅ AI backend is reachable. "+(payload?.service || "Ready for note generation."));
+  }catch(error){
+    console.error("AI backend connection test failed:",error);
+    const message=error?.message==="Failed to fetch"
+      ? "Cannot reach the AI backend. It is probably not deployed yet, or its CORS/network configuration is blocking GitHub Pages."
+      : (error?.message || "Unknown connection error.");
+    setAINoteStatus("❌ "+message,true);
+  }
+};
+
 window.openAINoteBuilder=function(target){
   if(!isAdmin){ alert("Only administrators can use the AI Note Builder."); return; }
   aiNoteTarget=target==="memorize" ? "memorize" : "notes";
@@ -4965,8 +5003,11 @@ window.generateAINote=async function(){
   }catch(error){
     console.error("AI Note Builder error:",error);
     if(preview) preview.innerHTML="";
-    setAINoteStatus(error?.message || "The AI request failed.",true);
-    alert("The AI could not generate the note. Check the proxy URL/token and your internet connection.");
+    const detail = error?.message==="Failed to fetch"
+      ? "Cannot reach the AI backend. The Firebase function may not be deployed yet, or CORS/network access is blocking GitHub Pages."
+      : (error?.message || "The AI request failed.");
+    setAINoteStatus(detail,true);
+    alert("AI connection failed. Use “Test Connection” to check the backend. If it says it cannot reach the backend, the Firebase function still needs to be deployed.");
   }
 };
 
