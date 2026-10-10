@@ -1,11 +1,12 @@
-const CACHE_VERSION = "nursing-duty-hub-v19-ai2";
+const CACHE_VERSION = "nursing-duty-hub-v20-ai-cloud";
 const APP_CACHE = CACHE_VERSION + "-app";
 const RUNTIME_CACHE = CACHE_VERSION + "-runtime";
 
 const FIREBASE_MODULES = [
-  "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js",
-  "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js",
-  "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js"
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js",
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js",
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js",
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-ai.js"
 ];
 
 async function cacheRequest(cache, url){
