@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v13-ai-notes-layout-fix">
+  <meta name="bsn2a-build" content="shared-layout-v14-ai-notes-layout-fix">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -1075,14 +1075,10 @@ select:focus{
   min-width:0;
 }
 .ai-note-grid{
-  display:grid;
-  grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);
+  display:flex;
+  flex-direction:column;
   gap:14px;
-  min-width:0;
-}
-.ai-note-grid > *,
-.ai-note-side,
-.ai-note-builder-head > *{
+  width:100%;
   min-width:0;
 }
 .ai-note-side{
@@ -1094,7 +1090,9 @@ select:focus{
 .ai-note-side textarea,
 .ai-note-side select{
   min-width:0;
+  width:100%;
   max-width:100%;
+  display:block;
 }
 .ai-note-warning,
 .ai-note-subtitle,
@@ -1105,7 +1103,7 @@ select:focus{
 }
 .ai-note-label{display:block;margin:0 0 5px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
 .ai-note-input{min-height:300px;line-height:1.5;resize:vertical;}
-.ai-note-preview{min-height:300px;max-height:54vh;overflow:auto;padding:13px;border:1px solid var(--border);border-radius:10px;background:var(--surface);line-height:1.55;}
+.ai-note-preview{width:100%;min-height:240px;max-height:45vh;overflow:auto;padding:13px;border:1px solid var(--border);border-radius:10px;background:var(--surface);line-height:1.55;}
 .ai-note-preview:empty::before{content:"Your cleaned note will appear here.";color:var(--muted2);}
 .ai-note-preview h2,.ai-note-preview h3{margin:12px 0 7px;}
 .ai-note-preview p{margin:7px 0;}
@@ -1126,9 +1124,7 @@ select:focus{
   .ai-note-grid{grid-template-columns:1fr;}
   .ai-note-preview{max-height:none;}
 }
-@media(min-width:821px) and (max-width:1100px){
-  .ai-note-grid{grid-template-columns:minmax(0,1fr) minmax(260px,.75fr);}
-}
+
 
 
 /* =========================================================
