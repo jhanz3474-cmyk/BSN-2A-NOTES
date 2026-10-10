@@ -1,54 +1,40 @@
 # AI Notes backend
 
-The GitHub Pages frontend already contains the admin-only AI Note Builder. The real model call is intentionally kept off the public page.
+The AI Note Builder uses a Cloudflare Worker. Firebase is not used for AI generation.
 
-## What this backend does
+## Architecture
 
-- Firebase Cloud Function in `asia-southeast1`
-- Calls the OpenAI Responses API from the server
-- Keeps the OpenAI API key in Firebase Secret Manager
-- Requires a separate AI proxy token
-- Returns a structured note draft for Nursing Notes or School Notes
-- The frontend reviews the draft before anything is saved
+`GitHub Pages → Cloudflare Worker → OpenAI Responses API`
 
-OpenAI's current JavaScript SDK uses the Responses API for primary model calls. The official SDK is published as the `openai` npm package. Firebase recommends Secret Manager-backed parameters for sensitive function configuration.
+The Worker keeps `OPENAI_API_KEY` and `AI_NOTES_PROXY_TOKEN` as Cloudflare Worker secrets. Cloudflare exposes encrypted secrets to the Worker through `env`; do not commit secret values. citeturn216336search0turn216336search8
 
 ## One-time deployment
 
-From a local clone of this repository:
+Open the `cloudflare-ai` folder in a terminal:
 
 ```bash
-npm install -g firebase-tools
-firebase login
-firebase use bsn-2a-notes
-
-cd functions
-npm install
-cd ..
-
-firebase functions:secrets:set OPENAI_API_KEY
-firebase functions:secrets:set AI_NOTES_PROXY_TOKEN
-
-firebase deploy --only functions:aiNotes
+npx wrangler login
+npx wrangler deploy
+npx wrangler secret put OPENAI_API_KEY
+npx wrangler secret put AI_NOTES_PROXY_TOKEN
 ```
 
-When prompted:
+After deployment, Cloudflare will show the Worker URL. It will normally look like:
 
-- `OPENAI_API_KEY` = your OpenAI API key
-- `AI_NOTES_PROXY_TOKEN` = a long random admin-only token
-
-After deployment, the endpoint is normally:
-
-```
-https://asia-southeast1-bsn-2a-notes.cloudfunctions.net/aiNotes
+```text
+https://bsn-2a-ai-notes.<your-account-subdomain>.workers.dev
 ```
 
-Paste that endpoint into the **AI proxy URL** field inside the admin AI Note Builder, then enter the same proxy token.
+Copy that exact URL into **Admin → AI Note Builder → Secure AI Proxy** and enter the proxy token.
 
-## Important
+Then press **Test Connection**.
 
-Do **not** put the OpenAI API key in `index.html`, `sw.js`, GitHub Actions logs, or any committed file. The public site should only know the function URL and the proxy token.
+## Security
 
-The existing admin password is enforced in the browser, so it should not be treated as a cryptographic identity system. The backend token is the second gate for the AI endpoint.
+The Worker only accepts the GitHub Pages origin `https://jhanz3474-cmyk.github.io` and requires the `x-ai-proxy-token` header.
 
-For the Nursing Notes tool, paste educational/shared note content only. Do not paste real patient names, hospital numbers, addresses, or other identifying information.
+The OpenAI API key never reaches the browser.
+
+The Worker calls the OpenAI Responses API. OpenAI's current guidance uses Responses for new integrations. citeturn838462search0
+
+Do not paste real patient identifiers into shared nursing notes.
