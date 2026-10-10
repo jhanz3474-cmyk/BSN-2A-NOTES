@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v15-ai-notes-connection-diagnostics">
+  <meta name="bsn2a-build" content="shared-layout-v16-ai-notes-cloudflare">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -3320,8 +3320,8 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
         </div>
         <div class="ai-note-settings">
           <div class="ai-note-label">Secure AI proxy</div>
-          <p class="ai-note-warning">The public GitHub Pages site should call your own backend proxy. Do not paste an OpenAI API key here or commit one into GitHub. Enter your proxy URL and a proxy access token instead.</p>
-          <input id="aiNoteProxyUrl" placeholder="https://asia-southeast1-bsn-2a-notes.cloudfunctions.net/aiNotes">
+          <p class="ai-note-warning">The AI runs through a secure Cloudflare Worker. Do not paste an OpenAI API key here or commit one into GitHub. Enter your Worker URL and AI proxy token instead.</p>
+          <input id="aiNoteProxyUrl" placeholder="https://bsn-2a-ai-notes.<your-account-subdomain>.workers.dev">
           <div style="height:8px;"></div>
           <input id="aiNoteProxyToken" type="password" placeholder="AI proxy access token">
           <div class="form-buttons" style="margin-top:8px;">
@@ -4814,9 +4814,16 @@ let aiNoteTarget = "notes";
 let aiNoteDraft = null;
 const AI_NOTE_PROXY_URL_KEY = "bsn2a_ai_note_proxy_url";
 const AI_NOTE_PROXY_TOKEN_KEY = "bsn2a_ai_note_proxy_token";
-const DEFAULT_AI_NOTE_PROXY_URL = "https://asia-southeast1-bsn-2a-notes.cloudfunctions.net/aiNotes";
+const DEFAULT_AI_NOTE_PROXY_URL = "";
 
-function getAINoteProxyUrl(){ return String(localStorage.getItem(AI_NOTE_PROXY_URL_KEY) || "").trim(); }
+function getAINoteProxyUrl(){
+  const stored=String(localStorage.getItem(AI_NOTE_PROXY_URL_KEY) || "").trim();
+  if(/cloudfunctions\\.net\\/aiNotes/i.test(stored)){
+    localStorage.removeItem(AI_NOTE_PROXY_URL_KEY);
+    return "";
+  }
+  return stored;
+}
 function getAINoteProxyToken(){ return String(sessionStorage.getItem(AI_NOTE_PROXY_TOKEN_KEY) || "").trim(); }
 
 function loadAINoteSettings(){
@@ -4841,7 +4848,7 @@ window.saveAINoteSettings=function(){
   localStorage.setItem(AI_NOTE_PROXY_URL_KEY,url);
   if(token) sessionStorage.setItem(AI_NOTE_PROXY_TOKEN_KEY,token);
   else sessionStorage.removeItem(AI_NOTE_PROXY_TOKEN_KEY);
-  setAINoteStatus("AI settings saved on this admin device.");
+  setAINoteStatus("AI settings saved on this admin device. Use Test Connection before generating.");
 };
 
 window.clearAINoteSettings=function(){
@@ -4859,31 +4866,39 @@ window.testAINoteConnection=async function(){
   }
 
   const proxyUrl=getAINoteProxyUrl() || String(document.getElementById("aiNoteProxyUrl")?.value||"").trim();
+  const proxyToken=getAINoteProxyToken() || String(document.getElementById("aiNoteProxyToken")?.value||"").trim();
+
   if(!proxyUrl){
-    alert("Please enter the AI proxy URL first.");
+    alert("Paste your Cloudflare Worker URL first.");
+    return;
+  }
+  if(!proxyToken){
+    alert("Enter your AI proxy token first.");
     return;
   }
 
-  setAINoteStatus("Testing AI backend connection…");
+  setAINoteStatus("Testing Cloudflare AI Worker…");
 
   try{
     const response=await fetch(proxyUrl,{
       method:"GET",
       cache:"no-store",
-      headers:{Accept:"application/json"}
+      headers:{
+        "Accept":"application/json",
+        "x-ai-proxy-token":proxyToken
+      }
     });
 
     const payload=await response.json().catch(()=>({}));
-
     if(!response.ok){
-      throw new Error(payload?.error || ("Backend responded with HTTP "+response.status));
+      throw new Error(payload?.error || ("Worker responded with HTTP "+response.status));
     }
 
-    setAINoteStatus("✅ AI backend is reachable. "+(payload?.service || "Ready for note generation."));
+    setAINoteStatus("✅ Cloudflare AI Worker is reachable. "+(payload?.message || "Ready for note generation."));
   }catch(error){
-    console.error("AI backend connection test failed:",error);
+    console.error("AI Worker connection test failed:",error);
     const message=error?.message==="Failed to fetch"
-      ? "Cannot reach the AI backend. It is probably not deployed yet, or its CORS/network configuration is blocking GitHub Pages."
+      ? "Cannot reach the Cloudflare AI Worker. Check the Worker URL, deployment status, and CORS configuration."
       : (error?.message || "Unknown connection error.");
     setAINoteStatus("❌ "+message,true);
   }
@@ -5004,10 +5019,10 @@ window.generateAINote=async function(){
     console.error("AI Note Builder error:",error);
     if(preview) preview.innerHTML="";
     const detail = error?.message==="Failed to fetch"
-      ? "Cannot reach the AI backend. The Firebase function may not be deployed yet, or CORS/network access is blocking GitHub Pages."
+      ? "Cannot reach the Cloudflare AI Worker. Check the Worker URL, deployment status, and CORS configuration."
       : (error?.message || "The AI request failed.");
     setAINoteStatus(detail,true);
-    alert("AI connection failed. Use “Test Connection” to check the backend. If it says it cannot reach the backend, the Firebase function still needs to be deployed.");
+    alert("AI connection failed. Use “Test Connection” to check the Cloudflare Worker. If it cannot reach the Worker, check the Worker URL and deployment.");
   }
 };
 
