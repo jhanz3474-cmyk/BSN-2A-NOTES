@@ -5248,6 +5248,35 @@ async function insertImageFileIntoEditor(file, sourceLabel="Pasted image"){
   }
 }
 
+function insertPlainClipboardText(editor, text){
+  if(!editor) return;
+  const value = String(text ?? "").replace(/\u00a0/g," ");
+  editor.focus();
+
+  const selection = window.getSelection();
+  if(selection && selection.rangeCount && editor.contains(selection.anchorNode)){
+    try{
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      const fragment = document.createDocumentFragment();
+      const lines = value.replace(/\r\n?/g,"\n").split("\n");
+      lines.forEach((line,index)=>{
+        if(index) fragment.appendChild(document.createElement("br"));
+        fragment.appendChild(document.createTextNode(line));
+      });
+      range.insertNode(fragment);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      return;
+    }catch(error){
+      console.warn("Could not insert plain clipboard text at selection:",error);
+    }
+  }
+
+  document.execCommand("insertText",false,value);
+}
+
 window.handleNotePaste = async function(event){
   const clipboard = event.clipboardData;
   if(!clipboard) return;
@@ -5304,7 +5333,14 @@ window.handleNotePaste = async function(event){
     }
   }
 
-  // Otherwise let normal text/HTML pasting continue.
+  // Text copied from Messenger and similar apps can contain
+  // background-color/highlight HTML. Always paste normal text as plain text
+  // so that foreign formatting cannot leak into the note editor.
+  event.preventDefault();
+  const plainText = clipboard.getData ? clipboard.getData("text/plain") : "";
+  const editor = document.getElementById("richNoteEditor");
+  insertPlainClipboardText(editor, plainText);
+  saveEditorSelection(editor,"note");
 };
 
 window.resizePastedImage = function(file, maxSize=1600, quality=0.82){
@@ -5834,12 +5870,25 @@ async function insertMemoImageFile(file){
 }
 
 window.handleMemoPaste=async function(event){
-  const items=Array.from(event.clipboardData?.items||[]);
+  const clipboard = event.clipboardData;
+  const items=Array.from(clipboard?.items||[]);
   const images=items.filter(i=>i.kind==='file' && /^image\//i.test(i.type||''));
   if(images.length){
     event.preventDefault();
-    for(const item of images){ const f=item.getAsFile(); if(f) await insertMemoImageFile(f); }
+    for(const item of images){
+      const f=item.getAsFile();
+      if(f) await insertMemoImageFile(f);
+    }
+    return;
   }
+
+  // Keep pasted study text clean by stripping Messenger/clipboard HTML
+  // highlighting and other foreign formatting.
+  event.preventDefault();
+  const plainText = clipboard?.getData ? clipboard.getData('text/plain') : '';
+  const editor=document.getElementById('richMemoEditor');
+  insertPlainClipboardText(editor,plainText);
+  saveEditorSelection(editor,"memo");
 };
 
 window.handleMemoFileSelection=async function(event){
