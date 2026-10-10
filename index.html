@@ -4773,14 +4773,15 @@ let aiNoteTarget = "notes";
 let aiNoteDraft = null;
 const AI_NOTE_PROXY_URL_KEY = "bsn2a_ai_note_proxy_url";
 const AI_NOTE_PROXY_TOKEN_KEY = "bsn2a_ai_note_proxy_token";
+const DEFAULT_AI_NOTE_PROXY_URL = "https://asia-southeast1-bsn-2a-notes.cloudfunctions.net/aiNotes";
 
 function getAINoteProxyUrl(){ return String(localStorage.getItem(AI_NOTE_PROXY_URL_KEY) || "").trim(); }
-function getAINoteProxyToken(){ return String(localStorage.getItem(AI_NOTE_PROXY_TOKEN_KEY) || "").trim(); }
+function getAINoteProxyToken(){ return String(sessionStorage.getItem(AI_NOTE_PROXY_TOKEN_KEY) || "").trim(); }
 
 function loadAINoteSettings(){
   const url=document.getElementById("aiNoteProxyUrl");
   const token=document.getElementById("aiNoteProxyToken");
-  if(url) url.value=getAINoteProxyUrl();
+  if(url) url.value=getAINoteProxyUrl() || DEFAULT_AI_NOTE_PROXY_URL;
   if(token) token.value=getAINoteProxyToken();
 }
 
@@ -4797,15 +4798,15 @@ window.saveAINoteSettings=function(){
   const token=String(document.getElementById("aiNoteProxyToken")?.value||"").trim();
   if(!url){ alert("Please enter your AI proxy URL."); return; }
   localStorage.setItem(AI_NOTE_PROXY_URL_KEY,url);
-  if(token) localStorage.setItem(AI_NOTE_PROXY_TOKEN_KEY,token);
-  else localStorage.removeItem(AI_NOTE_PROXY_TOKEN_KEY);
+  if(token) sessionStorage.setItem(AI_NOTE_PROXY_TOKEN_KEY,token);
+  else sessionStorage.removeItem(AI_NOTE_PROXY_TOKEN_KEY);
   setAINoteStatus("AI settings saved on this admin device.");
 };
 
 window.clearAINoteSettings=function(){
   if(!isAdmin) return;
   localStorage.removeItem(AI_NOTE_PROXY_URL_KEY);
-  localStorage.removeItem(AI_NOTE_PROXY_TOKEN_KEY);
+  sessionStorage.removeItem(AI_NOTE_PROXY_TOKEN_KEY);
   loadAINoteSettings();
   setAINoteStatus("AI settings cleared.");
 };
