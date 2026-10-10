@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v16-ai-notes-cloudflare">
+  <meta name="bsn2a-build" content="shared-layout-v17-ai-notes-persist-settings">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -3320,12 +3320,12 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
         </div>
         <div class="ai-note-settings">
           <div class="ai-note-label">Secure AI proxy</div>
-          <p class="ai-note-warning">The AI runs through a secure Cloudflare Worker. Do not paste an OpenAI API key here or commit one into GitHub. Enter your Worker URL and AI proxy token instead.</p>
+          <p class="ai-note-warning">The AI runs through a secure Cloudflare Worker. Save these settings once on this admin device; the site will remember them for future sessions. Do not paste an OpenAI API key here or commit one into GitHub.</p>
           <input id="aiNoteProxyUrl" placeholder="https://bsn-2a-ai-notes.<your-account-subdomain>.workers.dev">
           <div style="height:8px;"></div>
           <input id="aiNoteProxyToken" type="password" placeholder="AI proxy access token">
           <div class="form-buttons" style="margin-top:8px;">
-            <button class="btn small" type="button" onclick="saveAINoteSettings()">Save AI Settings</button>
+            <button class="btn small" type="button" onclick="saveAINoteSettings()">💾 Save on This Device</button>
             <button class="btn small" type="button" onclick="testAINoteConnection()">🔌 Test Connection</button>
             <button class="btn small" type="button" onclick="clearAINoteSettings()">Clear</button>
           </div>
@@ -4824,13 +4824,31 @@ function getAINoteProxyUrl(){
   }
   return stored;
 }
-function getAINoteProxyToken(){ return String(sessionStorage.getItem(AI_NOTE_PROXY_TOKEN_KEY) || "").trim(); }
+function getAINoteProxyToken(){ return String(localStorage.getItem(AI_NOTE_PROXY_TOKEN_KEY) || "").trim(); }
 
 function loadAINoteSettings(){
   const url=document.getElementById("aiNoteProxyUrl");
   const token=document.getElementById("aiNoteProxyToken");
   if(url) url.value=getAINoteProxyUrl() || DEFAULT_AI_NOTE_PROXY_URL;
   if(token) token.value=getAINoteProxyToken();
+  refreshAINoteSavedState();
+}
+
+function refreshAINoteSavedState(){
+  const url=document.getElementById("aiNoteProxyUrl");
+  const token=document.getElementById("aiNoteProxyToken");
+  const saveButton=document.querySelector('#aiNotesModal button[onclick="saveAINoteSettings()"]');
+  const urlSaved=Boolean(getAINoteProxyUrl());
+  const tokenSaved=Boolean(getAINoteProxyToken());
+
+  if(saveButton){
+    saveButton.title=(urlSaved && tokenSaved)
+      ? "AI settings are already saved on this admin device."
+      : "Save the Worker URL and token on this admin device.";
+  }
+
+  if(url) url.dataset.saved=urlSaved ? "true" : "false";
+  if(token) token.dataset.saved=tokenSaved ? "true" : "false";
 }
 
 function setAINoteStatus(message,isError=false){
@@ -4846,17 +4864,17 @@ window.saveAINoteSettings=function(){
   const token=String(document.getElementById("aiNoteProxyToken")?.value||"").trim();
   if(!url){ alert("Please enter your AI proxy URL."); return; }
   localStorage.setItem(AI_NOTE_PROXY_URL_KEY,url);
-  if(token) sessionStorage.setItem(AI_NOTE_PROXY_TOKEN_KEY,token);
-  else sessionStorage.removeItem(AI_NOTE_PROXY_TOKEN_KEY);
-  setAINoteStatus("AI settings saved on this admin device. Use Test Connection before generating.");
+  if(token) localStorage.setItem(AI_NOTE_PROXY_TOKEN_KEY,token);
+  else localStorage.removeItem(AI_NOTE_PROXY_TOKEN_KEY);
+  setAINoteStatus("✅ AI settings saved on this admin device. You will not need to enter them again unless you clear browser data or change the Worker/token.");
 };
 
 window.clearAINoteSettings=function(){
   if(!isAdmin) return;
   localStorage.removeItem(AI_NOTE_PROXY_URL_KEY);
-  sessionStorage.removeItem(AI_NOTE_PROXY_TOKEN_KEY);
+  localStorage.removeItem(AI_NOTE_PROXY_TOKEN_KEY);
   loadAINoteSettings();
-  setAINoteStatus("AI settings cleared.");
+  setAINoteStatus("AI settings cleared from this device.");
 };
 
 window.testAINoteConnection=async function(){
@@ -4924,7 +4942,7 @@ window.openAINoteBuilder=function(target){
   if(titleHint) titleHint.value="";
   if(catHint) catHint.value="";
   loadAINoteSettings();
-  setAINoteStatus(getAINoteProxyUrl() ? "AI proxy ready." : "Set your secure AI proxy URL first.");
+  setAINoteStatus(getAINoteProxyUrl() && getAINoteProxyToken() ? "✅ Saved AI settings found on this device." : "Enter your Worker URL and proxy token once, then save them.");
   modal?.classList.add("show");
   setTimeout(()=>source?.focus(),80);
 };
