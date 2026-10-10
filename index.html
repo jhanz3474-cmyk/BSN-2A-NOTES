@@ -4818,7 +4818,7 @@ const DEFAULT_AI_NOTE_PROXY_URL = "";
 
 function getAINoteProxyUrl(){
   const stored=String(localStorage.getItem(AI_NOTE_PROXY_URL_KEY) || "").trim();
-  if(/cloudfunctions\\.net\\/aiNotes/i.test(stored)){
+  if(stored.toLowerCase().includes("cloudfunctions.net/ainotes")){
     localStorage.removeItem(AI_NOTE_PROXY_URL_KEY);
     return "";
   }
