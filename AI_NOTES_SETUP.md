@@ -11,7 +11,7 @@ The GitHub Pages frontend already contains the admin-only AI Note Builder. The r
 - Returns a structured note draft for Nursing Notes or School Notes
 - The frontend reviews the draft before anything is saved
 
-OpenAI's current JavaScript SDK uses the Responses API for primary model calls. The official SDK is published as the `openai` npm package. Firebase recommends Secret Manager-backed parameters for sensitive function configuration. citeturn268735search2turn349157search0turn959251search0
+OpenAI's current JavaScript SDK uses the Responses API for primary model calls. The official SDK is published as the `openai` npm package. Firebase recommends Secret Manager-backed parameters for sensitive function configuration.
 
 ## One-time deployment
 
