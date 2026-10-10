@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v12-ai-notes">
+  <meta name="bsn2a-build" content="shared-layout-v13-ai-notes-layout-fix">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -1067,9 +1067,42 @@ select:focus{
   display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;
   background:var(--primarySoft);color:var(--primary);font-size:10px;font-weight:800;white-space:nowrap;
 }
-.ai-note-modal-box{width:min(1050px,96vw);max-width:1050px;}
-.ai-note-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,420px);gap:14px;}
-.ai-note-side{display:flex;flex-direction:column;gap:9px;}
+.ai-note-modal-box{
+  width:min(1050px,calc(100vw - 40px)) !important;
+  max-width:1050px !important;
+  max-height:calc(100vh - 40px);
+  overflow:auto;
+  min-width:0;
+}
+.ai-note-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);
+  gap:14px;
+  min-width:0;
+}
+.ai-note-grid > *,
+.ai-note-side,
+.ai-note-builder-head > *{
+  min-width:0;
+}
+.ai-note-side{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+.ai-note-side input,
+.ai-note-side textarea,
+.ai-note-side select{
+  min-width:0;
+  max-width:100%;
+}
+.ai-note-warning,
+.ai-note-subtitle,
+.ai-note-settings,
+.ai-note-preview{
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
 .ai-note-label{display:block;margin:0 0 5px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
 .ai-note-input{min-height:300px;line-height:1.5;resize:vertical;}
 .ai-note-preview{min-height:300px;max-height:54vh;overflow:auto;padding:13px;border:1px solid var(--border);border-radius:10px;background:var(--surface);line-height:1.55;}
@@ -1084,7 +1117,18 @@ select:focus{
 .ai-note-warning{margin:0 0 9px;color:var(--muted);font-size:10px;line-height:1.45;}
 .ai-note-result-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .ai-note-result-meta .full{grid-column:1/-1;}
-@media(max-width:820px){.ai-note-grid{grid-template-columns:1fr;}.ai-note-preview{max-height:none;}}
+@media(max-width:820px){
+  .ai-note-modal-box{
+    width:calc(100vw - 24px) !important;
+    max-height:calc(100vh - 24px);
+    padding:14px;
+  }
+  .ai-note-grid{grid-template-columns:1fr;}
+  .ai-note-preview{max-height:none;}
+}
+@media(min-width:821px) and (max-width:1100px){
+  .ai-note-grid{grid-template-columns:minmax(0,1fr) minmax(260px,.75fr);}
+}
 
 
 /* =========================================================
