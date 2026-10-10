@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v21-ai-free-gemini">
+  <meta name="bsn2a-build" content="shared-layout-v22-ai-preserve-dates">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -4754,9 +4754,11 @@ function ai2SystemInstruction(target){
     "",
     "RULES:",
     "1. Preserve the source meaning. Never invent facts, patient information, clinical values, dates, drug doses, lab ranges, or citations.",
-    "2. Correct spelling, grammar, punctuation, spacing, duplicated lines, broken formatting, OCR-like noise, and Messenger/clipboard artifacts.",
-    "3. Preserve every clinically meaningful number, unit, dosage, timing, formula, abbreviation, sequence, classification, and named structure.",
-    "4. If something is unclear or contradictory, do not guess. Keep the useful source wording and add [REVIEW] where necessary.",
+    "2. Dates, days of the week, months, years, deadlines, examination dates, duty dates, date ranges, and scheduled times are HIGH-PRIORITY information. Never omit, generalize, or replace them with vague wording.",
+    "3. Preserve every date reference from the source, including entries like Monday/Saturday, October 12, 2026, 10/12/2026, Oct. 12–17, 2026, and date/time ranges. Keep the original date wording whenever possible.",
+    "4. Correct spelling, grammar, punctuation, spacing, duplicated lines, broken formatting, OCR-like noise, and Messenger/clipboard artifacts, but do not clean away date-bearing information.",
+    "5. Preserve every clinically meaningful number, unit, dosage, timing, formula, abbreviation, sequence, classification, and named structure.",
+    "6. If something is unclear or contradictory, do not guess. Keep the useful source wording and add [REVIEW] where necessary.",
     "5. Remove obvious conversational filler and duplicate content.",
     "6. Use clear headings, short explanatory paragraphs, bullet lists for grouped facts, numbered lists for procedures/sequences, and tables only when they improve comparison.",
     "7. Do not over-compress. Retain important details for studying.",
@@ -4795,6 +4797,46 @@ window.closeAINoteBuilder=function(){
   ai2Draft=null;
 };
 
+function ai2ExtractDateReferences(source){
+  const text=String(source||"").replace(/\r/g,"");
+  const refs=[];
+  const add=(value)=>{
+    const v=String(value||"").replace(/^[\s•▪◦📌📍🔹🔸-]+/,"").trim();
+    if(!v) return;
+    if(v.length>140) return;
+    if(!refs.some(x=>x.toLowerCase()===v.toLowerCase())) refs.push(v);
+  };
+
+  const lines=text.split("\n").map(line=>line.trim()).filter(Boolean);
+  const datePattern=/\b(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?\s+\d{1,2}(?:\s*(?:-|–|—|to)\s*\d{1,2})?(?:,?\s*\d{4})?|\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b|\b(?:19|20)\d{2}\b|\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/i;
+
+  lines.forEach(line=>{
+    if(datePattern.test(line)) add(line);
+  });
+
+  const standaloneTimes=[...text.matchAll(/\b(?:[01]?\d|2[0-3]):[0-5]\d\s*(?:AM|PM)?\b/gi)].map(m=>m[0]);
+  standaloneTimes.forEach(add);
+
+  return refs.slice(0,30);
+}
+
+function ai2AppendMissingDates(html,dateRefs){
+  if(!dateRefs.length) return html;
+  const current=String(html||"");
+  const missing=dateRefs.filter(ref=>{
+    const normalized=ref.toLowerCase().replace(/\s+/g," ").trim();
+    const hay=current.toLowerCase().replace(/\s+/g," ");
+    return !hay.includes(normalized);
+  });
+  if(!missing.length) return current;
+
+  const rows=missing.map(ref=>"<li>"+esc(ref)+"</li>").join("");
+  return current +
+    "<h3>📅 Dates &amp; Schedule References</h3>" +
+    "<p><strong>Preserved from the source:</strong></p>" +
+    "<ul>"+rows+"</ul>";
+}
+
 window.generateAINote=async function(){
   if(!isAdmin){alert("Only administrators can use the AI Note Builder.");return;}
   const source=String(document.getElementById("ai2Source").value||"").trim();
@@ -4804,7 +4846,10 @@ window.generateAINote=async function(){
   if(!source){alert("Paste the source text first.");return;}
   if(source.length>80000){alert("Please split very large source text into smaller sections so the AI can preserve details carefully.");return;}
 
-  ai2Status("✨ Cloud Gemini is cleaning and organizing the note…");
+  const sourceDateRefs=ai2ExtractDateReferences(source);
+  ai2Status(sourceDateRefs.length
+    ? "✨ Cloud Gemini is cleaning the note and preserving "+sourceDateRefs.length+" date/schedule reference(s)…"
+    : "✨ Cloud Gemini is cleaning and organizing the note…");
   const preview=document.getElementById("ai2Preview");
   preview.innerHTML="<div style='color:var(--muted);'>Generating draft…</div>";
 
@@ -4849,6 +4894,8 @@ window.generateAINote=async function(){
       category:String(parsed.category||categoryHint||"").trim(),
       html:ai2Sanitize(parsed.html||"")
     };
+
+    ai2Draft.html=ai2Sanitize(ai2AppendMissingDates(ai2Draft.html,sourceDateRefs));
 
     if(!ai2Draft.html) throw new Error("The cloud AI returned no usable note content.");
 
