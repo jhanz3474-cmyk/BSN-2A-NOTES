@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v19-ai2-stable">
+  <meta name="bsn2a-build" content="shared-layout-v20-ai-cloud-gemini">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -3212,7 +3212,7 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
     <div class="ai2-head">
       <div>
         <h3 id="ai2Title" class="ai2-title">✨ AI Note Builder</h3>
-        <p class="ai2-sub" id="ai2Subtitle">Paste messy source text and turn it into a clean study note. Nothing is saved until you review it in the normal editor.</p>
+        <p class="ai2-sub" id="ai2Subtitle">Cloud-hosted Gemini AI. Paste messy source text and turn it into a clean study note.</p>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="ai2-badge">ADMIN ONLY</span>
@@ -3234,29 +3234,26 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
       </div>
     </div>
 
-    <div class="ai2-settings">
-      <label class="ai2-label" for="ai2WorkerUrl">Secure AI Worker URL</label>
-      <input id="ai2WorkerUrl" placeholder="https://your-worker.workers.dev">
-      <label class="ai2-label" for="ai2Token">AI proxy token</label>
-      <input id="ai2Token" type="password" placeholder="Enter once and save on this device">
-      <div class="ai2-row">
-        <button class="btn small" type="button" onclick="saveAINoteSettings()">💾 Save Settings</button>
-        <button class="btn small" type="button" onclick="testAINoteConnection()">🔌 Test Connection</button>
-        <button class="btn small" type="button" onclick="clearAINoteSettings()">Clear Saved Settings</button>
-      </div>
-    </div>
-
     <div id="ai2Status" class="ai2-status"></div>
 
     <div class="ai2-buttons">
       <button class="btn" type="button" onclick="closeAINoteBuilder()">Cancel / Exit</button>
-      <button class="btn primary" type="button" onclick="generateAINote()">✨ Generate Clean Note</button>
+      <button class="btn primary" type="button" onclick="generateAINote()">✨ Clean & Organize</button>
       <button class="btn" type="button" onclick="useAINoteDraft()">Use Draft in Editor</button>
     </div>
 
     <label class="ai2-label">AI draft preview</label>
     <div id="ai2Preview" class="ai2-preview"></div>
+
+    <div class="ai2-settings" style="margin-top:10px;">
+      <div class="ai2-label">AI mode</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">
+        ☁️ <strong>Cloud-hosted Gemini</strong> — the note is processed in Google's cloud, not on your device.
+        No Worker URL, proxy token, or local AI model setup is required.
+      </div>
+    </div>
   </div>
+</div>
 </div>
 
 <!-- =======================================================
@@ -3411,7 +3408,7 @@ import {
   initializeApp
 }
 from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
 
 import {
@@ -3426,10 +3423,19 @@ import {
   serverTimestamp
 }
 from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js";
+
+import {
+  getAI,
+  getGenerativeModel,
+  GoogleAIBackend,
+  InferenceMode
+}
+from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-ai.js";
 
 
 const firebaseConfig = {
@@ -3468,6 +3474,10 @@ const db =
   getDatabase(app);
 
 const storage = getStorage(app);
+
+// Firebase AI Logic — cloud-hosted Gemini only.
+// No Worker URL, proxy token, or on-device inference is used.
+const aiLogic = getAI(app, { backend: new GoogleAIBackend() });
 
 
 
@@ -4714,30 +4724,18 @@ applyTheme(
 
 
 /* =========================================================
-   AI NOTE BUILDER v2 JS
+   AI NOTE BUILDER v3 — FIREBASE AI LOGIC / CLOUD GEMINI
 ========================================================= */
-const AI2_URL_KEY="bsn2a_ai_worker_url";
-const AI2_TOKEN_KEY="bsn2a_ai_worker_token";
 let ai2Target="notes";
 let ai2Draft=null;
 
-function ai2GetUrl(){
-  const v=String(localStorage.getItem(AI2_URL_KEY)||"").trim();
-  return v.toLowerCase().includes("cloudfunctions.net") ? "" : v;
-}
-function ai2GetToken(){ return String(localStorage.getItem(AI2_TOKEN_KEY)||"").trim(); }
 function ai2Status(message,error=false){
   const el=document.getElementById("ai2Status");
   if(!el) return;
   el.textContent=message||"";
   el.style.color=error ? "var(--danger)" : "var(--muted)";
 }
-function ai2LoadSettings(){
-  const u=document.getElementById("ai2WorkerUrl");
-  const t=document.getElementById("ai2Token");
-  if(u) u.value=ai2GetUrl();
-  if(t) t.value=ai2GetToken();
-}
+
 function ai2Sanitize(html){
   const doc=new DOMParser().parseFromString(String(html||""),"text/html");
   const allowed=new Set(["P","BR","STRONG","B","EM","I","U","S","H2","H3","UL","OL","LI","BLOCKQUOTE","TABLE","THEAD","TBODY","TR","TH","TD"]);
@@ -4748,110 +4746,125 @@ function ai2Sanitize(html){
   return doc.body.innerHTML.trim();
 }
 
+function ai2SystemInstruction(target){
+  const destination=target==="memorize" ? "School Notes" : "Nursing Notes";
+  return [
+    "You are the editorial AI for a BSN-2A nursing school notes website.",
+    "Your task is to turn messy pasted material into a polished "+destination+" draft.",
+    "",
+    "RULES:",
+    "1. Preserve the source meaning. Never invent facts, patient information, clinical values, dates, drug doses, lab ranges, or citations.",
+    "2. Correct spelling, grammar, punctuation, spacing, duplicated lines, broken formatting, OCR-like noise, and Messenger/clipboard artifacts.",
+    "3. Preserve every clinically meaningful number, unit, dosage, timing, formula, abbreviation, sequence, classification, and named structure.",
+    "4. If something is unclear or contradictory, do not guess. Keep the useful source wording and add [REVIEW] where necessary.",
+    "5. Remove obvious conversational filler and duplicate content.",
+    "6. Use clear headings, short explanatory paragraphs, bullet lists for grouped facts, numbered lists for procedures/sequences, and tables only when they improve comparison.",
+    "7. Do not over-compress. Retain important details for studying.",
+    "8. Never fabricate patient scenarios or medical advice.",
+    "9. Return only valid JSON with title, category, and html.",
+    "10. html may only use: <p>, <br>, <strong>, <b>, <em>, <i>, <u>, <s>, <h2>, <h3>, <ul>, <ol>, <li>, <blockquote>, <table>, <thead>, <tbody>, <tr>, <th>, <td>.",
+    "",
+    destination==="memorize"
+      ? "SCHOOL NOTES EMPHASIS: definitions, classifications, mechanisms, formulas, steps, comparisons, and must-memorize facts."
+      : "NURSING NOTES EMPHASIS: concepts, procedure steps, precautions, measurements, terminology, normal/abnormal distinctions, and dosage/unit details."
+  ].join("\n");
+}
+
 window.openAINoteBuilder=function(target){
   if(!isAdmin){alert("Only administrators can use the AI Note Builder.");return;}
   ai2Target=target==="memorize" ? "memorize" : "notes";
   ai2Draft=null;
   const modal=document.getElementById("ai2Modal");
-  const subtitle=document.getElementById("ai2Subtitle");
   const source=document.getElementById("ai2Source");
   const preview=document.getElementById("ai2Preview");
   document.getElementById("ai2Title").textContent=ai2Target==="memorize" ? "✨ AI School Note Builder" : "✨ AI Nursing Note Builder";
-  subtitle.textContent=ai2Target==="memorize"
-    ? "Turn pasted lectures, slides, reviewer material, or rough notes into a cleaner study-ready draft."
-    : "Turn pasted nursing/clinical text into a clearer nursing note draft.";
+  document.getElementById("ai2Subtitle").textContent=ai2Target==="memorize"
+    ? "Cloud-hosted Gemini AI. Turn pasted lectures, slides, reviewer material, or rough notes into a cleaner study-ready draft."
+    : "Cloud-hosted Gemini AI. Turn pasted nursing/clinical text into a clearer nursing note draft.";
   source.value="";
   preview.innerHTML="";
   document.getElementById("ai2TitleHint").value="";
   document.getElementById("ai2CategoryHint").value="";
-  ai2LoadSettings();
-  ai2Status(ai2GetUrl() && ai2GetToken()
-    ? "✅ Saved AI settings loaded from this device."
-    : "Enter your Worker URL and token once, then save them on this device.");
+  ai2Status("☁️ Cloud AI ready. Nothing is saved until you review the draft.");
   modal.classList.add("show");
   setTimeout(()=>source.focus(),60);
 };
+
 window.closeAINoteBuilder=function(){
   document.getElementById("ai2Modal")?.classList.remove("show");
   ai2Draft=null;
 };
 
-window.saveAINoteSettings=function(){
-  if(!isAdmin)return;
-  const url=String(document.getElementById("ai2WorkerUrl").value||"").trim();
-  const token=String(document.getElementById("ai2Token").value||"").trim();
-  if(!url){alert("Paste your Cloudflare Worker URL first.");return;}
-  if(!/^https:\/\//i.test(url)){alert("The Worker URL must start with https://");return;}
-  if(url.toLowerCase().includes("cloudfunctions.net")){alert("Please use your Cloudflare Worker URL, not a Firebase Cloud Function URL.");return;}
-  if(!token){alert("Enter your AI proxy token once.");return;}
-  localStorage.setItem(AI2_URL_KEY,url);
-  localStorage.setItem(AI2_TOKEN_KEY,token);
-  ai2Status("✅ Saved. The Worker URL and token will be remembered on this device.");
-};
-
-window.clearAINoteSettings=function(){
-  if(!isAdmin)return;
-  localStorage.removeItem(AI2_URL_KEY);
-  localStorage.removeItem(AI2_TOKEN_KEY);
-  ai2LoadSettings();
-  ai2Status("Saved AI settings cleared.");
-};
-
-window.testAINoteConnection=async function(){
-  if(!isAdmin)return;
-  const url=ai2GetUrl()||String(document.getElementById("ai2WorkerUrl").value||"").trim();
-  const token=ai2GetToken()||String(document.getElementById("ai2Token").value||"").trim();
-  if(!url||!token){alert("Save the Worker URL and token first.");return;}
-  ai2Status("Testing AI Worker…");
-  try{
-    const response=await fetch(url,{method:"GET",cache:"no-store",headers:{"Accept":"application/json","x-ai-proxy-token":token}});
-    const data=await response.json().catch(()=>({}));
-    if(!response.ok)throw new Error(data?.error||("Worker returned HTTP "+response.status));
-    ai2Status("✅ AI Worker is reachable.");
-  }catch(error){
-    ai2Status(error?.message==="Failed to fetch"
-      ? "❌ Cannot reach the Worker. Check the URL, deployment, and CORS."
-      : "❌ "+(error?.message||"Connection failed."),true);
-  }
-};
-
 window.generateAINote=async function(){
-  if(!isAdmin)return;
-  const url=ai2GetUrl()||String(document.getElementById("ai2WorkerUrl").value||"").trim();
-  const token=ai2GetToken()||String(document.getElementById("ai2Token").value||"").trim();
+  if(!isAdmin){alert("Only administrators can use the AI Note Builder.");return;}
   const source=String(document.getElementById("ai2Source").value||"").trim();
   const titleHint=String(document.getElementById("ai2TitleHint").value||"").trim();
   const categoryHint=String(document.getElementById("ai2CategoryHint").value||"").trim();
-  if(!url||!token){alert("Save your Worker URL and token first.");return;}
+
   if(!source){alert("Paste the source text first.");return;}
-  if(source.length>80000){alert("Please split very large source text into smaller sections.");return;}
-  ai2Status("✨ AI is cleaning and organizing the note…");
+  if(source.length>80000){alert("Please split very large source text into smaller sections so the AI can preserve details carefully.");return;}
+
+  ai2Status("✨ Cloud Gemini is cleaning and organizing the note…");
   const preview=document.getElementById("ai2Preview");
   preview.innerHTML="<div style='color:var(--muted);'>Generating draft…</div>";
+
   try{
-    const response=await fetch(url,{
-      method:"POST",
-      headers:{"Content-Type":"application/json","x-ai-proxy-token":token},
-      body:JSON.stringify({target:ai2Target,source_text:source,title_hint:titleHint,category_hint:categoryHint})
+    const model=getGenerativeModel(aiLogic,{
+      mode:InferenceMode.ONLY_IN_CLOUD,
+      inCloudParams:{
+        model:"gemini-3.8-flash",
+        systemInstruction:ai2SystemInstruction(ai2Target),
+        generationConfig:{
+          responseMimeType:"application/json",
+          responseSchema:{
+            type:"object",
+            properties:{
+              title:{type:"string"},
+              category:{type:"string"},
+              html:{type:"string"}
+            },
+            required:["title","category","html"]
+          }
+        }
+      }
     });
-    const data=await response.json().catch(()=>({}));
-    if(!response.ok)throw new Error(data?.error||("Worker returned HTTP "+response.status));
-    const raw=String(data?.html||"").trim();
-    if(!raw)throw new Error("The AI returned an empty draft.");
+
+    const prompt=[
+      "Transform the following source into the requested note draft.",
+      titleHint ? "Preferred title: "+titleHint : "No title hint was supplied.",
+      categoryHint ? "Preferred category: "+categoryHint : "No category hint was supplied.",
+      "",
+      "SOURCE TEXT START",
+      source,
+      "SOURCE TEXT END"
+    ].join("\n");
+
+    const result=await model.generateContent(prompt);
+    const raw=result?.response?.text?.() || "";
+    if(!raw.trim()) throw new Error("The cloud AI returned an empty response.");
+
+    const parsed=JSON.parse(raw);
     ai2Draft={
-      title:String(data?.title||titleHint||"").trim()|| (ai2Target==="memorize" ? "School Note" : "Nursing Note"),
-      category:String(data?.category||categoryHint||"").trim(),
-      html:ai2Sanitize(raw)
+      title:String(parsed.title||titleHint||"").trim() || (ai2Target==="memorize" ? "School Note" : "Nursing Note"),
+      category:String(parsed.category||categoryHint||"").trim(),
+      html:ai2Sanitize(parsed.html||"")
     };
+
+    if(!ai2Draft.html) throw new Error("The cloud AI returned no usable note content.");
+
     preview.innerHTML="<h3 style='margin-top:0;'>"+esc(ai2Draft.title)+"</h3>"+
       (ai2Draft.category ? "<div class='note-category'>"+esc(ai2Draft.category)+"</div>" : "")+
       ai2Draft.html;
-    ai2Status("✅ Draft ready. Review it, then use Draft in Editor.");
+    ai2Status("✅ Draft ready. Review it carefully, then use Draft in Editor.");
   }catch(error){
+    console.error("Firebase AI Logic note generation failed:",error);
     preview.innerHTML="";
-    ai2Status(error?.message==="Failed to fetch"
-      ? "❌ Cannot reach the AI Worker. Check its URL/deployment/CORS."
-      : "❌ "+(error?.message||"AI generation failed."),true);
+    const message=String(error?.message||"");
+    if(/app.?check|403|permission|not.?enabled/i.test(message)){
+      ai2Status("❌ Firebase AI setup/App Check is not enabled for this web app yet. The site code is ready, but the Firebase AI Logic service needs to be enabled in your Firebase project.",true);
+    }else{
+      ai2Status("❌ "+(message||"Cloud AI generation failed."),true);
+    }
   }
 };
 
@@ -4860,6 +4873,7 @@ window.useAINoteDraft=function(){
   if(!ai2Draft){alert("Generate a draft first.");return;}
   const draft=ai2Draft;
   closeAINoteBuilder();
+
   if(ai2Target==="memorize"){
     editingMemoId=null;
     document.getElementById("memoEditorTitle").textContent="Add Study Material";
