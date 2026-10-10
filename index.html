@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v18-ai-notes-close-config">
+  <meta name="bsn2a-build" content="shared-layout-v11">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -1040,97 +1040,6 @@ select:focus{
 
   font-size:11px;
 }
-
-
-
-/* =========================================================
-   AI NOTE BUILDER — ADMIN ONLY
-========================================================= */
-.ai-note-builder-panel{
-  margin-top:14px;
-  padding:15px;
-  border:1px solid var(--border);
-  border-radius:13px;
-  background:linear-gradient(135deg,var(--surface),var(--surface2));
-}
-.ai-note-builder-head{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:10px;
-}
-.ai-note-builder-title{margin:0;font-size:15px;}
-.ai-note-builder-subtitle{margin:4px 0 0;color:var(--muted);font-size:11px;line-height:1.5;}
-.ai-note-builder-actions{display:flex;gap:8px;flex-wrap:wrap;}
-.ai-note-close-button{
-  width:34px !important;height:34px !important;min-width:34px !important;padding:0 !important;
-  border-radius:9px !important;font-size:22px !important;line-height:1 !important;
-  display:inline-flex !important;align-items:center !important;justify-content:center !important;
-}
-.ai-note-close-button:hover{background:var(--surface2) !important;}
-.ai-note-builder-badge{
-  display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;
-  background:var(--primarySoft);color:var(--primary);font-size:10px;font-weight:800;white-space:nowrap;
-}
-.ai-note-modal-box{
-  width:min(1050px,calc(100vw - 40px)) !important;
-  max-width:1050px !important;
-  max-height:calc(100vh - 40px);
-  overflow:auto;
-  min-width:0;
-}
-.ai-note-grid{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  width:100%;
-  min-width:0;
-}
-.ai-note-side{
-  display:flex;
-  flex-direction:column;
-  gap:9px;
-}
-.ai-note-side input,
-.ai-note-side textarea,
-.ai-note-side select{
-  min-width:0;
-  width:100%;
-  max-width:100%;
-  display:block;
-}
-.ai-note-warning,
-.ai-note-subtitle,
-.ai-note-settings,
-.ai-note-preview{
-  overflow-wrap:anywhere;
-  word-break:normal;
-}
-.ai-note-label{display:block;margin:0 0 5px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
-.ai-note-input{min-height:300px;line-height:1.5;resize:vertical;}
-.ai-note-preview{width:100%;min-height:240px;max-height:45vh;overflow:auto;padding:13px;border:1px solid var(--border);border-radius:10px;background:var(--surface);line-height:1.55;}
-.ai-note-preview:empty::before{content:"Your cleaned note will appear here.";color:var(--muted2);}
-.ai-note-preview h2,.ai-note-preview h3{margin:12px 0 7px;}
-.ai-note-preview p{margin:7px 0;}
-.ai-note-preview ul,.ai-note-preview ol{padding-left:22px;margin:7px 0;}
-.ai-note-preview table{width:100%;border-collapse:collapse;margin:10px 0;}
-.ai-note-preview th,.ai-note-preview td{border:1px solid var(--border);padding:7px;vertical-align:top;}
-.ai-note-status{min-height:18px;color:var(--muted);font-size:11px;}
-.ai-note-settings{padding:11px;border:1px dashed var(--border);border-radius:10px;background:var(--surface2);}
-.ai-note-warning{margin:0 0 9px;color:var(--muted);font-size:10px;line-height:1.45;}
-.ai-note-result-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.ai-note-result-meta .full{grid-column:1/-1;}
-@media(max-width:820px){
-  .ai-note-modal-box{
-    width:calc(100vw - 24px) !important;
-    max-height:calc(100vh - 24px);
-    padding:14px;
-  }
-  .ai-note-grid{grid-template-columns:1fr;}
-  .ai-note-preview{max-height:none;}
-}
-
 
 
 /* =========================================================
@@ -2852,20 +2761,8 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
       <h3>➕ Manage Nursing Notes</h3>
       <div class="form-buttons">
         <button class="btn primary" onclick="openNoteEditor()">Add Note</button>
-        <button class="btn" onclick="openAINoteBuilder('notes')">✨ AI Create / Clean Note</button>
       </div>
-      <div class="ai-note-builder-panel">
-        <div class="ai-note-builder-head">
-          <div>
-            <h4 class="ai-note-builder-title">✨ AI Nursing Note Builder</h4>
-            <p class="ai-note-builder-subtitle">Admin only. Paste rough text, slide text, Messenger text, or mixed notes. The AI will clean, organize, and preserve important clinical details for review.</p>
-          </div>
-          <span class="ai-note-builder-badge">ADMIN ONLY</span>
-        </div>
-        <div class="ai-note-builder-actions">
-          <button class="btn small" onclick="openAINoteBuilder('notes')">Open AI Builder</button>
-        </div>
-      </div>
+
     </div>
 
 
@@ -2893,21 +2790,8 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
       <h3>🧠 Manage School Notes</h3>
       <div class="form-buttons">
         <button class="btn primary" onclick="openMemoEditor()">➕ Add Study Material</button>
-        <button class="btn" onclick="openAINoteBuilder('memorize')">✨ AI Create / Clean Note</button>
       </div>
       <p class="muted" style="margin-top:8px;">Use rich school notes with checkboxes, lists, colors, highlights, images, links, and shared drag-and-drop ordering. Admin edits are shared with the group.</p>
-      <div class="ai-note-builder-panel">
-        <div class="ai-note-builder-head">
-          <div>
-            <h4 class="ai-note-builder-title">✨ AI School Note Builder</h4>
-            <p class="ai-note-builder-subtitle">Admin only. Turn pasted lectures, slides, reviewer drafts, or messy class notes into a cleaner study-ready note without silently saving it.</p>
-          </div>
-          <span class="ai-note-builder-badge">ADMIN ONLY</span>
-        </div>
-        <div class="ai-note-builder-actions">
-          <button class="btn small" onclick="openAINoteBuilder('memorize')">Open AI Builder</button>
-        </div>
-      </div>
     </div>
 
     <div class="memo-link-hint">🔗 Add school materials using links. Google Drive, Google Slides, Google Docs, Canva, OneDrive, Dropbox, PDFs, and other web links are supported.</div>
@@ -3292,73 +3176,6 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
     <div class="modal-buttons">
       <button class="btn" onclick="closeFilePreview()">Close</button>
       <a id="filePreviewDownload" class="btn primary" href="#" target="_blank" rel="noopener">Open / Download</a>
-    </div>
-  </div>
-</div>
-
-<!-- =======================================================
-     AI NOTE BUILDER MODAL — ADMIN ONLY
-======================================================= -->
-<div id="aiNotesModal" class="modal">
-  <div class="modal-box ai-note-modal-box">
-    <div class="ai-note-builder-head">
-      <div style="min-width:0;">
-        <h3 id="aiNoteModalTitle" style="margin:0;">✨ AI Note Builder</h3>
-        <p id="aiNoteModalSubtitle" class="ai-note-builder-subtitle">Paste raw text and create a cleaned, structured note draft.</p>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span class="ai-note-builder-badge">ADMIN ONLY</span>
-        <button type="button" class="btn ai-note-close-button" title="Close AI Note Builder" aria-label="Close AI Note Builder" onclick="closeAINoteBuilder()">×</button>
-      </div>
-    </div>
-    <div class="ai-note-grid">
-      <div class="ai-note-side">
-        <div>
-          <label class="ai-note-label" for="aiNoteSource">Pasted text</label>
-          <textarea id="aiNoteSource" class="ai-note-input" placeholder="Paste your messy text here…"></textarea>
-        </div>
-        <div class="ai-note-result-meta">
-          <div>
-            <label class="ai-note-label" for="aiNoteTitleHint">Title (optional)</label>
-            <input id="aiNoteTitleHint" placeholder="Let AI suggest a title">
-          </div>
-          <div>
-            <label class="ai-note-label" for="aiNoteCategoryHint">Category (optional)</label>
-            <input id="aiNoteCategoryHint" placeholder="e.g. Anatomy, RLE, NCM 103">
-          </div>
-        </div>
-        <div class="ai-note-settings">
-          <div class="ai-note-label">Secure AI proxy <span id="aiNoteSavedBadge" class="ai-note-builder-badge" style="display:none;">SAVED</span></div>
-          <p class="ai-note-warning">The AI runs through a secure Cloudflare Worker. Save the Worker URL and proxy token once on this device; they will be remembered for future sessions. Do not paste an OpenAI API key here or commit one into GitHub.</p>
-          <input id="aiNoteProxyUrl" placeholder="https://bsn-2a-ai-notes.<your-account-subdomain>.workers.dev">
-          <div style="height:8px;"></div>
-          <input id="aiNoteProxyToken" type="password" placeholder="AI proxy access token">
-          <div class="form-buttons" style="margin-top:8px;">
-            <button class="btn small" type="button" onclick="saveAINoteSettings()">💾 Save on This Device</button>
-            <button class="btn small" type="button" onclick="testAINoteConnection()">🔌 Test Connection</button>
-            <button class="btn small" type="button" onclick="clearAINoteSettings()">Clear</button>
-          </div>
-        </div>
-        <div id="aiNoteStatus" class="ai-note-status"></div>
-        <div class="form-buttons" style="justify-content:flex-start;margin-top:0;"><button class="btn small" type="button" onclick="showAINoteSettings()">⚙️ Configure AI</button></div>
-        <div class="modal-buttons" style="justify-content:flex-start;">
-          <button class="btn" type="button" onclick="closeAINoteBuilder()">Cancel</button>
-          <button class="btn primary" type="button" onclick="generateAINote()">✨ Generate Clean Note</button>
-          <button class="btn" type="button" onclick="useAINoteDraft()">Use Draft in Editor</button>
-        </div>
-      </div>
-      <div class="ai-note-side">
-        <div>
-          <label class="ai-note-label">AI draft preview</label>
-          <div id="aiNotePreview" class="ai-note-preview"></div>
-        </div>
-        <div class="ai-note-settings">
-          <div class="ai-note-label">AI cleanup rules</div>
-          <div style="font-size:11px;line-height:1.55;color:var(--muted);">
-            Preserve meaning • clean grammar • remove obvious duplication • organize headings and lists • keep units/dosages/numbers intact • mark uncertain text for review • never invent patient facts or clinical details • make study notes easier to scan and memorize.
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -4818,266 +4635,6 @@ applyTheme(
 
 
 /* =========================================================
-   AI NOTE BUILDER
-========================================================= */
-let aiNoteTarget = "notes";
-let aiNoteDraft = null;
-const AI_NOTE_PROXY_URL_KEY = "bsn2a_ai_note_proxy_url";
-const AI_NOTE_PROXY_TOKEN_KEY = "bsn2a_ai_note_proxy_token";
-const DEFAULT_AI_NOTE_PROXY_URL = "";
-
-function getAINoteProxyUrl(){
-  const stored=String(localStorage.getItem(AI_NOTE_PROXY_URL_KEY) || "").trim();
-  if(/cloudfunctions\\.net\\/aiNotes/i.test(stored)){
-    localStorage.removeItem(AI_NOTE_PROXY_URL_KEY);
-    return "";
-  }
-  return stored;
-}
-function getAINoteProxyToken(){ return String(localStorage.getItem(AI_NOTE_PROXY_TOKEN_KEY) || "").trim(); }
-
-function loadAINoteSettings(){
-  const url=document.getElementById("aiNoteProxyUrl");
-  const token=document.getElementById("aiNoteProxyToken");
-  if(url) url.value=getAINoteProxyUrl() || DEFAULT_AI_NOTE_PROXY_URL;
-  if(token) token.value=getAINoteProxyToken();
-  refreshAINoteSavedState();
-}
-
-function refreshAINoteSavedState(){
-  const urlSaved=Boolean(getAINoteProxyUrl());
-  const tokenSaved=Boolean(getAINoteProxyToken());
-  const badge=document.getElementById("aiNoteSavedBadge");
-  if(badge) badge.style.display=(urlSaved && tokenSaved) ? "inline-flex" : "none";
-}
-function setAINoteStatus(message,isError=false){
-  const el=document.getElementById("aiNoteStatus");
-  if(!el) return;
-  el.textContent=message || "";
-  el.style.color=isError ? "var(--danger)" : "var(--muted)";
-}
-
-window.saveAINoteSettings=function(){
-  if(!isAdmin){ alert("Only administrators can configure the AI builder."); return; }
-  const url=String(document.getElementById("aiNoteProxyUrl")?.value||"").trim();
-  const token=String(document.getElementById("aiNoteProxyToken")?.value||"").trim();
-  if(!url){ alert("Please enter your AI proxy URL."); return; }
-  localStorage.setItem(AI_NOTE_PROXY_URL_KEY,url);
-  if(token) localStorage.setItem(AI_NOTE_PROXY_TOKEN_KEY,token);
-  else localStorage.removeItem(AI_NOTE_PROXY_TOKEN_KEY);
-  setAINoteStatus("AI settings saved on this admin device. Use Test Connection before generating.");
-};
-
-window.clearAINoteSettings=function(){
-  if(!isAdmin) return;
-  localStorage.removeItem(AI_NOTE_PROXY_URL_KEY);
-  localStorage.removeItem(AI_NOTE_PROXY_TOKEN_KEY);
-  loadAINoteSettings();
-  setAINoteStatus("AI settings cleared.");
-};
-
-window.testAINoteConnection=async function(){
-  if(!isAdmin){
-    alert("Only administrators can test the AI connection.");
-    return;
-  }
-
-  const proxyUrl=getAINoteProxyUrl() || String(document.getElementById("aiNoteProxyUrl")?.value||"").trim();
-  const proxyToken=getAINoteProxyToken() || String(document.getElementById("aiNoteProxyToken")?.value||"").trim();
-
-  if(!proxyUrl){
-    alert("Paste your Cloudflare Worker URL first.");
-    return;
-  }
-  if(!proxyToken){
-    alert("Enter your AI proxy token first.");
-    return;
-  }
-
-  setAINoteStatus("Testing Cloudflare AI Worker…");
-
-  try{
-    const response=await fetch(proxyUrl,{
-      method:"GET",
-      cache:"no-store",
-      headers:{
-        "Accept":"application/json",
-        "x-ai-proxy-token":proxyToken
-      }
-    });
-
-    const payload=await response.json().catch(()=>({}));
-    if(!response.ok){
-      throw new Error(payload?.error || ("Worker responded with HTTP "+response.status));
-    }
-
-    setAINoteStatus("✅ Cloudflare AI Worker is reachable. "+(payload?.message || "Ready for note generation."));
-  }catch(error){
-    console.error("AI Worker connection test failed:",error);
-    const message=error?.message==="Failed to fetch"
-      ? "Cannot reach the Cloudflare AI Worker. Check the Worker URL, deployment status, and CORS configuration."
-      : (error?.message || "Unknown connection error.");
-    setAINoteStatus("❌ "+message,true);
-  }
-};
-
-window.showAINoteSettings=function(){
-  if(!isAdmin) return;
-  document.getElementById("aiNoteProxyUrl")?.focus();
-};
-window.openAINoteBuilder=function(target){
-  if(!isAdmin){ alert("Only administrators can use the AI Note Builder."); return; }
-  aiNoteTarget=target==="memorize" ? "memorize" : "notes";
-  aiNoteDraft=null;
-  const modal=document.getElementById("aiNotesModal");
-  const title=document.getElementById("aiNoteModalTitle");
-  const subtitle=document.getElementById("aiNoteModalSubtitle");
-  const source=document.getElementById("aiNoteSource");
-  const preview=document.getElementById("aiNotePreview");
-  const titleHint=document.getElementById("aiNoteTitleHint");
-  const catHint=document.getElementById("aiNoteCategoryHint");
-  if(title) title.textContent=aiNoteTarget==="memorize" ? "✨ AI School Note Builder" : "✨ AI Nursing Note Builder";
-  if(subtitle) subtitle.textContent=aiNoteTarget==="memorize"
-    ? "Turn pasted lectures, slides, or reviewer text into a structured school note draft."
-    : "Turn pasted nursing/clinical text into a structured nursing note draft.";
-  if(source) source.value="";
-  if(preview) preview.innerHTML="";
-  if(titleHint) titleHint.value="";
-  if(catHint) catHint.value="";
-  loadAINoteSettings();
-  setAINoteStatus(getAINoteProxyUrl() ? "AI proxy ready." : "Set your secure AI proxy URL first.");
-  modal?.classList.add("show");
-  setTimeout(()=>source?.focus(),80);
-};
-
-window.closeAINoteBuilder=function(){
-  document.getElementById("aiNotesModal")?.classList.remove("show");
-  aiNoteDraft=null;
-};
-
-function sanitizeAINoteHtml(html){
-  const parser=new DOMParser();
-  const doc=parser.parseFromString(String(html||""),"text/html");
-  const allowed=new Set(["P","BR","STRONG","B","EM","I","U","S","H2","H3","UL","OL","LI","BLOCKQUOTE","TABLE","THEAD","TBODY","TR","TH","TD"]);
-  doc.body.querySelectorAll("*").forEach(el=>{
-    if(!allowed.has(el.tagName)){
-      el.replaceWith(...Array.from(el.childNodes));
-      return;
-    }
-    Array.from(el.attributes).forEach(attr=>el.removeAttribute(attr.name));
-  });
-  return doc.body.innerHTML.trim();
-}
-
-function parseAINoteResponse(payload){
-  if(payload && typeof payload==="object" && payload.title && (payload.html || payload.content)) return payload;
-  const raw=String(payload?.output_text || payload?.text || payload?.content || "").trim();
-  if(!raw) throw new Error("The AI returned an empty response.");
-  try{
-    return JSON.parse(raw);
-  }catch(error){
-    const start=raw.indexOf("{");
-    const end=raw.lastIndexOf("}");
-    if(start>=0 && end>start) return JSON.parse(raw.slice(start,end+1));
-    throw new Error("The AI response was not valid JSON.");
-  }
-}
-
-function previewAINoteDraft(draft){
-  const preview=document.getElementById("aiNotePreview");
-  if(!preview || !draft) return;
-  const safeHtml=sanitizeAINoteHtml(draft.html || draft.content || "");
-  preview.innerHTML=
-    (draft.title ? "<h2>"+esc(draft.title)+"</h2>" : "") +
-    (draft.category ? "<div class='note-category'>"+esc(draft.category)+"</div>" : "") +
-    safeHtml;
-}
-
-window.generateAINote=async function(){
-  if(!isAdmin){ alert("Only administrators can use the AI Note Builder."); return; }
-
-  const proxyUrl=getAINoteProxyUrl() || String(document.getElementById("aiNoteProxyUrl")?.value||"").trim();
-  const proxyToken=getAINoteProxyToken() || String(document.getElementById("aiNoteProxyToken")?.value||"").trim();
-  const source=String(document.getElementById("aiNoteSource")?.value||"").trim();
-  const titleHint=String(document.getElementById("aiNoteTitleHint")?.value||"").trim();
-  const categoryHint=String(document.getElementById("aiNoteCategoryHint")?.value||"").trim();
-
-  if(!proxyUrl){ alert("Please configure your secure AI proxy URL first."); return; }
-  if(!source){ alert("Paste the source text first."); return; }
-  if(source.length>80000){ alert("That paste is very large. Split it into smaller sections so the AI can preserve details more carefully."); return; }
-
-  localStorage.setItem(AI_NOTE_PROXY_URL_KEY,proxyUrl);
-  if(proxyToken) localStorage.setItem(AI_NOTE_PROXY_TOKEN_KEY,proxyToken);
-
-  setAINoteStatus("AI is cleaning and organizing the text…");
-  const preview=document.getElementById("aiNotePreview");
-  if(preview) preview.innerHTML="<div style='color:var(--muted);padding:10px;'>Generating careful draft…</div>";
-
-  try{
-    const headers={"Content-Type":"application/json"};
-    if(proxyToken) headers["x-ai-proxy-token"]=proxyToken;
-    const response=await fetch(proxyUrl,{
-      method:"POST",
-      headers,
-      body:JSON.stringify({
-        target:aiNoteTarget,
-        source_text:source,
-        title_hint:titleHint,
-        category_hint:categoryHint
-      })
-    });
-    const payload=await response.json().catch(()=>({}));
-    if(!response.ok) throw new Error(payload?.error || ("AI proxy returned HTTP "+response.status));
-    const draft=parseAINoteResponse(payload);
-    if(!draft.title) draft.title=titleHint || (aiNoteTarget==="memorize" ? "School Note" : "Nursing Note");
-    if(!draft.category) draft.category=categoryHint || "";
-    draft.html=sanitizeAINoteHtml(draft.html || draft.content || "");
-    if(!draft.html) throw new Error("The AI generated no usable note content.");
-    aiNoteDraft=draft;
-    previewAINoteDraft(draft);
-    setAINoteStatus("Draft generated. Review it carefully before saving.");
-  }catch(error){
-    console.error("AI Note Builder error:",error);
-    if(preview) preview.innerHTML="";
-    const detail = error?.message==="Failed to fetch"
-      ? "Cannot reach the Cloudflare AI Worker. Check the Worker URL, deployment status, and CORS configuration."
-      : (error?.message || "The AI request failed.");
-    setAINoteStatus(detail,true);
-    alert("AI connection failed. Use “Test Connection” to check the Cloudflare Worker. If it cannot reach the Worker, check the Worker URL and deployment.");
-  }
-};
-
-window.useAINoteDraft=function(){
-  if(!isAdmin){ alert("Only administrators can use the AI Note Builder."); return; }
-  if(!aiNoteDraft){ alert("Generate a draft first."); return; }
-  const draft=aiNoteDraft;
-  closeAINoteBuilder();
-
-  if(aiNoteTarget==="memorize"){
-    editingMemoId=null;
-    document.getElementById("memoEditorTitle").textContent="Add Study Material";
-    document.getElementById("editorMemoTitle").value=draft.title || "";
-    document.getElementById("editorMemoCategory").value=draft.category || "";
-    document.getElementById("editorMemoType").value="note";
-    document.getElementById("editorMemoLink").value="";
-    document.getElementById("richMemoEditor").innerHTML=sanitizeAINoteHtml(draft.html||"");
-    document.getElementById("memoEditorModal").classList.add("show");
-    setTimeout(()=>document.getElementById("richMemoEditor")?.focus(),80);
-  }else{
-    editingNoteId=null;
-    document.getElementById("noteEditorTitle").textContent="Add Nursing Note";
-    document.getElementById("editorNoteTitle").value=draft.title || "";
-    document.getElementById("editorNoteCategory").value=draft.category || "";
-    document.getElementById("editorNoteType").value="note";
-    document.getElementById("editorNoteLink").value="";
-    document.getElementById("richNoteEditor").innerHTML=sanitizeAINoteHtml(draft.html||"");
-    document.getElementById("noteEditorModal").classList.add("show");
-    setupNoteFileDropZone();
-    setTimeout(()=>document.getElementById("richNoteEditor")?.focus(),80);
-  }
-};
-
-/* =========================================================
    ADMIN LOGIN
 ========================================================= */
 
@@ -5691,35 +5248,6 @@ async function insertImageFileIntoEditor(file, sourceLabel="Pasted image"){
   }
 }
 
-function insertPlainClipboardText(editor, text){
-  if(!editor) return;
-  const value = String(text ?? "").replace(/\u00a0/g," ");
-  editor.focus();
-
-  const selection = window.getSelection();
-  if(selection && selection.rangeCount && editor.contains(selection.anchorNode)){
-    try{
-      const range = selection.getRangeAt(0);
-      range.deleteContents();
-      const fragment = document.createDocumentFragment();
-      const lines = value.replace(/\r\n?/g,"\n").split("\n");
-      lines.forEach((line,index)=>{
-        if(index) fragment.appendChild(document.createElement("br"));
-        fragment.appendChild(document.createTextNode(line));
-      });
-      range.insertNode(fragment);
-      range.collapse(false);
-      selection.removeAllRanges();
-      selection.addRange(range);
-      return;
-    }catch(error){
-      console.warn("Could not insert plain clipboard text at selection:",error);
-    }
-  }
-
-  document.execCommand("insertText",false,value);
-}
-
 window.handleNotePaste = async function(event){
   const clipboard = event.clipboardData;
   if(!clipboard) return;
@@ -5776,14 +5304,7 @@ window.handleNotePaste = async function(event){
     }
   }
 
-  // Text copied from Messenger and similar apps can contain
-  // background-color/highlight HTML. Always paste normal text as plain text
-  // so that foreign formatting cannot leak into the note editor.
-  event.preventDefault();
-  const plainText = clipboard.getData ? clipboard.getData("text/plain") : "";
-  const editor = document.getElementById("richNoteEditor");
-  insertPlainClipboardText(editor, plainText);
-  saveEditorSelection(editor,"note");
+  // Otherwise let normal text/HTML pasting continue.
 };
 
 window.resizePastedImage = function(file, maxSize=1600, quality=0.82){
@@ -6313,25 +5834,12 @@ async function insertMemoImageFile(file){
 }
 
 window.handleMemoPaste=async function(event){
-  const clipboard = event.clipboardData;
-  const items=Array.from(clipboard?.items||[]);
+  const items=Array.from(event.clipboardData?.items||[]);
   const images=items.filter(i=>i.kind==='file' && /^image\//i.test(i.type||''));
   if(images.length){
     event.preventDefault();
-    for(const item of images){
-      const f=item.getAsFile();
-      if(f) await insertMemoImageFile(f);
-    }
-    return;
+    for(const item of images){ const f=item.getAsFile(); if(f) await insertMemoImageFile(f); }
   }
-
-  // Keep pasted study text clean by stripping Messenger/clipboard HTML
-  // highlighting and other foreign formatting.
-  event.preventDefault();
-  const plainText = clipboard?.getData ? clipboard.getData('text/plain') : '';
-  const editor=document.getElementById('richMemoEditor');
-  insertPlainClipboardText(editor,plainText);
-  saveEditorSelection(editor,"memo");
 };
 
 window.handleMemoFileSelection=async function(event){
@@ -7839,12 +7347,6 @@ document.querySelector(".image-viewer-fullscreen")?.addEventListener("click", as
   }
 });
 document.addEventListener("keydown", event=>{
-  const aiModal=document.getElementById("aiNotesModal");
-  if(event.key==="Escape" && aiModal?.classList.contains("show")){
-    closeAINoteBuilder();
-    return;
-  }
-
   const viewer=document.getElementById("noteImageViewer");
   if(!viewer?.classList.contains("show")) return;
   if(event.key === "Escape"){
