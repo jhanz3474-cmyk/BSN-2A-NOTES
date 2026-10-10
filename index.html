@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v20-ai-cloud-gemini">
+  <meta name="bsn2a-build" content="shared-layout-v21-ai-free-gemini">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -4812,7 +4812,7 @@ window.generateAINote=async function(){
     const model=getGenerativeModel(aiLogic,{
       mode:InferenceMode.ONLY_IN_CLOUD,
       inCloudParams:{
-        model:"gemini-3.8-flash",
+        model:"gemini-3.5-flash-lite",
         systemInstruction:ai2SystemInstruction(ai2Target),
         generationConfig:{
           responseMimeType:"application/json",
