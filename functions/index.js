@@ -101,6 +101,14 @@ exports.aiNotes = onRequest(
       return res.status(204).send("");
     }
 
+    if (req.method === "GET") {
+      return res.status(200).json({
+        ok: true,
+        service: "BSN-2A AI Notes",
+        message: "AI backend is reachable."
+      });
+    }
+
     if (req.method !== "POST") {
       return fail(res, 405, "Only POST requests are supported.");
     }
