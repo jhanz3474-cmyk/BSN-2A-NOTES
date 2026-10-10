@@ -4997,9 +4997,15 @@ function setupNoteDragAndDrop(box){
   const cards = Array.from(box.querySelectorAll(".note-draggable"));
   cards.forEach(card => {
     card.draggable = true;
+
+    card.querySelectorAll("a, img").forEach(node=>{
+      node.draggable = false;
+    });
+
     card.addEventListener("dragstart", event => {
       const interactive = event.target.closest("button, input, textarea, select, a");
       if(interactive){ event.preventDefault(); return; }
+      event.stopPropagation();
       draggedNoteId = String(card.dataset.noteId || "");
       draggedNoteCard = card;
       card.classList.add("note-dragging");
@@ -5108,21 +5114,64 @@ function requireAdmin(){
   return true;
 }
 
+let savedNoteEditorRange = null;
+let savedMemoEditorRange = null;
+
+function saveEditorSelection(editor,key){
+  if(!editor) return false;
+  const selection = window.getSelection();
+  if(!selection || !selection.rangeCount) return false;
+  const range = selection.getRangeAt(0);
+  if(!editor.contains(range.commonAncestorContainer)) return false;
+  const stored = range.cloneRange();
+  if(key === "note") savedNoteEditorRange = stored;
+  if(key === "memo") savedMemoEditorRange = stored;
+  return true;
+}
+
+function restoreEditorSelection(editor,key){
+  if(!editor) return false;
+  const range = key === "note" ? savedNoteEditorRange : savedMemoEditorRange;
+  editor.focus();
+  if(!range) return false;
+  try{
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    return true;
+  }catch(error){
+    return false;
+  }
+}
+
+document.addEventListener("selectionchange",()=>{
+  const noteEditor=document.getElementById("richNoteEditor");
+  const memoEditor=document.getElementById("richMemoEditor");
+  if(noteEditor) saveEditorSelection(noteEditor,"note");
+  if(memoEditor) saveEditorSelection(memoEditor,"memo");
+});
+
 function focusRichEditor(){
-  document.getElementById("richNoteEditor").focus();
+  const editor=document.getElementById("richNoteEditor");
+  restoreEditorSelection(editor,"note");
+  if(!savedNoteEditorRange) editor?.focus();
 }
 window.focusRichEditor = focusRichEditor;
 
 window.editorCommand = function(command,value=null){
-  focusRichEditor();
+  const editor=document.getElementById("richNoteEditor");
+  if(!restoreEditorSelection(editor,"note") && editor) editor.focus();
   document.execCommand(command,false,value);
+  saveEditorSelection(editor,"note");
 };
 
 window.highlightSelection = function(color){
-  focusRichEditor();
-  if(!document.execCommand("hiliteColor",false,color)){
-    document.execCommand("backColor",false,color);
-  }
+  const editor=document.getElementById("richNoteEditor");
+  if(!editor) return;
+  restoreEditorSelection(editor,"note");
+  const applied = document.execCommand("hiliteColor",false,color);
+  if(!applied) document.execCommand("backColor",false,color);
+  saveEditorSelection(editor,"note");
 };
 
 function insertNoteImageHtml(src, alt="Image"){
@@ -5644,9 +5693,15 @@ function setupMemoDragAndDrop(box){
   const cards=Array.from(box.querySelectorAll('.memo-draggable'));
   cards.forEach(card=>{
     card.draggable=true;
+
+    card.querySelectorAll('a,img').forEach(node=>{
+      node.draggable=false;
+    });
+
     card.addEventListener('dragstart',event=>{
       const interactive=event.target.closest('button,input,textarea,select,a');
       if(interactive){event.preventDefault();return;}
+      event.stopPropagation();
       draggedMemoId=String(card.dataset.memoId||'');
       draggedMemoCard=card;
       card.classList.add('memo-dragging');
@@ -5711,15 +5766,19 @@ async function saveMemoOrder(order){
 let editingMemoId=null;
 function memoCommand(command,value=null){
   const editor=document.getElementById('richMemoEditor');
-  editor?.focus();
+  if(!restoreEditorSelection(editor,"memo") && editor) editor.focus();
   document.execCommand(command,false,value);
+  saveEditorSelection(editor,"memo");
 }
 window.memoCommand=memoCommand;
 
 function highlightMemoSelection(color){
   const editor=document.getElementById('richMemoEditor');
-  editor?.focus();
-  if(!document.execCommand('hiliteColor',false,color)) document.execCommand('backColor',false,color);
+  if(!editor) return;
+  restoreEditorSelection(editor,"memo");
+  const applied=document.execCommand('hiliteColor',false,color);
+  if(!applied) document.execCommand('backColor',false,color);
+  saveEditorSelection(editor,"memo");
 }
 window.highlightMemoSelection=highlightMemoSelection;
 
