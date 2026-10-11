@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v22-ai-preserve-dates">
+  <meta name="bsn2a-build" content="shared-layout-v23-ai-app-check">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -3429,6 +3429,13 @@ import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from
 "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js";
 
 import {
+  initializeAppCheck,
+  ReCaptchaEnterpriseProvider
+}
+from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check.js";
+
+import {
   getAI,
   getGenerativeModel,
   GoogleAIBackend,
@@ -3468,6 +3475,16 @@ const app =
   initializeApp(
     firebaseConfig
   );
+
+
+/* =========================================================
+   FIREBASE APP CHECK
+   Protects cloud Gemini / Firebase AI Logic requests.
+========================================================= */
+const appCheck = initializeAppCheck(app,{
+  provider:new ReCaptchaEnterpriseProvider("6Lf62-ktAAAAAE0noymxM2Oiuok4DCHjOPILX7d"),
+  isTokenAutoRefreshEnabled:true
+});
 
 
 const db =
