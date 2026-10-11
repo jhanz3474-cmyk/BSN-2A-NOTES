@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v23-ai-app-check">
+  <meta name="bsn2a-build" content="shared-layout-v24-ai-diagnostics">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -4923,11 +4923,21 @@ window.generateAINote=async function(){
   }catch(error){
     console.error("Firebase AI Logic note generation failed:",error);
     preview.innerHTML="";
-    const message=String(error?.message||"");
-    if(/app.?check|403|permission|not.?enabled/i.test(message)){
-      ai2Status("❌ Firebase AI setup/App Check is not enabled for this web app yet. The site code is ready, but the Firebase AI Logic service needs to be enabled in your Firebase project.",true);
+
+    const code=String(error?.code||"").trim();
+    const rawMessage=String(error?.message||"").trim();
+    const details=code
+      ? " ["+code+"] "+rawMessage
+      : rawMessage;
+
+    if(code.includes("APP_CHECK") || /app.?check/i.test(rawMessage)){
+      ai2Status("❌ Firebase App Check rejected the AI request."+details+" Make sure the BSN 2A Notes web app is registered with the production Fraud Defense/reCAPTCHA Enterprise provider and that Firebase AI Logic App Check is enforced.",true);
+    }else if(/permission|forbidden|403/i.test(code+" "+rawMessage)){
+      ai2Status("❌ Firebase rejected the Gemini request."+details+" Check Firebase Console → AI Services → AI Logic and confirm the Gemini Developer API setup is completed.",true);
+    }else if(/not.?found|api.*disabled|failed.?precondition|unavailable/i.test(code+" "+rawMessage)){
+      ai2Status("❌ Firebase AI Logic is not fully enabled yet."+details+" Complete Firebase Console → AI Services → AI Logic → Get started → Gemini Developer API.",true);
     }else{
-      ai2Status("❌ "+(message||"Cloud AI generation failed."),true);
+      ai2Status("❌ Cloud Gemini error."+details,true);
     }
   }
 };
