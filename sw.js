@@ -1,8 +1,9 @@
-const CACHE_VERSION = "nursing-duty-hub-v20-ai-cloud";
+const CACHE_VERSION = "nursing-duty-hub-v23-app-check";
 const APP_CACHE = CACHE_VERSION + "-app";
 const RUNTIME_CACHE = CACHE_VERSION + "-runtime";
 
 const FIREBASE_MODULES = [
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check.js",
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js",
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js",
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js",
