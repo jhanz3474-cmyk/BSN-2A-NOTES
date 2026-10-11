@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="bsn2a-build" content="shared-layout-v24-ai-diagnostics">
+  <meta name="bsn2a-build" content="shared-layout-v25-ai-limited-app-check">
 <meta name="theme-color" content="#176b4d">
 
 <title>Nursing Duty Hub</title>
@@ -3494,7 +3494,7 @@ const storage = getStorage(app);
 
 // Firebase AI Logic — cloud-hosted Gemini only.
 // No Worker URL, proxy token, or on-device inference is used.
-const aiLogic = getAI(app, { backend: new GoogleAIBackend() });
+const aiLogic = getAI(app, { backend: new GoogleAIBackend(), useLimitedUseAppCheckTokens:true });
 
 
 
