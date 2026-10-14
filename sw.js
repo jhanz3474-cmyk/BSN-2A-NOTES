@@ -1,4 +1,4 @@
-const CACHE_VERSION = "nursing-duty-hub-v23-app-check";
+const CACHE_VERSION = "nursing-duty-hub-v26-ai-key-fix";
 const APP_CACHE = CACHE_VERSION + "-app";
 const RUNTIME_CACHE = CACHE_VERSION + "-runtime";
 
