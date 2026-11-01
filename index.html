@@ -2254,6 +2254,10 @@ and (orientation:landscape){
 .visitor-actions{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
 .login-visitor{margin-top:8px;}
 .visitor-access-note{margin-top:8px;font-size:11px;color:var(--muted2);text-align:center;}
+.account-status-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.approval-request-list{display:grid;gap:8px;margin-top:10px;}
+.approval-request{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;}
+.approval-request span{color:var(--muted);font-size:12px;}
 body.visitor-mode .nav > .group-header{display:none !important;}
 body.visitor-mode #mainNav,body.visitor-mode #systemNav{display:none !important;}
 body.visitor-mode #groupNav{display:flex !important;}
@@ -2275,13 +2279,20 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
 <div id="loginScreen" class="login-screen">
   <div class="login-box">
     <h2>🩺 BSN 2A • Group 4</h2>
-    <p>Enter your name and the group password to continue. Your login will be remembered on this device.</p>
-    <input id="loginName" type="text" placeholder="Your name" autocomplete="name">
-    <input id="loginPassword" type="password" placeholder="Group password" autocomplete="current-password" onkeydown="if(event.key==='Enter') loginUser()">
-    <button class="btn primary" style="width:100%;" onclick="loginUser()">Enter Group 4</button>
-    <button class="btn login-visitor" style="width:100%;" onclick="visitSiteOnly()">👀 Visit Site Only</button>
-    <div class="visitor-access-note">Visitor mode gives access to School Notes only and does not require the group password.</div>
-    <div id="loginError" class="login-error"></div>
+    <p>Sign in with your individual email and password. New accounts need email verification and administrator approval.</p>
+    <input id="loginName" type="text" placeholder="Full name (for a new account)" autocomplete="name">
+    <input id="loginEmail" type="email" placeholder="Email address" autocomplete="username">
+    <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter') loginUser()">
+    <button class="btn primary" style="width:100%;" onclick="loginUser()">Sign in</button>
+    <button class="btn" style="width:100%;margin-top:8px;" onclick="registerUser()">Create account</button>
+    <div id="accountStatusActions" class="account-status-actions" style="display:none;margin-top:8px;">
+      <button class="btn small" type="button" onclick="refreshApprovalStatus()">Check account status</button>
+      <button class="btn small" type="button" onclick="resendVerificationEmail()">Resend verification email</button>
+      <button class="btn small" type="button" onclick="returnToGroupLogin()">Sign out</button>
+    </div>
+    <button class="btn login-visitor" style="width:100%;" onclick="visitSiteOnly()">👀 Visit School Notes</button>
+    <div class="visitor-access-note">Visitors can read School Notes only. They cannot access group content or make changes.</div>
+    <div id="loginError" class="login-error" aria-live="polite"></div>
   </div>
 </div>
 
@@ -2923,6 +2934,12 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
       <div id="onlineMembersList" class="online-list"></div>
     </div>
 
+    <div id="adminApprovalPanel" class="admin-panel" style="display:none;">
+      <h3>🛡️ Account approval</h3>
+      <p class="muted">Approve verified student accounts. Access is granted by a trusted server function.</p>
+      <div id="approvalRequestList" class="approval-request-list"></div>
+    </div>
+
     <div class="members-header">
 
       <h3>
@@ -3256,58 +3273,7 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
 </div>
 </div>
 
-<!-- =======================================================
-     ADMIN LOGIN MODAL
-======================================================= -->
-
-<div
-  id="adminModal"
-  class="modal"
->
-
-  <div class="modal-box">
-
-    <h3>
-      🔐 Admin Login
-    </h3>
-
-
-    <input
-      id="adminPassword"
-      type="password"
-      placeholder="Admin password"
-      onkeydown="
-        if(event.key==='Enter'){
-          loginAdmin();
-        }
-      "
-    >
-
-
-    <div class="modal-buttons">
-
-      <button
-        class="btn"
-        onclick="closeAdminModal()"
-      >
-        Cancel
-      </button>
-
-
-      <button
-        class="btn primary"
-        onclick="loginAdmin()"
-      >
-        Login
-      </button>
-
-    </div>
-
-
-  </div>
-
-</div>
-
+<!-- Administrator access is derived from trusted Firebase ID token claims. -->
 
 <!-- =======================================================
      PROFILE MODAL
@@ -3412,20 +3378,46 @@ from
 
 
 import {
+  getAuth,
+  onIdTokenChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+  sendEmailVerification,
+  getIdToken,
+  getIdTokenResult,
+  connectAuthEmulator
+}
+from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+import {
+  getFunctions,
+  httpsCallable,
+  connectFunctionsEmulator
+}
+from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-functions.js";
+
+
+import {
   getDatabase,
   ref,
+  get,
   push,
   set,
   update,
   remove,
   onValue,
   onDisconnect,
-  serverTimestamp
+  serverTimestamp,
+  connectDatabaseEmulator
 }
 from
 "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from
+import { getStorage, ref as storageRef, uploadBytes, getBlob, connectStorageEmulator } from
 "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js";
 
 import {
@@ -3471,6 +3463,18 @@ const firebaseConfig = {
 };
 
 
+const emulatorMode =
+  (location.hostname === "localhost" || location.hostname === "127.0.0.1") &&
+  new URLSearchParams(location.search).get("firebaseEmulator") === "1";
+
+if(emulatorMode){
+  firebaseConfig.projectId = "demo-bsn2a-notes";
+  firebaseConfig.databaseURL = "http://127.0.0.1:9000?ns=demo-bsn2a-notes";
+  firebaseConfig.storageBucket = "demo-bsn2a-notes.appspot.com";
+}else if(firebaseConfig.projectId === "bsn-2a-notes"){
+  throw new Error("This migration branch is locked to Firebase emulators or a staging Firebase web config. Production initialization is disabled.");
+}
+
 const app =
   initializeApp(
     firebaseConfig
@@ -3481,7 +3485,7 @@ const app =
    FIREBASE APP CHECK
    Protects cloud Gemini / Firebase AI Logic requests.
 ========================================================= */
-const appCheck = initializeAppCheck(app,{
+const appCheck = emulatorMode ? null : initializeAppCheck(app,{
   provider:new ReCaptchaEnterpriseProvider("6Lf62-ktAAAAAE0n0ymxM2Oiuook4DCHjOPILX7d"),
   isTokenAutoRefreshEnabled:true
 });
@@ -3489,8 +3493,17 @@ const appCheck = initializeAppCheck(app,{
 
 const db =
   getDatabase(app);
-
+const auth = getAuth(app);
+const functions = getFunctions(app,"asia-southeast1");
+const approveRegistrationCall = httpsCallable(functions,"approveRegistration");
 const storage = getStorage(app);
+
+if(emulatorMode){
+  connectAuthEmulator(auth,"http://127.0.0.1:9099",{disableWarnings:true});
+  connectDatabaseEmulator(db,"127.0.0.1",9000);
+  connectStorageEmulator(storage,"127.0.0.1",9199);
+  connectFunctionsEmulator(functions,"127.0.0.1",5001);
+}
 
 // Firebase AI Logic — cloud-hosted Gemini only.
 // No Worker URL, proxy token, or on-device inference is used.
@@ -3509,6 +3522,9 @@ const OFFLINE_DB_VERSION = 1;
 let offlineDB = null;
 const offlineMemory = {};
 const offlineListeners = {};
+const offlineSubscriptions = {};
+const PUBLIC_COLLECTIONS = new Set(["memorize","memorizeLayout"]);
+const OFFLINE_SYNC_COLLECTIONS = new Set(["notes","noteLayout","memorize","memorizeLayout","schedule","members","files"]);
 let offlineSyncing = false;
 
 function openOfflineDB(){
@@ -3677,7 +3693,9 @@ function setGlobalCollection(collection,data){
 }
 
 async function notifyOfflineChange(collection){
-  const data = await getOfflineCollection(collection);
+  const data = canReadOfflineCollection(collection)
+    ? await getOfflineCollection(collection)
+    : {};
   setGlobalCollection(collection,data);
 
   const listeners = offlineListeners[collection] || [];
@@ -3694,33 +3712,26 @@ async function notifyOfflineChange(collection){
 }
 
 async function queueOfflineOperation(type,path,data){
+  const activeUser = auth.currentUser;
+  if(!activeUser || !isApproved || !isAdmin){
+    throw new Error("Only an approved administrator can queue shared changes.");
+  }
   const normalized = normalizeOffline(data);
   const operation = {
     type,
     path,
     data: normalized,
+    uid: activeUser.uid,
     queuedAt: Date.now()
   };
-
   await idbPut("queue",undefined,operation);
-
   const parts = splitOfflinePath(path);
   const collection = parts.collection;
   let local = cloneOffline(await getOfflineCollection(collection)) || {};
-
-  local = applyQueuedOperation(local,{
-    type,
-    path,
-    data: normalized
-  });
-
+  local = applyQueuedOperation(local,{type,path,data:normalized});
   await saveOfflineCollection(collection,local);
   await notifyOfflineChange(collection);
-
-  if(navigator.onLine){
-    flushOfflineQueue();
-  }
-
+  if(navigator.onLine) flushOfflineQueue();
   return operation;
 }
 
@@ -3771,136 +3782,125 @@ async function purgeStaleLayoutQueue(collection, remote){
   }catch(error){ console.warn('Could not clean stale layout queue',error); }
 }
 
+function canReadOfflineCollection(collection){
+  return PUBLIC_COLLECTIONS.has(collection) || Boolean(currentAuthUser && isApproved);
+}
+
+function offlineSnapshot(value){
+  const data = cloneOffline(value || {});
+  return {val:()=>cloneOffline(data),exists:()=>Object.keys(data || {}).length > 0};
+}
+
 async function offlineOnValue(collection,callback){
-  if(!offlineListeners[collection]){
-    offlineListeners[collection] = [];
-  }
+  if(!offlineListeners[collection]) offlineListeners[collection] = [];
   offlineListeners[collection].push(callback);
-
-  const local = await getOfflineCollection(collection);
+  await authStateReady;
+  const allowed = canReadOfflineCollection(collection);
+  const local = allowed ? await getOfflineCollection(collection) : {};
   const onlineAuthoritativeCollections = new Set(["notes","memorize","noteLayout","memorizeLayout"]);
+  if(!navigator.onLine || !onlineAuthoritativeCollections.has(collection)) callback(offlineSnapshot(local));
+  syncOfflineSubscriptions();
+}
 
-  // While online, Firebase is authoritative for shared notes and their layout.
-  // IndexedDB is used as the fallback only when the app is actually offline.
-  if(!navigator.onLine || !onlineAuthoritativeCollections.has(collection)){
-    callback({
-      val:()=>cloneOffline(local),
-      exists:()=>Object.keys(local || {}).length > 0
+async function replayOfflineSnapshots(){
+  for(const [collection,listeners] of Object.entries(offlineListeners)){
+    const data = canReadOfflineCollection(collection) ? await getOfflineCollection(collection) : {};
+    listeners.forEach(callback=>{
+      try{ callback(offlineSnapshot(data)); }
+      catch(error){ console.error("Offline listener error:",error); }
     });
-  }
-
-  try{
-    onValue(
-      ref(db,collection),
-      async snapshot=>{
-        let remote = snapshot.val() || {};
-
-        // Old builds could leave queued note-order updates in IndexedDB.
-        // Those stale operations must never override Firebase's current layout.
-        if(collection === "notes" && navigator.onLine){
-          await purgeQueuedNoteOrderOperations();
-          await purgeStaleLayoutQueue("notes", remote);
-        }
-        if(collection === "memorize" && navigator.onLine){
-          await purgeStaleLayoutQueue("memorize", remote);
-        }
-        const queue = await idbAll("queue");
-        const pending = queue.filter(op=>{
-          const parts = splitOfflinePath(op.path);
-          if(collection === "notes" || collection === "memorize"){
-            const data = op?.data || {};
-            const keys = Object.keys(data);
-            if(parts.collection === collection && (keys.includes("order") || keys.includes("layoutUpdatedAt"))) return false;
-            if(parts.collection === (collection === "notes" ? "noteLayout" : "memorizeLayout")) return false;
-          }
-          return parts.collection === collection;
-        });
-
-        pending.forEach(op=>{
-          const opData = op?.data || {};
-
-          // Never allow an older queued layout write from IndexedDB to beat
-          // the newer Firebase layout. This is the key protection against
-          // "resetting" to the old position after refresh/device changes.
-          const isItemLayoutOp =
-            (collection === "notes" || collection === "memorize") &&
-            (Object.prototype.hasOwnProperty.call(opData,"order") ||
-             Object.prototype.hasOwnProperty.call(opData,"layoutUpdatedAt"));
-
-          if(isItemLayoutOp){
-            const pendingUpdatedAt = Number(opData.layoutUpdatedAt || opData.updatedAt || op?.queuedAt || 0);
-            const remoteUpdatedAt = Object.values(remote || {}).reduce(
-              (max,item)=>Math.max(max,Number(item?.layoutUpdatedAt || 0)),0
-            );
-            if(pendingUpdatedAt && remoteUpdatedAt && pendingUpdatedAt <= remoteUpdatedAt){
-              return;
-            }
-          }
-
-          if(collection === "noteLayout" && remote && typeof remote === "object"){
-            const pendingUpdatedAt = Number(opData.updatedAt || op?.queuedAt || 0);
-            const remoteUpdatedAt = Number(remote.updatedAt || 0);
-            if(pendingUpdatedAt && remoteUpdatedAt && pendingUpdatedAt <= remoteUpdatedAt){
-              return;
-            }
-          }
-
-          if(collection === "memorizeLayout" && remote && typeof remote === "object"){
-            const pendingUpdatedAt = Number(opData.updatedAt || op?.queuedAt || 0);
-            const remoteUpdatedAt = Number(remote.updatedAt || 0);
-            if(pendingUpdatedAt && remoteUpdatedAt && pendingUpdatedAt <= remoteUpdatedAt){
-              return;
-            }
-          }
-
-          remote = applyQueuedOperation(remote,op);
-        });
-
-        await saveOfflineCollection(collection,remote);
-
-        callback({
-          val:()=>cloneOffline(remote),
-          exists:()=>Object.keys(remote || {}).length > 0
-        });
-
-        if(navigator.onLine){
-          flushOfflineQueue();
-        }
-      },
-      error=>{
-        console.warn("Firebase listener unavailable; using local data.",error);
-      }
-    );
-  }catch(error){
-    console.warn("Offline mode active.",error);
   }
 }
 
+function syncOfflineSubscriptions(){
+  for(const collection of Object.keys(offlineListeners)){
+    const allowed = canReadOfflineCollection(collection);
+    if(allowed && !offlineSubscriptions[collection]){
+      offlineSubscriptions[collection] = subscribeOfflineCollection(collection);
+    }else if(!allowed && offlineSubscriptions[collection]){
+      offlineSubscriptions[collection]();
+      delete offlineSubscriptions[collection];
+    }
+  }
+}
+
+function subscribeOfflineCollection(collection){
+  return onValue(ref(db,collection),async snapshot=>{
+    let remote = snapshot.val() || {};
+    if(collection === "notes" && navigator.onLine){
+      await purgeQueuedNoteOrderOperations();
+      await purgeStaleLayoutQueue("notes",remote);
+    }
+    if(collection === "memorize" && navigator.onLine) await purgeStaleLayoutQueue("memorize",remote);
+
+    const activeUid = auth.currentUser?.uid || "";
+    const canApplyQueue = Boolean(activeUid && isApproved && isAdmin);
+    const queue = await idbAll("queue");
+    if((auth.currentUser?.uid || "") !== activeUid || !canReadOfflineCollection(collection)) return;
+    const canApplyQueueNow = Boolean(activeUid && isApproved && isAdmin && auth.currentUser?.uid === activeUid);
+    const pending = queue.filter(operation=>{
+      if(!canApplyQueueNow || operation.uid !== activeUid) return false;
+      const parts = splitOfflinePath(operation.path);
+      if(collection === "notes" || collection === "memorize"){
+        const data = operation?.data || {};
+        const keys = Object.keys(data);
+        if(parts.collection === collection && (keys.includes("order") || keys.includes("layoutUpdatedAt"))) return false;
+        if(parts.collection === (collection === "notes" ? "noteLayout" : "memorizeLayout")) return false;
+      }
+      return parts.collection === collection;
+    });
+
+    pending.forEach(operation=>{
+      const data = operation?.data || {};
+      const isItemLayoutOp =
+        (collection === "notes" || collection === "memorize") &&
+        (Object.prototype.hasOwnProperty.call(data,"order") ||
+         Object.prototype.hasOwnProperty.call(data,"layoutUpdatedAt"));
+      if(isItemLayoutOp){
+        const pendingUpdatedAt = Number(data.layoutUpdatedAt || data.updatedAt || operation?.queuedAt || 0);
+        const remoteUpdatedAt = Object.values(remote || {}).reduce((max,item)=>Math.max(max,Number(item?.layoutUpdatedAt || 0)),0);
+        if(pendingUpdatedAt && remoteUpdatedAt && pendingUpdatedAt <= remoteUpdatedAt) return;
+      }
+      if(collection === "noteLayout" && remote && typeof remote === "object"){
+        const pendingUpdatedAt = Number(data.updatedAt || operation?.queuedAt || 0);
+        if(pendingUpdatedAt && Number(remote.updatedAt || 0) && pendingUpdatedAt <= Number(remote.updatedAt || 0)) return;
+      }
+      if(collection === "memorizeLayout" && remote && typeof remote === "object"){
+        const pendingUpdatedAt = Number(data.updatedAt || operation?.queuedAt || 0);
+        if(pendingUpdatedAt && Number(remote.updatedAt || 0) && pendingUpdatedAt <= Number(remote.updatedAt || 0)) return;
+      }
+      remote = applyQueuedOperation(remote,operation);
+    });
+
+    await saveOfflineCollection(collection,remote);
+    (offlineListeners[collection] || []).forEach(callback=>{
+      try{ callback(offlineSnapshot(remote)); }
+      catch(error){ console.error("Offline listener error:",error); }
+    });
+    if(navigator.onLine) flushOfflineQueue();
+  },error=>console.warn("Firebase read unavailable for "+collection+".",error));
+}
+
 async function flushOfflineQueue(){
-  if(offlineSyncing || !navigator.onLine) return;
-
+  const activeUser = auth.currentUser;
+  if(offlineSyncing || !navigator.onLine || !activeUser || !isApproved || !isAdmin) return;
   offlineSyncing = true;
-
   try{
     const queue = await idbAll("queue");
-
     for(const operation of queue.sort((a,b)=>a.id-b.id)){
-      if(!navigator.onLine) break;
-
+      if(!navigator.onLine || auth.currentUser?.uid !== activeUser.uid || !isApproved || !isAdmin) break;
+      if(operation.uid !== activeUser.uid) continue;
+      const collection = splitOfflinePath(operation.path).collection;
+      if(!OFFLINE_SYNC_COLLECTIONS.has(collection)) continue;
       try{
         const target = ref(db,operation.path);
-
-        if(operation.type === "set"){
-          await set(target,operation.data);
-        }else if(operation.type === "update"){
-          await update(target,operation.data);
-        }else if(operation.type === "remove"){
-          await remove(target);
-        }
-
+        if(operation.type === "set") await set(target,operation.data);
+        else if(operation.type === "update") await update(target,operation.data);
+        else if(operation.type === "remove") await remove(target);
+        else continue;
         await idbDelete("queue",operation.id);
       }catch(error){
-        console.warn("Sync paused; will retry later.",error);
+        console.warn("Authorized sync paused; Firebase rejected or deferred a queued change.",error);
         break;
       }
     }
@@ -3982,21 +3982,37 @@ let filesData = {};
 let onlinePresenceData = {};
 
 let isAdmin = false;
-
 let editingMemberId = null;
 
-
 /* =========================================================
-   USER
+   USER AND ROLE STATE
 ========================================================= */
 
-const GROUP_PASSWORD = "supboi";
+let currentAuthUser = null;
+let isApproved = false;
+let userName = "";
+let userDetail = "Group 4";
+let presenceHeartbeat = null;
+let presenceInitialized = false;
+let presenceUid = null;
+let presenceUnsubscribe = null;
+let registrationRequestsUnsubscribe = null;
+let authStateVersion = 0;
+let authStateReadyResolved = false;
+let authStateReadyResolver;
+const authStateReady = new Promise(resolve=>{ authStateReadyResolver = resolve; });
 
-let userName = localStorage.getItem("nursingDutyName") || "";
-let userDetail = localStorage.getItem("nursingDutyDetail") || "Group 4";
+localStorage.removeItem("nursingDutyLoggedIn");
+if(localStorage.getItem("nursingDutyVisitor") !== "true") localStorage.removeItem("nursingDutyName");
+
+function resolveAuthStateReady(){
+  if(authStateReadyResolved) return;
+  authStateReadyResolved = true;
+  authStateReadyResolver();
+}
 
 function isVisitorMode(){
-  return localStorage.getItem("nursingDutyVisitor") === "true";
+  return localStorage.getItem("nursingDutyVisitor") === "true" && !currentAuthUser;
 }
 
 function setVisitorMode(enabled){
@@ -4006,7 +4022,7 @@ function setVisitorMode(enabled){
   }else{
     localStorage.removeItem("nursingDutyVisitor");
   }
-  document.body.classList.toggle("visitor-mode", Boolean(enabled));
+  document.body.classList.toggle("visitor-mode",Boolean(enabled));
 }
 
 function focusSchoolNotes(){
@@ -4016,7 +4032,7 @@ function focusSchoolNotes(){
 
 function applyAccessMode(){
   const visitor = isVisitorMode();
-  document.body.classList.toggle("visitor-mode", visitor);
+  document.body.classList.toggle("visitor-mode",visitor);
   if(visitor){
     isAdmin = false;
     const adminButton = document.getElementById("admBtn");
@@ -4025,130 +4041,11 @@ function applyAccessMode(){
   }
 }
 
-function getPresenceId(){
-  let id = localStorage.getItem("nursingDutyPresenceId");
-  if(!id){
-    id = (window.crypto && crypto.randomUUID)
-      ? crypto.randomUUID()
-      : ("presence-" + Date.now() + "-" + Math.random().toString(36).slice(2));
-    localStorage.setItem("nursingDutyPresenceId", id);
-  }
-  return id;
-}
-
-let presenceHeartbeat = null;
-let presenceInitialized = false;
-
-function presenceRef(){
-  return ref(db, "presence/" + getPresenceId());
-}
-
-async function stopPresence(){
-  try{ await remove(presenceRef()); }catch(error){}
-  if(presenceHeartbeat){
-    clearInterval(presenceHeartbeat);
-    presenceHeartbeat = null;
-  }
-}
-
-async function updatePresence(){
-  if(isVisitorMode() || !userName){
-    await stopPresence();
-    return;
-  }
-
-  const target = presenceRef();
-
-  try{
-    await set(target,{
-      name:userName,
-      connected:true,
-      lastSeen:Date.now(),
-      updatedAt:serverTimestamp()
-    });
-
-    if(!presenceInitialized){
-      presenceInitialized = true;
-      try{ onDisconnect(target).remove(); }catch(error){}
-    }
-
-    if(!presenceHeartbeat){
-      presenceHeartbeat = setInterval(()=>{
-        if(!document.hidden){
-          set(target,{
-            name:userName,
-            connected:true,
-            lastSeen:Date.now(),
-            updatedAt:serverTimestamp()
-          }).catch(()=>{});
-        }
-      },20000);
-    }
-  }catch(error){
-    console.warn("Presence unavailable:",error);
-  }
-}
-
-function renderOnlineMembers(){
-  const list = document.getElementById("onlineMembersList");
-  const count = document.getElementById("onlineCount");
-  if(!list || !count) return;
-
-  const now = Date.now();
-  const entries = Object.entries(onlinePresenceData || {})
-    .filter(([,p]) =>
-      p &&
-      p.connected !== false &&
-      String(p.name || "").trim() &&
-      Number(p.lastSeen || 0) > now - 60000
-    )
-    .sort((a,b)=>
-      String(a[1]?.name || "").localeCompare(String(b[1]?.name || ""))
-    );
-
-  count.innerHTML = '<span class="online-dot"></span>' + entries.length + " online";
-
-  if(!entries.length){
-    list.innerHTML = '<div class="online-empty">No group members are currently online.</div>';
-    return;
-  }
-
-  list.innerHTML = "";
-
-  entries.forEach(([,p])=>{
-    const name = String(p.name || "Student").trim();
-    const initials =
-      name.split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase() || "S";
-
-    const row = document.createElement("div");
-    row.className = "online-person";
-    row.innerHTML =
-      '<div class="online-person-avatar">' +
-      esc(initials) +
-      '</div><div class="online-person-info"><div class="online-person-name">' +
-      esc(name) +
-      '</div><div class="online-person-status">Online now</div></div>';
-
-    list.appendChild(row);
-  });
-}
-
-function initializeUserDisplay(name, detail){
-  userName = String(name || "").trim() || "Student";
-  userDetail = String(detail ?? userDetail ?? "Group 4").trim() || "Group 4";
-
-  document.getElementById("currentUser").textContent = userName;
-  const detailNode = document.getElementById("currentUserDetail");
-  if(detailNode) detailNode.textContent = userDetail;
-
-  const initials = userName.split(/\s+/).map(x => x[0]).join("").slice(0,2).toUpperCase();
-  document.getElementById("userAvatar").textContent = initials || "S";
-  document.getElementById("welcomeText").textContent = isVisitorMode()
-    ? "Welcome to School Notes 👀"
-    : `Welcome, ${userName} 👋`;
-
-  applyAccessMode();
-  updatePresence();
+function setLoginMessage(message){
+  const error = document.getElementById("loginError");
+  if(!error) return;
+  error.textContent = message || "";
+  error.style.display = message ? "block" : "none";
 }
 
 function showLogin(){
@@ -4161,39 +4058,229 @@ function hideLogin(){
   if(screen) screen.style.display = "none";
 }
 
-window.visitSiteOnly = function(){
+function clearPrivateData(){
+  notesData = {};
+  noteLayoutOrder = [];
+  scheduleData = {};
+  membersData = {};
+  filesData = {};
+  onlinePresenceData = {};
+  renderAll();
+}
+
+function presenceRef(uid=currentAuthUser?.uid){
+  if(!uid) throw new Error("A signed-in user is required for presence.");
+  return ref(db,"presence/"+uid);
+}
+
+async function stopPresence(){
+  const uid = presenceUid || currentAuthUser?.uid;
+  if(uid){
+    try{ await remove(presenceRef(uid)); }catch(error){}
+  }
+  presenceUid = null;
+  presenceInitialized = false;
+  if(presenceHeartbeat){
+    clearInterval(presenceHeartbeat);
+    presenceHeartbeat = null;
+  }
+}
+
+function setPresenceListener(enabled){
+  if(enabled && !presenceUnsubscribe){
+    presenceUnsubscribe = onValue(ref(db,"presence"),snapshot=>{
+      onlinePresenceData = snapshot.val() || {};
+      renderOnlineMembers();
+    },error=>console.warn("Presence read unavailable:",error));
+  }else if(!enabled && presenceUnsubscribe){
+    presenceUnsubscribe();
+    presenceUnsubscribe = null;
+    onlinePresenceData = {};
+    renderOnlineMembers();
+  }
+}
+
+async function updatePresence(){
+  if(isVisitorMode() || !currentAuthUser || !isApproved){
+    await stopPresence();
+    return;
+  }
+  const uid = currentAuthUser.uid;
+  const target = presenceRef(uid);
+  presenceUid = uid;
+  const writePresence = ()=>set(target,{
+    name:userName,
+    connected:true,
+    lastSeen:Date.now(),
+    updatedAt:serverTimestamp()
+  });
+  try{
+    await writePresence();
+    if(!presenceInitialized){
+      presenceInitialized = true;
+      try{ await onDisconnect(target).remove(); }catch(error){}
+    }
+    if(!presenceHeartbeat){
+      presenceHeartbeat = setInterval(()=>{
+        if(!document.hidden && auth.currentUser?.uid === uid && isApproved) writePresence().catch(()=>{});
+      },20000);
+    }
+  }catch(error){
+    console.warn("Presence unavailable:",error);
+  }
+}
+
+function renderOnlineMembers(){
+  const list = document.getElementById("onlineMembersList");
+  const count = document.getElementById("onlineCount");
+  if(!list || !count) return;
+  const now = Date.now();
+  const entries = Object.entries(onlinePresenceData || {})
+    .filter(([,p])=>p && p.connected !== false && String(p.name || "").trim() && Number(p.lastSeen || 0) > now - 60000)
+    .sort((a,b)=>String(a[1]?.name || "").localeCompare(String(b[1]?.name || "")));
+  count.innerHTML = '<span class="online-dot"></span>' + entries.length + " online";
+  if(!entries.length){
+    list.innerHTML = '<div class="online-empty">No group members are currently online.</div>';
+    return;
+  }
+  list.innerHTML = "";
+  entries.forEach(([,p])=>{
+    const name = String(p.name || "Student").trim();
+    const initials = name.split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase() || "S";
+    const row = document.createElement("div");
+    row.className = "online-person";
+    row.innerHTML = '<div class="online-person-avatar">' + esc(initials) +
+      '</div><div class="online-person-info"><div class="online-person-name">' + esc(name) +
+      '</div><div class="online-person-status">Online now</div></div>';
+    list.appendChild(row);
+  });
+}
+
+function initializeUserDisplay(name,detail){
+  userName = String(name || "").trim() || "Student";
+  userDetail = String(detail || "Group 4").trim() || "Group 4";
+  const current = document.getElementById("currentUser");
+  const detailNode = document.getElementById("currentUserDetail");
+  const avatar = document.getElementById("userAvatar");
+  const welcome = document.getElementById("welcomeText");
+  if(current) current.textContent = userName;
+  if(detailNode) detailNode.textContent = userDetail;
+  if(avatar) avatar.textContent = userName.split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase() || "S";
+  if(welcome) welcome.textContent = isVisitorMode() ? "Welcome to School Notes 👀" : "Welcome, " + userName + " 👋";
+  applyAccessMode();
+  updatePresence();
+}
+
+async function ensureRegistrationRequest(user,nameHint=""){
+  const requestRef = ref(db,"registrationRequests/"+user.uid);
+  const existing = await get(requestRef);
+  if(existing.exists()) return;
+  const email = String(user.email || "").trim();
+  const name = String(nameHint || user.displayName || email.split("@")[0] || "Student").trim().slice(0,100);
+  await set(requestRef,{email,name,requestedAt:Date.now()});
+}
+
+window.visitSiteOnly = async function(){
+  await stopPresence();
+  if(auth.currentUser){
+    try{
+      await signOut(auth);
+    }catch(error){
+      console.warn("Sign-out failed:",error);
+      setVisitorMode(false);
+      showLogin();
+      setLoginMessage("Sign-out could not be confirmed. You remain signed in; reconnect and try again.");
+      return;
+    }
+  }
   setVisitorMode(true);
-  localStorage.setItem("nursingDutyName","Visitor");
-  const error = document.getElementById("loginError");
-  if(error) error.style.display = "none";
+  setLoginMessage("");
   hideLogin();
   initializeUserDisplay("Visitor","School Notes Visitor");
   focusSchoolNotes();
 };
 
-window.loginUser = function(){
-  const name = document.getElementById("loginName").value.trim();
-  const password = document.getElementById("loginPassword").value;
-  const error = document.getElementById("loginError");
-
-  if(!name){
-    error.textContent = "Please enter your name.";
-    error.style.display = "block";
+window.loginUser = async function(){
+  const email = String(document.getElementById("loginEmail")?.value || "").trim().toLowerCase();
+  const password = String(document.getElementById("loginPassword")?.value || "");
+  const name = String(document.getElementById("loginName")?.value || "").trim();
+  if(!email || !password){
+    setLoginMessage("Enter your email address and password.");
     return;
   }
-
-  if(password !== GROUP_PASSWORD){
-    error.textContent = "Incorrect group password.";
-    error.style.display = "block";
-    return;
-  }
-
   setVisitorMode(false);
-  localStorage.setItem("nursingDutyName", name);
-  localStorage.setItem("nursingDutyLoggedIn", "true");
-  error.style.display = "none";
-  hideLogin();
-  initializeUserDisplay(name,"Group 4");
+  try{
+    const credential = await signInWithEmailAndPassword(auth,email,password);
+    const token = await getIdTokenResult(credential.user);
+    if(token.claims.admin !== true && token.claims.approved !== true) await ensureRegistrationRequest(credential.user,name);
+    setLoginMessage(credential.user.emailVerified
+      ? "Signed in. Checking administrator approval…"
+      : "Verify your email address, then check your account status.");
+  }catch(error){
+    console.error("Firebase sign-in failed:",error);
+    setLoginMessage(error?.code === "auth/invalid-credential" || error?.code === "auth/wrong-password"
+      ? "The email or password was not accepted."
+      : error?.code === "auth/too-many-requests"
+        ? "Too many attempts. Wait a little, then try again."
+        : "Sign-in failed. Check the email address, password, and Firebase Authentication setup.");
+  }
+};
+
+window.registerUser = async function(){
+  const name = String(document.getElementById("loginName")?.value || "").trim();
+  const email = String(document.getElementById("loginEmail")?.value || "").trim().toLowerCase();
+  const password = String(document.getElementById("loginPassword")?.value || "");
+  if(!name || !email || !password){
+    setLoginMessage("Enter your name, email address, and a password to create an account.");
+    return;
+  }
+  if(password.length < 8){
+    setLoginMessage("Choose a password with at least 8 characters.");
+    return;
+  }
+  setVisitorMode(false);
+  try{
+    const credential = await createUserWithEmailAndPassword(auth,email,password);
+    await updateProfile(credential.user,{displayName:name.slice(0,100)});
+    await sendEmailVerification(credential.user);
+    await ensureRegistrationRequest(credential.user,name);
+    setLoginMessage("Account created. Verify your email, then wait for an administrator to approve your request.");
+  }catch(error){
+    console.error("Firebase account creation failed:",error);
+    setLoginMessage(error?.code === "auth/email-already-in-use"
+      ? "An account already uses that email. Sign in instead."
+      : error?.code === "auth/weak-password"
+        ? "Choose a stronger password and try again."
+        : "Account creation failed. Check the email address and Firebase Authentication setup.");
+  }
+};
+
+window.resendVerificationEmail = async function(){
+  if(!auth.currentUser){
+    setLoginMessage("Sign in to resend the verification email.");
+    return;
+  }
+  try{
+    await sendEmailVerification(auth.currentUser);
+    setLoginMessage("Verification email sent. Check your inbox and spam folder.");
+  }catch(error){
+    console.error("Could not resend verification email:",error);
+    setLoginMessage("The verification email could not be sent. Check Firebase Authentication email settings.");
+  }
+};
+
+window.refreshApprovalStatus = async function(){
+  if(!auth.currentUser){
+    setLoginMessage("Sign in first to check your account status.");
+    return;
+  }
+  try{
+    await getIdToken(auth.currentUser,true);
+    await applyAuthState(auth.currentUser);
+  }catch(error){
+    console.error("Could not refresh account status:",error);
+    setLoginMessage("Account status could not be refreshed. Reconnect and try again.");
+  }
 };
 
 window.openProfileModal = function(){
@@ -4209,59 +4296,167 @@ window.closeProfileModal = function(){
   document.getElementById("profileModal")?.classList.remove("show");
 };
 
-window.saveProfile = function(){
-  const name = document.getElementById("profileName").value.trim();
-
+window.saveProfile = async function(){
+  const name = String(document.getElementById("profileName")?.value || "").trim();
   if(!name){
     alert("Please enter a display name.");
     return;
   }
-
-  userName = name;
-  localStorage.setItem("nursingDutyName", userName);
-
-  if(!isVisitorMode()) localStorage.setItem("nursingDutyLoggedIn","true");
-
-  initializeUserDisplay(userName, userDetail);
-  closeProfileModal();
+  userName = name.slice(0,100);
+  try{
+    if(auth.currentUser && !isVisitorMode()) await updateProfile(auth.currentUser,{displayName:userName});
+    initializeUserDisplay(userName,userDetail);
+    closeProfileModal();
+  }catch(error){
+    console.error("Could not update profile:",error);
+    alert("The profile could not be updated.");
+  }
 };
 
-window.returnToGroupLogin = function(){
+window.returnToGroupLogin = async function(){
   setVisitorMode(false);
-  localStorage.removeItem("nursingDutyName");
-  localStorage.removeItem("nursingDutyDetail");
-  closeProfileModal();
+  await stopPresence();
+  if(auth.currentUser){
+    try{
+      await signOut(auth);
+    }catch(error){
+      console.warn("Sign-out failed:",error);
+      showLogin();
+      setLoginMessage("Sign-out could not be confirmed. You remain signed in; reconnect and try again.");
+      return;
+    }
+  }
+  userName = "";
+  const name = document.getElementById("loginName");
+  const password = document.getElementById("loginPassword");
+  if(name) name.value = "";
+  if(password) password.value = "";
+  document.getElementById("loginEmail")?.focus();
+  setLoginMessage("");
   showLogin();
-  document.getElementById("loginName").value = "";
-  document.getElementById("loginPassword").value = "";
 };
 
-function ensureGroupLogin(){
-  const loggedIn = localStorage.getItem("nursingDutyLoggedIn") === "true";
-  const visitor = isVisitorMode();
-  const savedName = localStorage.getItem("nursingDutyName");
-  const savedDetail = localStorage.getItem("nursingDutyDetail") || (visitor ? "School Notes Visitor" : "Group 4");
+function setRegistrationRequestListener(){
+  if(isAdmin && !registrationRequestsUnsubscribe){
+    registrationRequestsUnsubscribe = onValue(ref(db,"registrationRequests"),snapshot=>{
+      renderRegistrationRequests(snapshot.val() || {});
+    },error=>console.warn("Could not load account requests:",error));
+  }else if(!isAdmin && registrationRequestsUnsubscribe){
+    registrationRequestsUnsubscribe();
+    registrationRequestsUnsubscribe = null;
+    renderRegistrationRequests({});
+  }
+}
 
-  if(visitor){
-    hideLogin();
-    initializeUserDisplay(savedName || "Visitor", savedDetail);
-    focusSchoolNotes();
+function renderRegistrationRequests(requests){
+  const box = document.getElementById("approvalRequestList");
+  if(!box) return;
+  const pending = Object.entries(requests || {})
+    .filter(([,item])=>item && item.status !== "approved")
+    .sort((a,b)=>Number(a[1]?.requestedAt || 0)-Number(b[1]?.requestedAt || 0));
+  if(!pending.length){
+    box.innerHTML = '<div class="empty">No pending account requests.</div>';
     return;
   }
+  box.innerHTML = "";
+  pending.forEach(([uid,item])=>{
+    const row = document.createElement("div");
+    row.className = "approval-request";
+    const text = document.createElement("div");
+    text.innerHTML = '<strong>'+esc(item.name || "Student")+'</strong><br><span>'+esc(item.email || "")+'</span>';
+    const button = document.createElement("button");
+    button.className = "btn primary small";
+    button.type = "button";
+    button.textContent = "Approve";
+    button.addEventListener("click",()=>window.approveAccount(uid));
+    row.append(text,button);
+    box.appendChild(row);
+  });
+}
 
-  if(loggedIn && savedName){
-    hideLogin();
-    initializeUserDisplay(savedName, savedDetail);
+window.approveAccount = async function(uid){
+  if(!isAdmin || !isApproved) return;
+  if(!confirm("Approve this verified account for group access?")) return;
+  try{
+    await approveRegistrationCall({uid});
+  }catch(error){
+    console.error("Could not approve account:",error);
+    alert(error?.message || "The account could not be approved. Verify the account email and Firebase Functions setup.");
+  }
+};
+
+async function applyAuthState(user){
+  const run = ++authStateVersion;
+  const previousUid = currentAuthUser?.uid || "";
+  const wasApproved = isApproved;
+  const wasAdmin = isAdmin;
+  currentAuthUser = user || null;
+  isApproved = false;
+  isAdmin = false;
+
+  if(user){
+    let claims = {};
+    try{ claims = (await getIdTokenResult(user)).claims || {}; }
+    catch(error){ console.warn("Could not read Firebase ID token claims:",error); }
+    if(run !== authStateVersion) return;
+    const emailVerified = claims.email_verified === true;
+    isAdmin = emailVerified && claims.admin === true;
+    isApproved = emailVerified && (isAdmin || claims.approved === true);
+    setVisitorMode(false);
+    if(!isApproved && wasApproved) await stopPresence();
+    if(!isApproved && (wasApproved || previousUid !== user.uid)) clearPrivateData();
+
+    userName = user.displayName || String(user.email || "").split("@")[0] || "Student";
+    userDetail = isAdmin ? "Administrator" : isApproved ? "Approved group member" : "Account pending approval";
+    initializeUserDisplay(userName,userDetail);
+
+    const actions = document.getElementById("accountStatusActions");
+    if(actions) actions.style.display = isApproved ? "none" : "flex";
+    if(isApproved){
+      hideLogin();
+      setLoginMessage("");
+    }else{
+      showLogin();
+      setLoginMessage(!user.emailVerified
+        ? "Verify your email address, then select “Check account status”."
+        : "Your account is waiting for administrator approval.");
+    }
   }else{
-    showLogin();
+    if(wasApproved || previousUid) await stopPresence();
+    isAdmin = false;
+    isApproved = false;
+    clearPrivateData();
+    if(isVisitorMode()){
+      userName = "Visitor";
+      userDetail = "School Notes Visitor";
+      hideLogin();
+      setLoginMessage("");
+      initializeUserDisplay(userName,userDetail);
+      focusSchoolNotes();
+    }else{
+      userName = "";
+      userDetail = "Group 4";
+      showLogin();
+      setLoginMessage("");
+      const actions = document.getElementById("accountStatusActions");
+      if(actions) actions.style.display = "none";
+    }
+  }
+
+  if(run !== authStateVersion) return;
+  setPresenceListener(Boolean(currentAuthUser && isApproved));
+  syncOfflineSubscriptions();
+  setRegistrationRequestListener();
+  updateAdminUI();
+  renderAll();
+  resolveAuthStateReady();
+  await replayOfflineSnapshots();
+  if(isApproved && isAdmin) flushOfflineQueue();
+  if(wasAdmin !== isAdmin && isAdmin){
+    const actions = document.getElementById("accountStatusActions");
+    if(actions) actions.style.display = "none";
   }
 }
-
-if(userName){
-  initializeUserDisplay(userName, userDetail);
-}
-
-
 
 /* =========================================================
    TEXT CLEANER
@@ -4856,6 +5051,7 @@ function ai2AppendMissingDates(html,dateRefs){
 
 window.generateAINote=async function(){
   if(!isAdmin){alert("Only administrators can use the AI Note Builder.");return;}
+  if(emulatorMode){ai2Status("Cloud Gemini is disabled while using the Firebase emulators.",true);return;}
   const source=String(document.getElementById("ai2Source").value||"").trim();
   const titleHint=String(document.getElementById("ai2TitleHint").value||"").trim();
   const categoryHint=String(document.getElementById("ai2CategoryHint").value||"").trim();
@@ -4982,169 +5178,45 @@ if(!window.__ai2EscapeBound){
 }
 
 /* =========================================================
-   ADMIN LOGIN
+   ADMIN ACCESS
 ========================================================= */
 
-window.adminLogin =
-function(){
-
+window.adminLogin = function(){
   if(isVisitorMode()){
     focusSchoolNotes();
     return;
   }
-
-  if(isAdmin){
-
-    isAdmin =
-      false;
-
-
-    document.getElementById(
-      "admBtn"
-    ).textContent =
-      "Admin";
-
-
-    updateAdminUI();
-
-    renderAll();
-
+  if(!isAdmin){
+    alert("Administrator access is assigned to approved Firebase accounts.");
     return;
-
   }
-
-
-  document.getElementById(
-    "adminModal"
-  )
-  .classList.add(
-    "show"
-  );
-
-
-  document.getElementById(
-    "adminPassword"
-  ).value =
-    "";
-
-
-  setTimeout(
-    () =>
-      document.getElementById(
-        "adminPassword"
-      ).focus(),
-    100
-  );
-
+  show("members",document.querySelector('#systemNav button[onclick="adminLogin()"]'));
+  document.getElementById("adminApprovalPanel")?.scrollIntoView({behavior:"smooth",block:"start"});
 };
-
-
-window.closeAdminModal =
-function(){
-
-  document.getElementById(
-    "adminModal"
-  )
-  .classList.remove(
-    "show"
-  );
-
-};
-
-
-window.loginAdmin =
-function(){
-
-  const password =
-    document.getElementById(
-      "adminPassword"
-    ).value;
-
-
-  if(
-    password ===
-    "supperlol123123"
-  ){
-
-    isAdmin =
-      true;
-
-
-    document.getElementById(
-      "admBtn"
-    ).textContent =
-      "Logout";
-
-
-    closeAdminModal();
-
-    updateAdminUI();
-
-    renderAll();
-
-  }else{
-
-    alert(
-      "Incorrect admin password."
-    );
-
-  }
-
-};
-
 
 /* =========================================================
    ADMIN UI
 ========================================================= */
 
 function updateAdminUI(){
-
   const panels = [
-
     "adminNotesPanel",
     "adminMemorizePanel",
     "adminSchedulePanel",
     "adminFilesPanel",
-    "adminOnlinePanel"
-
+    "adminOnlinePanel",
+    "adminApprovalPanel"
   ];
-
-
-  panels.forEach(
-    id => {
-
-      const element =
-        document.getElementById(
-          id
-        );
-
-
-      if(element){
-
-        element.style.display =
-          isAdmin
-            ? "block"
-            : "none";
-
-      }
-
-    }
-  );
-
-
-  document.getElementById(
-    "addMemberButton"
-  ).style.display =
-    isAdmin
-      ? "block"
-      : "none";
-
-  const onlinePanel = document.getElementById("adminOnlinePanel");
-  if(onlinePanel) onlinePanel.style.display = isAdmin ? "block" : "none";
+  panels.forEach(id=>{
+    const element = document.getElementById(id);
+    if(element) element.style.display = isAdmin ? "block" : "none";
+  });
+  const addMemberButton = document.getElementById("addMemberButton");
+  if(addMemberButton) addMemberButton.style.display = isAdmin ? "block" : "none";
+  const adminButton = document.getElementById("admBtn");
+  if(adminButton) adminButton.textContent = isAdmin ? "Admin tools" : "Admin";
   renderOnlineMembers();
-
 }
-
 
 /* =========================================================
    NOTES
@@ -5153,11 +5225,6 @@ function updateAdminUI(){
 /* The note order is stored separately as one shared/global layout.
    This prevents different logins on the same device from getting different
    local orderings and makes the admin's layout authoritative for everyone. */
-onValue(ref(db, "presence"), snapshot => {
-  onlinePresenceData = snapshot.val() || {};
-  renderOnlineMembers();
-});
-
 setInterval(renderOnlineMembers,15000);
 
 offlineOnValue("noteLayout", snapshot => {
@@ -5225,6 +5292,7 @@ function getOrderedNoteEntries(){
 function renderNotes(){
 
   const box = document.getElementById("notesList");
+  releaseStorageObjectUrls(box);
   box.innerHTML = "";
 
   const entries = getOrderedNoteEntries().filter(([id,n])=>{
@@ -5249,7 +5317,7 @@ function renderNotes(){
     }
 
     const content = n.html
-      ? n.html
+      ? normalizeStoredHtml(n.html)
       : esc(cleanText(n.text)).replace(/\n/g,"<br>");
 
     element.innerHTML = `
@@ -5273,7 +5341,19 @@ function renderNotes(){
       const linkBox = document.createElement("div");
       linkBox.className = "memo-file-chip memo-link-card";
       linkBox.innerHTML = '<span>🔗 '+esc(n.linkLabel || "Reference link")+'</span><a class="btn small primary" href="'+esc(n.link)+'" target="_blank" rel="noopener noreferrer">Open link</a><button class="btn small" type="button">Copy link</button>';
-      addDriveViewerButton(linkBox,n.link,n.title || n.linkLabel || "Reference file");
+      const storageLinkPath = storagePathFromDownloadUrl(n.link);
+      if(storageLinkPath){
+        const openLink = linkBox.querySelector("a");
+        openLink.href = "#";
+        openLink.dataset.storagePath = storageLinkPath;
+        openLink.dataset.storageDownload = "true";
+        linkBox.querySelector("button")?.remove();
+        bindSecureStorageLinks(linkBox);
+      }else if(isFirebaseStorageUrl(n.link)){
+        linkBox.innerHTML = '<span>Storage link needs administrator review.</span>';
+      }else{
+        addDriveViewerButton(linkBox,n.link,n.title || n.linkLabel || "Reference file");
+      }
       linkBox.querySelectorAll("button").forEach(button=>{
         if(!button.classList.contains("drive-viewer-button")){
           button.addEventListener("click",()=>window.copyMemoLink(n.link));
@@ -5284,6 +5364,7 @@ function renderNotes(){
       else element.appendChild(linkBox);
     }
     box.appendChild(element);
+    hydrateStorageContent(element);
   });
 
   if(isAdmin){
@@ -5292,7 +5373,13 @@ function renderNotes(){
 
   box.querySelectorAll("input.note-check").forEach(input => {
     input.addEventListener("click", e => e.stopPropagation());
+    if(!isAdmin){
+      input.disabled = true;
+      input.setAttribute("aria-disabled","true");
+      return;
+    }
     input.addEventListener("change", async () => {
+      if(!isAdmin) return;
       if(input.checked) input.setAttribute("checked", "");
       else input.removeAttribute("checked");
 
@@ -5305,7 +5392,7 @@ function renderNotes(){
       if(!noteId || !notesData[noteId]) return;
 
       if(notesData[noteId].html){
-        const updated = noteCard.querySelector(".note-text").innerHTML;
+        const updated = serializeStorageHtml(noteCard.querySelector(".note-text"));
         notesData[noteId].html = updated;
         try{
           const payload={html:updated,updatedAt:Date.now()};
@@ -5575,9 +5662,8 @@ async function insertImageFileIntoEditor(file, sourceLabel="Pasted image"){
         // constrained to the note layout on every device.
         const images = Array.from(editor.querySelectorAll(".note-image-wrap img"));
         const target = images[images.length - 1];
-        if(target && uploaded?.downloadURL){
-          target.src = uploaded.downloadURL;
-          target.dataset.storagePath = uploaded.storagePath || "";
+        if(target && uploaded?.storagePath){
+          target.dataset.storagePath = uploaded.storagePath;
           target.dataset.sharedImage = "true";
         }
         if(status) status.textContent = `Added ${file.name || sourceLabel} • shared with the group`;
@@ -5723,10 +5809,11 @@ function noteAttachmentIcon(file){
   return "📎";
 }
 function noteFileSize(bytes){const n=Number(bytes||0);if(!n)return "";const u=["B","KB","MB","GB"];let i=0,v=n;while(v>=1024&&i<u.length-1){v/=1024;i++;}return v.toFixed(i?1:0)+" "+u[i];}
-function insertNoteFileAttachmentHtml(url,fileName,fileType,fileSize){
-  const editor=document.getElementById("richNoteEditor"); if(!editor||!url)return;
-  const html='<div class="note-file-attachment" data-file-attachment="true"><div class="file-attachment-icon">'+noteAttachmentIcon({name:fileName,type:fileType})+'</div><div class="file-attachment-meta"><strong>'+esc(fileName||"Attachment")+'</strong><small>'+esc(fileType||"File")+(fileSize?" • "+esc(noteFileSize(fileSize)):"")+'</small></div><a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Open</a></div><p><br></p>';
+function insertNoteFileAttachmentHtml(storagePath,fileName,fileType,fileSize){
+  const editor=document.getElementById("richNoteEditor"); if(!editor||!isSupportedStoragePath(storagePath))return;
+  const html='<div class="note-file-attachment" data-file-attachment="true"><div class="file-attachment-icon">'+noteAttachmentIcon({name:fileName,type:fileType})+'</div><div class="file-attachment-meta"><strong>'+esc(fileName||"Attachment")+'</strong><small>'+esc(fileType||"File")+(fileSize?" • "+esc(noteFileSize(fileSize)):"")+'</small></div><a href="#" data-storage-path="'+esc(storagePath)+'" data-storage-download="true">Open</a></div><p><br></p>';
   editor.focus(); document.execCommand("insertHTML",false,html);
+  bindSecureStorageLinks(editor);
 }
 async function insertNoteDroppedFile(file){
   if(!file)return;
@@ -5737,8 +5824,8 @@ async function insertNoteDroppedFile(file){
   try{
     if(status)status.textContent="Uploading "+(file.name||"file")+"…";
     const uploaded=await uploadFileToStorage(file,"group4-note-files");
-    if(!uploaded?.downloadURL)throw new Error("No download URL returned.");
-    insertNoteFileAttachmentHtml(uploaded.downloadURL,uploaded.name||file.name,uploaded.mimeType||file.type,uploaded.size||file.size||0);
+    if(!uploaded?.storagePath)throw new Error("No Storage path returned.");
+    insertNoteFileAttachmentHtml(uploaded.storagePath,uploaded.name||file.name,uploaded.mimeType||file.type,uploaded.size||file.size||0);
     if(status)status.textContent="Added "+(file.name||"file")+" to the note.";
   }catch(error){
     console.error("Could not upload note attachment:",error);
@@ -5779,7 +5866,7 @@ window.openNoteEditor = function(id=null){
     document.getElementById("editorNoteType").value = isLinkNote(note) ? "link" : "note";
     document.getElementById("editorNoteLink").value = note.link || "";
     editor.innerHTML = note.html
-      ? note.html
+      ? normalizeStoredHtml(note.html)
       : cleanText(note.text || "")
           .split("\n")
           .map(line => esc(line))
@@ -5797,6 +5884,7 @@ window.openNoteEditor = function(id=null){
   }
 
   document.getElementById("noteEditorModal").classList.add("show");
+  hydrateStorageContent(editor);
   setupNoteFileDropZone();
   setTimeout(()=>title.focus(),50);
 };
@@ -5809,6 +5897,7 @@ window.closeNoteEditor = function(){
   document.getElementById("editorNoteCategory").value = "";
   document.getElementById("editorNoteType").value = "note";
   document.getElementById("editorNoteLink").value = "";
+  releaseStorageObjectUrls(document.getElementById("richNoteEditor"));
   document.getElementById("richNoteEditor").innerHTML = "";
   const imageStatus = document.getElementById("noteImageUploadStatus");
   if(imageStatus) imageStatus.textContent = "Images are inserted into the note layout.";
@@ -5822,7 +5911,7 @@ window.saveNoteEditor = async function(){
   const category = document.getElementById("editorNoteCategory").value.trim();
   const type = document.getElementById("editorNoteType").value === "link" ? "link" : "note";
   const link = document.getElementById("editorNoteLink").value.trim();
-  const htmlContent = document.getElementById("richNoteEditor").innerHTML.trim();
+  const htmlContent = serializeStorageHtml(document.getElementById("richNoteEditor"));
 
   if(!title || (type === "note" && !htmlContent) || (type === "link" && !link && !htmlContent)){
     alert(type === "link" ? "Please enter a reference link or description." : "Please enter a title and note.");
@@ -5967,6 +6056,7 @@ function getOrderedMemoEntries(){
 function renderMemorize(){
   const box=document.getElementById('memorizeList');
   if(!box) return;
+  releaseStorageObjectUrls(box);
   box.innerHTML='';
   const entries=getOrderedMemoEntries().filter(([id,m])=>{
     const isLink=isLinkNote(m);
@@ -5982,7 +6072,7 @@ function renderMemorize(){
     card.className='memo-card' + (isAdmin ? ' memo-draggable' : '');
     card.dataset.memoId=id;
     if(isAdmin){ card.draggable=true; card.title='Drag to change this School Note position'; }
-    const content=m.html || esc(cleanText(m.text||'')).replace(/\n/g,'<br>');
+    const content=m.html ? normalizeStoredHtml(m.html) : esc(cleanText(m.text||'')).replace(/\n/g,'<br>');
     card.innerHTML=`
       <div class="memo-top">
         <div>
@@ -5996,7 +6086,19 @@ function renderMemorize(){
     `;
     const memoLinkBox = card.querySelector(".memo-link-card");
     if(memoLinkBox && m.link){
-      addDriveViewerButton(memoLinkBox,m.link,m.title || m.linkLabel || "Study material");
+      const storageLinkPath = storagePathFromDownloadUrl(m.link);
+      if(storageLinkPath){
+        const openLink = memoLinkBox.querySelector("a");
+        openLink.href = "#";
+        openLink.dataset.storagePath = storageLinkPath;
+        openLink.dataset.storageDownload = "true";
+        memoLinkBox.querySelector("button")?.remove();
+        bindSecureStorageLinks(memoLinkBox);
+      }else if(isFirebaseStorageUrl(m.link)){
+        memoLinkBox.innerHTML = '<span>Storage link needs administrator review.</span>';
+      }else{
+        addDriveViewerButton(memoLinkBox,m.link,m.title || m.linkLabel || "Study material");
+      }
       memoLinkBox.querySelectorAll("button").forEach(button=>{
         if(!button.classList.contains("drive-viewer-button")){
           button.onclick = ()=>copyMemoLink(m.link);
@@ -6009,18 +6111,25 @@ function renderMemorize(){
     typeBadge.textContent=isLinkNote(m) ? '🔗 Link / Reference' : '📝 Actual Note';
     card.querySelector('h3')?.before(typeBadge);
     box.appendChild(card);
+    hydrateStorageContent(card);
   });
 
   if(isAdmin) setupMemoDragAndDrop(box);
 
   box.querySelectorAll('input.note-check').forEach(input=>{
     input.addEventListener('click',e=>e.stopPropagation());
+    if(!isAdmin){
+      input.disabled = true;
+      input.setAttribute("aria-disabled","true");
+      return;
+    }
     input.addEventListener('change',async()=>{
+      if(!isAdmin) return;
       if(input.checked) input.setAttribute('checked',''); else input.removeAttribute('checked');
       const card=input.closest('.memo-card');
       const id=card?.dataset.memoId;
       if(!id || !memorizeData[id]) return;
-      const updated=card.querySelector('.memo-content')?.innerHTML || '';
+      const updated=serializeStorageHtml(card.querySelector('.memo-content'));
       memorizeData[id].html=updated;
       try{
         const payload={html:updated,updatedAt:Date.now()};
@@ -6170,7 +6279,7 @@ async function insertMemoImageFile(file){
         const editor=document.getElementById('richMemoEditor');
         const imgs=Array.from(editor.querySelectorAll('.memo-slide-image img'));
         const target=imgs[imgs.length-1];
-        if(target && uploaded?.downloadURL) target.src=uploaded.downloadURL;
+        if(target && uploaded?.storagePath) target.dataset.storagePath=uploaded.storagePath;
       }catch(err){ console.warn('Memo image upload failed; keeping embedded image.',err); }
     }
     if(status) status.textContent='Slide added.';
@@ -6296,8 +6405,9 @@ window.openMemoEditor=function(id=null){
   document.getElementById('editorMemoCategory').value=m?.category||'';
   document.getElementById('editorMemoType').value=isLinkNote(m) ? 'link' : 'note';
   document.getElementById('editorMemoLink').value=m?.link||'';
-  document.getElementById('richMemoEditor').innerHTML=m?.html || esc(cleanText(m?.text||'' )).replace(/\n/g,'<br>');
+  document.getElementById('richMemoEditor').innerHTML=m?.html ? normalizeStoredHtml(m.html) : esc(cleanText(m?.text||'' )).replace(/\n/g,'<br>');
   document.getElementById('memoEditorModal').classList.add('show');
+  hydrateStorageContent(document.getElementById('richMemoEditor'));
 };
 
 window.closeMemoEditor=function(){
@@ -6307,6 +6417,7 @@ window.closeMemoEditor=function(){
   document.getElementById('editorMemoCategory').value='';
   document.getElementById('editorMemoType').value='note';
   document.getElementById('editorMemoLink').value='';
+  releaseStorageObjectUrls(document.getElementById('richMemoEditor'));
   document.getElementById('richMemoEditor').innerHTML='';
 };
 
@@ -6316,7 +6427,7 @@ window.saveMemoEditor=async function(){
   const category=document.getElementById('editorMemoCategory').value.trim();
   const type=document.getElementById('editorMemoType').value==='link' ? 'link' : 'note';
   const link=document.getElementById('editorMemoLink').value.trim();
-  const html=document.getElementById('richMemoEditor').innerHTML.trim();
+  const html=serializeStorageHtml(document.getElementById('richMemoEditor'));
   if(!title || (type==='link' && !link && !html) || (type==='note' && !html)){
     alert(type==='link' ? 'Please enter a reference link or description.' : 'Please enter the note content.');
     return;
@@ -7279,8 +7390,70 @@ function addDriveViewerButton(container,rawUrl,title,label){
   else container.appendChild(button);
 }
 
-window.previewFile=function(id){const f=filesData[id];if(!f)return;const url=safeFileUrl(f.downloadURL||f.url||"");if(!url){alert("This file has no viewable source.");return;}const drive=googleDriveFileInfo(url);if(drive){openDriveViewer(url,f.title||f.name||"Google Drive File");return;}const modal=document.getElementById("filePreviewModal"),content=document.getElementById("filePreviewContent"),title=document.getElementById("filePreviewTitle"),meta=document.getElementById("filePreviewMeta"),download=document.getElementById("filePreviewDownload"),mime=String(f.mimeType||"").toLowerCase(),name=String(f.name||f.title||"File");title.textContent=f.title||name;meta.textContent=[name,formatFileSize(f.size),f.description||""].filter(Boolean).join(" • ");download.href=url;download.textContent="Open / Download";content.innerHTML="";if(mime.startsWith("image/")){const e=document.createElement("img");e.src=url;e.alt=name;content.appendChild(e);}else if(mime.startsWith("video/")){const e=document.createElement("video");e.src=url;e.controls=true;content.appendChild(e);}else if(mime.startsWith("audio/")){const e=document.createElement("audio");e.src=url;e.controls=true;content.appendChild(e);}else if(mime.includes("pdf")||/\.pdf($|\?)/i.test(url)){const e=document.createElement("iframe");e.src=url;e.title=name;content.appendChild(e);}else if(mime.startsWith("text/")||/\.(txt|html|css|js|json|xml|csv)($|\?)/i.test(url)){const e=document.createElement("iframe");e.src=url;e.title=name;content.appendChild(e);}else{content.innerHTML=`<div style="padding:25px;text-align:center;color:var(--muted)">${esc(fileTypeIcon(mime,name))}<br><br>This file type cannot be previewed directly by the browser.<br>You can still open or download it below.</div>`;}modal.classList.add("show");};
-window.closeFilePreview=function(){document.getElementById("filePreviewModal")?.classList.remove("show");document.getElementById("filePreviewContent").innerHTML="";};
+let filePreviewObjectUrl = null;
+window.previewFile = async function(id){
+  const file = filesData[id];
+  if(!file || !isApproved) return;
+  const path = storagePathFromRecord(file);
+  let url = "";
+  try{
+    if(path){
+      const blob = await getBlob(storageRef(storage,path));
+      filePreviewObjectUrl = URL.createObjectURL(blob);
+      url = filePreviewObjectUrl;
+    }else if(!isFirebaseStorageUrl(file.url)){
+      url = safeFileUrl(file.url || "");
+    }
+  }catch(error){
+    console.error("File preview denied by Storage rules:",error);
+    alert("This file is not available to the current account.");
+    return;
+  }
+  if(!url){
+    alert("This file has no viewable source.");
+    return;
+  }
+  const drive = googleDriveFileInfo(url);
+  if(!path && drive){
+    openDriveViewer(url,file.title||file.name||"Google Drive File");
+    return;
+  }
+  const modal = document.getElementById("filePreviewModal");
+  const content = document.getElementById("filePreviewContent");
+  const title = document.getElementById("filePreviewTitle");
+  const meta = document.getElementById("filePreviewMeta");
+  const download = document.getElementById("filePreviewDownload");
+  const mime = String(file.mimeType || "").toLowerCase();
+  const name = String(file.name || file.title || "File");
+  title.textContent = file.title || name;
+  meta.textContent = [name,formatFileSize(file.size),file.description||""].filter(Boolean).join(" • ");
+  download.href = url;
+  download.textContent = "Open / Download";
+  content.innerHTML = "";
+  if(mime.startsWith("image/")){
+    const element = document.createElement("img"); element.src = url; element.alt = name; content.appendChild(element);
+  }else if(mime.startsWith("video/")){
+    const element = document.createElement("video"); element.src = url; element.controls = true; content.appendChild(element);
+  }else if(mime.startsWith("audio/")){
+    const element = document.createElement("audio"); element.src = url; element.controls = true; content.appendChild(element);
+  }else if(mime.includes("pdf") || /\.pdf($|\?)/i.test(url)){
+    const element = document.createElement("iframe"); element.src = url; element.title = name; content.appendChild(element);
+  }else if(mime.startsWith("text/") || /\.(txt|html|css|js|json|xml|csv)($|\?)/i.test(url)){
+    const element = document.createElement("iframe"); element.src = url; element.title = name; content.appendChild(element);
+  }else{
+    content.innerHTML = '<div style="padding:25px;text-align:center;color:var(--muted)">'+esc(fileTypeIcon(mime,name))+'<br><br>This file type cannot be previewed directly by the browser.<br>You can still open or download it below.</div>';
+  }
+  modal.classList.add("show");
+};
+window.closeFilePreview=function(){
+  document.getElementById("filePreviewModal")?.classList.remove("show");
+  releaseStorageObjectUrls(document.getElementById("filePreviewContent"));
+  document.getElementById("filePreviewContent").innerHTML="";
+  if(filePreviewObjectUrl){
+    URL.revokeObjectURL(filePreviewObjectUrl);
+    filePreviewObjectUrl=null;
+  }
+};
 
 /* =========================================================
    NOTE IMAGE VIEWER / FULLSCREEN
@@ -7568,10 +7741,224 @@ function enableNoteImageViewer(){
 }
 window.enableNoteImageViewer=enableNoteImageViewer;
 
-function renderFiles(){const box=document.getElementById("filesList");box.innerHTML="";const entries=Object.entries(filesData||{}).sort((a,b)=>Number(a[1]?.createdAt||0)-Number(b[1]?.createdAt||0));if(!entries.length){box.innerHTML=`<div class="empty">No clinical files added yet.</div>`;return;}entries.forEach(([id,f])=>{const e=document.createElement("div");e.className="file-card";const source=f.downloadURL||f.url||"";e.innerHTML=`<div class="file-icon">${fileTypeIcon(f.mimeType,f.name||f.title)}</div><h3>${esc(f.title||f.name||"Clinical File")}</h3>${f.description?`<p>${esc(cleanText(f.description))}</p>`:""}${f.name?`<p class="file-meta">${esc(f.name)}${f.size?` • ${esc(formatFileSize(f.size))}`:""}</p>`:""}${source?`<div class="form-buttons" style="margin-top:10px;"><button class="btn primary" onclick="previewFile('${id}')">📖 View in Website</button><a class="btn" href="${esc(safeFileUrl(source))}" target="_blank" rel="noopener">${f.downloadURL?"Open / Download":"Open Link"}</a></div>`:""}${isAdmin?`<div class="note-actions"><button class="btn danger" onclick="deleteFile('${id}')">Delete</button></div>`:""}`;box.appendChild(e);});}
+function renderFiles(){
+  const box = document.getElementById("filesList");
+  if(!box) return;
+  releaseStorageObjectUrls(box);
+  box.innerHTML = "";
+  const entries = Object.entries(filesData || {}).sort((a,b)=>Number(a[1]?.createdAt || 0)-Number(b[1]?.createdAt || 0));
+  if(!entries.length){
+    box.innerHTML = '<div class="empty">No clinical files added yet.</div>';
+    return;
+  }
+  entries.forEach(([id,file])=>{
+    const card = document.createElement("div");
+    card.className = "file-card";
+    const path = storagePathFromRecord(file);
+    const externalUrl = (path || isFirebaseStorageUrl(file.url)) ? "" : String(file.url || "");
+    card.innerHTML =
+      '<div class="file-icon">'+fileTypeIcon(file.mimeType,file.name||file.title)+'</div>'+
+      '<h3>'+esc(file.title||file.name||"Clinical File")+'</h3>'+
+      (file.description ? '<p>'+esc(cleanText(file.description))+'</p>' : '')+
+      (file.name ? '<p class="file-meta">'+esc(file.name)+(file.size?' • '+esc(formatFileSize(file.size)):'')+'</p>' : '');
+    if(path || externalUrl){
+      const actions = document.createElement("div");
+      actions.className = "form-buttons";
+      actions.style.marginTop = "10px";
+      const preview = document.createElement("button");
+      preview.className = "btn primary";
+      preview.type = "button";
+      preview.textContent = "📖 View in Website";
+      preview.addEventListener("click",()=>window.previewFile(id));
+      actions.appendChild(preview);
+      if(path){
+        const open = document.createElement("button");
+        open.className = "btn";
+        open.type = "button";
+        open.textContent = "Open / Download";
+        open.addEventListener("click",()=>window.openStorageObject(path,file.name||file.title||"file"));
+        actions.appendChild(open);
+      }else{
+        const open = document.createElement("a");
+        open.className = "btn";
+        open.href = esc(safeFileUrl(externalUrl));
+        open.target = "_blank";
+        open.rel = "noopener";
+        open.textContent = "Open Link";
+        actions.appendChild(open);
+      }
+      card.appendChild(actions);
+    }
+    if(isAdmin){
+      const buttons = document.createElement("div");
+      buttons.className = "note-actions";
+      const remove = document.createElement("button");
+      remove.className = "btn danger";
+      remove.textContent = "Delete";
+      remove.addEventListener("click",()=>window.deleteFile(id));
+      buttons.appendChild(remove);
+      card.appendChild(buttons);
+    }
+    box.appendChild(card);
+  });
+}
 let selectedStorageFile=null;
 window.handleFileStorageSelection=function(event){selectedStorageFile=event.target.files?.[0]||null;const s=document.getElementById("fileUploadStatus");if(s)s.textContent=selectedStorageFile?`Selected: ${selectedStorageFile.name} • ${formatFileSize(selectedStorageFile.size)}`:"No local file selected.";};
-async function uploadFileToStorage(file,folder){const cleanName=String(file.name||"file").replace(/[^a-zA-Z0-9._-]+/g,"_");const path=`${folder}/${Date.now()}_${Math.random().toString(36).slice(2,9)}_${cleanName}`;const target=storageRef(storage,path);const result=await uploadBytes(target,file,{contentType:file.type||"application/octet-stream"});const url=await getDownloadURL(result.ref);return {downloadURL:url,storagePath:path,mimeType:file.type||"application/octet-stream",name:file.name||cleanName,size:file.size||0};}
+function isSupportedStoragePath(path){
+  const value = String(path || "");
+  return !value.split("/").includes("..") &&
+    ["group4-note-images/","group4-note-files/","group4-memorize-images/","group4-files/"].some(prefix=>value.startsWith(prefix));
+}
+
+function isFirebaseStorageUrl(value){
+  try{ return new URL(String(value || ""),location.href).hostname === "firebasestorage.googleapis.com"; }
+  catch(error){ return false; }
+}
+
+function storagePathFromDownloadUrl(value){
+  try{
+    const url = new URL(String(value || ""),location.href);
+    if(url.hostname !== "firebasestorage.googleapis.com") return "";
+    const match = url.pathname.match(/^\/v0\/b\/[^/]+\/o\/(.+)$/);
+    if(!match) return "";
+    const path = decodeURIComponent(match[1]);
+    return isSupportedStoragePath(path) ? path : "";
+  }catch(error){
+    return "";
+  }
+}
+
+function storagePathFromRecord(item){
+  const direct = isSupportedStoragePath(item?.storagePath) ? String(item.storagePath) : "";
+  return direct || storagePathFromDownloadUrl(item?.downloadURL) || storagePathFromDownloadUrl(item?.url);
+}
+
+function normalizeStoredHtml(html){
+  const doc = new DOMParser().parseFromString(String(html || ""),"text/html");
+  doc.querySelectorAll("[data-object-url],[data-storage-bound]").forEach(node=>{
+    node.removeAttribute("data-object-url");
+    node.removeAttribute("data-storage-bound");
+  });
+  doc.querySelectorAll("img").forEach(img=>{
+    const path = isSupportedStoragePath(img.dataset.storagePath)
+      ? img.dataset.storagePath
+      : storagePathFromDownloadUrl(img.getAttribute("src"));
+    if(path){
+      img.dataset.storagePath = path;
+      img.removeAttribute("src");
+    }else if(String(img.getAttribute("src") || "").startsWith("blob:") || isFirebaseStorageUrl(img.getAttribute("src"))){
+      img.removeAttribute("src");
+    }
+  });
+  doc.querySelectorAll("a").forEach(anchor=>{
+    const path = isSupportedStoragePath(anchor.dataset.storagePath)
+      ? anchor.dataset.storagePath
+      : storagePathFromDownloadUrl(anchor.getAttribute("href"));
+    if(path){
+      anchor.dataset.storagePath = path;
+      anchor.dataset.storageDownload = "true";
+      anchor.setAttribute("href","#");
+      anchor.removeAttribute("target");
+      anchor.removeAttribute("rel");
+    }else if(isFirebaseStorageUrl(anchor.getAttribute("href"))){
+      anchor.removeAttribute("href");
+      anchor.removeAttribute("target");
+      anchor.removeAttribute("rel");
+    }
+  });
+  return doc.body.innerHTML;
+}
+
+function serializeStorageHtml(editor){
+  return normalizeStoredHtml(editor?.innerHTML || "");
+}
+
+function releaseStorageObjectUrls(root){
+  if(!root) return;
+  const nodes = [];
+  if(root.matches?.("[data-object-url]")) nodes.push(root);
+  nodes.push(...(root.querySelectorAll?.("[data-object-url]") || []));
+  nodes.forEach(node=>{
+    const url = node.dataset.objectUrl;
+    if(url) URL.revokeObjectURL(url);
+    node.removeAttribute("data-object-url");
+  });
+}
+
+function bindSecureStorageLinks(root){
+  if(!root) return;
+  root.querySelectorAll('a[data-storage-path]').forEach(anchor=>{
+    if(anchor.dataset.storageBound === "true") return;
+    anchor.dataset.storageBound = "true";
+    anchor.addEventListener("click",event=>{
+      event.preventDefault();
+      window.openStorageObject(anchor.dataset.storagePath,anchor.textContent.trim() || "attachment");
+    });
+  });
+}
+
+async function hydrateStorageContent(root){
+  if(!root) return;
+  root.innerHTML = normalizeStoredHtml(root.innerHTML);
+  bindSecureStorageLinks(root);
+  const images = Array.from(root.querySelectorAll("img[data-storage-path]"));
+  await Promise.all(images.map(async img=>{
+    const path = img.dataset.storagePath;
+    if(!isSupportedStoragePath(path)) return;
+    try{
+      const blob = await getBlob(storageRef(storage,path));
+      const url = URL.createObjectURL(blob);
+      if(!img.isConnected){
+        URL.revokeObjectURL(url);
+        return;
+      }
+      img.src = url;
+      img.dataset.objectUrl = url;
+    }catch(error){
+      img.removeAttribute("src");
+      console.warn("Storage image is unavailable under current access rules:",path,error);
+    }
+  }));
+}
+
+window.openStorageObject = async function(path,fileName="file"){
+  if(!isSupportedStoragePath(path)){
+    alert("This Storage path is not allowed.");
+    return;
+  }
+  const popup = window.open("about:blank","_blank");
+  if(popup) popup.opener = null;
+  try{
+    const blob = await getBlob(storageRef(storage,path));
+    const url = URL.createObjectURL(blob);
+    if(popup){
+      popup.location.href = url;
+    }else{
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName || "file";
+      link.rel = "noopener";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }catch(error){
+    if(popup) popup.close();
+    console.error("Storage download failed:",error);
+    alert("The file could not be opened. Check your account approval and Firebase Storage permissions.");
+  }
+};
+
+async function uploadFileToStorage(file,folder){
+  const cleanName = String(file.name || "file").replace(/[^a-zA-Z0-9._-]+/g,"_");
+  const path = folder + "/" + Date.now() + "_" + Math.random().toString(36).slice(2,9) + "_" + cleanName;
+  const target = storageRef(storage,path);
+  await uploadBytes(target,file,{contentType:file.type || "application/octet-stream"});
+  return {storagePath:path,mimeType:file.type || "application/octet-stream",name:file.name || cleanName,size:file.size || 0};
+}
+
+
 
 
 window.addFile = async function(){if(!isAdmin)return;const title=document.getElementById("fileTitle").value.trim(),url=document.getElementById("fileUrl").value.trim(),description=document.getElementById("fileDescription").value.trim(),file=selectedStorageFile,status=document.getElementById("fileUploadStatus");if(!title&&!file){alert("Please enter a file title or select a file.");return;}if(!url&&!file){alert("Add a file from your device or enter a file URL.");return;}try{let uploaded={};if(file){if(status)status.textContent="Uploading file…";uploaded=await uploadFileToStorage(file,"group4-files");}await offlinePush("files",{title:title||file.name,url:url||"",description,...uploaded,createdAt:Date.now()});["fileTitle","fileUrl","fileDescription"].forEach(id=>document.getElementById(id).value="");const input=document.getElementById("fileStorageInput");if(input)input.value="";selectedStorageFile=null;if(status)status.textContent="File added successfully.";}catch(error){console.error(error);if(status)status.textContent="Upload failed.";alert("The file could not be uploaded. Check your internet connection and Firebase Storage permissions.");}};
@@ -7717,46 +8104,23 @@ document.getElementById("filePreviewModal")
    INITIALIZE
 ========================================================= */
 
-ensureGroupLogin();
-
 updateAdminUI();
 
 renderAll();
 
+onIdTokenChanged(auth,user=>{
+  applyAuthState(user).catch(error=>{
+    console.error("Could not initialize authenticated access:",error);
+    resolveAuthStateReady();
+    showLogin();
+    setLoginMessage("Firebase account status could not be loaded. Check Authentication and project configuration.");
+  });
+});
 
-async function migrateLegacyLayoutsOnce(){
-  if(!navigator.onLine) return;
-  try{
-    const once=path=>new Promise(resolve=>onValue(ref(db,path),snap=>resolve(snap),{onlyOnce:true}));
-    const ns=await once("noteLayout"); const nv=ns.val();
-    if(!Array.isArray(nv?.order) || !nv.order.length){
-      const ids=Object.entries(notesData||{}).sort((a,b)=>{
-        const ao=Number(a[1]?.order),bo=Number(b[1]?.order);
-        if(Number.isFinite(ao)&&Number.isFinite(bo)&&ao!==bo) return ao-bo;
-        const ac=Number(a[1]?.createdAt||0),bc=Number(b[1]?.createdAt||0);
-        if(ac!==bc) return ac-bc;
-        return String(a[0]).localeCompare(String(b[0]));
-      }).map(([id])=>String(id));
-      if(ids.length){const p={order:ids,updatedAt:Date.now(),version:9};await set(ref(db,"noteLayout"),p);noteLayoutOrder=ids.slice();}
-    }
-    const ms=await once("memorizeLayout"); const mv=ms.val();
-    if(!Array.isArray(mv?.order) || !mv.order.length){
-      const ids=Object.entries(memorizeData||{}).sort((a,b)=>{
-        const ao=Number(a[1]?.order),bo=Number(b[1]?.order);
-        if(Number.isFinite(ao)&&Number.isFinite(bo)&&ao!==bo) return ao-bo;
-        const ac=Number(a[1]?.createdAt||0),bc=Number(b[1]?.createdAt||0);
-        if(ac!==bc) return ac-bc;
-        return String(a[0]).localeCompare(String(b[0]));
-      }).map(([id])=>String(id));
-      if(ids.length){const p={order:ids,updatedAt:Date.now(),version:9};await set(ref(db,"memorizeLayout"),p);memorizeLayoutOrder=ids.slice();}
-    }
-    renderNotes();renderMemorize();
-  }catch(error){console.warn("Layout migration unavailable:",error);}
-}
+
+// Existing shared records are not rewritten during the authentication migration.
 
 window.addEventListener("pagehide",()=>{ stopPresence(); });
-
-migrateLegacyLayoutsOnce();
 
 </script>
 

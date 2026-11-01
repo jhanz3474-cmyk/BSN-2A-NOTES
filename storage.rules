@@ -1,0 +1,42 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function approvedMember() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && (request.auth.token.approved == true || request.auth.token.admin == true);
+    }
+
+    function administrator() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.admin == true;
+    }
+
+    // School Notes and their illustrations are intentionally public and read-only.
+    match /group4-memorize-images/{filePath=**} {
+      allow read: if true;
+      allow write: if administrator();
+    }
+
+    // Group nursing notes, attachments, and shared files require approved access.
+    match /group4-note-images/{filePath=**} {
+      allow read: if approvedMember();
+      allow write: if administrator();
+    }
+
+    match /group4-note-files/{filePath=**} {
+      allow read: if approvedMember();
+      allow write: if administrator();
+    }
+
+    match /group4-files/{filePath=**} {
+      allow read: if approvedMember();
+      allow write: if administrator();
+    }
+  }
+}

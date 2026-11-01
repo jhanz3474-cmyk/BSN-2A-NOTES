@@ -1,11 +1,13 @@
-const CACHE_VERSION = "nursing-duty-hub-v26-ai-key-fix";
+const CACHE_VERSION = "nursing-duty-hub-v27-secure-auth";
 const APP_CACHE = CACHE_VERSION + "-app";
 const RUNTIME_CACHE = CACHE_VERSION + "-runtime";
 
 const FIREBASE_MODULES = [
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-app-check.js",
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js",
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js",
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js",
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-functions.js",
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js",
   "https://www.gstatic.com/firebasejs/12.19.0/firebase-ai.js"
 ];

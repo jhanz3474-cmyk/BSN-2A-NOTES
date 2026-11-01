@@ -1,59 +1,47 @@
-# BSN 2A Notes — Firebase Authentication Migration (staging only)
+# BSN 2A Notes — Firebase Authentication and security migration
 
-Target branch: `secure-firebase-auth-migration`
-Production branch: `main` (must remain unchanged until migration is tested)
-Initial administrator email supplied by owner: `tuyormark1@gmail.com`
+**Status:** Prepared on `secure-firebase-auth-migration`; not deployed.  
+**Production branch:** `main` remains unchanged.  
+**Production Firebase:** No Console configuration, Auth user, database record, Storage object, or rule was changed.
 
-## Current-state findings
+## Findings on the target branch
 
-- The current page imports Firebase App, Realtime Database, Storage, App Check, and Firebase AI Logic.
-- The current login is a client-side group-password check using localStorage; it is not Firebase Authentication.
-- The admin check is a client-side password comparison; it is not a trusted authorization boundary.
-- The Realtime Database currently has public root read/write rules (`.read: true`, `.write: true`), as shown in the owner's Firebase Console screenshot.
-- The app uses Realtime Database collections including notes, memorize, noteLayout, memorizeLayout, schedule, members, files, and presence, plus offline IndexedDB queues.
-- Gemini is invoked through Firebase AI Logic. No OpenAI API endpoint or OpenAI secret key was found in the inspected current page.
-- The Firebase web config includes a public Firebase API key. This is expected for a web client, but API restrictions, App Check, and Firebase rules must be configured correctly.
+- The branch had a migration plan and emulator configuration, but no `database.rules.json` or `storage.rules`, even though `firebase.json` referenced both.
+- The app used a shared client-side group password and a client-side admin password. Neither established an identity Firebase could authorize.
+- The Realtime Database paths used by the app are `notes`, `noteLayout`, `memorize`, `memorizeLayout`, `schedule`, `members`, `files`, and `presence`.
+- Uploaded files use `group4-note-images`, `group4-note-files`, `group4-memorize-images`, and `group4-files`.
+- Local offline writes were held in a shared IndexedDB queue and replayed without an account identity.
+- The page calls Firebase AI Logic directly from the browser. `AI_NOTES_SETUP.md` describes a Cloudflare/OpenAI Worker that is absent from the checked branch; this needs owner review before AI access can be claimed as server-authorized.
 
-## Required target behavior
+## Prepared on this branch
 
-1. Each group student has an individual Firebase Authentication email/password account.
-2. New registrations remain pending until an administrator approves them.
-3. Anonymous visitors can read School Notes (the existing `memorize` content and its layout) only.
-4. Approved group members can read group content and use member features.
-5. Only trusted administrators can create, edit, delete, reorder, or manage group content, members, files, schedules, and AI access.
-6. Presence writes are limited to the authenticated user's own presence record.
-7. Offline mode remains a local cache/queue only. Queued writes must be re-authorized by Firebase when connectivity returns; offline UI state is never proof of authorization.
-8. Existing records must not be deleted or rewritten as part of the migration.
+- Replaced shared-password login with Firebase email/password sign-in and registration, verification email, and a pending-approval state.
+- Added a registration request record that each signed-in user can create once under their own UID.
+- Added an App Check protected callable function for an administrator to approve a verified request. The function grants the `approved` custom claim using the Admin SDK.
+- Added a guarded bootstrap script for the owner-supplied initial administrator, `tuyormark1@gmail.com`. It requires the account UID, checks the email and verification state, and refuses project ID `bsn-2a-notes`.
+- Added Realtime Database and Storage rules. Visitors can read only School Notes and its layout, plus the School Notes image folder. Approved users can read group content and their permitted presence data. Only administrators can write group content or upload files. Presence writes are restricted to `presence/{auth.uid}`.
+- Changed Storage uploads and reads to store object paths and use the SDK's rules-checked `getBlob()` operation instead of creating new download-token URLs. Existing token URLs found inside note HTML or file records are resolved to Storage paths in the client before display; records are not rewritten.
+- Bound offline queue entries to the current Firebase UID, limited queue replay to administrators, and left legacy untagged entries unsubmitted. Firebase rules still re-authorize every online write.
+- Added an explicit localhost-only emulator switch and refreshed the service-worker cache version and module list.
 
-## Authorization design (must be validated against every actual data path)
+## Tests and local checks
 
-Use Firebase Authentication as the identity source. Use trusted admin authorization, preferably custom claims set by a trusted Admin SDK environment, or a carefully bootstrapped server-controlled role record. Never let a client write its own admin/approval status.
+- Added Realtime Database and Storage emulator rules tests in `tests/security.rules.test.mjs`.
+- Added manual offline authorization checks in `tests/OFFLINE-SYNC-TEST-PLAN.md`.
+- Static JSON parsing and JavaScript syntax checks pass. The emulator suite could not run in the authoring environment because Firebase CLI, npm, and installed dependencies are unavailable; install dependencies and run `npm run test:rules` before rollout.
+- The branch has not been deployed and this plan does not apply rules or create Firebase Auth accounts.
 
-Suggested Realtime Database structure for a role-record design:
-- `admins/{uid}: true` — provisioned only by project owner through trusted console/Admin SDK; clients cannot write this path.
-- `approvedUsers/{uid}: true` — written only by an administrator; a user may read only their own status.
-- All default access denied.
-- `memorize` and `memorizeLayout`: public read, admin write.
-- Group data paths: approved-user read, admin write.
-- `presence/{uid}`: approved-user read as needed; user may write only their own record.
-- Admin/approval role paths: no client writes.
+## Owner setup still required
 
-This is a design outline, NOT deployable rules yet. Exact rules must be reconciled with the app's complete path inventory and any multi-location updates before publication. Realtime Database rules cascade; no broad parent grant may override child restrictions.
+1. In a staging Firebase project, enable Email/Password and email verification in Authentication.
+2. Replace the hardcoded web app config on this branch with the staging app's config before running against a real project. The current production project ID is blocked at app startup unless the local emulator switch is selected.
+3. Create and verify the initial administrator account for `tuyormark1@gmail.com`, copy its UID, then run `functions/bootstrap-admin.mjs` against the staging project. Use Application Default Credentials for staging; no password is stored in the repository.
+4. Deploy the callable function only after the staging project, App Check provider, and Functions billing setup are ready. Cloud Functions deployment requires an eligible billing plan.
+5. Configure Storage CORS for the staging app origin so browser `getBlob()` reads can succeed.
+6. Test account registration, approval, read/write denials, presence ownership, uploads, downloads, and offline replay in the emulators and a staging project before considering any production rollout.
+7. Before changing production, back up the Realtime Database and Storage objects/rules. Existing Storage download URLs use long-lived revokable tokens; owners should review/revoke exposed legacy tokens in Firebase Console. This branch does not rewrite existing data or revoke tokens.
+8. Move AI generation behind a trusted backend that checks the admin claim before treating AI access as admin-only. The existing browser SDK call is gated in the interface but Firebase Realtime Database and Storage rules do not protect that AI endpoint.
 
-## Migration blockers / required owner actions
+## Rollout boundary
 
-- Enable Email/Password in Firebase Authentication.
-- Confirm the Firebase project is on Spark or Blaze and review current Gemini/Firebase usage.
-- Create the first Firebase Auth account for `tuyormark1@gmail.com`; do not send its password to anyone or commit it.
-- Obtain that account's UID, then provision its administrator role using a trusted owner-only process.
-- Decide how student approval is performed (admin UI backed by trusted authorization, or controlled Firebase Console operation during the first phase).
-- Inspect and write Storage rules separately; Realtime Database rules do not secure Firebase Storage.
-- Check Firebase App Check enforcement and API-key restrictions.
-- Test login, registration, visitor access, admin access, denied access, AI requests, uploads/downloads, offline queue replay, and existing data on a staging project before deploying.
-
-## Rollout safety
-
-- Do not change production Realtime Database rules until the new client is deployed and verified against staging.
-- Do not merge this branch into `main` until the owner approves the tested migration.
-- Export/backup Realtime Database data and current Storage rules before rollout.
-- If any test fails, keep production rules and the production site unchanged.
+Do not deploy these rules or functions, merge the branch, or change production Firebase configuration/data until the staging configuration and emulator/staging checks are complete and the owner approves the rollout.
