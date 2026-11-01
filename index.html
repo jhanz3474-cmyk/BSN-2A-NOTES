@@ -3291,6 +3291,9 @@ body.visitor-mode .brand p::after{content:" • School Notes Visitor";}
     <div id="visitorProfileActions" class="visitor-actions" style="display:none;">
       <button class="btn" style="width:100%;" onclick="returnToGroupLogin()">🔐 Return to Group Login</button>
     </div>
+    <div id="signedInProfileActions" class="visitor-actions" style="display:none;">
+      <button class="btn" style="width:100%;" onclick="returnToGroupLogin()">Sign out of this account</button>
+    </div>
   </div>
 </div>
 
@@ -4289,6 +4292,8 @@ window.openProfileModal = function(){
   document.getElementById("profileName").value = userName || "Student";
   const visitorActions = document.getElementById("visitorProfileActions");
   if(visitorActions) visitorActions.style.display = isVisitorMode() ? "block" : "none";
+  const signedInActions = document.getElementById("signedInProfileActions");
+  if(signedInActions) signedInActions.style.display = auth.currentUser ? "block" : "none";
   modal.classList.add("show");
 };
 
@@ -4331,6 +4336,7 @@ window.returnToGroupLogin = async function(){
   const password = document.getElementById("loginPassword");
   if(name) name.value = "";
   if(password) password.value = "";
+  closeProfileModal();
   document.getElementById("loginEmail")?.focus();
   setLoginMessage("");
   showLogin();
